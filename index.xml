@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JDHeyburn</title>
+    <link>https://jdheyburn.github.io/</link>
+    <description>Recent content on JDHeyburn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 11 Feb 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jdheyburn.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Blog Bootstrap</title>
+      <link>https://jdheyburn.github.io/posts/blog-bootstrap/</link>
+      <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.github.io/posts/blog-bootstrap/</guid>
+      <description>Howdy! 👋 This site will be an area for me to braindump everything and anything that comes across my mind - although I&amp;rsquo;ll try my best to keep it tech-focused!
+The blog platform itself is pretty basic. It is built using Hugo and hosted using GitHub Pages. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!</description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>https://jdheyburn.github.io/contact/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.github.io/contact/</guid>
+      <description>If you wish to get in touch - reach me via @jdheyburn.</description>
+    </item>
+    
+  </channel>
+</rss>
