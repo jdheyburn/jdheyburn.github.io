@@ -18,7 +18,7 @@
       
       <guid>https://jdheyburn.co.uk/posts/blog-bootstrap/</guid>
       <description>Howdy! 👋 This site will be an area for me to braindump everything and anything that comes across my mind - although I&amp;rsquo;ll try my best to keep it tech-focused!
-The blog platform itself is pretty basic. It is built using Hugo and hosted using GitHub Pages. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!</description>
+The blog platform itself is pretty basic. It is built using Hugo, hosted using GitHub Pages, while served over a custom domain via CloudFlare. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!</description>
     </item>
     
     <item>
