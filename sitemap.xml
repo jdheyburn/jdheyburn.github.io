@@ -3,39 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jdheyburn.github.io/posts/blog-bootstrap/</loc>
+    <loc>https://jdheyburn.co.uk/posts/blog-bootstrap/</loc>
     <lastmod>2019-02-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jdheyburn.github.io/tags/blabber/</loc>
-    <lastmod>2019-02-11T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.github.io/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.github.io/contact/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.github.io/</loc>
+    <loc>https://jdheyburn.co.uk/tags/blabber/</loc>
     <lastmod>2019-02-11T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jdheyburn.github.io/posts/</loc>
+    <loc>https://jdheyburn.co.uk/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/contact/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/</loc>
     <lastmod>2019-02-11T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://jdheyburn.github.io/tags/</loc>
+    <loc>https://jdheyburn.co.uk/posts/</loc>
+    <lastmod>2019-02-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
     <lastmod>2019-02-11T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

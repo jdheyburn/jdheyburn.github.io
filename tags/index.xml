@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on JDHeyburn</title>
-    <link>https://jdheyburn.github.io/tags/</link>
+    <link>https://jdheyburn.co.uk/tags/</link>
     <description>Recent content in Tags on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 11 Feb 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://jdheyburn.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jdheyburn.co.uk/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Blabber</title>
-      <link>https://jdheyburn.github.io/tags/blabber/</link>
+      <link>https://jdheyburn.co.uk/tags/blabber/</link>
       <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://jdheyburn.github.io/tags/blabber/</guid>
+      <guid>https://jdheyburn.co.uk/tags/blabber/</guid>
       <description></description>
     </item>
     
