@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Joseph D. Heyburn">
+    <meta name="description" content="Ramblings of a tech guy">
+    <meta name="keywords" content="blog,developer,devops,cloud">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Extending Gotests for Strict Error Tests"/>
+<meta name="twitter:description" content="Here I document about a custom template used for enhancing how errors are tested in the gotests library."/>
+
+
+    <base href="https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/">
+    <title>
+  Extending Gotests for Strict Error Tests · JDHeyburn
+</title>
+
+    <link rel="canonical" href="https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Merriweather:300,700|Source+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder.min.8881182b3ec36ffd9c735306f7e16ce9b1129ebc650e069e7c4114827e9d9b23.css" integrity="sha256-iIEYKz7Db/2cc1MG9&#43;Fs6bESnrxlDgaefEEUgn6dmyM=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder-inverted.min.b275a7d098cfe39135a5644e9c6d811e77fc4bdeac01e8e339c7d767146340a8.css" integrity="sha256-snWn0JjP45E1pWROnG2BHnf8S96sAejjOcfXZxRjQKg=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.54.0" />
+  </head>
+
+  <body class=" inverted">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://jdheyburn.co.uk/">
+      JDHeyburn
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/contact/">Contact</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Extending Gotests for Strict Error Tests</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2019-04-29T00:00:00Z'>
+                29 April 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              5 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://jdheyburn.co.uk/tags/golang/">golang</a>
+      <span class="separator">•</span>
+    <a href="https://jdheyburn.co.uk/tags/java/">java</a>
+      <span class="separator">•</span>
+    <a href="https://jdheyburn.co.uk/tags/testing/">testing</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+
+<h1 id="strict-error-tests-in-java">Strict Error Tests in Java</h1>
+
+<p>I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD).  For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter <code>expected</code> for the annotation <code>@Test</code>, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.</p>
+
+<p>This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#6ab825;font-weight:bold">public</span> <span style="color:#6ab825;font-weight:bold">static</span> <span style="color:#6ab825;font-weight:bold">boolean</span> <span style="color:#447fcf">validateDogName</span>(String dogName) <span style="color:#6ab825;font-weight:bold">throws</span> DogValidationException {
+
+    <span style="color:#6ab825;font-weight:bold">if</span> (containsSymbols(dogName)) {
+        <span style="color:#6ab825;font-weight:bold">throw</span> <span style="color:#6ab825;font-weight:bold">new</span> DogValidationException(<span style="color:#ed9d13">&#34;Dogs cannot have symbols in their name!&#34;</span>);
+    }
+    
+    <span style="color:#6ab825;font-weight:bold">if</span> (dogName.<span style="color:#bbb">length</span> &gt; 100) {
+        <span style="color:#6ab825;font-weight:bold">throw</span> <span style="color:#6ab825;font-weight:bold">new</span> DogValidationException(<span style="color:#ed9d13">&#34;Who has a name for a dog that long?!&#34;</span>);
+    }
+
+    <span style="color:#6ab825;font-weight:bold">return</span> <span style="color:#6ab825;font-weight:bold">true</span>;
+}</code></pre></div>
+<p>For this method, just using <code>@Test(expected = DogValidationException.class)</code> on our test method is not sufficient; how can we determine that the exception was raised for a dogName.length breach and not for containing symbols?</p>
+
+<p>In order for me to resolve this, I came across the <code>ExpectedException</code> class for JUnit on <a href="https://www.baeldung.com/junit-assert-exception">Baeldung</a> which enables us to specify the error message expected. Here it is applied to the test case for this method:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ffa500">@Rule</span>
+<span style="color:#6ab825;font-weight:bold">public</span> ExpectedException exceptionRule = ExpectedException.<span style="color:#bbb">none</span>();
+
+<span style="color:#ffa500">@Test</span>
+<span style="color:#6ab825;font-weight:bold">public</span> <span style="color:#6ab825;font-weight:bold">void</span> <span style="color:#447fcf">shouldHandleDogNameWithSymbols</span>() {
+    exceptionRule.<span style="color:#bbb">expect</span>(DogValidationException.<span style="color:#bbb">class</span>);
+    exceptionRule.<span style="color:#bbb">expectMessage</span>(<span style="color:#ed9d13">&#34;Dogs cannot have symbols in their name!&#34;</span>);
+    validateDogName(<span style="color:#ed9d13">&#34;GoodestBoy#1&#34;</span>);
+}</code></pre></div>
+<h1 id="applying-to-golang">Applying to Golang</h1>
+
+<p>Back to Golang, there is a built-in library aptly named <code>testing</code> which enables us to assert on test conditions. When combined with <a href="https://github.com/cweill/gotests">Gotests</a> - a tool for generating Go tests from your code - writing tests could not be easier! I love how this is bundled in with the Go extension for VSCode, my text editor of choice (for now&hellip;).</p>
+
+<p>Converting the above Java <code>validateDogName</code> method to Golang will produce something like:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#6ab825;font-weight:bold">func</span> <span style="color:#447fcf">validateDogName</span>(name <span style="color:#6ab825;font-weight:bold">string</span>) (<span style="color:#6ab825;font-weight:bold">bool</span>, <span style="color:#6ab825;font-weight:bold">error</span>) {
+    <span style="color:#6ab825;font-weight:bold">if</span> <span style="color:#447fcf">containsSymbols</span>(name) {
+        <span style="color:#6ab825;font-weight:bold">return</span> <span style="color:#6ab825;font-weight:bold">false</span>, errors.<span style="color:#447fcf">New</span>(<span style="color:#ed9d13">&#34;dog cannot have symbols in their name&#34;</span>)
+    }
+
+    <span style="color:#6ab825;font-weight:bold">if</span> <span style="color:#24909d">len</span>(name) &gt; <span style="color:#3677a9">100</span> {
+        <span style="color:#6ab825;font-weight:bold">return</span> <span style="color:#6ab825;font-weight:bold">false</span>, errors.<span style="color:#447fcf">New</span>(<span style="color:#ed9d13">&#34;who has a name for a dog that long&#34;</span>)
+    }
+
+    <span style="color:#6ab825;font-weight:bold">return</span> <span style="color:#6ab825;font-weight:bold">true</span>, <span style="color:#6ab825;font-weight:bold">nil</span>
+}</code></pre></div>
+<p>If you have a Go method that returns the <code>error</code> interface, then gotests will generate a test that look like this:</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#6ab825;font-weight:bold">func</span> <span style="color:#447fcf">Test_validateDogName</span>(t *testing.T) {
+    <span style="color:#6ab825;font-weight:bold">type</span> args <span style="color:#6ab825;font-weight:bold">struct</span> {
+        name <span style="color:#6ab825;font-weight:bold">string</span>
+    }
+    tests := []<span style="color:#6ab825;font-weight:bold">struct</span> {
+        name    <span style="color:#6ab825;font-weight:bold">string</span>
+        args    args
+        want    <span style="color:#6ab825;font-weight:bold">bool</span>
+        wantErr <span style="color:#6ab825;font-weight:bold">bool</span>
+    }{
+        name: <span style="color:#ed9d13">&#34;Test error was thrown for dog name with symbols&#34;</span>,
+        args: args{
+            name: <span style="color:#ed9d13">&#34;GoodestBoy#1&#34;</span>,
+        },
+        want: <span style="color:#6ab825;font-weight:bold">false</span>,
+        wantErr: <span style="color:#6ab825;font-weight:bold">true</span>,
+    }
+    <span style="color:#6ab825;font-weight:bold">for</span> _, tt := <span style="color:#6ab825;font-weight:bold">range</span> tests {
+        t.<span style="color:#447fcf">Run</span>(tt.name, <span style="color:#6ab825;font-weight:bold">func</span>(t *testing.T) {
+            got, err := <span style="color:#447fcf">validateDogName</span>(tt.args.name)
+            <span style="color:#6ab825;font-weight:bold">if</span> (err != <span style="color:#6ab825;font-weight:bold">nil</span>) != tt.wantErr {
+                t.<span style="color:#447fcf">Errorf</span>(<span style="color:#ed9d13">&#34;validateDogName() error = %v, wantErr %v&#34;</span>, err, tt.wantErr)
+                <span style="color:#6ab825;font-weight:bold">return</span>
+            }
+            <span style="color:#6ab825;font-weight:bold">if</span> got != tt.want {
+                t.<span style="color:#447fcf">Errorf</span>(<span style="color:#ed9d13">&#34;validateDogName() = %v, want %v&#34;</span>, got, tt.want)
+            }
+        })
+    }
+}</code></pre></div>
+<p>From the above we are limited to what error we can assert for, here <em>any</em> error returned will pass the test. This is equivalent to using <code>@Test(expected=Exception.class)</code> in JUnit! But there is another way&hellip;</p>
+
+<h2 id="modifying-the-generated-test">Modifying the Generated Test</h2>
+
+<p>We only need to make a few simple changes to the generated test to give us the ability to assert on test error message&hellip;</p>
+
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#6ab825;font-weight:bold">func</span> <span style="color:#447fcf">Test_validateDogName</span>(t *testing.T) {
+    <span style="color:#6ab825;font-weight:bold">type</span> args <span style="color:#6ab825;font-weight:bold">struct</span> {
+        name <span style="color:#6ab825;font-weight:bold">string</span>
+    }
+    tests := []<span style="color:#6ab825;font-weight:bold">struct</span> {
+        name    <span style="color:#6ab825;font-weight:bold">string</span>
+        args    args
+        want    <span style="color:#6ab825;font-weight:bold">bool</span>
+<span style="display:block;width:100%;background-color:#363636">        wantErr <span style="color:#6ab825;font-weight:bold">error</span>
+</span>    }{
+        name: <span style="color:#ed9d13">&#34;Test error was thrown for dog name with symbols&#34;</span>,
+        args: args{
+            name: <span style="color:#ed9d13">&#34;GoodestBoy#1&#34;</span>,
+        },
+        want: <span style="color:#6ab825;font-weight:bold">false</span>,
+<span style="display:block;width:100%;background-color:#363636">        wantErr: errors.<span style="color:#447fcf">New</span>(<span style="color:#ed9d13">&#34;dog cannot have symbols in their name&#34;</span>),
+</span>    }
+    <span style="color:#6ab825;font-weight:bold">for</span> _, tt := <span style="color:#6ab825;font-weight:bold">range</span> tests {
+        t.<span style="color:#447fcf">Run</span>(tt.name, <span style="color:#6ab825;font-weight:bold">func</span>(t *testing.T) {
+            got, err := <span style="color:#447fcf">validateDogName</span>(tt.args.name)
+<span style="display:block;width:100%;background-color:#363636">            <span style="color:#6ab825;font-weight:bold">if</span> tt.wantErr != <span style="color:#6ab825;font-weight:bold">nil</span> &amp;&amp; !reflect.<span style="color:#447fcf">DeepEqual</span>(err, tt.wantErr) {
+</span>                t.<span style="color:#447fcf">Errorf</span>(<span style="color:#ed9d13">&#34;validateDogName() error = %v, wantErr %v&#34;</span>, err, tt.wantErr)
+                <span style="color:#6ab825;font-weight:bold">return</span>
+            }
+            <span style="color:#6ab825;font-weight:bold">if</span> got != tt.want {
+                t.<span style="color:#447fcf">Errorf</span>(<span style="color:#ed9d13">&#34;validateDogName() = %v, want %v&#34;</span>, got, tt.want)
+            }
+        })
+    }
+}</code></pre></div>
+
+<p>From the above there are three highlighted changes, let&rsquo;s go over them individually:</p>
+
+<ol>
+<li><code>wantErr error</code>
+
+<ul>
+<li>we are changing this from <code>bool</code> so that we can make a comparison against the error returned from the function</li>
+</ul></li>
+<li><code>wantErr: errors.New(&quot;dog cannot have symbols in their name&quot;),</code>
+
+<ul>
+<li>this is the error struct that we are expecting</li>
+</ul></li>
+<li><code>if tt.wantErr != nil &amp;&amp; !reflect.DeepEqual(err, tt.wantErr) {</code>
+
+<ul>
+<li>check to make sure the test is expected an error, if so then compare it against the returned error</li>
+</ul></li>
+</ol>
+
+<p>Point 3 provides additional support if there was a test case that did not expect an error. Note how <code>wantErr</code> is omitted entirely from the test case below.</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang">{
+    name: <span style="color:#ed9d13">&#34;Should return true for valid dog name&#34;</span>,
+    args: args{
+        name: <span style="color:#ed9d13">&#34;Benedict Cumberland the Sausage Dog&#34;</span>,
+    },
+    want: <span style="color:#6ab825;font-weight:bold">true</span>,
+}</code></pre></div>
+<h2 id="customising-gotests-generated-test">Customising Gotests Generated Test</h2>
+
+<p>Gotests gives us the ability to provide our own templates for generating tests, and can easily be integrated into your text editor of choice. I&rsquo;ll show you how this can be done in VSCode.</p>
+
+<ol>
+<li><p>Check out gotests and copy the templates directory to a place of your choosing</p>
+
+<ul>
+<li><code>git clone https://github.com/cweill/gotests.git</code></li>
+<li><code>cp -R gotests/internal/render/templates ~/scratch/gotests</code></li>
+</ul></li>
+
+<li><p>Overwrite the contents of function.tmpl with <a href="https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5">the contents of this Gist</a></p></li>
+
+<li><p>Add the following setting to VSCode&rsquo;s settings.json</p>
+
+<ul>
+<li><code>&quot;go.generateTestsFlags&quot;: [&quot;--template_dir=~/scratch/templates&quot;]</code></li>
+</ul></li>
+</ol>
+
+<p>Once you have done that, future tests will now generate with stricter error testing! 🎉 
+</p>
+
+<h1 id="closing">Closing</h1>
+
+<p>I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.</p>
+
+<p>I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶 
+</p>
+
+      </div>
+
+      <footer>
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2019
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
