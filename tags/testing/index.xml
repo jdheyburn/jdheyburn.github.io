@@ -1,1 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Testing on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/testing/</link><description>Recent content in Testing on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Extending Gotests for Strict Error Tests</title><link>https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/</guid><description>Strict Error Tests in Java I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter expected for the annotation @Test, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Testing on JDHeyburn</title>
+    <link>https://jdheyburn.co.uk/tags/testing/</link>
+    <description>Recent content in Testing on JDHeyburn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Extending Gotests for Strict Error Tests</title>
+      <link>https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/</link>
+      <pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/</guid>
+      <description>Strict Error Tests in Java I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter expected for the annotation @Test, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.</description>
+    </item>
+    
+  </channel>
+</rss>
