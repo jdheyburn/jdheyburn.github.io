@@ -1,14 +1,14 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Joseph D. Heyburn"><meta name=description content="Ramblings of a tech guy"><meta name=keywords content=blog,developer,devops,cloud><meta name=twitter:card content=summary><meta name=twitter:title content="Three Ways To Spice Up Your Python Code"><meta name=twitter:description content="I describe some simple methods to improve on your Python codes integrity and durability"><base href=https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/><title>Three Ways To Spice Up Your Python Code · JDHeyburn</title><link rel=canonical href=https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/><link href="https://fonts.googleapis.com/css?family=Lato:400,700|Merriweather:300,700|Source+Code+Pro:400,700" rel=stylesheet><link rel=stylesheet href=https://use.fontawesome.com/releases/v5.3.1/css/all.css integrity=sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin=anonymous><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder.min.8881182b3ec36ffd9c735306f7e16ce9b1129ebc650e069e7c4114827e9d9b23.css integrity="sha256-iIEYKz7Db/2cc1MG9&#43;Fs6bESnrxlDgaefEEUgn6dmyM=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder-inverted.min.b275a7d098cfe39135a5644e9c6d811e77fc4bdeac01e8e339c7d767146340a8.css integrity="sha256-snWn0JjP45E1pWROnG2BHnf8S96sAejjOcfXZxRjQKg=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-16x16.png sizes=16x16><meta name=generator content="Hugo 0.58.3"></head><body class=inverted><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://jdheyburn.co.uk/>JDHeyburn</a>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Joseph D. Heyburn"><meta name=description content="Ramblings of a tech guy"><meta name=keywords content=blog,developer,devops,cloud><meta name=twitter:card content=summary><meta name=twitter:title content="Three Ways To Spice Up Your Python Code"><meta name=twitter:description content="I describe some simple methods to improve on your Python codes integrity and durability"><meta property=og:title content="Three Ways To Spice Up Your Python Code"><meta property=og:description content="I describe some simple methods to improve on your Python codes integrity and durability"><meta property=og:type content=article><meta property=og:url content=https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/><meta property=article:published_time content=2019-07-05T00:00:00+00:00><meta property=article:modified_time content=2019-07-05T00:00:00+00:00><base href=https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/><title>Three Ways To Spice Up Your Python Code · JDHeyburn</title><link rel=canonical href=https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/><link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel=stylesheet><link rel=stylesheet href=https://use.fontawesome.com/releases/v5.11.2/css/all.css integrity=sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-16x16.png sizes=16x16><meta name=generator content="Hugo 0.58.3"></head><body class=colorscheme-dark><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://jdheyburn.co.uk/>JDHeyburn</a>
 <input type=checkbox id=menu-toggle>
 <label class="menu-button float-right" for=menu-toggle><i class="fas fa-bars"></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/blog/>Blog</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/contact/>Contact</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title>Three Ways To Spice Up Your Python Code</h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fas fa-calendar"></i><time datetime=2019-07-05T00:00:00Z>5 July 2019</time></span>
-<span class=reading-time><i class="fas fa-clock"></i>12 minutes read</span></div><div class=tags><i class="fas fa-tag"></i><a href=https://jdheyburn.co.uk/tags/python/>python</a>
+<span class=reading-time><i class="fas fa-clock"></i>12-minute read</span></div><div class=tags><i class="fas fa-tag"></i><a href=https://jdheyburn.co.uk/tags/python/>python</a>
 <span class=separator>•</span>
 <a href=https://jdheyburn.co.uk/tags/testing/>testing</a>
 <span class=separator>•</span>
-<a href=https://jdheyburn.co.uk/tags/typing/>typing</a></div></div></header><div><h1 id=spice-up-your-life-python-hahahugoshortcode-s0-hbhb>Spice Up Your <del>Life</del> Python 🐍</h1><p>I&rsquo;m currently working on a side project that I&rsquo;ve written in Python. Now I&rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&rsquo;t quite cut it. Don&rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.</p><p>My experience with Python didn&rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&rsquo;t find it again but it went something like this:</p><blockquote><p>Stages of learning programming:</p><ol><li>Learn a typed language, such as Java - complain at its complexity</li><li>Learn an untyped language, such as JavaScript or Python - marvel at its simplicity</li><li>Get frustrated at implied types in step 2</li><li>Revert to step 1</li></ol></blockquote><p>During said experiences I came across some poorly written scripts whiched <strong>triggered</strong> some pet peeves: what object a function is expecting, or what it returns? Did I break some downstream function? This made it terribly difficult to add new functionality to scripts.</p><p>With this side project I wanted to make it right from the start. So I said to myself these are the key areas I want to target:</p><ol><li>The application must be extensively tested (did I mention I <a href=https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/>love tests?</a>)</li><li>Functions must clearly define what the type of the objects the parameters are, and what the types of the objects they return are.</li><li><del>Best</del> Practices are upheld throughout the way</li></ol><p>From this list, we can include the following to solve the above:</p><ol><li><a href=#tests>Tests!!</a></li><li><a href=#static-type-checking>Static type checking</a></li><li><a href=#class-objects>Classes</a></li></ol><h1 id=tests>Tests</h1><p>Alright so I know this one is a given. But in all honesty I&rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&rsquo;s start with a basic function:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># scratch.py</span>
+<a href=https://jdheyburn.co.uk/tags/typing/>typing</a></div></div></header><div><aside><nav id=TableOfContents><ul><li><ul><li><a href=#spice-up-your-life-python>Spice Up Your <del>Life</del> Python 🐍</a></li><li><a href=#tests>Tests</a><ul><li><a href=#implementation>Implementation</a><ul><li><a href=#imports>Imports</a></li><li><a href=#class-declaration>Class Declaration</a></li><li><a href=#test-methods>Test Methods</a></li><li><a href=#main-method-invocation>Main Method Invocation</a></li></ul></li><li><a href=#execution>Execution</a></li></ul></li><li><a href=#static-type-checking>Static Type Checking</a></li></ul></li><li><a href=#spotify-py>spotify.py</a></li><li><a href=#test-spotify-py>test_spotify.py</a></li><li><a href=#f>F</a><ul><li><a href=#fail-test-equality-main-testobject>FAIL: test_equality (<strong>main</strong>.TestObject)</a></li><li><a href=#toc_13>.</a></li><li><a href=#closing>Closing</a></li></ul></li></ul></nav></aside><h2 id=spice-up-your-life-python>Spice Up Your <del>Life</del> Python 🐍</h2><p>I&rsquo;m currently working on a side project that I&rsquo;ve written in Python. Now I&rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&rsquo;t quite cut it. Don&rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.</p><p>My experience with Python didn&rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&rsquo;t find it again but it went something like this:</p><blockquote><p>Stages of learning programming:</p><ol><li>Learn a typed language, such as Java - complain at its complexity</li><li>Learn an untyped language, such as JavaScript or Python - marvel at its simplicity</li><li>Get frustrated at implied types in step 2</li><li>Revert to step 1</li></ol></blockquote><p>During said experiences I came across some poorly written scripts whiched <strong>triggered</strong> some pet peeves: what object a function is expecting, or what it returns? Did I break some downstream function? This made it terribly difficult to add new functionality to scripts.</p><p>With this side project I wanted to make it right from the start. So I said to myself these are the key areas I want to target:</p><ol><li>The application must be extensively tested (did I mention I <a href=https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/>love tests?</a>)</li><li>Functions must clearly define what the type of the objects the parameters are, and what the types of the objects they return are.</li><li><del>Best</del> Practices are upheld throughout the way</li></ol><p>From this list, we can include the following to solve the above:</p><ol><li><a href=#tests>Tests!!</a></li><li><a href=#static-type-checking>Static type checking</a></li><li><a href=#class-objects>Classes</a></li></ol><h2 id=tests>Tests</h2><p>Alright so I know this one is a given. But in all honesty I&rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&rsquo;s start with a basic function:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># scratch.py</span>
 <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>increment_int_by_one</span>(int_to_inc):
     incremented_int = int_to_increment + <span style=color:#3677a9>1</span>
-    <span style=color:#6ab825;font-weight:700>return</span> incremented_int</code></pre></div><p>While this is something easy enough to test by doing so manually, at some point its functionality may increase, and at that point we would require automated tests to ensure its original feature-set was unchanged.</p><h2 id=implementation>Implementation</h2><p>There are <a href=https://wiki.python.org/moin/PythonTestingToolsTaxonomy>several testing frameworks</a> out there, but for my use case I am using the built-in <code>unittest</code> which is easy enough to use. A basic structure of a test file is seen below:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># test_scratch.py</span>
+    <span style=color:#6ab825;font-weight:700>return</span> incremented_int</code></pre></div><p>While this is something easy enough to test by doing so manually, at some point its functionality may increase, and at that point we would require automated tests to ensure its original feature-set was unchanged.</p><h3 id=implementation>Implementation</h3><p>There are <a href=https://wiki.python.org/moin/PythonTestingToolsTaxonomy>several testing frameworks</a> out there, but for my use case I am using the built-in <code>unittest</code> which is easy enough to use. A basic structure of a test file is seen below:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># test_scratch.py</span>
 <span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>unittest</span>
 
 <span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>scratch</span>
@@ -28,9 +28,9 @@
 
 
 <span style=color:#6ab825;font-weight:700>if</span> __name__ == <span style=color:#ed9d13>&#39;__main__&#39;</span>:
-    unittest.main()</code></pre></div><p>There&rsquo;s a lot going on here, let&rsquo;s break it down by section.</p><h3 id=imports>Imports</h3><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>unittest</span>
+    unittest.main()</code></pre></div><p>There&rsquo;s a lot going on here, let&rsquo;s break it down by section.</p><h4 id=imports>Imports</h4><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>unittest</span>
 
-<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>scratch</span></code></pre></div><p>Here we are specifying the modules that the test file is going to interact with. <code>unittest</code> is the testing framework and <code>scratch</code> is the Python file containing our business logic, as written earlier.</p><h3 id=class-declaration>Class Declaration</h3><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>TestIncrement</span>(unittest.TestCase):</code></pre></div><p>Simply enough, this is a class that extends the <code>unittest.TestCase</code> class, for which then unittest can then execute all the test methods defined within it, and you can name them like <code>class TestXXXX</code>. There is no limit to how many classes you can have, but I like to group my TestClasses together in terms of what logic they are testing.</p><h3 id=test-methods>Test Methods</h3><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>test_increment</span>(self):
+<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>scratch</span></code></pre></div><p>Here we are specifying the modules that the test file is going to interact with. <code>unittest</code> is the testing framework and <code>scratch</code> is the Python file containing our business logic, as written earlier.</p><h4 id=class-declaration>Class Declaration</h4><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>TestIncrement</span>(unittest.TestCase):</code></pre></div><p>Simply enough, this is a class that extends the <code>unittest.TestCase</code> class, for which then unittest can then execute all the test methods defined within it, and you can name them like <code>class TestXXXX</code>. There is no limit to how many classes you can have, but I like to group my TestClasses together in terms of what logic they are testing.</p><h4 id=test-methods>Test Methods</h4><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>test_increment</span>(self):
     <span style=color:#ed9d13>&#34;&#34;&#34;
 </span><span style=color:#ed9d13>    Should successfully return int value 2
 </span><span style=color:#ed9d13>    Given a parameter of int value 1
@@ -38,8 +38,8 @@
     expected = <span style=color:#3677a9>2</span>
     int_to_inc = <span style=color:#3677a9>1</span>
     actual = scratch.increment_int_by_one(int_to_inc)
-    self.assertEqual(actual, expected)</code></pre></div><p>These methods are the real juicy bits of your tests. Here you are defining the parameters that are going to be used by your functions, and hitting the logic you are testing. For each test that you write you will alter the test name, description, expected values, and input parameters accordingly to what you are testing.</p><h3 id=main-method-invocation>Main Method Invocation</h3><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>if</span> __name__ == <span style=color:#ed9d13>&#39;__main__&#39;</span>:
-    unittest.main()</code></pre></div><p>To close off nice and easily, this will tell Python to invoke all test classes that are described within <code>unittest.TestCase</code>.</p><h2 id=execution>Execution</h2><p>Now just execute the test file and it will now run as expected:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt; python -m unittest test_scratch                                     
+    self.assertEqual(actual, expected)</code></pre></div><p>These methods are the real juicy bits of your tests. Here you are defining the parameters that are going to be used by your functions, and hitting the logic you are testing. For each test that you write you will alter the test name, description, expected values, and input parameters accordingly to what you are testing.</p><h4 id=main-method-invocation>Main Method Invocation</h4><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>if</span> __name__ == <span style=color:#ed9d13>&#39;__main__&#39;</span>:
+    unittest.main()</code></pre></div><p>To close off nice and easily, this will tell Python to invoke all test classes that are described within <code>unittest.TestCase</code>.</p><h3 id=execution>Execution</h3><p>Now just execute the test file and it will now run as expected:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt; python -m unittest test_scratch                                     
 .                                                                     
 ----------------------------------------------------------------------
 Ran <span style=color:#3677a9>1</span> test <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#3677a9>0.001</span>s                                                  
@@ -49,7 +49,7 @@ OK                                                                    </code></p
 ----------------------------------------------------------------------
 Ran <span style=color:#3677a9>1</span> test <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#3677a9>0.002</span>s                                                  
                                                                       
-OK                                                                    </code></pre></div><h1 id=static-type-checking>Static Type Checking</h1><p>As I mentioned before, Python is great for throwing together a script to automate some task. It&rsquo;s quick and easy to do mainly because the type of a variable is implied from whatever you set to it.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt;&gt;&gt; my_int_var = <span style=color:#3677a9>1</span>
+OK                                                                    </code></pre></div><h2 id=static-type-checking>Static Type Checking</h2><p>As I mentioned before, Python is great for throwing together a script to automate some task. It&rsquo;s quick and easy to do mainly because the type of a variable is implied from whatever you set to it.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt;&gt;&gt; my_int_var = <span style=color:#3677a9>1</span>
 &gt;&gt;&gt; <span style=color:#24909d>type</span>(my_int_var)
 &lt;<span style=color:#6ab825;font-weight:700>class</span> <span style=color:#a61717;background-color:#e3d2d2>&#39;</span><span style=color:#447fcf;text-decoration:underline>int</span><span style=color:#ed9d13>&#39;&gt;</span></code></pre></div><p>This also applies to functions that take in a parameter, the type for it is implied from what it receives! Let&rsquo;s revisit our incrementing function from earlier:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>increment_int_by_one</span>(int_to_inc):
     incremented_int = int_to_increment + <span style=color:#3677a9>1</span>
@@ -63,109 +63,150 @@ Traceback (most recent call last):
   File <span style=color:#ed9d13>&#34;&lt;stdin&gt;&#34;</span>, line <span style=color:#3677a9>1</span>, <span style=color:#6ab825;font-weight:700>in</span> &lt;module&gt;
   File <span style=color:#ed9d13>&#34;&lt;stdin&gt;&#34;</span>, line <span style=color:#3677a9>2</span>, <span style=color:#6ab825;font-weight:700>in</span> increment_int_by_one
 <span style=color:#bbb>TypeError</span>: must be <span style=color:#24909d>str</span>, <span style=color:#6ab825;font-weight:700>not</span> <span style=color:#24909d>int</span></code></pre></div><p>Yikes, that&rsquo;s a misleading error! Having a look at the error straight away, you&rsquo;d be confused at &lsquo;what&rsquo; must be a string, not an int - didn&rsquo;t you accidentally provide a str? So why is it telling us it must be a str and not an int?</p><p>What this is actually error-ing on is how an int is being concatenated to a str on the left-hand side of the + operator.</p><blockquote><p>Under the hood, Python believe you are trying to do a <strong>string concatenation</strong> because the parameter is of type string, and is on the left-hand side of the + operator. The below shows a valid way to perform a string concatenation:</p><p><code>&quot;1&quot; + &quot;1&quot; # -&gt; &quot;11&quot;</code></p><p>If the int value was on the left-hand side of the operator and you passed a string, you&rsquo;d get something like this:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>&gt;&gt;&gt; 1 + &#34;1&#34;
-Traceback (most recent call last):
-  File &#34;&lt;stdin&gt;&#34;, line 1, in &lt;module&gt;
-TypeError: unsupported operand type(s) for +: &#39;int&#39; and &#39;str&#39;</pre></div></blockquote><p>But changing the right-side of the operator won&rsquo;t fix this for us. What we need is to implement typing.</p><h2 id=implementation-1>Implementation</h2><p>Python 3.6 onwards introduced static type checking, so make sure you upgrade to it if you haven&rsquo;t already - which you might want to do very soon as Python 2 is <a href=https://pythonclock.org/>EOL in 2020</a>!</p><p>Taking our above <code>increment_int_by_one</code> function, we can add <code>: int</code> to the parameter which will tell the function what type it expects the parameter to be.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>increment_int_by_one</span>(int_to_inc: <span style=color:#24909d>int</span>):
-    incremented_int = int_to_increment + <span style=color:#3677a9>1</span>
-    <span style=color:#6ab825;font-weight:700>return</span> incremented_int</code></pre></div><p>Now when we pass in a <code>str</code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive <strong>type hints</strong>!</p><p><img src=type_hinting.png alt="Screenshot displaying type hinting provided by Visual Studio Code"></p><p>I&rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.</p><p>VSCode also has the ability to check the type of the value you are passing into the function:</p><p><img src=type_checking.png alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"></p><p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the <code>pyright</code> extension which can be found in the VSCode Extensions section.</p><h2 id=return-types>Return Types</h2><p>So all of that just describes how typing works for parameters, but how can we specify the return type of a function? That is done easily enough too. Let&rsquo;s extend on our increment function from earlier.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>increment_int_by_one</span>(int_to_inc: <span style=color:#24909d>int</span>) -&gt; <span style=color:#24909d>int</span>:
-    incremented_int = int_to_inc + <span style=color:#3677a9>1</span>
-    <span style=color:#6ab825;font-weight:700>return</span> incremented_int</code></pre></div><p>Note the only change here is the <code>-&gt; int</code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:</p><p><img src=type_checking_bad_return.png alt="Screenshot displaying type checking, highlighting the bad return value"></p><p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&hellip;</p><p><img src=type_checking_bad_assign.png alt="Screenshot displaying type checking, highlighting the bad assigned variable"></p><p>And in this snapshot, we are trying to assign a varaible of type <code>str</code> to the output of the function which returns an <code>int</code>!</p><p>Another pattern you might see is if a method does not return anything (in Java-speak, it is <code>void</code>), an example of this is if the method is a constructor for a class.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> __init__(self) -&gt; None:
-    self.attribute = <span style=color:#ed9d13>&#39;DEFAULT_VALUE&#39;</span></code></pre></div><h1 id=class-objects>Class Objects</h1><p>So you might <strong>class</strong> this (pardon the pun!) as a type of its own, but this is something I&rsquo;ve learnt all the same recently, so I hope it benefits you too! Python has the ability to construct more complex objects in the form of classes. While I won&rsquo;t go into the details of that (I&rsquo;ll leave it up to <a href=https://www.w3schools.com/python/python_classes.asp>better resources</a>), I wanted to show how I&rsquo;ve been able to utilise them.</p><h2 id=test-mocks>Test Mocks</h2><p>One of the main reasons for implementing classes has been to resolve one of my requirements I described earlier on in this post, the ability to test my code easily. For my side project I interface with some third-party APIs to retrieve data, in order for me to test these I need to mock them appropriately. See below for a snippet of the code:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># spotify.py</span>
-<span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>SpApi</span>():
-    client: spotipy.Spotify
+&gt;Traceback (most recent call last):
+&gt;  File &#34;&lt;stdin&gt;&#34;, line 1, in &lt;module&gt;
+&gt;TypeError: unsupported operand type(s) for +: &#39;int&#39; and &#39;str&#39;
+&gt;```
 
-    <span style=color:#6ab825;font-weight:700>def</span> __init__(self, <span style=color:#24909d>id</span>: <span style=color:#24909d>str</span>, secret: <span style=color:#24909d>str</span>) -&gt; None:
-        ccm = SpotifyClientCredentials(
-            client_id=<span style=color:#24909d>id</span>,
-            client_secret=secret
-        )
-        self.client = spotipy.Spotify(client_credentials_manager=ccm)
+But changing the right-side of the operator won&#39;t fix this for us. What we need is to implement typing.
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>get_album_by_id</span>(self, <span style=color:#24909d>id</span>: <span style=color:#24909d>str</span>) -&gt; SpAlbum:
-        <span style=color:#6ab825;font-weight:700>return</span> SpAlbum(self.client.album(<span style=color:#24909d>id</span>))
+### Implementation
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>query_album_by_title</span>(self, title: <span style=color:#24909d>str</span>) -&gt; SpQueryRespWrapper:
-        q = SpQueryBuilder(album=title).build()
-        <span style=color:#6ab825;font-weight:700>return</span> self.execute_query(q)
+Python 3.6 onwards introduced static type checking, so make sure you upgrade to it if you haven&#39;t already - which you might want to do very soon as Python 2 is [EOL in 2020](https://pythonclock.org/)! 
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>query_album_by_title_and_artist</span>(self,
-                                        title: <span style=color:#24909d>str</span>,
-                                        artist: <span style=color:#24909d>str</span>) -&gt; SpQueryRespWrapper:
-        q = SpQueryBuilder(album=title, album_artist=artist).build()
-        <span style=color:#6ab825;font-weight:700>return</span> self.execute_query(q)
+Taking our above `increment_int_by_one` function, we can add `: int` to the parameter which will tell the function what type it expects the parameter to be.</pre></div><p>python
+def increment_int_by_one(int_to_inc: int):
+incremented_int = int_to_increment + 1
+return incremented_int</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>Now when we pass in a `str` as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive **type hints**!
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>execute_query</span>(self, q: <span style=color:#24909d>str</span>) -&gt; SpQueryRespWrapper:
-        <span style=color:#6ab825;font-weight:700>return</span> SpQueryRespWrapper(self.client.search(q=q, <span style=color:#24909d>type</span>=<span style=color:#ed9d13>&#39;album&#39;</span>))</code></pre></div><p>You might have guessed it, the API is Spotify&rsquo;s, and I am using the <a href=https://github.com/plamere/spotipy>spotipy</a> library to do the interfacing. The <code>SpApi</code> class is essentially a wrapper around the client to allow me to easily re-use methods across the app. It&rsquo;s usage would be <code>sp_api = SpApi()</code>, which would return us a client available at <code>sp_api.client</code>. It is this attribute of the class which we want the ability to mock for when we test it. See how I implemented the mock:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#999;font-style:italic># test_spotify.py</span>
-<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>unittest</span>
-<span style=color:#6ab825;font-weight:700>from</span> <span style=color:#447fcf;text-decoration:underline>unittest.mock</span> <span style=color:#6ab825;font-weight:700>import</span> MagicMock
-
-<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>munch</span>
-
-<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>spotify</span>
-
-get_album_by_id_response_fname = <span style=color:#ed9d13>&#39;sp_get_album_by_id.json&#39;</span>
-<span style=color:#6ab825;font-weight:700>with</span> <span style=color:#24909d>open</span>(get_album_by_id_response_fname, <span style=color:#ed9d13>&#39;r&#39;</span>, encoding=<span style=color:#ed9d13>&#39;utf-8&#39;</span>) <span style=color:#6ab825;font-weight:700>as</span> f:
-    get_album_by_id_response = json.load(f)
+<figure class=center>
+    <img src=type_hinting.png alt="Screenshot displaying type hinting provided by Visual Studio Code"> 
+</figure>
 
 
-<span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>TestSpApiClass</span>(unittest.TestCase):
+I&#39;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>get_mock_sp_api</span>(self) -&gt; spotify.SpApi:
-        mock_sp_api = spotify.SpApi(<span style=color:#ed9d13>&#39;id&#39;</span>, <span style=color:#ed9d13>&#39;secret&#39;</span>)
-        mocked_album = MagicMock(return_value=get_album_by_id_response)
-        mock_sp_api.client = MagicMock(album=mocked_album)
-        <span style=color:#6ab825;font-weight:700>return</span> mock_sp_api
+VSCode also has the ability to check the type of the value you are passing into the function:
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>test_get_album_by_id</span>(self):
-        <span style=color:#ed9d13>&#34;&#34;&#34;
-</span><span style=color:#ed9d13>        Given a request is made to Spotify API for Album ID
-</span><span style=color:#ed9d13>        Should verify that the API is hit
-</span><span style=color:#ed9d13>        &#34;&#34;&#34;</span>
-        mock_sp_api = self.get_mock_sp_api()
-        expected = spotify.SpAlbum(munch.munchify(get_album_by_id_response))
-        actual = mock_sp_api.get_album_by_id(<span style=color:#ed9d13>&#39;album_id&#39;</span>)
-        mock_sp_api.client.album.assert_called_once_with(<span style=color:#ed9d13>&#39;album_id&#39;</span>)
-        self.assertEqual(actual, expected)</code></pre></div><p>Talking about <code>get_mock_sp_api</code> first, this constructs a new <code>SpApi</code> wrapper class, but then it overwrites the client attribute with MagicMocks from the unittest framework. MagicMock essentially creates a mocked object or function for you. When I create a MagicMock with a <code>return_value</code> parameter, it will return that passed parameter when the MagicMock object is invoked.</p><blockquote><p>Did you notice how it specifies the return type too?! <code>-&gt; spotify.SpApi</code></p></blockquote><p>The test <code>test_get_album_by_id</code> creates an instance of this mocked Spotify API, so when we call the wrapper method <code>get_album_by_id</code> it makes a downstream call to <code>client.album</code>, which is what we mocked already with the chained MagicMock object! So now we can tell it what to return back when hit with certain parameters - and validating back with <code>assert_called_once_with</code>.</p><p>Trying to learn how to implement the above has probably been the biggest blocker for me to test Python code in this way - now that I&rsquo;ve discovered it I can&rsquo;t stop using it everywhere!</p><h2 id=complex-object-comparison>Complex Object Comparison</h2><p>Much like the previous section, this relates to the static typing we implemented earlier. I was writing methods that returned complex objects encapsulated in classes, and I wanted to be able to test for equality using unittest&rsquo;s <code>self.assertEqual(actual, expected)</code>.</p><p>Let&rsquo;s take this simple class:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>SomeObject</span>():
-    some_str: <span style=color:#24909d>str</span>
-    some_int: <span style=color:#24909d>int</span>
+<figure class=center>
+    <img src=type_checking.png alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"> 
+</figure>
 
-    <span style=color:#6ab825;font-weight:700>def</span> __init__(self, some_str: <span style=color:#24909d>str</span>, some_int: <span style=color:#24909d>int</span>) -&gt; None:
-        self.some_str = some_str
-        self.some_int = some_int</code></pre></div><p>What we want to achieve is for us to be able to use the below test like so:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>class</span> <span style=color:#447fcf;text-decoration:underline>TestObject</span>(unittest.TestCase):
 
-    <span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>test_equality</span>(self):
-        <span style=color:#ed9d13>&#34;&#34;&#34;
-</span><span style=color:#ed9d13>        Should successfully test for object equality
-</span><span style=color:#ed9d13>        Given both objects are equal
-</span><span style=color:#ed9d13>        When using self.assertEqual
-</span><span style=color:#ed9d13>        &#34;&#34;&#34;</span>
-        object1 = scratch.SomeObject(some_str=<span style=color:#ed9d13>&#39;str&#39;</span>, some_int=<span style=color:#3677a9>1</span>)
-        object2 = scratch.SomeObject(some_str=<span style=color:#ed9d13>&#39;str&#39;</span>, some_int=<span style=color:#3677a9>1</span>)
-        self.assertEqual(object1, object2)</code></pre></div><p>However executing the test gives us an error:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt; python test_scratch.py
-F
-======================================================================
-FAIL: test_equality (__main__.TestObject)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File <span style=color:#ed9d13>&#34;test_scratch.py&#34;</span>, line <span style=color:#3677a9>16</span>, <span style=color:#6ab825;font-weight:700>in</span> test_equality
-    self.assertEqual(object1, object2)
-<span style=color:#bbb>AssertionError</span>: &lt;scratch.SomeObject <span style=color:#24909d>object</span> at <span style=color:#3677a9>0x000002A0A0199EB8</span>&gt; != &lt;scratch.SomeObject <span style=color:#24909d>object</span> at <span style=color:#3677a9>0x000002A0A0199EF0</span>&gt;
+Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the `pyright` extension which can be found in the VSCode Extensions section.
 
-----------------------------------------------------------------------
-Ran <span style=color:#3677a9>1</span> test <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#3677a9>0.003</span>s
+### Return Types
 
-FAILED (failures=<span style=color:#3677a9>1</span>)</code></pre></div><p>This fails because we have not overwritten the default <code>__eq__</code> method on the class. Python then defaults to comparing the memory references for both objects. Since these are two entirely different objects they will be pointing to different memory references. What we need to do is tell Python what defines equality, so let&rsquo;s add the method onto <code>SomeObject</code>.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> __eq__(self, other):
-    <span style=color:#6ab825;font-weight:700>if</span> <span style=color:#24909d>type</span>(other) != <span style=color:#24909d>type</span>(self):
-        <span style=color:#6ab825;font-weight:700>return</span> NotImplemented
-    <span style=color:#6ab825;font-weight:700>return</span> self.some_str == other.some_str \
-        <span style=color:#6ab825;font-weight:700>and</span> self.some_int == other.some_int</code></pre></div><p>And here we are! First we are quickly checking to see the two objects are of the same type before we proceed with the underlying values (fail first, and early!). From there we are checking the attributes within the objects. Hurrah!</p><p>One neat little trick I like to do for complex objects that have multiple attributes, is that instead of writing out a new <code>and</code> comparator for every attribute, is to replace it all with this:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>def</span> __eq__(self, other):
-    <span style=color:#6ab825;font-weight:700>if</span> <span style=color:#24909d>type</span>(other) != <span style=color:#24909d>type</span>(self):
-        <span style=color:#6ab825;font-weight:700>return</span> NotImplemented
-    <span style=color:#6ab825;font-weight:700>return</span> self.__dict__ == other.__dict__</code></pre></div><p>The <code>__dict__</code> attribute returns the objects in a Python dictionary format, which will contain all the attributes and their values. If the objects are entirely identical then they will return true! Now let&rsquo;s run the test again.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>&gt; python test_scratch.py                                              
-.                                                                     
-----------------------------------------------------------------------
-Ran <span style=color:#3677a9>1</span> test <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#3677a9>0.001</span>s                                                  
-                                                                      
-OK                                                                    </code></pre></div><p>Normal service is resumed!!</p><h1 id=closing>Closing</h1><p>I hope the hints detailed in this helped you as much as it did for me! I&rsquo;m sure there are many more tips out there - as I discover them be sure that I&rsquo;ll share them once I find them, along with documenting more on the side project I&rsquo;ve been working on!</p><p>Thanks for reading 😃</p></div><footer></footer></article></section></div><footer class=footer><section class=container>© 2020
+So all of that just describes how typing works for parameters, but how can we specify the return type of a function? That is done easily enough too. Let&#39;s extend on our increment function from earlier.</pre></div><p>python
+def increment_int_by_one(int_to_inc: int) -&gt; int:
+incremented_int = int_to_inc + 1
+return incremented_int</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>Note the only change here is the `-&gt; int` which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:
+
+<figure class=center>
+    <img src=type_checking_bad_return.png alt="Screenshot displaying type checking, highlighting the bad return value"> 
+</figure>
+
+
+The IDE has shown us that the function is expected to return a type different to what it is actually returning...
+
+<figure class=center>
+    <img src=type_checking_bad_assign.png alt="Screenshot displaying type checking, highlighting the bad assigned variable"> 
+</figure>
+
+
+And in this snapshot, we are trying to assign a variable of type `str` to the output of the function which returns an `int`!
+
+Another pattern you might see is if a method does not return anything (in Java-speak, it is `void`), an example of this is if the method is a constructor for a class.</pre></div><p>python
+def <strong>init</strong>(self) -&gt; None:
+self.attribute = &lsquo;DEFAULT_VALUE&rsquo;</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>## Class Objects
+
+So you might __class__ this (pardon the pun!) as a type of its own, but this is something I&#39;ve learnt all the same recently, so I hope it benefits you too! Python has the ability to construct more complex objects in the form of classes. While I won&#39;t go into the details of that (I&#39;ll leave it up to [better resources](https://www.w3schools.com/python/python_classes.asp)), I wanted to show how I&#39;ve been able to utilise them.
+
+### Test Mocks
+
+One of the main reasons for implementing classes has been to resolve one of my requirements I described earlier on in this post, the ability to test my code easily. For my side project I interface with some third-party APIs to retrieve data, in order for me to test these I need to mock them appropriately. See below for a snippet of the code:</pre></div><p>python</p><h1 id=spotify-py>spotify.py</h1><p>class SpApi():
+client: spotipy.Spotify</p></blockquote><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>def __init__(self, id: str, secret: str) -&gt; None:
+    ccm = SpotifyClientCredentials(
+        client_id=id,
+        client_secret=secret
+    )
+    self.client = spotipy.Spotify(client_credentials_manager=ccm)
+
+def get_album_by_id(self, id: str) -&gt; SpAlbum:
+    return SpAlbum(self.client.album(id))
+
+def query_album_by_title(self, title: str) -&gt; SpQueryRespWrapper:
+    q = SpQueryBuilder(album=title).build()
+    return self.execute_query(q)
+
+def query_album_by_title_and_artist(self,
+                                    title: str,
+                                    artist: str) -&gt; SpQueryRespWrapper:
+    q = SpQueryBuilder(album=title, album_artist=artist).build()
+    return self.execute_query(q)
+
+def execute_query(self, q: str) -&gt; SpQueryRespWrapper:
+    return SpQueryRespWrapper(self.client.search(q=q, type=&#39;album&#39;))</pre></div><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>You might have guessed it, the API is Spotify&#39;s, and I am using the [spotipy](https://github.com/plamere/spotipy) library to do the interfacing. The `SpApi` class is essentially a wrapper around the client to allow me to easily re-use methods across the app. It&#39;s usage would be `sp_api = SpApi()`, which would return us a client available at `sp_api.client`. It is this attribute of the class which we want the ability to mock for when we test it. See how I implemented the mock:</pre></div><p>python</p><h1 id=test-spotify-py>test_spotify.py</h1><p>import unittest
+from unittest.mock import MagicMock</p><p>import munch</p><p>import spotify</p><p>get_album_by_id_response_fname = &lsquo;sp_get_album_by_id.json&rsquo;
+with open(get_album_by_id_response_fname, &lsquo;r&rsquo;, encoding=&lsquo;utf-8&rsquo;) as f:
+get_album_by_id_response = json.load(f)</p><p>class TestSpApiClass(unittest.TestCase):</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>def get_mock_sp_api(self) -&gt; spotify.SpApi:
+    mock_sp_api = spotify.SpApi(&#39;id&#39;, &#39;secret&#39;)
+    mocked_album = MagicMock(return_value=get_album_by_id_response)
+    mock_sp_api.client = MagicMock(album=mocked_album)
+    return mock_sp_api
+
+def test_get_album_by_id(self):
+    &#34;&#34;&#34;
+    Given a request is made to Spotify API for Album ID
+    Should verify that the API is hit
+    &#34;&#34;&#34;
+    mock_sp_api = self.get_mock_sp_api()
+    expected = spotify.SpAlbum(munch.munchify(get_album_by_id_response))
+    actual = mock_sp_api.get_album_by_id(&#39;album_id&#39;)
+    mock_sp_api.client.album.assert_called_once_with(&#39;album_id&#39;)
+    self.assertEqual(actual, expected)</pre></div><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>Talking about `get_mock_sp_api` first, this constructs a new `SpApi` wrapper class, but then it overwrites the client attribute with MagicMocks from the unittest framework. MagicMock essentially creates a mocked object or function for you. When I create a MagicMock with a `return_value` parameter, it will return that passed parameter when the MagicMock object is invoked.
+
+&gt; Did you notice how it specifies the return type too?! `-&gt; spotify.SpApi`
+
+The test `test_get_album_by_id` creates an instance of this mocked Spotify API, so when we call the wrapper method `get_album_by_id` it makes a downstream call to `client.album`, which is what we mocked already with the chained MagicMock object! So now we can tell it what to return back when hit with certain parameters - and validating back with `assert_called_once_with`.
+
+Trying to learn how to implement the above has probably been the biggest blocker for me to test Python code in this way - now that I&#39;ve discovered it I can&#39;t stop using it everywhere!
+
+### Complex Object Comparison
+
+Much like the previous section, this relates to the static typing we implemented earlier. I was writing methods that returned complex objects encapsulated in classes, and I wanted to be able to test for equality using unittest&#39;s `self.assertEqual(actual, expected)`. 
+
+Let&#39;s take this simple class:</pre></div><p>python
+class SomeObject():
+some_str: str
+some_int: int</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>def __init__(self, some_str: str, some_int: int) -&gt; None:
+    self.some_str = some_str
+    self.some_int = some_int</pre></div><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>What we want to achieve is for us to be able to use the below test like so:</pre></div><p>python
+class TestObject(unittest.TestCase):</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>def test_equality(self):
+    &#34;&#34;&#34;
+    Should successfully test for object equality
+    Given both objects are equal
+    When using self.assertEqual
+    &#34;&#34;&#34;
+    object1 = scratch.SomeObject(some_str=&#39;str&#39;, some_int=1)
+    object2 = scratch.SomeObject(some_str=&#39;str&#39;, some_int=1)
+    self.assertEqual(object1, object2)</pre></div><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>However executing the test gives us an error:</pre></div><p>python
+&gt; python test_scratch.py</p><h1 id=f>F</h1><h2 id=fail-test-equality-main-testobject>FAIL: test_equality (<strong>main</strong>.TestObject)</h2><p>Traceback (most recent call last):
+File &ldquo;test_scratch.py&rdquo;, line 16, in test_equality
+self.assertEqual(object1, object2)
+AssertionError: <scratch.someobject object at 0x000002a0a0199eb8>!= <scratch.someobject object at 0x000002a0a0199ef0></p><hr><p>Ran 1 test in 0.003s</p><p>FAILED (failures=1)</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>This fails because we have not overwritten the default `__eq__` method on the class. Python then defaults to comparing the memory references for both objects. Since these are two entirely different objects they will be pointing to different memory references. What we need to do is tell Python what defines equality, so let&#39;s add the method onto `SomeObject`.</pre></div><p>python
+def <strong>eq</strong>(self, other):
+if type(other) != type(self):
+return NotImplemented
+return self.some_str == other.some_str<br>and self.some_int == other.some_int</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>And here we are! First we are quickly checking to see the two objects are of the same type before we proceed with the underlying values (fail first, and early!). From there we are checking the attributes within the objects. Hurrah!
+
+One neat little trick I like to do for complex objects that have multiple attributes, is that instead of writing out a new `and` comparator for every attribute, is to replace it all with this:</pre></div><p>python
+def <strong>eq</strong>(self, other):
+if type(other) != type(self):
+return NotImplemented
+return self.<strong>dict</strong> == other.<strong>dict</strong></p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4>The `__dict__` attribute returns the objects in a Python dictionary format, which will contain all the attributes and their values. If the objects are entirely identical then they will return true! Now let&#39;s run the test again.</pre></div><p>python
+&gt; python test_scratch.py</p><h2 id=toc_13>.</h2><p>Ran 1 test in 0.001s</p><p>OK<br>```</p><p>Normal service is resumed!!</p><h2 id=closing>Closing</h2><p>I hope the hints detailed in this helped you as much as it did for me! I&rsquo;m sure there are many more tips out there - as I discover them be sure that I&rsquo;ll share them once I find them, along with documenting more on the side project I&rsquo;ve been working on!</p><p>Thanks for reading 😃</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2020
+Joseph D. Heyburn
 ·
 Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main><script type=application/javascript>var dnt=(navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack);var doNotTrack=(dnt=="1"||dnt=="yes");if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-139246187-1','auto');ga('set','anonymizeIp',true);ga('send','pageview');}</script></body></html>
