@@ -1,1 +1,144 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/golang/</link><description>Recent content in golang on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>Extending Gotests for Strict Error Tests</title><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>Strict Error Tests in Java I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter expected for the annotation @Test, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/golang/</link><description>Recent content in golang on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 29 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>Extending Gotests for Strict Error Tests</title><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>&lt;h2 id="strict-error-tests-in-java">Strict Error Tests in Java&lt;/h2>
+&lt;p>I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter &lt;code>expected&lt;/code> for the annotation &lt;code>@Test&lt;/code>, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.&lt;/p>
+&lt;p>This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#6ab825;font-weight:bold">public&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">static&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">boolean&lt;/span> &lt;span style="color:#447fcf">validateDogName&lt;/span>(String dogName) &lt;span style="color:#6ab825;font-weight:bold">throws&lt;/span> DogValidationException {
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> (containsSymbols(dogName)) {
+&lt;span style="color:#6ab825;font-weight:bold">throw&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">new&lt;/span> DogValidationException(&lt;span style="color:#ed9d13">&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span>);
+}
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> (dogName.&lt;span style="color:#bbb">length&lt;/span> &amp;gt; 100) {
+&lt;span style="color:#6ab825;font-weight:bold">throw&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">new&lt;/span> DogValidationException(&lt;span style="color:#ed9d13">&amp;#34;Who has a name for a dog that long?!&amp;#34;&lt;/span>);
+}
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>;
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>For this method, just using &lt;code>@Test(expected = DogValidationException.class)&lt;/code> on our test method is not sufficient; how can we determine that the exception was raised for a dogName.length breach and not for containing symbols?&lt;/p>
+&lt;p>In order for me to resolve this, I came across the &lt;code>ExpectedException&lt;/code> class for JUnit on &lt;a href="https://www.baeldung.com/junit-assert-exception">Baeldung&lt;/a> which enables us to specify the error message expected. Here it is applied to the test case for this method:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#ffa500">@Rule&lt;/span>
+&lt;span style="color:#6ab825;font-weight:bold">public&lt;/span> ExpectedException exceptionRule = ExpectedException.&lt;span style="color:#bbb">none&lt;/span>();
+&lt;span style="color:#ffa500">@Test&lt;/span>
+&lt;span style="color:#6ab825;font-weight:bold">public&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">void&lt;/span> &lt;span style="color:#447fcf">shouldHandleDogNameWithSymbols&lt;/span>() {
+exceptionRule.&lt;span style="color:#bbb">expect&lt;/span>(DogValidationException.&lt;span style="color:#bbb">class&lt;/span>);
+exceptionRule.&lt;span style="color:#bbb">expectMessage&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span>);
+validateDogName(&lt;span style="color:#ed9d13">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="applying-to-golang">Applying to Golang&lt;/h2>
+&lt;p>Back to Golang, there is a built-in library aptly named &lt;code>testing&lt;/code> which enables us to assert on test conditions. When combined with &lt;a href="https://github.com/cweill/gotests">Gotests&lt;/a> - a tool for generating Go tests from your code - writing tests could not be easier! I love how this is bundled in with the Go extension for VSCode, my text editor of choice (for now&amp;hellip;).&lt;/p>
+&lt;p>Converting the above Java &lt;code>validateDogName&lt;/code> method to Golang will produce something like:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#6ab825;font-weight:bold">func&lt;/span> &lt;span style="color:#447fcf">validateDogName&lt;/span>(name &lt;span style="color:#6ab825;font-weight:bold">string&lt;/span>) (&lt;span style="color:#6ab825;font-weight:bold">bool&lt;/span>, &lt;span style="color:#6ab825;font-weight:bold">error&lt;/span>) {
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> &lt;span style="color:#447fcf">containsSymbols&lt;/span>(name) {
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">false&lt;/span>, errors.&lt;span style="color:#447fcf">New&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>)
+}
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> &lt;span style="color:#24909d">len&lt;/span>(name) &amp;gt; &lt;span style="color:#3677a9">100&lt;/span> {
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">false&lt;/span>, errors.&lt;span style="color:#447fcf">New&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;who has a name for a dog that long&amp;#34;&lt;/span>)
+}
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span> &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>, &lt;span style="color:#6ab825;font-weight:bold">nil&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you have a Go method that returns the &lt;code>error&lt;/code> interface, then gotests will generate a test that look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#6ab825;font-weight:bold">func&lt;/span> &lt;span style="color:#447fcf">Test_validateDogName&lt;/span>(t *testing.T) {
+&lt;span style="color:#6ab825;font-weight:bold">type&lt;/span> args &lt;span style="color:#6ab825;font-weight:bold">struct&lt;/span> {
+name &lt;span style="color:#6ab825;font-weight:bold">string&lt;/span>
+}
+tests := []&lt;span style="color:#6ab825;font-weight:bold">struct&lt;/span> {
+name &lt;span style="color:#6ab825;font-weight:bold">string&lt;/span>
+args args
+want &lt;span style="color:#6ab825;font-weight:bold">bool&lt;/span>
+wantErr &lt;span style="color:#6ab825;font-weight:bold">bool&lt;/span>
+}{
+name: &lt;span style="color:#ed9d13">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
+args: args{
+name: &lt;span style="color:#ed9d13">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
+},
+want: &lt;span style="color:#6ab825;font-weight:bold">false&lt;/span>,
+wantErr: &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>,
+}
+&lt;span style="color:#6ab825;font-weight:bold">for&lt;/span> _, tt := &lt;span style="color:#6ab825;font-weight:bold">range&lt;/span> tests {
+t.&lt;span style="color:#447fcf">Run&lt;/span>(tt.name, &lt;span style="color:#6ab825;font-weight:bold">func&lt;/span>(t *testing.T) {
+got, err := &lt;span style="color:#447fcf">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> (err != &lt;span style="color:#6ab825;font-weight:bold">nil&lt;/span>) != tt.wantErr {
+t.&lt;span style="color:#447fcf">Errorf&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span>
+}
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> got != tt.want {
+t.&lt;span style="color:#447fcf">Errorf&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
+}
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>From the above we are limited to what error we can assert for, here &lt;em>any&lt;/em> error returned will pass the test. This is equivalent to using &lt;code>@Test(expected=Exception.class)&lt;/code> in JUnit! But there is another way&amp;hellip;&lt;/p>
+&lt;h3 id="modifying-the-generated-test">Modifying the Generated Test&lt;/h3>
+&lt;p>We only need to make a few simple changes to the generated test to give us the ability to assert on test error message&amp;hellip;&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#6ab825;font-weight:bold">func&lt;/span> &lt;span style="color:#447fcf">Test_validateDogName&lt;/span>(t *testing.T) {
+&lt;span style="color:#6ab825;font-weight:bold">type&lt;/span> args &lt;span style="color:#6ab825;font-weight:bold">struct&lt;/span> {
+name &lt;span style="color:#6ab825;font-weight:bold">string&lt;/span>
+}
+tests := []&lt;span style="color:#6ab825;font-weight:bold">struct&lt;/span> {
+name &lt;span style="color:#6ab825;font-weight:bold">string&lt;/span>
+args args
+want &lt;span style="color:#6ab825;font-weight:bold">bool&lt;/span>
+&lt;span style="display:block;width:100%;background-color:#363636"> wantErr &lt;span style="color:#6ab825;font-weight:bold">error&lt;/span>
+&lt;/span> }{
+name: &lt;span style="color:#ed9d13">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
+args: args{
+name: &lt;span style="color:#ed9d13">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
+},
+want: &lt;span style="color:#6ab825;font-weight:bold">false&lt;/span>,
+&lt;span style="display:block;width:100%;background-color:#363636"> wantErr: errors.&lt;span style="color:#447fcf">New&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
+&lt;/span> }
+&lt;span style="color:#6ab825;font-weight:bold">for&lt;/span> _, tt := &lt;span style="color:#6ab825;font-weight:bold">range&lt;/span> tests {
+t.&lt;span style="color:#447fcf">Run&lt;/span>(tt.name, &lt;span style="color:#6ab825;font-weight:bold">func&lt;/span>(t *testing.T) {
+got, err := &lt;span style="color:#447fcf">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="display:block;width:100%;background-color:#363636"> &lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> tt.wantErr != &lt;span style="color:#6ab825;font-weight:bold">nil&lt;/span> &amp;amp;&amp;amp; !reflect.&lt;span style="color:#447fcf">DeepEqual&lt;/span>(err, tt.wantErr) {
+&lt;/span> t.&lt;span style="color:#447fcf">Errorf&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
+&lt;span style="color:#6ab825;font-weight:bold">return&lt;/span>
+}
+&lt;span style="color:#6ab825;font-weight:bold">if&lt;/span> got != tt.want {
+t.&lt;span style="color:#447fcf">Errorf&lt;/span>(&lt;span style="color:#ed9d13">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
+}
+})
+}
+}&lt;/code>&lt;/pre>&lt;/div>
+&lt;p>From the above there are three highlighted changes, let&amp;rsquo;s go over them individually:&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>wantErr error&lt;/code>
+&lt;ul>
+&lt;li>we are changing this from &lt;code>bool&lt;/code> so that we can make a comparison against the error returned from the function&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>wantErr: errors.New(&amp;quot;dog cannot have symbols in their name&amp;quot;),&lt;/code>
+&lt;ul>
+&lt;li>this is the error struct that we are expecting&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>if tt.wantErr != nil &amp;amp;&amp;amp; !reflect.DeepEqual(err, tt.wantErr) {&lt;/code>
+&lt;ul>
+&lt;li>check to make sure the test is expected an error, if so then compare it against the returned error&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Point 3 provides additional support if there was a test case that did not expect an error. Note how &lt;code>wantErr&lt;/code> is omitted entirely from the test case below.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">{
+name: &lt;span style="color:#ed9d13">&amp;#34;Should return true for valid dog name&amp;#34;&lt;/span>,
+args: args{
+name: &lt;span style="color:#ed9d13">&amp;#34;Benedict Cumberland the Sausage Dog&amp;#34;&lt;/span>,
+},
+want: &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>,
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="customising-gotests-generated-test">Customising Gotests Generated Test&lt;/h3>
+&lt;p>Gotests gives us the ability to provide our own templates for generating tests, and can easily be integrated into your text editor of choice. I&amp;rsquo;ll show you how this can be done in VSCode.&lt;/p>
+&lt;ol>
+&lt;li>Check out gotests and copy the templates directory to a place of your choosing
+&lt;ul>
+&lt;li>&lt;code>git clone https://github.com/cweill/gotests.git&lt;/code>&lt;/li>
+&lt;li>&lt;code>cp -R gotests/internal/render/templates ~/scratch/gotests&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Overwrite the contents of function.tmpl with &lt;a href="https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5">the contents of this Gist&lt;/a>&lt;/li>
+&lt;li>Add the following setting to VSCode&amp;rsquo;s settings.json
+&lt;ul>
+&lt;li>&lt;code>&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/scratch/templates&amp;quot;]&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Once you have done that, future tests will now generate with stricter error testing! 🎉&lt;/p>
+&lt;h2 id="closing">Closing&lt;/h2>
+&lt;p>I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.&lt;/p>
+&lt;p>I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p></description></item></channel></rss>
