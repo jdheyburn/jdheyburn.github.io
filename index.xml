@@ -1730,4 +1730,69 @@ want: &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>,
 &lt;p>This site will be an area for me to braindump everything and anything that comes across my mind - although I&amp;rsquo;ll try my best to keep it tech-focused!&lt;/p>
 &lt;p>The blog platform itself is pretty basic. It is built using &lt;a href="https://gohugo.io/">Hugo&lt;/a>, hosted using &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a>, while served over a custom domain via CloudFlare. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!&lt;/p>
 &lt;p>It also gives me an opportunity to migrate the platform from GitHub Pages onto another hosted platform. Maybe that is AWS, which is a perfect learning opportunity, or even customise the theme of this blog (which is very cool already - thanks &lt;a href="https://themes.gohugo.io/hugo-coder/">hugo-coder!&lt;/a>) that I have left as its default. All of which provides me with more content to blog about!&lt;/p>
-&lt;p>See you around!&lt;/p></description></item><item><title>Contact</title><link>https://jdheyburn.co.uk/contact/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/contact/</guid><description>&lt;p>If you wish to get in touch - reach me via &lt;a href="https://twitter.com/jdheyburn/">@jdheyburn&lt;/a>.&lt;/p></description></item></channel></rss>
+&lt;p>See you around!&lt;/p></description></item><item><title>:file_folder: Projects</title><link>https://jdheyburn.co.uk/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/projects/</guid><description>&lt;h2 id="portfolio-website">Portfolio Website&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk">jdheyburn.co.uk&lt;/a> is how you are reading this content&lt;/li>
+&lt;li>It is based the JAMstack framework &lt;a href="https://gohugo.io/">Hugo&lt;/a>&lt;/li>
+&lt;li>Hosted on &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a> and built &amp;amp; deployed via &lt;a href="https://github.com/features/actions">GitHub Actions&lt;/a>&lt;/li>
+&lt;li>Globally distributed via &lt;a href="https://www.cloudflare.com/cdn/">Cloudflare CDN&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="oss-contributions">OSS Contributions&lt;/h2>
+&lt;h3 id="terraform-aws-providerhttpsgithubcomterraform-providersterraform-provider-aws">&lt;a href="https://github.com/terraform-providers/terraform-provider-aws/">terraform-aws-provider&lt;/a>&lt;/h3>
+&lt;p>&lt;a href="https://github.com/terraform-providers/terraform-provider-aws/pull/9486">&lt;strong>Add data source for aws_ssm_patch_baseline&lt;/strong>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Adding a data source component to &lt;code>aws_ssm_patch_baseline&lt;/code> enables retrieval of AWS SSM Patch Baselines that already exist in your AWS account&lt;/li>
+&lt;li>You can assign baselines that have been created by AWS, or managed outside of your Terraform configuration.&lt;/li>
+&lt;li>A blog post detailing its capability will be linked here when available&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Status&lt;/strong>: Merged ✅&lt;/p>
+&lt;p>&lt;a href="https://github.com/terraform-providers/terraform-provider-aws/pull/11879">&lt;strong>Add patch_source block to resource_aws_ssm_patch_baseline&lt;/strong>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>The &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-how-it-works-alt-source-repository.html">patch source&lt;/a> API enables AWS SSM Patch Baselines to specify alternate patch repositories at runtime of the SSM Document AWS-RunPatchBaseline.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Status&lt;/strong>: Awaiting Review ⏳&lt;/p></description></item><item><title>:mailbox: Contact</title><link>https://jdheyburn.co.uk/contact/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/contact/</guid><description>&lt;p>You can get in contact with me via any of the below:&lt;/p>
+&lt;p>🐤 &lt;a href="https://twitter.com/jdheyburn/">Twitter&lt;/a>&lt;/p>
+&lt;p>✉️ jdheyburn [at] gmail [dot] com&lt;/p></description></item><item><title>:wave: Hey Joe!</title><link>https://jdheyburn.co.uk/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/about/</guid><description>&lt;p>Hi there! 👋&lt;/p>
+&lt;p>I&amp;rsquo;m a technology enthusiast based in London, UK 💂‍♂️ 🇬🇧 with experience across software development, DevOps, and Cloud Engineering.&lt;/p>
+&lt;p>I mainly &lt;a href="https://jdheyburn.co.uk/blog/">blog about&lt;/a> stuff I&amp;rsquo;ve been working on - documenting my methodology throughout the way, along with writing up about any cool stuff &lt;a href="https://jdheyburn.co.uk/projects/">I&amp;rsquo;ve built or contributed to&lt;/a>.&lt;/p>
+&lt;p>If you&amp;rsquo;re interested in contacting me then please feel free to &lt;a href="https://jdheyburn.co.uk/contact/">reach out&lt;/a>.&lt;/p>
+&lt;h2 id="-passions">💓 Passions&lt;/h2>
+&lt;ul>
+&lt;li>Automation&lt;/li>
+&lt;li>Code Quality&lt;/li>
+&lt;li>Documentation&lt;/li>
+&lt;li>Open Source&lt;/li>
+&lt;li>Security&lt;/li>
+&lt;/ul>
+&lt;h2 id="-tools--technologies">🛠️ Tools &amp;amp; Technologies&lt;/h2>
+&lt;ul>
+&lt;li>Ansible&lt;/li>
+&lt;li>ElasticSearch&lt;/li>
+&lt;li>HAProxy&lt;/li>
+&lt;li>MongoDB&lt;/li>
+&lt;li>Redis&lt;/li>
+&lt;li>SQL&lt;/li>
+&lt;li>Terraform&lt;/li>
+&lt;li>&amp;hellip; and a plethora of AWS services!&lt;/li>
+&lt;/ul>
+&lt;h2 id="--certificates">🏆 📜 Certificates&lt;/h2>
+&lt;ul>
+&lt;li>AWS Solutions Architect Associate
+&lt;ul>
+&lt;li>2019 - Present&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Cisco Certified Network Associate (CCNA)
+&lt;ul>
+&lt;li>2013 - 2019&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="--languages">🗣 🌐 Languages&lt;/h2>
+&lt;ul>
+&lt;li>Bash scripting&lt;/li>
+&lt;li>Golang&lt;/li>
+&lt;li>Java&lt;/li>
+&lt;li>Python&lt;/li>
+&lt;li>React&lt;/li>
+&lt;/ul></description></item></channel></rss>
