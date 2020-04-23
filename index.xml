@@ -1731,8 +1731,12 @@ want: &lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>,
 &lt;p>The blog platform itself is pretty basic. It is built using &lt;a href="https://gohugo.io/">Hugo&lt;/a>, hosted using &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a>, while served over a custom domain via CloudFlare. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!&lt;/p>
 &lt;p>It also gives me an opportunity to migrate the platform from GitHub Pages onto another hosted platform. Maybe that is AWS, which is a perfect learning opportunity, or even customise the theme of this blog (which is very cool already - thanks &lt;a href="https://themes.gohugo.io/hugo-coder/">hugo-coder!&lt;/a>) that I have left as its default. All of which provides me with more content to blog about!&lt;/p>
 &lt;p>See you around!&lt;/p></description></item><item><title>:file_folder: Projects</title><link>https://jdheyburn.co.uk/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/projects/</guid><description>&lt;h2 id="portfolio-website">Portfolio Website&lt;/h2>
+&lt;figure class="center">
+&lt;img src="jdheyburn-homepage.png"
+alt="jdheyburn.co.uk homepage"/>
+&lt;/figure>
 &lt;ul>
-&lt;li>&lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk">jdheyburn.co.uk&lt;/a> is how you are reading this content&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk">jdheyburn.co.uk&lt;/a> is my portfolio website - how you are reading this content!&lt;/li>
 &lt;li>It is based the JAMstack framework &lt;a href="https://gohugo.io/">Hugo&lt;/a>&lt;/li>
 &lt;li>Hosted on &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a> and built &amp;amp; deployed via &lt;a href="https://github.com/features/actions">GitHub Actions&lt;/a>&lt;/li>
 &lt;li>Globally distributed via &lt;a href="https://www.cloudflare.com/cdn/">Cloudflare CDN&lt;/a>&lt;/li>
