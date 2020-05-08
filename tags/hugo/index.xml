@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hugo on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/hugo/</link><description>Recent content in hugo on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 5: Updates Galore!</title><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hugo on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/hugo/</link><description>Recent content in hugo on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
 &lt;ol>
 &lt;li>Upgrading our Hugo theme&lt;/li>
 &lt;li>Upgrading the Hugo version&lt;/li>
@@ -13,21 +13,21 @@
 &lt;p>Upgrading Hugo is as easy as downloading and replacing the executable you’ve placed in your &lt;code>PATH&lt;/code>, or running &lt;code>brew upgrade hugo&lt;/code> if using Homebrew on macOS.&lt;/p>
 &lt;/blockquote>
 &lt;p>A quick execute of &lt;code>hugo version&lt;/code> tells us what we&amp;rsquo;re currently running. We can then have a look at the &lt;a href="https://github.com/gohugoio/hugo/releases/">Hugo release page&lt;/a> to find the latest one - which at the time of writing is &lt;a href="https://github.com/gohugoio/hugo/releases/tag/v0.68.3">0.68.3&lt;/a>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo version
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo version
 Hugo Static Site Generator v0.58.3-4AAC02D4/extended linux/amd64 BuildDate: 2019-09-19T15:34:54Z
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>I run Linux so I would need to replace the executable on my &lt;code>PATH&lt;/code>. This can be done with a handy script to pull the archive and install it for us.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#40ffff">HUGO_VERSION&lt;/span>=&lt;span style="color:#ed9d13">&amp;#34;0.68.3&amp;#34;&lt;/span>
-wget &lt;span style="color:#ed9d13">&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span>&lt;span style="color:#ed9d13">${&lt;/span>&lt;span style="color:#40ffff">HUGO_VERSION&lt;/span>&lt;span style="color:#ed9d13">}&lt;/span>&lt;span style="color:#ed9d13">/hugo_extended_&lt;/span>&lt;span style="color:#ed9d13">${&lt;/span>&lt;span style="color:#40ffff">HUGO_VERSION&lt;/span>&lt;span style="color:#ed9d13">}&lt;/span>&lt;span style="color:#ed9d13">_Linux-64bit.tar.gz&amp;#34;&lt;/span>
-tar -zxvf &lt;span style="color:#ed9d13">&amp;#34;hugo_extended_&lt;/span>&lt;span style="color:#ed9d13">${&lt;/span>&lt;span style="color:#40ffff">HUGO_VERSION&lt;/span>&lt;span style="color:#ed9d13">}&lt;/span>&lt;span style="color:#ed9d13">_Linux-64bit.tar.gz&amp;#34;&lt;/span> hugo
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#8be9fd;font-style:italic">HUGO_VERSION&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;0.68.3&amp;#34;&lt;/span>
+wget &lt;span style="color:#f1fa8c">&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">HUGO_VERSION&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">/hugo_extended_&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">HUGO_VERSION&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">_Linux-64bit.tar.gz&amp;#34;&lt;/span>
+tar -zxvf &lt;span style="color:#f1fa8c">&amp;#34;hugo_extended_&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">HUGO_VERSION&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">_Linux-64bit.tar.gz&amp;#34;&lt;/span> hugo
 sudo mv -v hugo /usr/local/bin
 hugo version
-rm &lt;span style="color:#ed9d13">&amp;#34;hugo_extended_&lt;/span>&lt;span style="color:#ed9d13">${&lt;/span>&lt;span style="color:#40ffff">HUGO_VERSION&lt;/span>&lt;span style="color:#ed9d13">}&lt;/span>&lt;span style="color:#ed9d13">_Linux-64bit.tar.gz&amp;#34;&lt;/span>
+rm &lt;span style="color:#f1fa8c">&amp;#34;hugo_extended_&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">HUGO_VERSION&lt;/span>&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">_Linux-64bit.tar.gz&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Remember that the hugo-coder theme requires the extended version of Hugo in order for it to render files correctly.&lt;/p>
 &lt;blockquote>
 &lt;p>You can see where &lt;code>hugo&lt;/code> is currently installed on your system with the command &lt;code>which hugo&lt;/code>, given it is in your &lt;code>PATH&lt;/code>.&lt;/p>
 &lt;/blockquote>
 &lt;p>Executing &lt;code>hugo version&lt;/code> one more time confirms if the upgrade took place.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo version
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo version
 Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing-for-any-issues">Testing For Any Issues&lt;/h3>
 &lt;p>At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code>hugo serve&lt;/code> command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p>
@@ -41,12 +41,12 @@ Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020
 &lt;p>As mentioned before, I&amp;rsquo;m using hugo-coder as the theme for my Hugo website which is being pulled as a submodule in my git repository. I can interface with it via the command &lt;code>git submodules&lt;/code>.&lt;/p>
 &lt;p>One of the cool things about &lt;code>git submodules&lt;/code> is I don&amp;rsquo;t need to have a copy of the source code for the theme in my project. I can just reference the codebase at a particular point in time - or a commit, and git will pull in the resources for which then my Hugo website can utilise it.&lt;/p>
 &lt;p>We already defined this back in the &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/">first post of this series&lt;/a>, in our root directory we created a file called &lt;code>.gitmodules&lt;/code> with the following contents:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">[submodule &lt;span style="color:#ed9d13">&amp;#34;themes/hugo-coder&amp;#34;&lt;/span>]
-&lt;span style="color:#40ffff">path&lt;/span> = themes/hugo-coder
-&lt;span style="color:#40ffff">url&lt;/span> = https://github.com/luizdepra/hugo-coder.git
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#ff79c6">[&lt;/span>submodule &lt;span style="color:#f1fa8c">&amp;#34;themes/hugo-coder&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">]&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">path&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> themes/hugo-coder
+&lt;span style="color:#8be9fd;font-style:italic">url&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> https://github.com/luizdepra/hugo-coder.git
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Line by line, we are giving the submodule a name, telling git where to check out the module to, and lastly where git can find the repository for the module when we checkout our project.&lt;/p>
 &lt;p>When we pull in the submodule for the first time, it creates a tree in our projects &lt;code>.git/modules&lt;/code> filled with metadata about the submodule.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree .git/modules/themes/hugo-coder -L &lt;span style="color:#3677a9">1&lt;/span>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree .git/modules/themes/hugo-coder -L &lt;span style="color:#bd93f9">1&lt;/span>
 .git/modules/themes/hugo-coder
 ├── branches
 ├── config
@@ -63,18 +63,18 @@ Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020
 &lt;p>The &lt;code>.git/&lt;/code> directory contains all the metadata about your repository so that &lt;code>git&lt;/code> knows where to pull/push to/from the repository, &lt;a href="https://githowto.com/git_internals_git_directory">amongst other things&lt;/a>. It has a near identical directory structure to the one shown above.&lt;/p>
 &lt;/blockquote>
 &lt;p>One of the files in this directory is called &lt;code>HEAD&lt;/code>, and it contains the commit of which &lt;code>git&lt;/code> should checkout the submodule&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
 e66c1740611b15eee0069811d10b5a22b0dc4332
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We can even view this commit in the repository at &lt;a href="https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332">https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&lt;/a>.&lt;/p>
 &lt;h3 id="upgrading-submodules">Upgrading Submodules&lt;/h3>
 &lt;p>To upgrade submodules in your project, you simply need to execute the command below:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git submodule update --recursive --remote
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git submodule update --recursive --remote
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We can then check the value in &lt;code>.git/modules/themes/hugo-coder/HEAD&lt;/code> and see what this is updated to.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
 &lt;figure>
-&lt;img src="hugo-coder-commit.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
 alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
@@ -90,16 +90,16 @@ alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;figcaption>
 &lt;h3 id="lists-not-rendering-as-before">Lists not rendering as before&lt;/h3>
 &lt;p>It turns out that my markdown for articles wasn&amp;rsquo;t as watertight as I thought; Hugo is now a whole lot more strict in ensuring your syntax is correct. Check these two before and after for comparison.&lt;/p>
 &lt;figure>
-&lt;img src="old-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/old-render-list.png" class="screenshotimg"
 alt="Screenshot showing old, proper list render"/>
 &lt;/figure>
 &lt;figure>
-&lt;img src="new-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/new-render-list.png" class="screenshotimg"
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
 &lt;figure>
-&lt;img src="git-diff-list.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
 alt="Screenshot showing git diff between old and new list"/>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
@@ -108,19 +108,18 @@ alt="Screenshot showing git diff between old and new list"/>
 &lt;h2 id="adding-series-links-in-content-footer">Adding Series Links in Content Footer&lt;/h2>
 &lt;p>The hugo-coder theme now has better support for series - these are articles that directly follow on from one another, such as this Who Goes Blogging one. Series are nothing new to Hugo and we could have done them with the version we upgraded from, only in &lt;a href="https://github.com/luizdepra/hugo-coder/commit/27e83b1e5a9d8b7bbd42d202bd5ef57adcce659b">this commit for hugo-coder&lt;/a> has it added a layout for it to be rendered.&lt;/p>
 &lt;p>To create a series, we use the &lt;code>series&lt;/code> front matter setting for articles. For the Who Goes Blogging articles, adding the front matter to them looks like this.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">date&lt;/span>:&lt;span style="color:#666"> &lt;/span>2020-03-10&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">title&lt;/span>:&lt;span style="color:#666"> &lt;/span>&lt;span style="color:#ed9d13">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic">#...&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">series&lt;/span>:&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666"> &lt;/span>- Who&lt;span style="color:#666"> &lt;/span>Goes&lt;span style="color:#666"> &lt;/span>Blogging&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">tags&lt;/span>:&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic">#...&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---
+&lt;span style="color:#ff79c6">date&lt;/span>: 2020-03-10
+&lt;span style="color:#ff79c6">title&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>
+&lt;span style="color:#6272a4">#...&lt;/span>
+&lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">series&lt;/span>:
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - Who Goes Blogging
+&lt;/span>&lt;span style="color:#ff79c6">tags&lt;/span>:
+&lt;span style="color:#6272a4">#...&lt;/span>
+---
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
 &lt;figure>
-&lt;img src="series-footer-section.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png" class="screenshotimg"
 alt="Screenshot showing series rendered in the page footer"/>
 &lt;/figure>
 &lt;h2 id="adding-table-of-contents">Adding Table of Contents&lt;/h2>
@@ -130,55 +129,55 @@ alt="Screenshot showing series rendered in the page footer"/>
 &lt;p>The type of a markdown file (defined by the front matter setting &lt;code>type&lt;/code>) tells Hugo where to look for in the &lt;code>layouts/&lt;/code> directory of your project. The Hugo theme you&amp;rsquo;re using will already have these all defined, hence why they are predefined themes! Before Hugo looks for these layout HTML files in your theme, it will check for them in your projects &lt;code>layouts/&lt;/code> directory first.&lt;/p>
 &lt;p>In other words, the order of precedence (or hierarchy) for HTML files is anything in the project &lt;code>layouts/&lt;/code> directory takes a higher priority than that in your theme - as described in Hugo&amp;rsquo;s &lt;a href="https://gohugo.io/templates/lookup-order/">documentation for template lookup order&lt;/a>.&lt;/p>
 &lt;p>See below for a directory tree explaning this - a lot of content has been removed for brevity.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree layouts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree layouts
 layouts
 ├── posts
-│ └── single.html &lt;span style="color:#999;font-style:italic"># hugo will use this file to render your HTML&lt;/span>
+│ └── single.html &lt;span style="color:#6272a4"># hugo will use this file to render your HTML&lt;/span>
 └── themes
 └── hugo-coder
 └── layouts
 └── posts
-└── single.html &lt;span style="color:#999;font-style:italic"># hugo will ignore this one in the themes directory&lt;/span>
+└── single.html &lt;span style="color:#6272a4"># hugo will ignore this one in the themes directory&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="implementation">Implementation&lt;/h3>
 &lt;p>The primer above gives a hint as to what file we need to modify. The &lt;a href="https://github.com/luizdepra/hugo-coder/blob/master/layouts/posts/single.html">&lt;code>single.html&lt;/code>&lt;/a> file is in charge of how articles are rendered. Since we want everything else to remain the same about this file, we can take a copy of the file as it currently stands and place it into our project root.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">mkdir layouts/posts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">mkdir layouts/posts
 cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>I won&amp;rsquo;t go into the details here, I&amp;rsquo;ll leave that to you to make changes to see how they affect the rendering of the page.&lt;/p>
 &lt;/blockquote>
 &lt;p>I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">29
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">30
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">31
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">32
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">33
-&lt;/span>&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">34
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">35
+&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+&lt;/span>&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&amp;lt;&lt;span style="color:#6ab825;font-weight:bold">div&lt;/span>&amp;gt;
+&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&amp;lt;&lt;span style="color:#ff79c6">div&lt;/span>&amp;gt;
 {{ if .Params.featured_image }}
-&amp;lt;&lt;span style="color:#6ab825;font-weight:bold">img&lt;/span> &lt;span style="color:#bbb">src&lt;/span>=&lt;span style="color:#ed9d13">&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span> &lt;span style="color:#bbb">alt&lt;/span>=&lt;span style="color:#ed9d13">&amp;#34;Featured image&amp;#34;&lt;/span> /&amp;gt;
+&amp;lt;&lt;span style="color:#ff79c6">img&lt;/span> &lt;span style="color:#50fa7b">src&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span> &lt;span style="color:#50fa7b">alt&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;Featured image&amp;#34;&lt;/span> /&amp;gt;
 {{ end }}
-&lt;span style="display:block;width:100%;background-color:#363636"> {{ partial &amp;#34;toc.html&amp;#34; . }}
+&lt;span style="display:block;width:100%;background-color:#3d3f4a"> {{ partial &amp;#34;toc.html&amp;#34; . }}
 &lt;/span> {{ .Content }}
-&amp;lt;/&lt;span style="color:#6ab825;font-weight:bold">div&lt;/span>&amp;gt;
+&amp;lt;/&lt;span style="color:#ff79c6">div&lt;/span>&amp;gt;
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>We&amp;rsquo;re not done there - we&amp;rsquo;ve referenced a &lt;a href="https://gohugo.io/templates/partials/">partial template file&lt;/a> here. These allow us to reuse HTML files in multiple places, or to break up a large HTML file into smaller, more easier to manage chunks.&lt;/p>
 &lt;p>Partial templates are found under the &lt;code>layouts/partials&lt;/code> directory and follow the same principle as defined in the primer for template lookups, and are referenced back as &lt;code>{{ partial &amp;quot;&amp;lt;partial_name&amp;gt;.html&amp;quot; . }}&lt;/code>.&lt;/p>
 &lt;p>Let&amp;rsquo;s go ahead and create the &lt;code>layouts/partials/toc.html&lt;/code> file and populate it as below.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
-&amp;lt;&lt;span style="color:#6ab825;font-weight:bold">aside&lt;/span>&amp;gt;
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
+&amp;lt;&lt;span style="color:#ff79c6">aside&lt;/span>&amp;gt;
 {{.TableOfContents}}
-&amp;lt;/&lt;span style="color:#6ab825;font-weight:bold">aside&lt;/span>&amp;gt;
+&amp;lt;/&lt;span style="color:#ff79c6">aside&lt;/span>&amp;gt;
 {{ end }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This is similar to &lt;a href="https://gohugo.io/content-management/toc/#template-example-toc-partial">Hugo&amp;rsquo;s example&lt;/a> but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p>
 &lt;p>Previewing it by &lt;code>hugo serve&lt;/code> we should get something that appears as below.&lt;/p>
 &lt;figure>
-&lt;img src="completed-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/completed-toc.png" class="screenshotimg"
 alt="Screenshot showing rendered Table of Contents"/>
 &lt;/figure>
 &lt;h3 id="bugs-along-the-way">Bugs Along The Way&lt;/h3>
@@ -187,45 +186,45 @@ alt="Screenshot showing rendered Table of Contents"/>
 &lt;p>Per &lt;a href="https://gohugo.io/content-management/toc/#usage">Table of Contents Usage documentation&lt;/a>, Hugo will render from &lt;code>&amp;lt;h2&amp;gt;&lt;/code> headings, which are defined as &lt;code>##&lt;/code> in markdown. So &lt;code># Introduction&lt;/code> would not be included in the TOC, but &lt;code>## Introduction&lt;/code> will.&lt;/p>
 &lt;p>This is a problem for some of my articles since I&amp;rsquo;ve been writing headings liberally at the wrong level.&lt;/p>
 &lt;figure class="center">
-&lt;img src="improper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/improper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents not including all headings for a post"/> &lt;figcaption>
 &lt;p>Notice the &lt;strong>Applying Cartography&lt;/strong> heading doesn&amp;rsquo;t appear in the TOC&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>The given example above shows what happens when we use &lt;code># Heading Name&lt;/code> instead of &lt;code>## Heading Name&lt;/code>. To fix this I just need to go through each heading and make sure top-level headings begin with &lt;code>##&lt;/code> and any subheadings have an additional &lt;code>#&lt;/code>.&lt;/p>
 &lt;figure class="center">
-&lt;img src="proper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/proper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents fixed with correct heading indentation"/> &lt;figcaption>
 &lt;p>Much better!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h4 id="fix-emojis">Fix Emojis&lt;/h4>
 &lt;p>Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html"># layouts/shortcodes/emoji.html
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html"># layouts/shortcodes/emoji.html
 {{ .Get 0 | emojify }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>&lt;a href="https://gohugo.io/content-management/shortcodes/">Shortcodes&lt;/a> are similar to partial templates in that they contain HTML, but they are usually for referring to one HTML element as opposed to multiple.&lt;/p>
 &lt;/blockquote>
 &lt;p>Then in my markdown I would refer back to them such as &lt;code>{{&amp;lt; emoji &amp;quot;:wave:&amp;quot; &amp;gt;}}&lt;/code>. However in headings they rendered as below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="bad-emojis-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/bad-emojis-headings.png" class="screenshotimg"
 alt="Screenshot showing poorly rendered emojis in Table of Contents"/> &lt;figcaption>
 &lt;p>Hugo clearly finds this hysterical&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>It&amp;rsquo;s a weird one for sure - especially since they render fine in the headings themselves already&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-1.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-1.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 1"/>
 &lt;/figure>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-2.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-2.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 2"/>
 &lt;/figure>
 &lt;p>There is a fix for these, and it&amp;rsquo;s called &lt;em>rendering emojis the correct way!&lt;/em> 😅&lt;/p>
 &lt;p>Firstly in the site &lt;code>config.toml&lt;/code> I added &lt;code>enableEmoji = true&lt;/code> at the root level and then proceeded to change all occurrence of &lt;code>{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code> to &lt;code>:emoji_name:&lt;/code>. With that I can then remove &lt;code>layouts/shortcodes/emoji.html&lt;/code> since it&amp;rsquo;s not being referred back to anymore.&lt;/p>
 &lt;figure class="center">
-&lt;img src="correct-emoji-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png" class="screenshotimg"
 alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcaption>
 &lt;p>Nicely done&lt;/p>
 &lt;/figcaption>
@@ -233,37 +232,36 @@ alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcapt
 &lt;h4 id="markdown-not-rendering">Markdown Not Rendering&lt;/h4>
 &lt;p>I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code>## Spice Up Your ~~Life~~ Python 🐍&lt;/code>, which renders as a heading in the screenshot below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="markdown-heading-render.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png" class="screenshotimg"
 alt="Screenshot showing a heading formatted correctly with markdown"/>
 &lt;/figure>
 &lt;p>But in the table of contents it appears without the tilde strikethrough (&lt;code>~&lt;/code>) rendering.&lt;/p>
 &lt;figure class="center">
-&lt;img src="incorrect-markdown-rendering-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/incorrect-markdown-rendering-toc.png" class="screenshotimg"
 alt="Screenshot showing tilde strikethrough not appearing in table of content entry"/>
 &lt;/figure>
 &lt;p>This looks to be a bug within Hugo itself, since I was able to get &lt;strong>strong&lt;/strong> and &lt;em>emphasise&lt;/em> to render fine - I &lt;a href="https://github.com/gohugoio/hugo/issues/7169">raised an issue&lt;/a> on the project - I can live with it for now.&lt;/p>
 &lt;h2 id="emojify-everything">Emojify Everything!&lt;/h2>
 &lt;p>Continuing on the theme of emojis; we were able to get them to appear in the Table of Contents fine. But what about in the titles of the articles themselves? We can add them in the &lt;code>title&lt;/code> front matter setting like below:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">date&lt;/span>:&lt;span style="color:#666"> &lt;/span>2019-07-05&lt;span style="color:#666">
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">title&lt;/span>:&lt;span style="color:#666"> &lt;/span>&lt;span style="color:#ed9d13">&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic"># ...&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---
+&lt;span style="color:#ff79c6">date&lt;/span>: 2019-07-05
+&lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">title&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span>
+&lt;/span>&lt;span style="color:#6272a4"># ...&lt;/span>
+---
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>(1)&lt;/strong> Post title&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
 alt="Screenshot of broken emoji on browser title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-list.png" class="screenshotimg"
 alt="Screenshot of broken emoji rendering on lists"/>
 &lt;/figure>
 &lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
@@ -277,22 +275,22 @@ alt="Screenshot of broken emoji rendering on lists"/>
 &lt;p>You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p>
 &lt;p>The end result for the title will look like this:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
 alt="Screenshot of fixed emoji on browser title"/>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
 &lt;p>We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code>posts&lt;/code> and make the modification there - &lt;code>layouts/posts/li.html&lt;/code>. We&amp;rsquo;ll need to do the same here as we did for &lt;code>single.html&lt;/code> and copy it to our project root.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js">&lt;/script>
 &lt;p>Once done, we can see it reflect nicely in the list:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-list.png" class="screenshotimg"
 alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;/figure>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
@@ -308,7 +306,7 @@ alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;li>Added support for emojis in post titles&lt;/li>
 &lt;/ol>
 &lt;p>You can view all the changes made in this post at this &lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk/pull/2">pull request&lt;/a>.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
+&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
 &lt;ol>
 &lt;li>Moving content articles from a flat structure to a leaf bundle&lt;/li>
 &lt;li>Rename content section to &lt;strong>blog&lt;/strong> from &lt;strong>posts&lt;/strong>&lt;/li>
@@ -322,7 +320,7 @@ alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;p>The alternative way to organise content is the &lt;a href="https://gohugo.io/content-management/page-bundles/#leaf-bundles">Leaf Bundle&lt;/a>. This is where at a branch level you have a directory with the name of the article you wish to publish, followed by an &lt;code>index.md&lt;/code> file with the article content - such as &lt;code>content/posts/blog-bootstrap/index.md&lt;/code>.&lt;/p>
 &lt;p>Any page resources defined in this directory can be referenced relatively in the markdown files within it, such that any images can be stored within &lt;code>content/posts/blog-bootstrap/&lt;/code> and referred to in the markdown as &lt;code>figure src=&amp;quot;my-relative-img.png&amp;quot; ...&lt;/code> as opposed to &lt;code>src=&amp;quot;/images/my-not-relative-img.png&amp;quot; ...&lt;/code>.&lt;/p>
 &lt;p>This allows me to organise content much more effectively such that we will be going from this structure:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree content/posts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree content/posts
 content/posts
 ├── blog-bootstrap.md
 ├── extending-gotests-for-strict-error-tests.md
@@ -333,15 +331,15 @@ content/posts
 ├── who-goes-blogging-2-custom-domain.md
 ├── who-goes-blogging-3-1-deployment-methods-travisci.md
 └── who-goes-blogging-3-2-deployment-methods-github-actions.md
-&lt;span style="color:#3677a9">0&lt;/span> directories, &lt;span style="color:#3677a9">9&lt;/span> files
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree static/images
+&lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">9&lt;/span> files
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree static/images
 static/images
 ├── analytics_example.png
-├── ... &lt;span style="color:#999;font-style:italic"># Everything stored in a flat hierarchy&lt;/span>
+├── ... &lt;span style="color:#6272a4"># Everything stored in a flat hierarchy&lt;/span>
 └── type_hinting.png
-&lt;span style="color:#3677a9">0&lt;/span> directories, &lt;span style="color:#3677a9">57&lt;/span> files
+&lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">57&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>To this:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree content/posts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree content/posts
 content/posts
 ├── blog-bootstrap
 │ └── index.md
@@ -358,71 +356,71 @@ content/posts
 ├── github-actions-build.png
 ├── index.md
 └── travis-disable-build.png
-&lt;span style="color:#3677a9">9&lt;/span> directories, &lt;span style="color:#3677a9">45&lt;/span> files
+&lt;span style="color:#bd93f9">9&lt;/span> directories, &lt;span style="color:#bd93f9">45&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>One other benefit of grouping all content together in a bundle is it allows you to use just one command to add your article content to the repository - no more will images in another directory be forgotten about!&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add content/blog/&lt;span style="color:#40ffff">$articleName&lt;/span>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add content/blog/&lt;span style="color:#8be9fd;font-style:italic">$articleName&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="transformation-script">Transformation Script&lt;/h3>
 &lt;p>As opposed to doing the transformation manually, I&amp;rsquo;ve written a script which will move and alter the files for us.&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 1
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 2
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 3
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 4
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 5
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 6
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 7
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 8
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868"> 9
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">10
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">11
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">12
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">13
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">14
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">15
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">16
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">17
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">18
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">19
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">20
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">21
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">22
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">23
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">24
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">25
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">26
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">27
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">28
-&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#686868">29
+&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+&lt;/span>&lt;span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#999;font-style:italic"># in project root dir&lt;/span>
-&lt;span style="color:#40ffff">posts&lt;/span>=&lt;span style="color:#6ab825;font-weight:bold">$(&lt;/span>find content/posts -type f -name &lt;span style="color:#ed9d13">&amp;#39;*.md&amp;#39;&lt;/span> -not -path &lt;span style="color:#ed9d13">&amp;#39;**/index.md&amp;#39;&lt;/span> -not -path &lt;span style="color:#ed9d13">&amp;#39;**/_index.md&amp;#39;&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">)&lt;/span>
-&lt;span style="color:#24909d">echo&lt;/span> &lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#40ffff">$posts&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span> | &lt;span style="color:#6ab825;font-weight:bold">while&lt;/span> &lt;span style="color:#24909d">read&lt;/span> p; &lt;span style="color:#6ab825;font-weight:bold">do&lt;/span>
-&lt;span style="color:#999;font-style:italic"># Move to leaf bundle&lt;/span>
-&lt;span style="color:#40ffff">postFname&lt;/span>=&lt;span style="color:#6ab825;font-weight:bold">$(&lt;/span>basename -- &lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#40ffff">$p&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">)&lt;/span>
-&lt;span style="color:#40ffff">title&lt;/span>=&lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#ed9d13">${&lt;/span>&lt;span style="color:#40ffff">postFname&lt;/span>%.*&lt;span style="color:#ed9d13">}&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span>
-&lt;span style="color:#40ffff">leafBundleDir&lt;/span>=content/posts/&lt;span style="color:#40ffff">$title&lt;/span>
-mkdir &lt;span style="color:#40ffff">$leafBundleDir&lt;/span>
-&lt;span style="color:#40ffff">newPostLocation&lt;/span>=&lt;span style="color:#40ffff">$leafBundleDir&lt;/span>/index.md
-git mv -v &lt;span style="color:#40ffff">$p&lt;/span> &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
-&lt;span style="color:#999;font-style:italic"># Move images referenced in the articles to new leaf bundle dir&lt;/span>
-&lt;span style="color:#40ffff">images&lt;/span>=&lt;span style="color:#6ab825;font-weight:bold">$(&lt;/span>grep -oP &lt;span style="color:#ed9d13">&amp;#39;images\/.*.(png|jpg|jpeg)&amp;#39;&lt;/span> &lt;span style="color:#40ffff">$newPostLocation&lt;/span> | xargs -n1 | sort -u&lt;span style="color:#6ab825;font-weight:bold">)&lt;/span>
-&lt;span style="color:#24909d">echo&lt;/span> &lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#40ffff">$images&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span> | &lt;span style="color:#6ab825;font-weight:bold">while&lt;/span> &lt;span style="color:#24909d">read&lt;/span> i; &lt;span style="color:#6ab825;font-weight:bold">do&lt;/span>
-[ -z &lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#40ffff">$i&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span> ] &amp;amp;&amp;amp; &lt;span style="color:#6ab825;font-weight:bold">continue&lt;/span>
-&lt;span style="color:#40ffff">imgFname&lt;/span>=&lt;span style="color:#6ab825;font-weight:bold">$(&lt;/span>basename -- &lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#40ffff">$i&lt;/span>&lt;span style="color:#ed9d13">&amp;#34;&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">)&lt;/span>
-git mv -v static/&lt;span style="color:#40ffff">$i&lt;/span> &lt;span style="color:#40ffff">$leafBundleDir&lt;/span>/&lt;span style="color:#40ffff">$imgFname&lt;/span>
-&lt;span style="color:#6ab825;font-weight:bold">done&lt;/span>
-&lt;span style="color:#999;font-style:italic"># Change references to images in the article&lt;/span>
-&lt;span style="color:#999;font-style:italic">## figure src=&amp;#34;/images/namecheap-domain-purchase.png&amp;#34;&lt;/span>
-sed -i &lt;span style="color:#ed9d13">&amp;#39;s/src=&amp;#34;\/images\//src=&amp;#34;/g&amp;#39;&lt;/span> &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
-&lt;span style="color:#999;font-style:italic">## images:&lt;/span>
-&lt;span style="color:#999;font-style:italic">## - images/namecheap_landing.png&lt;/span>
-sed -i &lt;span style="color:#ed9d13">&amp;#39;s/- images\//- /g&amp;#39;&lt;/span> &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
-&lt;span style="color:#999;font-style:italic">## [blog_arch]: /images/blog-arch-cover.png&lt;/span>
-sed -i &lt;span style="color:#ed9d13">&amp;#39;s/: \/images\//: /g&amp;#39;&lt;/span> &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
-git add &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
-&lt;span style="color:#6ab825;font-weight:bold">done&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#6272a4"># in project root dir&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">posts&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>find content/posts -type f -name &lt;span style="color:#f1fa8c">&amp;#39;*.md&amp;#39;&lt;/span> -not -path &lt;span style="color:#f1fa8c">&amp;#39;**/index.md&amp;#39;&lt;/span> -not -path &lt;span style="color:#f1fa8c">&amp;#39;**/_index.md&amp;#39;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$posts&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> | &lt;span style="color:#ff79c6">while&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">read&lt;/span> p; &lt;span style="color:#ff79c6">do&lt;/span>
+&lt;span style="color:#6272a4"># Move to leaf bundle&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">postFname&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>basename -- &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$p&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">title&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#f1fa8c">${&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">postFname&lt;/span>%.*&lt;span style="color:#f1fa8c">}&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">leafBundleDir&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>content/posts/&lt;span style="color:#8be9fd;font-style:italic">$title&lt;/span>
+mkdir &lt;span style="color:#8be9fd;font-style:italic">$leafBundleDir&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">newPostLocation&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$leafBundleDir&lt;/span>/index.md
+git mv -v &lt;span style="color:#8be9fd;font-style:italic">$p&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span>
+&lt;span style="color:#6272a4"># Move images referenced in the articles to new leaf bundle dir&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">images&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>grep -oP &lt;span style="color:#f1fa8c">&amp;#39;images\/.*.(png|jpg|jpeg)&amp;#39;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span> | xargs -n1 | sort -u&lt;span style="color:#ff79c6">)&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$images&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> | &lt;span style="color:#ff79c6">while&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">read&lt;/span> i; &lt;span style="color:#ff79c6">do&lt;/span>
+&lt;span style="color:#ff79c6">[&lt;/span> -z &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$i&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ff79c6">continue&lt;/span>
+&lt;span style="color:#8be9fd;font-style:italic">imgFname&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>basename -- &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">$i&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">)&lt;/span>
+git mv -v static/&lt;span style="color:#8be9fd;font-style:italic">$i&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$leafBundleDir&lt;/span>/&lt;span style="color:#8be9fd;font-style:italic">$imgFname&lt;/span>
+&lt;span style="color:#ff79c6">done&lt;/span>
+&lt;span style="color:#6272a4"># Change references to images in the article&lt;/span>
+&lt;span style="color:#6272a4">## figure src=&amp;#34;/images/namecheap-domain-purchase.png&amp;#34;&lt;/span>
+sed -i &lt;span style="color:#f1fa8c">&amp;#39;s/src=&amp;#34;\/images\//src=&amp;#34;/g&amp;#39;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span>
+&lt;span style="color:#6272a4">## images:&lt;/span>
+&lt;span style="color:#6272a4">## - images/namecheap_landing.png&lt;/span>
+sed -i &lt;span style="color:#f1fa8c">&amp;#39;s/- images\//- /g&amp;#39;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span>
+&lt;span style="color:#6272a4">## [blog_arch]: /images/blog-arch-cover.png&lt;/span>
+sed -i &lt;span style="color:#f1fa8c">&amp;#39;s/: \/images\//: /g&amp;#39;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span>
+git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/span>
+&lt;span style="color:#ff79c6">done&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>
 &lt;p>Breaking down the script, firstly we are retrieving all posts that aren&amp;rsquo;t already converted to a leaf bundle and looping over them, where lines 4-9 performs the conversion itself.&lt;/p>
@@ -435,7 +433,7 @@ git add &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
 &lt;h2 id="renaming-content-section">Renaming Content Section&lt;/h2>
 &lt;p>A gripe I&amp;rsquo;ve had with my site is when you click on &lt;strong>Blog&lt;/strong> in the site header it takes you to &lt;strong>Posts&lt;/strong>. Similar to the previous section this is because of &lt;a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">Branch Bundles&lt;/a> which are any directory that sits underneath the &lt;code>content&lt;/code> directory. The bundle name here is what forms the URL and the parent page for those articles &lt;a href="https://gohugo.io/content-management/sections/">as defined&lt;/a>.&lt;/p>
 &lt;p>Based on this information, migrating should be as easy as&amp;hellip;&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git mv content/posts/ content/blog/
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ git mv content/posts/ content/blog/
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Despite doing this, we come across some problems&amp;hellip;&lt;/p>
 &lt;ol>
 &lt;li>We lose the correct rendering for the article
@@ -451,13 +449,13 @@ git add &lt;span style="color:#40ffff">$newPostLocation&lt;/span>
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
 &lt;figure>
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
 &lt;h3 id="fixing-article-rendering">Fixing Article Rendering&lt;/h3>
 &lt;p>We just made our existing articles leaf bundles that sat under &lt;code>content/posts&lt;/code>, but now this is renamed to &lt;code>content/blog&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree contents/blog -L &lt;span style="color:#3677a9">1&lt;/span>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree contents/blog -L &lt;span style="color:#bd93f9">1&lt;/span>
 content/blog
 ├── blog-bootstrap
 ├── extending-gotests-for-strict-error-tests
@@ -468,77 +466,77 @@ content/blog
 ├── who-goes-blogging-2-custom-domain
 ├── who-goes-blogging-3-1-deployment-methods-travisci
 └── who-goes-blogging-3-2-deployment-methods-github-actions
-&lt;span style="color:#3677a9">9&lt;/span> directories, &lt;span style="color:#3677a9">0&lt;/span> files
+&lt;span style="color:#bd93f9">9&lt;/span> directories, &lt;span style="color:#bd93f9">0&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>The section of which your article sits underneath also tells Hugo how it should render the page - known as &lt;a href="https://gohugo.io/content-management/types/#defining-a-content-type">Content Types&lt;/a>. Take the article blog-bootstrap which is under &lt;code>posts&lt;/code>; Hugo will look in the theme for &lt;code>layouts/posts&lt;/code> for &lt;code>html&lt;/code> files to render it against* - this is how the articles go from a markdown file to rendered HTML.&lt;/p>
 &lt;blockquote>
 &lt;p>* Hugo will &lt;a href="https://gohugo.io/templates/lookup-order/">first look&lt;/a> in your local project for any overriding files.&lt;/p>
 &lt;/blockquote>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree themes/hugo-coder/layouts/posts
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ tree themes/hugo-coder/layouts/posts
 themes/hugo-coder/layouts/posts
 ├── li.html
 ├── list.html
 └── single.html
-&lt;span style="color:#3677a9">0&lt;/span> directories, &lt;span style="color:#3677a9">3&lt;/span> files
+&lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
 &lt;figure>
-&lt;img src="posts-blog-rendering-error.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
 alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>One way of fixing this would be to also change the &lt;code>hugo-coder&lt;/code> theme from &lt;code>layouts/posts&lt;/code> to &lt;code>layouts/blog&lt;/code> - however a much simpler solution exists. We can use the &lt;code>type&lt;/code> front matter setting to tell Hugo what layout to use to render it.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">date&lt;/span>:&lt;span style="color:#666"> &lt;/span>2020-03-10&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">title&lt;/span>:&lt;span style="color:#666"> &lt;/span>&lt;span style="color:#ed9d13">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">description&lt;/span>:&lt;span style="color:#666"> &lt;/span>Migrating&lt;span style="color:#666"> &lt;/span>to&lt;span style="color:#666"> &lt;/span>GitHub&lt;span style="color:#666"> &lt;/span>Actions&lt;span style="color:#666"> &lt;/span>as&lt;span style="color:#666"> &lt;/span>our&lt;span style="color:#666"> &lt;/span>CI&lt;span style="color:#666"> &lt;/span>tool&lt;span style="color:#666">
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">type&lt;/span>:&lt;span style="color:#666"> &lt;/span>posts&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic"># ...&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>---&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---
+&lt;span style="color:#ff79c6">date&lt;/span>: 2020-03-10
+&lt;span style="color:#ff79c6">title&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">description&lt;/span>: Migrating to GitHub Actions as our CI tool
+&lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">type&lt;/span>: posts
+&lt;/span>&lt;span style="color:#6272a4"># ...&lt;/span>
+---&lt;/code>&lt;/pre>&lt;/div>
 &lt;blockquote>
 &lt;p>Hugo &lt;a href="https://gohugo.io/content-management/front-matter">front matter&lt;/a> are content parameter settings you place into the heading of the content - an example of this is right above!&lt;/p>
 &lt;/blockquote>
 &lt;p>Having to define this in every new article can become repetitive. We can make this easier for ourselves by using &lt;a href="https://gohugo.io/content-management/archetypes/">archetypes&lt;/a>; which are essentially templates that new content is templated from.&lt;/p>
 &lt;p>In your project root directory, create the &lt;code>archetypes/blog&lt;/code> directory and in there a file called &lt;code>index.md&lt;/code>, and populate it with the below:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">draft&lt;/span>:&lt;span style="color:#666"> &lt;/span>&lt;span style="color:#6ab825;font-weight:bold">true&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">type&lt;/span>:&lt;span style="color:#666"> &lt;/span>posts&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic"># ... Add in other defaults as you see fit&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>---&lt;span style="color:#666">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can then create new content from this template like so:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo new --kind blog blog/blog-post
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---
+&lt;span style="color:#ff79c6">draft&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
+&lt;span style="color:#ff79c6">type&lt;/span>: posts
+&lt;span style="color:#6272a4"># ... Add in other defaults as you see fit&lt;/span>
+---
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can then create new content from this template like so:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ hugo new --kind blog blog/blog-post
 /home/jdheyburn/projects/jdheyburn.co.uk/content/blog/blog-post created
 $ tree content/blog/blog-post
 content/blog/blog-post
 └── index.md
-&lt;span style="color:#3677a9">0&lt;/span> directories, &lt;span style="color:#3677a9">1&lt;/span> file
+&lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">1&lt;/span> file
 $ cat content/blog/blog-post/index.md
 ---
-draft: &lt;span style="color:#24909d">true&lt;/span>
+draft: &lt;span style="color:#8be9fd;font-style:italic">true&lt;/span>
 type: posts
-&lt;span style="color:#999;font-style:italic"># ...&lt;/span>
+&lt;span style="color:#6272a4"># ...&lt;/span>
 ---
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="fixing-existing-urls">Fixing Existing URLs&lt;/h3>
 &lt;p>Changing the section the article is in affects the URL too; meaning articles will appear at &lt;code>https://jdheyburn.co.uk/blog/blog-bootstrap/&lt;/code> instead of &lt;code>https://jdheyburn.co.uk/posts/blog-bootstrap/&lt;/code>. Therefore existing hyperlinks pointing to these articles will break.&lt;/p>
 &lt;p>Tnere is another quick fix available for us through the front matter setting &lt;code>aliases&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">date&lt;/span>:&lt;span style="color:#666"> &lt;/span>2020-03-10&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">title&lt;/span>:&lt;span style="color:#666"> &lt;/span>&lt;span style="color:#ed9d13">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">description&lt;/span>:&lt;span style="color:#666"> &lt;/span>Migrating&lt;span style="color:#666"> &lt;/span>to&lt;span style="color:#666"> &lt;/span>GitHub&lt;span style="color:#666"> &lt;/span>Actions&lt;span style="color:#666"> &lt;/span>as&lt;span style="color:#666"> &lt;/span>our&lt;span style="color:#666"> &lt;/span>CI&lt;span style="color:#666"> &lt;/span>tool&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">type&lt;/span>:&lt;span style="color:#666"> &lt;/span>posts&lt;span style="color:#666">
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666">&lt;/span>&lt;span style="color:#6ab825;font-weight:bold">aliases&lt;/span>:&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="display:block;width:100%;background-color:#363636">&lt;span style="color:#666"> &lt;/span>- /posts/who-goes-blogging&lt;span style="color:#3677a9">-3-2&lt;/span>-deployment-methods-github-actions/&lt;span style="color:#666">
-&lt;/span>&lt;/span>&lt;span style="color:#666">&lt;/span>&lt;span style="color:#999;font-style:italic"># ...&lt;/span>&lt;span style="color:#666">
-&lt;/span>&lt;span style="color:#666">&lt;/span>---&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">---
+&lt;span style="color:#ff79c6">date&lt;/span>: 2020-03-10
+&lt;span style="color:#ff79c6">title&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">description&lt;/span>: Migrating to GitHub Actions as our CI tool
+&lt;span style="color:#ff79c6">type&lt;/span>: posts
+&lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">aliases&lt;/span>:
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - /posts/who-goes-blogging&lt;span style="color:#bd93f9">-3-2&lt;/span>-deployment-methods-github-actions/
+&lt;/span>&lt;span style="color:#6272a4"># ...&lt;/span>
+---&lt;/code>&lt;/pre>&lt;/div>
 &lt;p>You can read more about how &lt;code>aliases&lt;/code> does its operations &lt;a href="https://gohugo.io/content-management/urls/#aliases">here&lt;/a>.&lt;/p>
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
 &lt;figure>
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>
 &lt;p>Remembering that &lt;code>content/blog&lt;/code> is a &lt;a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">branch bundle&lt;/a>, we can override the inferred title with a &lt;code>_index.md&lt;/code> file at that directory.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#999;font-style:italic"># content/blog/_index.md&lt;/span>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#6272a4"># content/blog/_index.md&lt;/span>
 ---
 title: Blog
 type: posts
@@ -546,8 +544,8 @@ type: posts
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>We have another &lt;code>type: posts&lt;/code> setting here because similar to above, we want Hugo to render the landing page the same as we did for posts.&lt;/p>
 &lt;h3 id="heading-to-blog">Heading to Blog&lt;/h3>
 &lt;p>Lastly and most easily, the &lt;strong>Blog&lt;/strong> shortcut at the top-right corner of the page still directs us to &lt;code>/posts&lt;/code> - we need to change that in the top-level &lt;code>config.toml&lt;/code> to point to &lt;code>/blog&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[[languages.en.menu.main]]
-name = &lt;span style="color:#ed9d13">&amp;#34;Blog&amp;#34;&lt;/span>
-weight = &lt;span style="color:#3677a9">2&lt;/span>
-url = &lt;span style="color:#ed9d13">&amp;#34;/blog/&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[[languages.en.menu.main]]
+name = &lt;span style="color:#f1fa8c">&amp;#34;Blog&amp;#34;&lt;/span>
+weight = &lt;span style="color:#bd93f9">2&lt;/span>
+url = &lt;span style="color:#f1fa8c">&amp;#34;/blog/&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Thanks for reading!&lt;/p></description></item></channel></rss>
