@@ -136,6 +136,17 @@ content/blog
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png"
 alt="Hugo RSS post with images being correctly rendered"/>
 &lt;/figure>
+&lt;blockquote>
+&lt;p>&lt;strong>UPDATE 2020-05-16&lt;/strong>&lt;/p>
+&lt;p>Upon posting this, I noticed I needed to do the same thing for hyperlinks referencing headings with the same post. For instance the markdown below which renders a hyperlink to a heading&amp;hellip;&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-markdown" data-lang="markdown">[&lt;span style="color:#ff79c6">images to display in RSS content&lt;/span>](&lt;span style="color:#50fa7b">#rendering-images-in-rss-posts&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Will render this in RSS:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&amp;lt;&lt;span style="color:#ff79c6">a&lt;/span> &lt;span style="color:#50fa7b">href&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;https://jdheyburn.co.uk/#rendering-images-in-rss-posts&amp;#34;&lt;/span>&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Which does not take the reader to the right location at all. What we need to do is repeat the regex used above in &lt;code>rss.xml&lt;/code> to catch these and replace them with the complete URL. See below for the snippet.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">{{&lt;span style="color:#ff79c6">-&lt;/span> $content &lt;span style="color:#ff79c6">:=&lt;/span> replaceRE &lt;span style="color:#f1fa8c">&amp;#34;a href=\&amp;#34;(#.*?)\&amp;#34;&amp;#34;&lt;/span> (printf &lt;span style="color:#f1fa8c">&amp;#34;%s%s%s&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;a href=\&amp;#34;&amp;#34;&lt;/span> .Permalink &lt;span style="color:#f1fa8c">&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span>) .Content &lt;span style="color:#ff79c6">-&lt;/span>}}
+{{&lt;span style="color:#ff79c6">-&lt;/span> $content = replaceRE &lt;span style="color:#f1fa8c">&amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34;&lt;/span> (printf &lt;span style="color:#f1fa8c">&amp;#34;%s%s%s&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;img src=\&amp;#34;&amp;#34;&lt;/span> .Permalink &lt;span style="color:#f1fa8c">&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span>) $content &lt;span style="color:#ff79c6">-&lt;/span>}}
+&amp;lt;description&amp;gt;{{ $content | html }}&amp;lt;&lt;span style="color:#ff79c6">/&lt;/span>description&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
 &lt;h2 id="adding-cards-for-posts">Adding cards for posts&lt;/h2>
 &lt;p>Not dissimilar to &lt;a href="https://barkersocial.com/social-cards/">social media cards&lt;/a>, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p>
 &lt;figure class="center">
@@ -244,7 +255,7 @@ alt="inoreader displaying images for each post when in card view"/> &lt;figcapti
 &lt;li>Line 8 will revert to an image containing either &lt;code>cover&lt;/code> or &lt;code>thumbnail&lt;/code>, if an image is not found previously&lt;/li>
 &lt;li>Lines 12-13 will default to the image defined at the site level params&lt;/li>
 &lt;/ul>
-&lt;p>With lessons learnt trying to get &lt;a href="#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
+&lt;p>With lessons learnt trying to get &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
 &lt;p>I&amp;rsquo;m going to follow lines 12-13 above and have a default card defined at the site level parameters. In my &lt;code>config.toml&lt;/code> I&amp;rsquo;ll need to add the following&amp;hellip;&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[params]
 images = [&lt;span style="color:#f1fa8c">&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span>]
@@ -270,5 +281,5 @@ alt="RSS subscription button displayed on the homepage"/>
 &lt;h2 id="summarising-changes-to-rss-xml">Summarising changes to RSS XML&lt;/h2>
 &lt;p>You can view the gist below to see my complete RSS XML file after all the above has been added. If you wish to use it, you&amp;rsquo;ll need to place it in &lt;code>layouts/_default/rss.xml&lt;/code> in your project directory.&lt;/p>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920.js">&lt;/script>
-&lt;p>&lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions#diff-c166fdc5b553c1f4e101f56186da7017">Click here&lt;/a> for a &lt;code>git diff&lt;/code> view on the changes I made from the default RSS XML file.&lt;/p>
+&lt;p>&lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions">Click here&lt;/a> for a &lt;code>git diff&lt;/code> view on the changes I made from the default RSS XML file.&lt;/p>
 &lt;p>Thanks for reading! 💯&lt;/p></description></item></channel></rss>

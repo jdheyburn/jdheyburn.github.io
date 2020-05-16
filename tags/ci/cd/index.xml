@@ -116,7 +116,7 @@ git -c &lt;span style="color:#f1fa8c">&amp;#34;http.extraheader=$auth_header&amp
 &lt;span style="color:#ff79c6">commit_message&lt;/span>: ${{ github.event.head_commit.message }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a>. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
+&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
 &lt;ul>
 &lt;li>If you didn&amp;rsquo;t name yours &lt;code>DEPLOY_KEY&lt;/code> then you&amp;rsquo;ll need to change it here too.&lt;/li>
 &lt;/ul>

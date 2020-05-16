@@ -19,9 +19,9 @@
 &lt;/ol>
 &lt;p>From this list, we can include the following to solve the above:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#class-objects">Classes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="tests">Tests&lt;/h2>
 &lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>

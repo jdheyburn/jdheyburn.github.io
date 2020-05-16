@@ -150,10 +150,10 @@ jdheyburn.co.uk
 &lt;p>In my case, I purchased &lt;code>jdheyburn.com&lt;/code> and had it redirect to &lt;code>jdheyburn.co.uk&lt;/code> - why not give it a try: &lt;a href="https://jdheyburn.com">https://jdheyburn.com&lt;/a>&lt;/p>
 &lt;p>The steps are already defined in this post. For a breakdown of what they are:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;p>Steps 1 and 2 are pretty easy to perform yourselves - so for this exercise I&amp;rsquo;ll join in at step 3.&lt;/p>
 &lt;h2 id="cloudflare-domain-redirection">Cloudflare Domain Redirection&lt;/h2>

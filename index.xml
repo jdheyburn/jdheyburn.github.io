@@ -136,6 +136,17 @@ content/blog
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png"
 alt="Hugo RSS post with images being correctly rendered"/>
 &lt;/figure>
+&lt;blockquote>
+&lt;p>&lt;strong>UPDATE 2020-05-16&lt;/strong>&lt;/p>
+&lt;p>Upon posting this, I noticed I needed to do the same thing for hyperlinks referencing headings with the same post. For instance the markdown below which renders a hyperlink to a heading&amp;hellip;&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-markdown" data-lang="markdown">[&lt;span style="color:#ff79c6">images to display in RSS content&lt;/span>](&lt;span style="color:#50fa7b">#rendering-images-in-rss-posts&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Will render this in RSS:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&amp;lt;&lt;span style="color:#ff79c6">a&lt;/span> &lt;span style="color:#50fa7b">href&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;https://jdheyburn.co.uk/#rendering-images-in-rss-posts&amp;#34;&lt;/span>&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Which does not take the reader to the right location at all. What we need to do is repeat the regex used above in &lt;code>rss.xml&lt;/code> to catch these and replace them with the complete URL. See below for the snippet.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">{{&lt;span style="color:#ff79c6">-&lt;/span> $content &lt;span style="color:#ff79c6">:=&lt;/span> replaceRE &lt;span style="color:#f1fa8c">&amp;#34;a href=\&amp;#34;(#.*?)\&amp;#34;&amp;#34;&lt;/span> (printf &lt;span style="color:#f1fa8c">&amp;#34;%s%s%s&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;a href=\&amp;#34;&amp;#34;&lt;/span> .Permalink &lt;span style="color:#f1fa8c">&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span>) .Content &lt;span style="color:#ff79c6">-&lt;/span>}}
+{{&lt;span style="color:#ff79c6">-&lt;/span> $content = replaceRE &lt;span style="color:#f1fa8c">&amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34;&lt;/span> (printf &lt;span style="color:#f1fa8c">&amp;#34;%s%s%s&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;img src=\&amp;#34;&amp;#34;&lt;/span> .Permalink &lt;span style="color:#f1fa8c">&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span>) $content &lt;span style="color:#ff79c6">-&lt;/span>}}
+&amp;lt;description&amp;gt;{{ $content | html }}&amp;lt;&lt;span style="color:#ff79c6">/&lt;/span>description&amp;gt;
+&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
 &lt;h2 id="adding-cards-for-posts">Adding cards for posts&lt;/h2>
 &lt;p>Not dissimilar to &lt;a href="https://barkersocial.com/social-cards/">social media cards&lt;/a>, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p>
 &lt;figure class="center">
@@ -244,7 +255,7 @@ alt="inoreader displaying images for each post when in card view"/> &lt;figcapti
 &lt;li>Line 8 will revert to an image containing either &lt;code>cover&lt;/code> or &lt;code>thumbnail&lt;/code>, if an image is not found previously&lt;/li>
 &lt;li>Lines 12-13 will default to the image defined at the site level params&lt;/li>
 &lt;/ul>
-&lt;p>With lessons learnt trying to get &lt;a href="#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
+&lt;p>With lessons learnt trying to get &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
 &lt;p>I&amp;rsquo;m going to follow lines 12-13 above and have a default card defined at the site level parameters. In my &lt;code>config.toml&lt;/code> I&amp;rsquo;ll need to add the following&amp;hellip;&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[params]
 images = [&lt;span style="color:#f1fa8c">&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span>]
@@ -270,7 +281,7 @@ alt="RSS subscription button displayed on the homepage"/>
 &lt;h2 id="summarising-changes-to-rss-xml">Summarising changes to RSS XML&lt;/h2>
 &lt;p>You can view the gist below to see my complete RSS XML file after all the above has been added. If you wish to use it, you&amp;rsquo;ll need to place it in &lt;code>layouts/_default/rss.xml&lt;/code> in your project directory.&lt;/p>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920.js">&lt;/script>
-&lt;p>&lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions#diff-c166fdc5b553c1f4e101f56186da7017">Click here&lt;/a> for a &lt;code>git diff&lt;/code> view on the changes I made from the default RSS XML file.&lt;/p>
+&lt;p>&lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions">Click here&lt;/a> for a &lt;code>git diff&lt;/code> view on the changes I made from the default RSS XML file.&lt;/p>
 &lt;p>Thanks for reading! 💯&lt;/p></description></item><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
 &lt;ol>
 &lt;li>Upgrading our Hugo theme&lt;/li>
@@ -304,7 +315,7 @@ rm &lt;span style="color:#f1fa8c">&amp;#34;hugo_extended_&lt;/span>&lt;span styl
 Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing-for-any-issues">Testing For Any Issues&lt;/h3>
 &lt;p>At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code>hugo serve&lt;/code> command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p>
-&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="#validation-and-testing">later in this post&lt;/a>.&lt;/p>
+&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#validation-and-testing">later in this post&lt;/a>.&lt;/p>
 &lt;h3 id="updating-hugo-in-cicd">Updating Hugo in CI/CD&lt;/h3>
 &lt;p>We&amp;rsquo;ve only upgrading Hugo on our machines, but we also need to upgrade it in our CI/CD pipeline to ensure it deploys with the correct rendering too. We set this up in parts &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/">3.1&lt;/a> and &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/">3.2&lt;/a>.&lt;/p>
 &lt;p>I&amp;rsquo;m using GitHub Actions for my CI/CD pipeline, so I need to head to &lt;code>.github/workflows/deploy.yml&lt;/code> and change &lt;code>hugo-version: &amp;quot;0.58.3&amp;quot;&lt;/code> to &lt;code>hugo-version: &amp;quot;0.68.3&amp;quot;&lt;/code>.&lt;/p>
@@ -390,7 +401,7 @@ alt="Screenshot showing git diff between old and new list"/>
 &lt;/span>&lt;span style="color:#ff79c6">tags&lt;/span>:
 &lt;span style="color:#6272a4">#...&lt;/span>
 ---
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
 &lt;figure>
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png" class="screenshotimg"
 alt="Screenshot showing series rendered in the page footer"/>
@@ -537,9 +548,9 @@ alt="Screenshot of broken emoji on browser title"/>
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-list.png" class="screenshotimg"
 alt="Screenshot of broken emoji rendering on lists"/>
 &lt;/figure>
-&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
+&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
 &lt;h3 id="fix-post--browser-title">Fix Post &amp;amp; Browser Title&lt;/h3>
-&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
+&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
 &lt;p>We need to go back to that file and &lt;em>emojify&lt;/em> both the main article heading, alongside the browser title to change any occurrence of &lt;code>{{ .Title }}&lt;/code> to &lt;code>{{ .Title | emojify }}&lt;/code>.&lt;/p>
 &lt;p>By doing this we will &lt;em>always&lt;/em> emojify the titles even if in our &lt;code>config.toml&lt;/code> we specified &lt;code>enableEmoji = false&lt;/code>, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code>false&lt;/code>. We could do some conditional logic on the &lt;code>enableEmoji&lt;/code> setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code>{{ if .Site.enableEmoji }}&lt;/code>. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code>hugo-coder&lt;/code> theme. I&amp;rsquo;ve raised a &lt;a href="https://github.com/gohugoio/hugo/issues/7171">couple&lt;/a> of &lt;a href="https://github.com/gohugoio/hugo/issues/7170">issues&lt;/a> against Hugo requesting these features.&lt;/p>
 &lt;p>Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p>
@@ -939,7 +950,7 @@ git -c &lt;span style="color:#f1fa8c">&amp;#34;http.extraheader=$auth_header&amp
 &lt;span style="color:#ff79c6">commit_message&lt;/span>: ${{ github.event.head_commit.message }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a>. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
+&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
 &lt;ul>
 &lt;li>If you didn&amp;rsquo;t name yours &lt;code>DEPLOY_KEY&lt;/code> then you&amp;rsquo;ll need to change it here too.&lt;/li>
 &lt;/ul>
@@ -1375,10 +1386,10 @@ jdheyburn.co.uk
 &lt;p>In my case, I purchased &lt;code>jdheyburn.com&lt;/code> and had it redirect to &lt;code>jdheyburn.co.uk&lt;/code> - why not give it a try: &lt;a href="https://jdheyburn.com">https://jdheyburn.com&lt;/a>&lt;/p>
 &lt;p>The steps are already defined in this post. For a breakdown of what they are:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;p>Steps 1 and 2 are pretty easy to perform yourselves - so for this exercise I&amp;rsquo;ll join in at step 3.&lt;/p>
 &lt;h2 id="cloudflare-domain-redirection">Cloudflare Domain Redirection&lt;/h2>
@@ -1607,9 +1618,9 @@ alt="A graph displaying total requests, and how many of them were cached"/>
 &lt;/ol>
 &lt;p>From this list, we can include the following to solve the above:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#class-objects">Classes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="tests">Tests&lt;/h2>
 &lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>
