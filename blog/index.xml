@@ -2,9 +2,9 @@
 &lt;p>I uploaded my completed RSS file to &lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920">GitHub Gist&lt;/a> 🚀&lt;/p>
 &lt;h2 id="what-is-rss">What is RSS?&lt;/h2>
 &lt;p>&lt;a href="https://en.wikipedia.org/wiki/RSS">RSS&lt;/a> is a great way to &amp;ldquo;subscribe&amp;rdquo; to websites to ensure that you don&amp;rsquo;t miss content from them. The standard for how it is generated has been the same for decades now - however its still the best supported and most accepted way to receive updates. It is simply a standardised XML file that allows consumers such as RSS aggregators to parse the content of the post - for which there are many to choose from (RIP &lt;a href="https://en.wikipedia.org/wiki/Google_Reader">Google Reader&lt;/a>).&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="inoreader-complete.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png"
-alt="inoreader as an RSS feed aggregator"/> &lt;figcaption>
+alt="inoreader as an RSS feed aggregator"/> &lt;/a>&lt;figcaption>
 &lt;p>My RSS aggregator of choice currently is &lt;a href="https://www.inoreader.com/">inoreader&lt;/a> - I&amp;rsquo;ll be using this in my examples&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -13,16 +13,16 @@ alt="inoreader as an RSS feed aggregator"/> &lt;figcaption>
 &lt;h2 id="the-problem">The Problem&lt;/h2>
 &lt;p>Some (but not all) websites only include the first paragraph of their post in an RSS update (aka summary), along with a message after that paragraph requesting the reader to visit the site in a browser to view the rest of the content.&lt;/p>
 &lt;p>This is a common feature of WordPress blogs - and it is done to have you load the full website and along with it, all the code for providing the owner with user analytics, and advertising - if they have it. So really they&amp;rsquo;re getting the benefit of being able to publish updates via a standardised approach (RSS), to then lure you onto the website.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="rss-post-show-more-content.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png"
-alt="An RSS post loading incompletely"/>
+alt="An RSS post loading incompletely"/> &lt;/a>
 &lt;/figure>
 &lt;p>Hugo &lt;em>kind of&lt;/em> does this through the highlighted line in the &lt;a href="https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml">templated RSS XML file&lt;/a>:&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-xml" data-lang="xml">&lt;span style="color:#ff79c6">&amp;lt;description&amp;gt;&lt;/span>{{ .Summary | html }}&lt;span style="color:#ff79c6">&amp;lt;/description&amp;gt;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>.Summary&lt;/code> will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;rsquo;ve produced a very short article!&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="hugo-incomplete-post.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png"
-alt="Hugo producing a summarised RSS post"/>
+alt="Hugo producing a summarised RSS post"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m not against the practice of previewing the post, if a blog provides revenue for the author(s) then you will need to force readers to view the full website for analytics and advertising (businesses gotta make money!).&lt;/p>
 &lt;p>Although I&amp;rsquo;m sure the initial purpose of RSS was only meant to be used to provide subscribers a pure text version of your content. At the end of the day, I believe the author should give the reader choice on mediums of consumption - and they accept the limitations that come from RSS.&lt;/p>
@@ -67,17 +67,17 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>Let&amp;rsquo;s now view the changes in the RSS reader.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="hugo-complete-post.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png"
-alt="Hugo RSS post displaying all content"/> &lt;figcaption>
+alt="Hugo RSS post displaying all content"/> &lt;/a>&lt;figcaption>
 &lt;p>We can now see much more content is being produced - and with proper HTML this time!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="rendering-images-in-rss-posts">Rendering images in RSS posts&lt;/h2>
 &lt;p>Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code>alt&lt;/code>) text is being displayed instead.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="hugo-missing-images-post.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png"
-alt="Hugo RSS post with missing images, alt text displayed instead"/> &lt;figcaption>
+alt="Hugo RSS post with missing images, alt text displayed instead"/> &lt;/a>&lt;figcaption>
 &lt;p>Note the highlighted alt texts of images&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -132,9 +132,9 @@ content/blog
 &lt;p>&lt;code>REPLACEMENT&lt;/code> is calling another Hugo function called &lt;a href="https://gohugo.io/functions/printf/">printf&lt;/a> to construct the replacement text. We&amp;rsquo;re pretty much just injecting the page &lt;code>.Permalink&lt;/code> prior to the captured text from the &lt;code>PATTERN&lt;/code> - so that RSS can then display the complete URL. While adding back the &lt;code>img src=&amp;quot;&amp;quot;&lt;/code> that was removed.&lt;/p>
 &lt;p>&lt;code>INPUT&lt;/code> will be the page &lt;code>.Content&lt;/code>, what we were printing out before.&lt;/p>
 &lt;p>Once we&amp;rsquo;ve made the change, images are now rendered properly!&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="hugo-images-post.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png"
-alt="Hugo RSS post with images being correctly rendered"/>
+alt="Hugo RSS post with images being correctly rendered"/> &lt;/a>
 &lt;/figure>
 &lt;blockquote>
 &lt;p>&lt;strong>UPDATE 2020-05-16&lt;/strong>&lt;/p>
@@ -149,9 +149,9 @@ alt="Hugo RSS post with images being correctly rendered"/>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
 &lt;h2 id="adding-cards-for-posts">Adding cards for posts&lt;/h2>
 &lt;p>Not dissimilar to &lt;a href="https://barkersocial.com/social-cards/">social media cards&lt;/a>, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="inoreader-enclosure-card-view.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png"
-alt="inoreader displaying images for each post when in card view"/> &lt;figcaption>
+alt="inoreader displaying images for each post when in card view"/> &lt;/a>&lt;figcaption>
 &lt;p>While in card view for inoreader, we can see featured images being displayed&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -261,9 +261,9 @@ alt="inoreader displaying images for each post when in card view"/> &lt;figcapti
 images = [&lt;span style="color:#f1fa8c">&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span>]
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&amp;hellip;while also ensuring that I&amp;rsquo;ve placed the image under &lt;code>static/images/jdheyburn_co_uk_card.png&lt;/code>.&lt;/p>
 &lt;p>Once all that is done and deployed - we will have an RSS post card that looks like this 🙌&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="hugo-enclosure-card-view.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png"
-alt="inoreader displaying an image for a Hugo post"/>
+alt="inoreader displaying an image for a Hugo post"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can now advertise our RSS subscription URL to readers. My theme &lt;code>hugo-coder&lt;/code> supports this as a social button on the home page. We just need to add the below block to the &lt;code>config.toml&lt;/code> file.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[[params.social]]
@@ -274,9 +274,9 @@ url = &lt;span style="color:#f1fa8c">&amp;#34;https://jdheyburn.co.uk/index.xml&
 rel = &lt;span style="color:#f1fa8c">&amp;#34;alternate&amp;#34;&lt;/span>
 type = &lt;span style="color:#f1fa8c">&amp;#34;application/rss+xml&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Once done - our homepage will have the button displayed.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="rss-subscription-button.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png"
-alt="RSS subscription button displayed on the homepage"/>
+alt="RSS subscription button displayed on the homepage"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="summarising-changes-to-rss-xml">Summarising changes to RSS XML&lt;/h2>
 &lt;p>You can view the gist below to see my complete RSS XML file after all the above has been added. If you wish to use it, you&amp;rsquo;ll need to place it in &lt;code>layouts/_default/rss.xml&lt;/code> in your project directory.&lt;/p>
@@ -357,9 +357,9 @@ e66c1740611b15eee0069811d10b5a22b0dc4332
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="hugo-coder-commit.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
-alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;figcaption>
+alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -382,9 +382,9 @@ alt="Screenshot showing old, proper list render"/>
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="git-diff-list.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
-alt="Screenshot showing git diff between old and new list"/>
+alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
 &lt;h2 id="adding-new-features">Adding New Features&lt;/h2>
@@ -539,9 +539,9 @@ alt="Screenshot showing tilde strikethrough not appearing in table of content en
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="broken-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
-alt="Screenshot of broken emoji on browser title"/>
+alt="Screenshot of broken emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
@@ -563,9 +563,9 @@ alt="Screenshot of broken emoji rendering on lists"/>
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="fixed-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
-alt="Screenshot of fixed emoji on browser title"/>
+alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
 &lt;p>We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code>posts&lt;/code> and make the modification there - &lt;code>layouts/posts/li.html&lt;/code>. We&amp;rsquo;ll need to do the same here as we did for &lt;code>single.html&lt;/code> and copy it to our project root.&lt;/p>
@@ -732,9 +732,9 @@ git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/sp
 &lt;/li>
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
-&lt;figure>
+&lt;figure>&lt;a href="blogs-landing-page.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
-alt="Screenshot of Blog landing page with incorrect Blogs title"/>
+alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
 &lt;h3 id="fixing-article-rendering">Fixing Article Rendering&lt;/h3>
@@ -762,9 +762,9 @@ themes/hugo-coder/layouts/posts
 └── single.html
 &lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="posts-blog-rendering-error.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
-alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;figcaption>
+alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;/a>&lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -814,9 +814,9 @@ type: posts
 &lt;p>You can read more about how &lt;code>aliases&lt;/code> does its operations &lt;a href="https://gohugo.io/content-management/urls/#aliases">here&lt;/a>.&lt;/p>
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="blogs-landing-page.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
-alt="Screenshot of Blog landing page with incorrect Blogs title"/>
+alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>
 &lt;p>Remembering that &lt;code>content/blog&lt;/code> is a &lt;a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">branch bundle&lt;/a>, we can override the inferred title with a &lt;code>_index.md&lt;/code> file at that directory.&lt;/p>
@@ -865,14 +865,14 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;p>&lt;code>alias pbcopy=&amp;quot;xclip -selection clipboard&amp;quot;&lt;/code>&lt;/p>
 &lt;/blockquote>
 &lt;p>In GitHub load up your GitHub Pages repo and navigate to &lt;code>Settings&lt;/code> and then &lt;code>Deploy keys&lt;/code>. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code>Allow write access&lt;/code>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="gha-deploy-key.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png"
-alt="GitHub Pages repo deploy keys page"/>
+alt="GitHub Pages repo deploy keys page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Copy the contents of the &lt;em>private key&lt;/em> you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code>Settings&lt;/code> page, then &lt;code>Secrets&lt;/code>. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="gha-secrets-key.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png"
-alt="GitHub source code repo secrets page"/> &lt;figcaption>
+alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>No secrets here!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -971,17 +971,17 @@ git -c &lt;span style="color:#f1fa8c">&amp;#34;http.extraheader=$auth_header&amp
 &lt;h2 id="bringing-it-all-together-again">Bringing It All Together (Again)&lt;/h2>
 &lt;p>If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p>
 &lt;p>For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href="https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings">https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a> for me) and disabling &lt;code>Build pushed branches&lt;/code>.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-disable-build.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png"
-alt="Build pushed branches disabled on Travis"/>
+alt="Build pushed branches disabled on Travis"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code>Actions&lt;/code> tab of your source code repo on GitHub.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add --all
 git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span>
 git push
-&lt;/code>&lt;/pre>&lt;/div>&lt;figure>
+&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;a href="github-actions-build.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png"
-alt="Successful build on GitHub Actions"/> &lt;figcaption>
+alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;p>Great success!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1010,54 +1010,54 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p>Now there are many CI tools out there with the most well known likely to be &lt;a href="https://jenkins.io/">Jenkins&lt;/a>, but there are also hosted solutions available which will take your code and perform your pipelines against them.&lt;/p>
 &lt;p>One of those hosted solutions is &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>, where they integrate quite nicely with GitHub repositories to attach &lt;a href="https://developer.github.com/webhooks/">webhooks&lt;/a> against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p>
 &lt;p>So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-free.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png"
-alt="Screenshot of Travis free pricing plan"/> &lt;figcaption>
+alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;p>Free is definitely a thing you love to see&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="travisci-account-setup">TravisCI Account Setup&lt;/h2>
 &lt;p>The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em>another&lt;/em> account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href="https://travis-ci.com/">https://travis-ci.com/&lt;/a> and click on &lt;code>Sign in with GitHub&lt;/code>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-landing.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png"
-alt="Screenshot of Travis landing page"/> &lt;figcaption>
+alt="Screenshot of Travis landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>GitHub will ask you if you &lt;em>really&lt;/em> want to share some of your GitHub data with Travis.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-authorise.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png"
-alt="Screenshot of GitHub authorising Travis"/> &lt;figcaption>
+alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Another green button? Why not!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p>
 &lt;p>All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href="https://travis-ci.com/account/repositories">https://travis-ci.com/account/repositories&lt;/a> page is what you need for that - then click on the &lt;code>Activate&lt;/code> button.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-github-apps-integration.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png"
-alt="Screenshot of GitHub Apps Integration"/> &lt;figcaption>
+alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>&amp;hellip;More green buttons?!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Now on the next screen you may or may not want the default selection of &lt;code>All repositories&lt;/code> which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">&lt;em>principle of least privilege&lt;/em>&lt;/a> (POLP); not just for users but for services too.&lt;/p>
 &lt;p>For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code>jdheyburn.co.uk&lt;/code> and &lt;code>jdheyburn.github.io&lt;/code> - it also gives you a cleaner Travis dashboard too.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-repos-selection.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png"
-alt="Screenshot of GitHub Travis Repository Authorisation"/>
+alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="back-to-github">Back to GitHub&lt;/h3>
 &lt;p>The next step is required to permit Travis to push the built project to our GitHub Pages repo. We need to generate a secret with the permissions that Travis requires and keep it aside for the Travis config file later.&lt;/p>
 &lt;p>Navigate to the &lt;a href="https://github.com/settings/tokens">GitHub Personal Access Tokens&lt;/a> page and click on &lt;code>Generate new token&lt;/code>.&lt;/p>
 &lt;p>You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code>repo&lt;/code> checkbox as done so below.&lt;/p>
 &lt;p>After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code>Generate token&lt;/code>.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-pat.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png"
-alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/>
+alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/> &lt;/a>
 &lt;/figure>
 &lt;p>The token&amp;rsquo;s secret will display on the next screen. &lt;strong>Make sure you copy it&lt;/strong> and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-pat-created.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png"
-alt="Screenshot of GitHub Personal Access Token Creation - token complete"/>
+alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="travisci-configuration">TravisCI Configuration&lt;/h2>
 &lt;p>Once we have our Travis account set up, we need to add in a &lt;a href="https://docs.travis-ci.com/user/tutorial/">configuration file&lt;/a> that Travis will read from to determine what steps we&amp;rsquo;d like it to perform.&lt;/p>
@@ -1217,9 +1217,9 @@ git push
 &lt;p>Documenting down architecture, processes, runbooks, etc., can help to give you clarity into the subject you are writing about. Once you&amp;rsquo;ve extracted all the details and are able to view them at a high-level, you&amp;rsquo;re able to iron out any creases and make improvements from there.&lt;/p>
 &lt;p>However, more importantly, and one that is most beneficial to me is that&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>You will forget that shit and will need to reference it back again!&lt;/strong>&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="elephant-cartoon.png">
 &lt;img src="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/elephant-cartoon.png"
-alt="Cartoon elephant" width="400x"/> &lt;figcaption>
+alt="Cartoon elephant" width="400x"/> &lt;/a>&lt;figcaption>
 &lt;p>Not everyone can have the memory of an elephant&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1253,20 +1253,20 @@ alt="Cartoon elephant" width="400x"/> &lt;figcaption>
 &lt;p>GitHub has a &lt;a href="https://help.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site">series of documentation&lt;/a> on applying a custom domain to GitHub Pages in much greater detail than what I am about to write out, should you wish to find out more information.&lt;/p>
 &lt;h2 id="acquire-a-domain">Acquire a Domain&lt;/h2>
 &lt;p>The rest of the post will depict a lot of Namecheap semantics, since that is the registrar I have access to. You can choose to follow the guide alongside a different registrar if you wish, at a high-level they will be pretty similar. For now, let&amp;rsquo;s move on ahead with Namecheap and navigate through to the &lt;a href="https://www.namecheap.com/">domain purchase page&lt;/a>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="namecheap_landing.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png"
-alt="Screenshot depicting the namecheap domain landing page"/> &lt;figcaption>
+alt="Screenshot depicting the namecheap domain landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>The hardest part is deciding on the domain name&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
-&lt;figure>
+&lt;figure>&lt;a href="namecheap-domain-purchase.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png"
-alt="Screenshot depicting the namecheap domain purchase page"/>
+alt="Screenshot depicting the namecheap domain purchase page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Once you&amp;rsquo;ve set up an account and purchased your domain, your accounts domain landing page will look something like the below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="namecheap-domain-acquired.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png"
-alt="Screenshot depicting the namecheap domain landing page"/> &lt;figcaption>
+alt="Screenshot depicting the namecheap domain landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1283,17 +1283,17 @@ alt="Screenshot depicting the namecheap domain landing page"/> &lt;figcaption>
 &lt;/blockquote>
 &lt;h3 id="cloudflare-our-domain">Cloudflare our Domain&lt;/h3>
 &lt;p>Create an account with &lt;a href="https://www.cloudflare.com/">Cloudflare&lt;/a> if you haven&amp;rsquo;t done so already. Once done you&amp;rsquo;ll need to click &lt;strong>Add Site&lt;/strong> at the top of the browser dashboard. Enter your newly purchased domain from the previous section.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare-add-domain.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png"
-alt="Screenshot depicting the Cloudflare add domain page"/> &lt;figcaption>
+alt="Screenshot depicting the Cloudflare add domain page"/> &lt;/a>&lt;figcaption>
 &lt;p>Enter your newly purchased domain from the previous section&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Go ahead now and select the free plan, if you want to &lt;a href="https://www.cloudflare.com/en-gb/plans/">go more advanced&lt;/a> then you can do so.&lt;/p>
 &lt;p>Once that&amp;rsquo;s created you&amp;rsquo;ll see Cloudflare scan the DNS records for this domain you&amp;rsquo;ve added - for now let&amp;rsquo;s navigate back to the &lt;a href="https://dash.cloudflare.com/">Cloudflare Dashboard&lt;/a> and selecting the domain. You&amp;rsquo;ll be presented with a page similar to below, minus all the activity!&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare-domain-landing.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png"
-alt="Screenshot depicting the Cloudflare domain home page"/> &lt;figcaption>
+alt="Screenshot depicting the Cloudflare domain home page"/> &lt;/a>&lt;figcaption>
 &lt;p>Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1309,31 +1309,31 @@ alt="Screenshot depicting the Cloudflare domain home page"/> &lt;figcaption>
 185.199.110.153
 185.199.111.153
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Let&amp;rsquo;s add these to the Cloudflare DNS page below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare-dns-record.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png"
-alt="Screenshot depicting adding DNS records to Cloudflare"/> &lt;figcaption>
+alt="Screenshot depicting adding DNS records to Cloudflare"/> &lt;/a>&lt;figcaption>
 &lt;p>Add in the GitHub IP addresses one by one&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Once done - your records will look something like this:&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare-completed-records.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png"
-alt="Screenshot depicting completed DNS management"/>
+alt="Screenshot depicting completed DNS management"/> &lt;/a>
 &lt;/figure>
 &lt;p>You&amp;rsquo;ll notice an additional CNAME record at the bottom for &lt;code>www&lt;/code>. This will redirect any requests made to &lt;code>www.jdheyburn.co.uk&lt;/code> to &lt;code>jdheyburn.co.uk&lt;/code>. This could be something you&amp;rsquo;d want to replicate too if you wish.&lt;/p>
 &lt;p>One thing to note down before we move on is to capture the Cloudflare DNS Nameservers that have been assigned to our domain. You can find these on the same DNS management page we are on, but by just scrolling down we can see these nameservers.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare-nameservers.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png"
-alt="Screenshot depicting completed Cloudflare DNS nameservers"/> &lt;figcaption>
+alt="Screenshot depicting completed Cloudflare DNS nameservers"/> &lt;/a>&lt;figcaption>
 &lt;p>Make a note of these nameservers for your domain&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h3 id="direct-namecheap-to-cloudflare">Direct Namecheap to Cloudflare&lt;/h3>
 &lt;p>&lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#acquire-a-domain">Earlier in this post&lt;/a>, I mentioned that a newly created Namecheap domain will default to their own DNS nameservers. We want to change this to Cloudflares DNS nameservers from which we configured our DNS records.&lt;/p>
 &lt;p>Navigate to the &lt;a href="https://ap.www.namecheap.com/domains/list/">Namecheap management page&lt;/a> for your domain and enter the Cloudflare nameservers once you have selected &lt;strong>Custom DNS&lt;/strong>.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="namecheap-nameservers.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png"
-alt="Screenshot depicting completed nameservers pointing to Cloudflare"/> &lt;figcaption>
+alt="Screenshot depicting completed nameservers pointing to Cloudflare"/> &lt;/a>&lt;figcaption>
 &lt;p>Add in your Cloudflare domains from previously&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1349,16 +1349,16 @@ alt="Screenshot depicting completed nameservers pointing to Cloudflare"/> &lt;fi
 &lt;p>For this step, you need to navigate to the settings pages for your &lt;code>.github.io&lt;/code> repo containing your rendered code.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">https://github.com/&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io/settings
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now scroll down, keep going until you hit the &lt;strong>GitHub Pages&lt;/strong> heading. Here you will see a form for entering a custom domain; do the honours and enter it in like below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="github_pages_setup.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/github_pages_setup.png"
-alt="Screenshot depicting GitHub Pages form for specifying a custom domain"/> &lt;figcaption>
+alt="Screenshot depicting GitHub Pages form for specifying a custom domain"/> &lt;/a>&lt;figcaption>
 &lt;p>Ignore my already published domain&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Now again wait for DNS to propagate across the world. When GitHub is happy with the changes then you will see the green banner similar to the one in the screenshot above. This means everything is being served up! Why not give it a try ourselves? Head to your domain now and see if everything is working!&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="jdheyburn_co_uk_custom_domain.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png"
-alt="Screenshot depicting completed custom domain"/> &lt;figcaption>
+alt="Screenshot depicting completed custom domain"/> &lt;/a>&lt;figcaption>
 &lt;p>You should end up with something like this!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1395,15 +1395,15 @@ jdheyburn.co.uk
 &lt;h2 id="cloudflare-domain-redirection">Cloudflare Domain Redirection&lt;/h2>
 &lt;p>Assuming that you&amp;rsquo;ve completed steps 1 and 2, we&amp;rsquo;ll need to configure the redirection - but we don&amp;rsquo;t do this via inserting a DNS record like we did previously, Cloudflare has a feature that handles that for us called &lt;strong>Page Rules&lt;/strong>.&lt;/p>
 &lt;p>On your Cloudflare website landing page, navigate to &lt;strong>Page Rules&lt;/strong> in the toolbar at the top and then &lt;strong>Create Page Rule&lt;/strong>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare_page_rules.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png"
-alt="Screenshot depicting how to access the Create Page Rule feature"/>
+alt="Screenshot depicting how to access the Create Page Rule feature"/> &lt;/a>
 &lt;/figure>
 &lt;p>In the next screen we&amp;rsquo;re going to define the rule. Cloudflare have &lt;a href="https://support.cloudflare.com/hc/en-us/categories/200276257-Page-Rules">documentation on Page Rules&lt;/a>, and even more &lt;a href="https://support.cloudflare.com/hc/en-us/articles/200172286-Configuring-URL-forwarding-or-redirects-with-Cloudflare-Page-Rules">specifically on redirection&lt;/a>.&lt;/p>
 &lt;p>From this screen you will want something that appears as below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare_new_page_rule.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png"
-alt="Screenshot depicting how to populate the Create Page Rule form"/>
+alt="Screenshot depicting how to populate the Create Page Rule form"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s break down what&amp;rsquo;s happening here:&lt;/p>
 &lt;ol>
@@ -1422,9 +1422,9 @@ alt="Screenshot depicting how to populate the Create Page Rule form"/>
 &lt;p>Having the forwarded URL set to the &lt;code>https://&lt;/code> scheme will ensure that your users will receive your website encrypted, safe from man-in-the-middle attacks.&lt;/p>
 &lt;/blockquote>
 &lt;p>Lastly, click on &lt;strong>Save and Deploy&lt;/strong> to finalise your changes; you&amp;rsquo;ll have a view such as below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="cloudflare_completed_page_rule.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png"
-alt="Screenshot depicting the newly created page rule"/>
+alt="Screenshot depicting the newly created page rule"/> &lt;/a>
 &lt;/figure>
 &lt;p>That&amp;rsquo;s all you need - once again you will have to wait for DNS replication to trickle down. You can repeat this over again for other domains you may have.&lt;/p>
 &lt;h1 id="conclusion">Conclusion&lt;/h1>
@@ -1495,9 +1495,9 @@ ln -s ~/projects/hugo-coder blog-source/themes/hugo-coder
 &lt;span style="color:#8be9fd;font-style:italic">cd&lt;/span> blog-source
 hugo serve
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>That last command will locally serve the example site, so that you can view it at &lt;code>http://localhost:1313/&lt;/code>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="local_example_site.jpg">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg"
-alt="Screenshot depicting the locally run example site"/> &lt;figcaption>
+alt="Screenshot depicting the locally run example site"/> &lt;/a>&lt;figcaption>
 &lt;p>Success!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -1554,9 +1554,9 @@ git push
 &lt;p>That&amp;rsquo;s when you can make true comparisons in any system. As such the aim of this series of posts will be to explain how this website is architected, so that we may reference it in future posts. Later on, I&amp;rsquo;ll also talk about how you&amp;rsquo;re able to get yourself set up as well.&lt;/p>
 &lt;h3 id="the-setup">The Setup&lt;/h3>
 &lt;p>Because we all love an architecture diagram, let&amp;rsquo;s slap one in now.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="blog-arch-cover.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png"
-alt="An architecture diagram of my portfolio site"/>
+alt="An architecture diagram of my portfolio site"/> &lt;/a>
 &lt;/figure>
 &lt;p>Wow. That is&amp;hellip; really not much at all. Apologies if you were expecting a lot more arrows and boxes!&lt;/p>
 &lt;p>In a way, I shouldn&amp;rsquo;t be sorry, because one of the core priniciples in software development is KISS (Keep It Simple Stupid!) - and this setup is just an advantage of how I decided the first implementation of my website to be:&lt;/p>
@@ -1582,9 +1582,9 @@ alt="An architecture diagram of my portfolio site"/>
 &lt;h4 id="analytics">Analytics&lt;/h4>
 &lt;p>Because everyone loves graphs and numbers&amp;hellip; right??&amp;hellip; Alright just me then&amp;hellip;&lt;/p>
 &lt;p>You&amp;rsquo;ll be able to see how many requests are being served up, where requests originate from, amongst others. Take a look at an example below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="analytics_example.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/analytics_example.png"
-alt="A graph displaying total requests, and how many of them were cached"/>
+alt="A graph displaying total requests, and how many of them were cached"/> &lt;/a>
 &lt;/figure>
 &lt;h4 id="custom-domain">Custom domain&lt;/h4>
 &lt;ul>
@@ -1720,15 +1720,15 @@ TypeError: unsupported operand type(s) for +: &amp;#39;int&amp;#39; and &amp;#39
 incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_hinting.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
-alt="Screenshot displaying type hinting provided by Visual Studio Code"/>
+alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
 &lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
-alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/>
+alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
 &lt;/figure>
 &lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
 &lt;h3 id="return-types">Return Types&lt;/h3>
@@ -1737,14 +1737,14 @@ alt="Screenshot displaying type checking provided by Visual Studio Code - the il
 incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking_bad_return.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
-alt="Screenshot displaying type checking, highlighting the bad return value"/>
+alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
 &lt;/figure>
 &lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
-alt="Screenshot displaying type checking, highlighting the bad assigned variable"/>
+alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
 &lt;/figure>
 &lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>
 &lt;p>Another pattern you might see is if a method does not return anything (in Java-speak, it is &lt;code>void&lt;/code>), an example of this is if the method is a constructor for a class.&lt;/p>

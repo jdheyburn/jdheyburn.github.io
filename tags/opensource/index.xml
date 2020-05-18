@@ -17,9 +17,9 @@
 &lt;p>Documenting down architecture, processes, runbooks, etc., can help to give you clarity into the subject you are writing about. Once you&amp;rsquo;ve extracted all the details and are able to view them at a high-level, you&amp;rsquo;re able to iron out any creases and make improvements from there.&lt;/p>
 &lt;p>However, more importantly, and one that is most beneficial to me is that&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>You will forget that shit and will need to reference it back again!&lt;/strong>&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="elephant-cartoon.png">
 &lt;img src="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/elephant-cartoon.png"
-alt="Cartoon elephant" width="400x"/> &lt;figcaption>
+alt="Cartoon elephant" width="400x"/> &lt;/a>&lt;figcaption>
 &lt;p>Not everyone can have the memory of an elephant&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>

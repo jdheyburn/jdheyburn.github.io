@@ -31,14 +31,14 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;p>&lt;code>alias pbcopy=&amp;quot;xclip -selection clipboard&amp;quot;&lt;/code>&lt;/p>
 &lt;/blockquote>
 &lt;p>In GitHub load up your GitHub Pages repo and navigate to &lt;code>Settings&lt;/code> and then &lt;code>Deploy keys&lt;/code>. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code>Allow write access&lt;/code>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="gha-deploy-key.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png"
-alt="GitHub Pages repo deploy keys page"/>
+alt="GitHub Pages repo deploy keys page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Copy the contents of the &lt;em>private key&lt;/em> you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code>Settings&lt;/code> page, then &lt;code>Secrets&lt;/code>. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="gha-secrets-key.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png"
-alt="GitHub source code repo secrets page"/> &lt;figcaption>
+alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>No secrets here!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -137,17 +137,17 @@ git -c &lt;span style="color:#f1fa8c">&amp;#34;http.extraheader=$auth_header&amp
 &lt;h2 id="bringing-it-all-together-again">Bringing It All Together (Again)&lt;/h2>
 &lt;p>If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p>
 &lt;p>For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href="https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings">https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a> for me) and disabling &lt;code>Build pushed branches&lt;/code>.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-disable-build.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png"
-alt="Build pushed branches disabled on Travis"/>
+alt="Build pushed branches disabled on Travis"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code>Actions&lt;/code> tab of your source code repo on GitHub.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add --all
 git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span>
 git push
-&lt;/code>&lt;/pre>&lt;/div>&lt;figure>
+&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;a href="github-actions-build.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png"
-alt="Successful build on GitHub Actions"/> &lt;figcaption>
+alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;p>Great success!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -176,54 +176,54 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p>Now there are many CI tools out there with the most well known likely to be &lt;a href="https://jenkins.io/">Jenkins&lt;/a>, but there are also hosted solutions available which will take your code and perform your pipelines against them.&lt;/p>
 &lt;p>One of those hosted solutions is &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>, where they integrate quite nicely with GitHub repositories to attach &lt;a href="https://developer.github.com/webhooks/">webhooks&lt;/a> against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p>
 &lt;p>So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-free.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png"
-alt="Screenshot of Travis free pricing plan"/> &lt;figcaption>
+alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;p>Free is definitely a thing you love to see&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="travisci-account-setup">TravisCI Account Setup&lt;/h2>
 &lt;p>The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em>another&lt;/em> account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href="https://travis-ci.com/">https://travis-ci.com/&lt;/a> and click on &lt;code>Sign in with GitHub&lt;/code>.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-landing.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png"
-alt="Screenshot of Travis landing page"/> &lt;figcaption>
+alt="Screenshot of Travis landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>GitHub will ask you if you &lt;em>really&lt;/em> want to share some of your GitHub data with Travis.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-authorise.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png"
-alt="Screenshot of GitHub authorising Travis"/> &lt;figcaption>
+alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Another green button? Why not!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p>
 &lt;p>All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href="https://travis-ci.com/account/repositories">https://travis-ci.com/account/repositories&lt;/a> page is what you need for that - then click on the &lt;code>Activate&lt;/code> button.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="travis-github-apps-integration.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png"
-alt="Screenshot of GitHub Apps Integration"/> &lt;figcaption>
+alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>&amp;hellip;More green buttons?!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Now on the next screen you may or may not want the default selection of &lt;code>All repositories&lt;/code> which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">&lt;em>principle of least privilege&lt;/em>&lt;/a> (POLP); not just for users but for services too.&lt;/p>
 &lt;p>For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code>jdheyburn.co.uk&lt;/code> and &lt;code>jdheyburn.github.io&lt;/code> - it also gives you a cleaner Travis dashboard too.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-repos-selection.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png"
-alt="Screenshot of GitHub Travis Repository Authorisation"/>
+alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="back-to-github">Back to GitHub&lt;/h3>
 &lt;p>The next step is required to permit Travis to push the built project to our GitHub Pages repo. We need to generate a secret with the permissions that Travis requires and keep it aside for the Travis config file later.&lt;/p>
 &lt;p>Navigate to the &lt;a href="https://github.com/settings/tokens">GitHub Personal Access Tokens&lt;/a> page and click on &lt;code>Generate new token&lt;/code>.&lt;/p>
 &lt;p>You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code>repo&lt;/code> checkbox as done so below.&lt;/p>
 &lt;p>After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code>Generate token&lt;/code>.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-pat.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png"
-alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/>
+alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/> &lt;/a>
 &lt;/figure>
 &lt;p>The token&amp;rsquo;s secret will display on the next screen. &lt;strong>Make sure you copy it&lt;/strong> and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="travis-github-pat-created.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png"
-alt="Screenshot of GitHub Personal Access Token Creation - token complete"/>
+alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="travisci-configuration">TravisCI Configuration&lt;/h2>
 &lt;p>Once we have our Travis account set up, we need to add in a &lt;a href="https://docs.travis-ci.com/user/tutorial/">configuration file&lt;/a> that Travis will read from to determine what steps we&amp;rsquo;d like it to perform.&lt;/p>

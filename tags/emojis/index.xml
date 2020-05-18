@@ -73,9 +73,9 @@ e66c1740611b15eee0069811d10b5a22b0dc4332
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="hugo-coder-commit.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
-alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;figcaption>
+alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -98,9 +98,9 @@ alt="Screenshot showing old, proper list render"/>
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="git-diff-list.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
-alt="Screenshot showing git diff between old and new list"/>
+alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
 &lt;h2 id="adding-new-features">Adding New Features&lt;/h2>
@@ -255,9 +255,9 @@ alt="Screenshot showing tilde strikethrough not appearing in table of content en
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="broken-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
-alt="Screenshot of broken emoji on browser title"/>
+alt="Screenshot of broken emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
@@ -279,9 +279,9 @@ alt="Screenshot of broken emoji rendering on lists"/>
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="fixed-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
-alt="Screenshot of fixed emoji on browser title"/>
+alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
 &lt;p>We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code>posts&lt;/code> and make the modification there - &lt;code>layouts/posts/li.html&lt;/code>. We&amp;rsquo;ll need to do the same here as we did for &lt;code>single.html&lt;/code> and copy it to our project root.&lt;/p>

@@ -73,9 +73,9 @@ e66c1740611b15eee0069811d10b5a22b0dc4332
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cat .git/modules/themes/hugo-coder/HEAD
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="hugo-coder-commit.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
-alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;figcaption>
+alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -98,9 +98,9 @@ alt="Screenshot showing old, proper list render"/>
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="git-diff-list.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
-alt="Screenshot showing git diff between old and new list"/>
+alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
 &lt;h2 id="adding-new-features">Adding New Features&lt;/h2>
@@ -255,9 +255,9 @@ alt="Screenshot showing tilde strikethrough not appearing in table of content en
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="broken-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
-alt="Screenshot of broken emoji on browser title"/>
+alt="Screenshot of broken emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
@@ -279,9 +279,9 @@ alt="Screenshot of broken emoji rendering on lists"/>
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="fixed-emoji-browser-title.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
-alt="Screenshot of fixed emoji on browser title"/>
+alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
 &lt;p>We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code>posts&lt;/code> and make the modification there - &lt;code>layouts/posts/li.html&lt;/code>. We&amp;rsquo;ll need to do the same here as we did for &lt;code>single.html&lt;/code> and copy it to our project root.&lt;/p>
@@ -448,9 +448,9 @@ git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/sp
 &lt;/li>
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
-&lt;figure>
+&lt;figure>&lt;a href="blogs-landing-page.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
-alt="Screenshot of Blog landing page with incorrect Blogs title"/>
+alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
 &lt;h3 id="fixing-article-rendering">Fixing Article Rendering&lt;/h3>
@@ -478,9 +478,9 @@ themes/hugo-coder/layouts/posts
 └── single.html
 &lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="posts-blog-rendering-error.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
-alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;figcaption>
+alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;/a>&lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -530,9 +530,9 @@ type: posts
 &lt;p>You can read more about how &lt;code>aliases&lt;/code> does its operations &lt;a href="https://gohugo.io/content-management/urls/#aliases">here&lt;/a>.&lt;/p>
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
-&lt;figure>
+&lt;figure>&lt;a href="blogs-landing-page.png">
 &lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
-alt="Screenshot of Blog landing page with incorrect Blogs title"/>
+alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>
 &lt;p>Remembering that &lt;code>content/blog&lt;/code> is a &lt;a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">branch bundle&lt;/a>, we can override the inferred title with a &lt;code>_index.md&lt;/code> file at that directory.&lt;/p>

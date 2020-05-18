@@ -121,15 +121,15 @@ TypeError: unsupported operand type(s) for +: &amp;#39;int&amp;#39; and &amp;#39
 incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_hinting.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
-alt="Screenshot displaying type hinting provided by Visual Studio Code"/>
+alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
 &lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
-alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/>
+alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
 &lt;/figure>
 &lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
 &lt;h3 id="return-types">Return Types&lt;/h3>
@@ -138,14 +138,14 @@ alt="Screenshot displaying type checking provided by Visual Studio Code - the il
 incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking_bad_return.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
-alt="Screenshot displaying type checking, highlighting the bad return value"/>
+alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
 &lt;/figure>
 &lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
-&lt;figure class="center">
+&lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
 &lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
-alt="Screenshot displaying type checking, highlighting the bad assigned variable"/>
+alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
 &lt;/figure>
 &lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>
 &lt;p>Another pattern you might see is if a method does not return anything (in Java-speak, it is &lt;code>void&lt;/code>), an example of this is if the method is a constructor for a class.&lt;/p>
