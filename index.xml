@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JDHeyburn</title><link>https://jdheyburn.co.uk/</link><description>Recent content on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JDHeyburn</title><link>https://jdheyburn.co.uk/</link><description>Recent content on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 02 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/index.xml" rel="self" type="application/rss+xml"/><item><title>Using Terraform to Manage AWS Patch Baselines at Enterprise Scale</title><enclosure url="https://jdheyburn.co.uk/blog/managed-aws-patch-baselines-terraform/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/managed-aws-patch-baselines-terraform/</link><pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/managed-aws-patch-baselines-terraform/</guid><description>&lt;p>If you’re new to AWS and patching principles then continue reading, else you can &lt;a href="https://jdheyburn.co.uk/blog/managed-aws-patch-baselines-terraform/#data-sources-for-patch-baselines">skip to juicy stuff below&lt;/a>.&lt;/p>
+&lt;h2 id="aws-primer-">AWS Primer ☁️&lt;/h2>
+&lt;h3 id="ec2">EC2&lt;/h3>
+&lt;p>Amazon Web Services (AWS) provides Cloud resources to those that require it, &lt;a href="https://www.lastweekinaws.com/blog/4-reasons-lyft-is-smart-to-pay-aws-300m/">for a cost&lt;/a> mind you. One resource in particular is a box-standard server known on AWS as &lt;a href="https://aws.amazon.com/ec2/">EC2 Instances&lt;/a> which you can secure shell (&lt;a href="https://www.ssh.com/ssh/">SSH&lt;/a>) into and do whatever you like with it - the world is now officially your oyster! 🦪&lt;/p>
+&lt;p>Just like with your personal laptop, computer, mobile phone, etc., you need to patch your servers with the latest security updates to ensure that you are protected from any adversary gaining access to your devices.&lt;/p>
+&lt;p>If they were to gain unauthorised access, they can execute whatever they like on there; whether that be sniffing around your network for some sensitive files, or &lt;a href="https://www.cybersecurity-insiders.com/hackers-cyber-attack-amazon-cloud-to-mine-bitcoins/">mining cryptocurrency&lt;/a> on your paid-for resources. Just like you earlier - your world is now officially &lt;em>their&lt;/em> oyster!&lt;/p>
+&lt;p>EC2 instances are operated by you, and as per the &lt;a href="https://aws.amazon.com/compliance/shared-responsibility-model/">AWS Shared Responsibility Model&lt;/a>, &lt;em>you&lt;/em> are responsible for ensuring the software is kept secured.&lt;/p>
+&lt;h3 id="ssm--patch-manager">SSM &amp;amp; Patch Manager&lt;/h3>
+&lt;p>AWS have a service used to help with the administration of EC2 instances called &lt;a href="https://aws.amazon.com/systems-manager/">Systems Manager (SSM*)&lt;/a>. SSM is a bit of a beast and covers a lot of different functionalitie, going deep on SSM is beyond the scope of this article - so you can read more about it on the &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">AWS documentation&lt;/a>.&lt;/p>
+&lt;blockquote>
+&lt;p>* SSM formerly was an acronym for Simple Systems Manager - I guess it got more complex than they thought!&lt;/p>
+&lt;/blockquote>
+&lt;p>To help you keep your instances patched, AWS provided the &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-patch.html">Patch Manager&lt;/a> - within there it contains a number of tools to help with this. These are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/about-patch-baselines.html">&lt;strong>Patch Baselines&lt;/strong>&lt;/a>
+&lt;ul>
+&lt;li>a policy which filters available patches for your instances to what should be installed on it&lt;/li>
+&lt;li>filters which you can apply to a baseline include
+&lt;ul>
+&lt;li>how many days since the patch was released&lt;/li>
+&lt;li>the severity and classification of the patch&lt;/li>
+&lt;li>or even explicitly deny individual patches if you know they introduce a bug&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>e.g. only install security classified patches marked as critical severity which have been released more than 7 days ago&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-patch-patchgroups.html">&lt;strong>Patch Groups&lt;/strong>&lt;/a>
+&lt;ul>
+&lt;li>a label which joins together patch baselines, to what instances they should be applied to&lt;/li>
+&lt;li>they apply to instances as a tag at a key named &lt;code>Patch Group&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>To then perform a patch event on an instance, you will need to execute an SSM Document known as &lt;strong>AWS-RunPatchBaseline&lt;/strong> on your target instances.&lt;/p>
+&lt;blockquote>
+&lt;p>An &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-ssm-docs.html">SSM Document&lt;/a> is essentially an automation script that you can perform on one or more instances at a time, with conditions to apply different sets of scripts depending on the operating system (OS) platform (i.e. Windows / Linux).&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>AWS-RunPatchBaseline&lt;/strong> is one such example of a document that has both Windows and Linux stages, and it will check and install patches against the patch baseline that has been applied to your instance, via a patch group.&lt;/p>
+&lt;blockquote>
+&lt;p>However if an EC2 instance is not assigned to a patch group, then AWS will pick the &lt;strong>default baseline&lt;/strong> for that instances operating system&lt;/p>
+&lt;/blockquote>
+&lt;p>Say you had a security policy of ensuring instances must check for patches once a week - there&amp;rsquo;s no need to manually execute the SSM Document yourself. &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-maintenance.html">Maintenance Windows&lt;/a> can help with that. They are essentially a &lt;a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">cron expression&lt;/a> that you define to then execute a task. In this case we can create a maintenance window to execute the AWS-RunPatchBaseline document on a weekly basis.&lt;/p>
+&lt;p>The resulting relationship of all the above looks like this:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">Maintenance Windows ──┬── invokes ───&amp;gt; SSM Document ─── queries ───&amp;gt; Patch Baseline
+|
+|
+└── targets ───&amp;gt; Patch Groups ─── assigned to ───&amp;gt; EC2 Instances
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="infrastructure-as-code-primer">Infrastructure as Code Primer&lt;/h2>
+&lt;p>Creating your resources through a web UI such as AWS Console is okay for learning in. But how do you ensure your infrastructure is repeatable across several environments? Not only that, how do you easily keep a history of the state of your application infrastructure?&lt;/p>
+&lt;p>This is where &lt;a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code&lt;/a> (IAC) comes in. IAC is where all your infrastructure resources are defined in code, and published onto a source code repository of your choosing (GitHub, GitLab, etc.).&lt;/p>
+&lt;p>That way you can ensure the code that defines your infrastructure can be repeated across your different application environments, and be able to view history of code changes.&lt;/p>
+&lt;p>It also acts as a single source of truth that everyone in your team can depend on for what the application state looks like.&lt;/p>
+&lt;p>There are several IAC tools that you can use:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://aws.amazon.com/cloudformation/">CloudFormation&lt;/a> is AWS’s home-grown solution exclusively for AWS services&lt;/li>
+&lt;li>There are platform-agnostic tools such as &lt;a href="https://www.terraform.io/">Terraform&lt;/a>
+&lt;ul>
+&lt;li>written in its own proprietary language HashiCorp Configuration Language (HCL)&lt;/li>
+&lt;li>I’ve talked about Terraform before in a &lt;a href="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/#background">previous post&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Or for a language-agnostic, platform-agnostic tool - &lt;a href="https://www.pulumi.com/why-pulumi/">Pulumi&lt;/a> is the one for you.&lt;/li>
+&lt;/ul>
+&lt;p>In the case of Terraform, it keeps the current state of your infrastructure stack in a file stored in a shared remote location. This is known as the &lt;a href="https://www.terraform.io/docs/state/index.html">state file&lt;/a>, and it is used by Terraform to understand what resources Terraform is aware of in your platform.&lt;/p>
+&lt;h2 id="patch-baselines-in-an-enterprise-environment">Patch Baselines in an Enterprise Environment&lt;/h2>
+&lt;p>When managing Terraform in an enterprise environment, it is a best practice to split up the infrastructure on the structure of the teams working on them, known as workspaces. This is something advised by &lt;a href="https://www.terraform.io/docs/cloud/guides/recommended-practices/part1.html#the-recommended-terraform-workspace-structure">Terraform themselves&lt;/a>. For example, you would have a workspace for billing, and one for networking. That way you can ensure teams can work effectively without treading on each others&amp;rsquo; toes.&lt;/p>
+&lt;p>The same principle can be applied to a security team that defines security policies, who will also write up patching policies. These policies will be followed by teams working in different workspaces to understand at minimum what patches should be installed on a server, and how quickly to install them.&lt;/p>
+&lt;blockquote>
+&lt;p>Check out the University of Exeter’s own &lt;a href="https://www.exeter.ac.uk/media/level1/academicserviceswebsite/it/recordsmanagementservice/policydocuments/Patch_Management_Policy_FINAL.pdf">patching policy&lt;/a> for an example.&lt;/p>
+&lt;/blockquote>
+&lt;p>For example, an enterprise may have a patching policy that states all patches with a severity marked as ‘Critical’ or ‘Important’ must be installed within 14 days of its release. If an out-of-band (OOB) patch is released, then it must be installed within 3 days.&lt;/p>
+&lt;p>These folk are the same lot who will also conjure up the &lt;strong>Patch Baselines&lt;/strong> we learned about earlier.&lt;/p>
+&lt;p>They may deploy these patch baselines in a different Terraform workspace from yours. If that were the case, then if you wanted to refer back to these in your Terraform workspace, then the &lt;a href="https://www.terraform.io/docs/providers/terraform/d/remote_state.html">&lt;code>remote_state&lt;/code>&lt;/a> resource is something you might need.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#6272a4"># This example references a subnet_id created in another workspace
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;terraform_remote_state&amp;#34; &amp;#34;vpc&amp;#34;&lt;/span> {
+backend &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;remote&amp;#34;&lt;/span>
+config &lt;span style="color:#ff79c6">=&lt;/span> {
+organization &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;hashicorp&amp;#34;&lt;/span>
+workspaces &lt;span style="color:#ff79c6">=&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;vpc-prod&amp;#34;&lt;/span>
+}
+}
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_instance&amp;#34; &amp;#34;foo&amp;#34;&lt;/span> {&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # ...
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> subnet_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">terraform_remote_state&lt;/span>.&lt;span style="color:#ff79c6">vpc&lt;/span>.&lt;span style="color:#ff79c6">outputs&lt;/span>.&lt;span style="color:#ff79c6">subnet_id&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>So the above works if all parties are using Terraform workspaces. But what if you&amp;rsquo;re using Terraform, and the security team (who are managing patch baselines) are using something different like the mentioned CloudFormation or Pulumi.&lt;/p>
+&lt;p>If you are creating &lt;strong>patch groups&lt;/strong> in Terraform - you won’t be able to reference the &lt;strong>patch baselines&lt;/strong> they’ve created, because they are in a different state file.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_group&amp;#34; &amp;#34;front_end_servers&amp;#34;&lt;/span> {
+baseline_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_patch_baseline&lt;/span>.&lt;span style="color:#ff79c6">front_end_servers&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>&lt;span style="color:#6272a4"> # Terraform does not know about this resource!
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> patch_group &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;front_end_servers&amp;#34;&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You could of course replicate the patch baseline they’ve created in your Terraform code, but then that does not scale in an enterprise.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_baseline&amp;#34; &amp;#34;front_end_servers&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;front-end-servers&amp;#34;&lt;/span>
+...&lt;span style="color:#6272a4"> # variables removed for brevity
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_group&amp;#34; &amp;#34;front_end_servers&amp;#34;&lt;/span> {
+baseline_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_patch_baseline&lt;/span>.&lt;span style="color:#ff79c6">front_end_servers&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>&lt;span style="color:#6272a4"> # Not good!
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> patch_group &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;front_end_servers&amp;#34;&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is what we want to avoid.&lt;/p>
+&lt;h3 id="data-sources-for-patch-baselines">Data Sources For Patch Baselines&lt;/h3>
+&lt;p>&lt;a href="https://www.terraform.io/docs/configuration/data-sources.html">Data sources&lt;/a> in Terraform allow you to pull resources in your platform that may exist in a separate state file to yours, or even a completely different IAC tool to Terraform, such as CloudFormation. What we need is a data source component for the &lt;code>aws_ssm_patch_baseline&lt;/code> resource.&lt;/p>
+&lt;p>With a &lt;a href="https://github.com/terraform-providers/terraform-provider-aws/pull/9486">pull request&lt;/a> I made to the &lt;a href="https://github.com/terraform-providers/terraform-provider-aws">terraform-aws-provider&lt;/a> project - I added the ability to pull in &lt;strong>patch baseline&lt;/strong> resources that exist in the AWS account you are targeting, meaning if the enterprise security team had deployed a patch baseline via a different stack, then you can reference that in your &lt;strong>patch group&lt;/strong>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#6272a4"># This resource is defined outside of the current working Terraform state
+&lt;/span>&lt;span style="color:#6272a4"># So we are making a call to retrieve the ID of the resource in AWS
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_baseline&amp;#34; &amp;#34;front_end_servers&amp;#34;&lt;/span> {
+owner &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Self&amp;#34;&lt;/span>
+name_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;FrontEndServers&amp;#34;&lt;/span>
+operating_system &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;CENTOS&amp;#34;&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_group&amp;#34; &amp;#34;front_end_servers&amp;#34;&lt;/span> {
+baseline_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">aws_ssm_patch_baseline&lt;/span>.&lt;span style="color:#ff79c6">front_end_servers&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+patch_group &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;front_end_servers&amp;#34;&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_instance&amp;#34; &amp;#34;front_end_server&amp;#34;&lt;/span> {
+...&lt;span style="color:#6272a4"> # variables removed for brevity
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>
+tags &lt;span style="color:#ff79c6">=&lt;/span> {
+&amp;#34;Patch Group&amp;#34; &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_patch_group&lt;/span>.&lt;span style="color:#ff79c6">front_end_servers&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The documentation for its usage can be found &lt;a href="https://www.terraform.io/docs/providers/aws/d/ssm_patch_baseline.html">here&lt;/a>.&lt;/p>
+&lt;p>Another scenario might be where you want to reuse the &lt;strong>patch baselines&lt;/strong> that AWS has created in your account. One such baseline is &lt;code>AWS-WindowsPredefinedPatchBaseline-OS-Applications&lt;/code>, which patches both the Windows OS, and selected Microsoft applications installed on the Windows server.&lt;/p>
+&lt;p>Currently this is not the default baseline for Windows. So if you want to have this baseline assigned to a patch group, you could do something like this:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_baseline&amp;#34; &amp;#34;windows_predefined_os_and_apps&amp;#34;&lt;/span> {
+owner &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AWS&amp;#34;&lt;/span>
+name_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AWS-WindowsPredefinedPatchBaseline-OS-Applications&amp;#34;&lt;/span>
+operating_system &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;WINDOWS&amp;#34;&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_patch_group&amp;#34; &amp;#34;active_directory&amp;#34;&lt;/span> {
+baseline_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">aws_ssm_patch_baseline&lt;/span>.&lt;span style="color:#ff79c6">windows_predefined_os_and_apps&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+patch_group &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;active_directory&amp;#34;&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_instance&amp;#34; &amp;#34;active_directory&amp;#34;&lt;/span> {
+...&lt;span style="color:#6272a4"> # variables removed for brevity
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>
+tags &lt;span style="color:#ff79c6">=&lt;/span> {
+&amp;#34;Patch Group&amp;#34; &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_patch_group&lt;/span>.&lt;span style="color:#ff79c6">active_directory&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This is a relatively short post - but it was just a quick introduction to AWS Patch Manager. I hope you find it helpful in applying your enterprise patching strategy to your product teams!&lt;/p></description></item><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
 &lt;p>If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration">skip there&lt;/a>.&lt;/p>
 &lt;h2 id="background">Background&lt;/h2>
 &lt;p>A few months back I kitted out my home with some &lt;a href="https://www.ui.com/products/#unifi">Ubiquiti UniFi&lt;/a> gear to fix our crappy Wifi at home, following inspiration from &lt;a href="https://www.troyhunt.com/ubiquiti-all-the-things-how-i-finally-fixed-my-dodgy-wifi/">Troy Hunt&lt;/a> and &lt;a href="https://scotthelme.co.uk/my-ubiquiti-home-network/">Scott Helme&lt;/a>.&lt;/p>
