@@ -1,4 +1,247 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JDHeyburn</title><link>https://jdheyburn.co.uk/</link><description>Recent content on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 02 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/index.xml" rel="self" type="application/rss+xml"/><item><title>Using Terraform to Manage AWS Patch Baselines at Enterprise Scale</title><enclosure url="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</link><pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</guid><description>&lt;p>If you’re new to AWS and patching principles then continue reading, else you can &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#data-sources-for-patch-baselines">skip to juicy stuff below&lt;/a>.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JDHeyburn</title><link>https://jdheyburn.co.uk/</link><description>Recent content on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/index.xml" rel="self" type="application/rss+xml"/><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
+&lt;p>Today I&amp;rsquo;ll be talking about a small enhancement to how the tests are generated to make use of the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package within &lt;a href="https://github.com/stretchr/testify">testify&lt;/a>. Go already comes with enough for you to write tests, but &lt;code>assert&lt;/code> provides me with more options for comparison in a natural language form. I&amp;rsquo;ll also be adding support for when a test case returns an unexpected error.&lt;/p>
+&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
+&lt;h2 id="recap">Recap&lt;/h2>
+&lt;p>From the last time we visited this, our test code took the format below.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+want &lt;span style="color:#8be9fd">bool&lt;/span>
+wantErr &lt;span style="color:#8be9fd">error&lt;/span>
+}{
+name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
+args: args{
+name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
+},
+want: &lt;span style="color:#ff79c6">false&lt;/span>,
+wantErr: errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
+}
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> !reflect.&lt;span style="color:#50fa7b">DeepEqual&lt;/span>(err, tt.wantErr) {
+t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
+t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
+}
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although this works nicely, there is one issue - we&amp;rsquo;re not capturing unexpected errors. Or rather, if an error is returned to &lt;code>err&lt;/code>, and &lt;code>tt.wantErr&lt;/code> is set to &lt;code>nil&lt;/code>, then the test will not fail.&lt;/p>
+&lt;p>Okay, so we still have the &lt;code>if got != tt.want&lt;/code> condition to fail the test if needed. Although we still could have this condition pass, we want to make sure we capture the error. The test suite is doing currently is &lt;em>assuming&lt;/em> we don&amp;rsquo;t care about the outcome of &lt;code>err&lt;/code>, just because we didn&amp;rsquo;t want one as described by &lt;code>tt.wantErr&lt;/code>.&lt;/p>
+&lt;p>I seem to remember assumptions being the &lt;del>brother&lt;/del> mother of something&amp;hellip;&lt;/p>
+&lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+&lt;iframe src="https://www.youtube.com/embed/G-2NimrRPAQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
+&lt;/div>
+&lt;h2 id="enhancing-for-unexpected-errors">Enhancing for Unexpected Errors&lt;/h2>
+&lt;p>In order to enhance what we have already from the original modified &lt;a href="https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5">function.tmpl&lt;/a>, we could have it output something like this to capture unexpected errors.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#6272a4">// ... removed for brevity
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() unexpected error = %v&amp;#34;&lt;/span>, err)
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
+&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> !reflect.&lt;span style="color:#50fa7b">DeepEqual&lt;/span>(err, tt.wantErr) {
+t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
+t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
+}
+})
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The highlighted lines show the new addition. This is something we could implement fairly easily. On the other hand, the &lt;code>assert&lt;/code> library gives us a lot more to play with. It essentially is doing the same as the above under the hood, albeit in a cleaner fashion&amp;hellip; and I&amp;rsquo;m all for better code readability!&lt;/p>
+&lt;h3 id="rewriting-for-assert">Rewriting for Assert&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+want &lt;span style="color:#8be9fd">bool&lt;/span>
+wantErr &lt;span style="color:#8be9fd">error&lt;/span>
+}{
+name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
+args: args{
+name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
+},
+want: &lt;span style="color:#ff79c6">false&lt;/span>,
+wantErr: errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
+}
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> )
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
+&lt;/span> })
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code block is what we get when we take the test code above that is using the &lt;code>t.Errorf&lt;/code> function call to record a test failure, and rewrite it to use &lt;code>assert&lt;/code>.&lt;/p>
+&lt;p>What we now need to do is have &lt;code>gotests&lt;/code> generate it for us.&lt;/p>
+&lt;h2 id="customising-gotests-generated-test-v2">Customising Gotests Generated Test v2&lt;/h2>
+&lt;p>We&amp;rsquo;ll be following a process similar to when I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/#customising-gotests-generated-test">last did this&lt;/a>. I&amp;rsquo;m still using VSCode, so you&amp;rsquo;ll need to find the &lt;a href="https://github.com/cweill/gotests/#demo">correct plugin&lt;/a> for your editor.&lt;/p>
+&lt;ol>
+&lt;li>Check out gotests and copy the templates directory to a place of your choosing
+&lt;ul>
+&lt;li>&lt;code>git clone https://github.com/cweill/gotests.git&lt;/code>&lt;/li>
+&lt;li>&lt;code>cp -R gotests/internal/render/templates ~/.vscode/gotests/templates&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>In order for us to achieve the generated test using &lt;code>assert&lt;/code>, this time we&amp;rsquo;re going to need to edit two files; &lt;code>function.tmpl&lt;/code> and &lt;code>results.tmpl&lt;/code>
+&lt;ul>
+&lt;li>Overwrite the contents of &lt;code>function.tmpl&lt;/code> with the &lt;a href="https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-function-tmpl">contents of this Gist&lt;/a>&lt;/li>
+&lt;li>Overwrite the contents of &lt;code>results.tmpl&lt;/code> with the &lt;a href="https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-results-tmpl">contents of this Gist&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Add the following setting to VSCode’s settings.json
+&lt;ul>
+&lt;li>&lt;code>&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/.vscode/gotests/templates&amp;quot;]&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Now we can generate tests of functions that return the following:&lt;/p>
+&lt;ol>
+&lt;li>only returns an error&lt;/li>
+&lt;li>a value, and an error&lt;/li>
+&lt;li>multiple values, and an error&lt;/li>
+&lt;/ol>
+&lt;p>I have the &lt;a href="https://marketplace.visualstudio.com/items?itemName=golang.go">Go plugin&lt;/a> for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p>
+&lt;figure>&lt;a href="generate-unit-tests.png">
+&lt;img src="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png"
+alt="VSCode dropdown with Go plugin"/> &lt;/a>
+&lt;/figure>
+&lt;h3 id="only-returns-an-error">Only returns an error&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+wantErr &lt;span style="color:#8be9fd">error&lt;/span>
+}{
+&lt;span style="color:#6272a4">// TODO: Add test cases.
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
+&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
+&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
+)
+}
+&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
+}
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="returns-a-value-and-an-error">Returns a value, and an error&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+want &lt;span style="color:#8be9fd">bool&lt;/span>
+wantErr &lt;span style="color:#8be9fd">error&lt;/span>
+}{
+&lt;span style="color:#6272a4">// TODO: Add test cases.
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
+&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
+&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
+)
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="returns-multiple-values-and-an-error">Returns multiple values, and an error&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+want &lt;span style="color:#8be9fd">bool&lt;/span>
+want1 &lt;span style="color:#8be9fd">bool&lt;/span>
+wantErr &lt;span style="color:#8be9fd">error&lt;/span>
+}{
+&lt;span style="color:#6272a4">// TODO: Add test cases.
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got, got1, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
+&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
+&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
+)
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
+assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
+&lt;span style="color:#ff79c6">return&lt;/span>
+}
+assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
+assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want1, got1)
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="bonus-only-returns-values">Bonus: Only returns values&lt;/h3>
+&lt;p>The below example is for a function that doesn&amp;rsquo;t produce any errors, but I&amp;rsquo;m including it for the sake of completeness.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+}
+tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
+name &lt;span style="color:#8be9fd">string&lt;/span>
+args args
+want &lt;span style="color:#8be9fd">bool&lt;/span>
+}{
+&lt;span style="color:#6272a4">// TODO: Add test cases.
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
+&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
+t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
+got &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
+assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
+})
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="thats-it">That&amp;rsquo;s It!&lt;/h2>
+&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Using Terraform to Manage AWS Patch Baselines at Enterprise Scale</title><enclosure url="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</link><pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</guid><description>&lt;p>If you’re new to AWS and patching principles then continue reading, else you can &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#data-sources-for-patch-baselines">skip to juicy stuff below&lt;/a>.&lt;/p>
 &lt;h2 id="aws-primer-">AWS Primer ☁️&lt;/h2>
 &lt;h3 id="ec2">EC2&lt;/h3>
 &lt;p>Amazon Web Services (AWS) provides Cloud resources to those that require it, &lt;a href="https://www.lastweekinaws.com/blog/4-reasons-lyft-is-smart-to-pay-aws-300m/">for a cost&lt;/a> mind you. One resource in particular is a box-standard server known on AWS as &lt;a href="https://aws.amazon.com/ec2/">EC2 Instances&lt;/a> which you can secure shell (&lt;a href="https://www.ssh.com/ssh/">SSH&lt;/a>) into and do whatever you like with it - the world is now officially your oyster! 🦪&lt;/p>
@@ -2121,7 +2364,12 @@ OK
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Normal service is resumed!!&lt;/p>
 &lt;h2 id="closing">Closing&lt;/h2>
 &lt;p>I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p>
-&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>&lt;h2 id="strict-error-tests-in-java">Strict Error Tests in Java&lt;/h2>
+&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>&lt;blockquote>
+&lt;p>&lt;strong>UPDATE 2020-07-17&lt;/strong>&lt;/p>
+&lt;p>I wrote a follow up post to this one using the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package instead.&lt;/p>
+&lt;p>Awesome - &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">take me there&lt;/a>!&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="strict-error-tests-in-java">Strict Error Tests in Java&lt;/h2>
 &lt;p>I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter &lt;code>expected&lt;/code> for the annotation &lt;code>@Test&lt;/code>, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.&lt;/p>
 &lt;p>This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">boolean&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>&lt;span style="color:#ff79c6">(&lt;/span>String dogName&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> DogValidationException &lt;span style="color:#ff79c6">{&lt;/span>
