@@ -1,4 +1,353 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on JDHeyburn</title><link>https://jdheyburn.co.uk/blog/</link><description>Recent content in Blog on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 29 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on JDHeyburn</title><link>https://jdheyburn.co.uk/blog/</link><description>Recent content in Blog on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 16 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
+&lt;p>In this post we&amp;rsquo;ll be exploring how we can automate this using maintenance windows - also within the SSM suite. This is something I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">covered before&lt;/a>, but want to extend on that to show how its done.&lt;/p>
+&lt;h2 id="tldr">tl;dr&lt;/h2>
+&lt;ul>
+&lt;li>We can use SSM Maintenance Windows to automate our newly created command documents on a schedule&lt;/li>
+&lt;li>Multiple command documents can be combined in a maintenance window, such as a patching event followed by a healthcheck&lt;/li>
+&lt;li>This provides us with a means of viewing historical invocations on whatever workflow we&amp;rsquo;ve automated&lt;/li>
+&lt;li>By storing command outputs to S3, we can ensure we can recover logs that are too large to display in the console&lt;/li>
+&lt;li>Using S3 Lifecycle Rules we can remove aged logs&lt;/li>
+&lt;/ul>
+&lt;p>Once again all the Terraform code for this post is available on GitHub. It is split into two parts:&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-barebones">aws-ssm-automation-1-barebones&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#barebones-maintenance-window-with-aws-runpatchbaseline">barebones walkthrough&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">aws-ssm-automation-1-logging&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#logging-command-output-to-s3">logging enhancement&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="intro-to-maintenance-windows">Intro to Maintenance Windows&lt;/h2>
+&lt;p>&lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-maintenance.html">Maintenance Windows&lt;/a>, are a means of executing some automation workflow in your AWS estate on a schedule. Got an SSM Document you&amp;rsquo;ve written and want it automated? What about a &lt;a href="https://aws.amazon.com/lambda/">Lambda&lt;/a> you want invoked at a regular schedule? Or maybe it&amp;rsquo;s a &lt;a href="https://aws.amazon.com/step-functions/">Step Function&lt;/a>? Whatever the use case, Maintenance Windows are for you - just don&amp;rsquo;t be fooled by the name - they don&amp;rsquo;t necessarily have to be &lt;em>just&lt;/em> for maintenance!&lt;/p>
+&lt;h3 id="similarities-to-eventbridge-rules">Similarities to EventBridge Rules&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;strong>&amp;ldquo;But wait&amp;rdquo;&lt;/strong>, &lt;em>I hear you ask&lt;/em>, &lt;strong>&amp;ldquo;don&amp;rsquo;t CloudWatch/EventBridge Rules also allow you to invoke events on a schedule too?&amp;quot;&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>Yes they do - both Maintenance Windows and &lt;a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html">EventBridge&lt;/a> Rules (the bigger sibling of CloudWatch Rules) use &lt;a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">cron expressions&lt;/a> to define the schedule they should run on. The primary difference between the two is that Maintenance Windows allow you to &lt;strong>specify the timezone&lt;/strong> that the cron expression adheres to, whereas EventBridge is &lt;a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html">&lt;strong>tied to UTC&lt;/strong>&lt;/a>.&lt;/p>
+&lt;figure class="center">&lt;a href="eventbridge-rule-create.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/eventbridge-rule-create.png"
+alt="The EventBridge rule creation page, there is no option to schedule the rule to a timezone"/> &lt;/a>&lt;figcaption>
+&lt;p>No timezone, no party&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>So using maintenance windows can be handy if you&amp;rsquo;re in a non-UTC timezone and you don&amp;rsquo;t have to constantly convert your local timezone to UTC to schedule events. More importantly, maintenance windows will respect daylight savings time (DST) if your timezone observes it, so you can be sure your automation will be invoked at the same time in the specified timezone throughout the year.&lt;/p>
+&lt;p>On the other hand, EventBridge Rules are fixed to UTC; meaning if your timezone does observe DST, then you&amp;rsquo;ll find your automation could be off by an hour for some portion of the year (unless you change it of course - but who wants to be changing automation twice a year??).&lt;/p>
+&lt;blockquote>
+&lt;p>I don&amp;rsquo;t think I&amp;rsquo;ve ever met a software engineer that&amp;rsquo;s a fan of DST!&lt;/p>
+&lt;/blockquote>
+&lt;p>Notably as well, you can view the execution history of maintenance windows as they&amp;rsquo;ve occurred in the past, allowing you to quickly see whether a particular invocation was successful or not - and drill down into any failures.&lt;/p>
+&lt;p>I&amp;rsquo;m not bashing EventBridge Rules, in fact, it is easier to set up than Maintenance Windows. But there&amp;rsquo;s always the right tool for the job.&lt;/p>
+&lt;p>For the rest of this post, we&amp;rsquo;re going to be exploring how to automate the command document we created last time. Later on in the series we&amp;rsquo;ll be looking at using maintenance windows to automate automation documents.&lt;/p>
+&lt;h3 id="automating-command-documents-with-maintenance-windows">Automating command documents with maintenance windows&lt;/h3>
+&lt;p>So what&amp;rsquo;s the purpose of creating the command document we achieved last time? Well we&amp;rsquo;re not going to be manually invoking it like what we have been doing so far - as engineers we need to be automating as many repetitive tasks as possible.&lt;/p>
+&lt;p>To summarise where we are now, we&amp;rsquo;ve produced a Command document which when executed, automates the following:&lt;/p>
+&lt;ol>
+&lt;li>Downloads a healthcheck script from S3&lt;/li>
+&lt;li>Executes the healthcheck script, failing the command invocation if healthcheck does not pass&lt;/li>
+&lt;/ol>
+&lt;p>Healthchecks are important to run both continuously in our environment, as a means of monitoring and verifying the estate is working as intended, before your users notice. They are also necessary to run after a change has been introduced to the environment, such as a new code deployment, or even a patching event via the &lt;strong>AWS-RunPatchBaseline&lt;/strong> document.&lt;/p>
+&lt;h2 id="barebones-maintenance-window-with-aws-runpatchbaseline">Barebones maintenance window with AWS-RunPatchBaseline&lt;/h2>
+&lt;p>We&amp;rsquo;re going to use Terraform again to build out a minimal maintenance window. You can view the code for it &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-1-barebones/maintenance_window.tf">here&lt;/a>. You&amp;rsquo;ll notice the repository this file sits in is identical to the one from the &lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-0">first post&lt;/a>, except I&amp;rsquo;ve included the new resources that will enable us to accomplish the requirement.&lt;/p>
+&lt;p>Here is a breakdown of each of the resources we&amp;rsquo;re going to create.&lt;/p>
+&lt;h3 id="maintenance-window">Maintenance Window&lt;/h3>
+&lt;p>This creates the maintenance window resource, which is then referred to in the subsequent resources we create.&lt;/p>
+&lt;ul>
+&lt;li>It&amp;rsquo;s nothing more than that cron expression I mentioned earlier, along with the timezone it should execute in&lt;/li>
+&lt;li>We specify how long the window lasts for, and the cutoff; both of which are specified in hours
+&lt;ul>
+&lt;li>The cutoff indicates how long before the end of the window should AWS not schedule any new tasks in that window&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span>
+description &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Daily patch event with a healthcheck afterward&amp;#34;&lt;/span>
+schedule &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;cron(0 9 ? * * *)&amp;#34;&lt;/span>&lt;span style="color:#6272a4"> # Everyday at 9am UK time
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> schedule_timezone &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Europe/London&amp;#34;&lt;/span>
+duration &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">3&lt;/span>
+cutoff &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="maintenance-window-target">Maintenance Window Target&lt;/h3>
+&lt;p>We need a means of telling the window what instances to target, and the &lt;code>aws_ssm_maintenance_window_target&lt;/code> resource is how you do it. Below I&amp;rsquo;m demonstrating two methods of doing this:&lt;/p>
+&lt;ol>
+&lt;li>Specify the instance IDs directly
+&lt;ul>
+&lt;li>Handy if you have a fixed list of instances you only want to be included in the maintenance window&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Target instances by their tags
+&lt;ul>
+&lt;li>This is much for scalable, and means you don&amp;rsquo;t have to keep adding instance IDs to the list&lt;/li>
+&lt;li>When the maintenance window executes, it will filter instances with this tag key and value combo for what to target&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>An optimum tag to use would be &lt;code>Patch Group&lt;/code> &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-patch-patchgroups.html">described here&lt;/a> - which I have &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">mentioned previously&lt;/a>. For the sake of this demo, we will keep it simple by targeting instance IDs.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_target&amp;#34; &amp;#34;patch_with_healthcheck_target&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheckTargets&amp;#34;&lt;/span>
+description &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;All instances that should be patched with a healthcheck after&amp;#34;&lt;/span>
+resource_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;INSTANCE&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;InstanceIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">concat&lt;/span>(
+&lt;span style="color:#ff79c6">module&lt;/span>.&lt;span style="color:#ff79c6">windows_ec2&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>,
+&lt;span style="color:#ff79c6">module&lt;/span>.&lt;span style="color:#ff79c6">linux_ec2&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+)
+}&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # Using tags is more scalable
+&lt;/span>&lt;span style="color:#6272a4"> # targets {
+&lt;/span>&lt;span style="color:#6272a4"> # key = &amp;#34;tag:Terraform&amp;#34;
+&lt;/span>&lt;span style="color:#6272a4"> # values = [&amp;#34;true&amp;#34;]
+&lt;/span>&lt;span style="color:#6272a4"> # }
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="maintenance-window-tasks">Maintenance Window Tasks&lt;/h3>
+&lt;h4 id="patching-task">Patching task&lt;/h4>
+&lt;p>Now for the tasks&amp;hellip; remember that we want to execute our healthcheck SSM document after a patch event right? We need to build a task for executing the &lt;strong>AWS-RunPatchBaseline&lt;/strong> document.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;patch_task&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+task_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;RUN_COMMAND&amp;#34;&lt;/span>
+task_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AWS-RunPatchBaseline&amp;#34;&lt;/span>
+priority &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">10&lt;/span>
+service_role_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+max_concurrency &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;100%&amp;#34;&lt;/span>
+max_errors &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;WindowTargetIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#ff79c6">aws_ssm_maintenance_window_target&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck_target&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>]
+}
+&lt;span style="color:#ff79c6">task_invocation_parameters&lt;/span> {
+&lt;span style="color:#ff79c6">run_command_parameters&lt;/span> {
+timeout_seconds &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">3600&lt;/span>
+&lt;span style="color:#ff79c6">parameter&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Operation&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;Scan&amp;#34;&lt;/span>]
+}
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Let&amp;rsquo;s run through the main attributes:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>window_id&lt;/code> - the maintenance window to associate this task with&lt;/li>
+&lt;li>&lt;code>task_type&lt;/code> - what kind of task this is
+&lt;ul>
+&lt;li>since we&amp;rsquo;re executing a command document, the value here is &lt;code>RUN_COMMAND&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>task_arn&lt;/code> - the ARN of the document you wish to run
+&lt;ul>
+&lt;li>note the document name can also be used here, as demonstrated above&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>priority&lt;/code> - defines in what order should tasks be executed in, whereby the lower the number given, the earlier the task is executed in the window
+&lt;ul>
+&lt;li>e.g. a task priority of &lt;code>1&lt;/code> gets executed before one with &lt;code>10&lt;/code>&lt;/li>
+&lt;li>tasks with the same priority get executed in parallel&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>service_role_arn&lt;/code> - tells which IAM role should be assumed to execute this task as
+&lt;ul>
+&lt;li>we&amp;rsquo;ll get an explanation of this later&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>max_concurrency&lt;/code> - specifies how many instances this task should be invoked on simultaenously
+&lt;ul>
+&lt;li>it can take a percentage as a value, only applying to that percentage of target instances at a time
+&lt;ul>
+&lt;li>i.e. &lt;code>50%&lt;/code> indicates only half of targeted instances will have the task executed at a time&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>or it can take a fixed number such as &lt;code>1&lt;/code>; indicating that only one instance should have this task executed at a time&lt;/li>
+&lt;li>&lt;code>100%&lt;/code> indicates this task will be invoked on all targets at the same time&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>max_errors&lt;/code> - indicates how many errors should be thrown before we abort further invocations
+&lt;ul>
+&lt;li>&lt;code>0&lt;/code> indicates any error will abort the maintenance window and set its result to failed&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>The &lt;code>targets&lt;/code> block allows us to define what instances to target this on - we&amp;rsquo;re referencing the &lt;code>aws_ssm_maintenance_window_target&lt;/code> resource we created previously.&lt;/p>
+&lt;p>Lastly the &lt;code>task_invocation_parameters&lt;/code> allows us to customise how the document should be ran via the &lt;code>parameter&lt;/code> setting - which is passed to the document. For this example we&amp;rsquo;re only performing the &lt;code>Scan&lt;/code> operation on the document, for testing purposes.&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;code>Scan&lt;/code> will only check for missing patches - it won&amp;rsquo;t actually install them.&lt;/p>
+&lt;/blockquote>
+&lt;p>A full list of available commands can be found in the AWS-RunPatchBaseline &lt;a href="https://console.aws.amazon.com/systems-manager/documents/AWS-RunPatchBaseline/content">command document&lt;/a>.&lt;/p>
+&lt;figure class="center">&lt;a href="run-patch-baseline-parameters.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/run-patch-baseline-parameters.png"
+alt="Available parameters for the Run Patch Baseline document; Operation, Snapshot ID, Install Override List, and Reboot Option"/> &lt;/a>&lt;figcaption>
+&lt;p>In the console GUI we can see the available parameters for the AWS-RunPatchBaseline document&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h4 id="healthcheck-task">Healthcheck task&lt;/h4>
+&lt;p>Next we want to define the healthcheck task.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;healthcheck_task&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+task_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;RUN_COMMAND&amp;#34;&lt;/span>
+task_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_document&lt;/span>.&lt;span style="color:#ff79c6">perform_healthcheck_s3&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+priority &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">20&lt;/span>
+service_role_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+max_concurrency &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;100%&amp;#34;&lt;/span>
+max_errors &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;WindowTargetIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#ff79c6">aws_ssm_maintenance_window_target&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck_target&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>]
+}
+&lt;span style="color:#ff79c6">task_invocation_parameters&lt;/span> {
+&lt;span style="color:#ff79c6">run_command_parameters&lt;/span> {
+timeout_seconds &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">600&lt;/span>
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>There&amp;rsquo;s not a whole lot of difference here compared to the patching task; our healthcheck script takes no &lt;code>parameters&lt;/code> so we can leave them out (although if yours does, you&amp;rsquo;ll need to add it here!), and the &lt;code>task_arn&lt;/code> points to the command document we created last time.&lt;/p>
+&lt;p>Probably the most significant change though is the &lt;code>priority&lt;/code>. Remember that the priority number indicates the ordering of tasks to be invoked? Our patching task had a priority of &lt;code>10&lt;/code>, whereby our healthcheck task is &lt;code>20&lt;/code>. &lt;strong>This means the patch task will be invoked &lt;em>before&lt;/em> the healthcheck one.&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>I could have set the priority of the patching and healthcheck tasks to &lt;code>1&lt;/code> and &lt;code>2&lt;/code> respectively to achieve the same thing.&lt;/p>
+&lt;p>However, giving some distance between them means you can programmatically add new tasks before/after each other.&lt;/p>
+&lt;p>Want a post-patch, pre-healthcheck task? Attach a new task with priority &lt;code>15&lt;/code>!&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="iam-role-for-maintenance-window">IAM role for maintenance window&lt;/h3>
+&lt;p>We&amp;rsquo;ve been referencing &lt;code>aws_iam_role.patch_mw_role.arn&lt;/code> as our task &lt;code>service_role_arn&lt;/code>. You can view the code for it &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-1-barebones/maintenance_window_iam.tf">here&lt;/a> - but let&amp;rsquo;s run through them quickly.&lt;/p>
+&lt;p>All we&amp;rsquo;re doing is creating an IAM role, allowing the EC2 and SSM AWS services to assume said role, and applying the predefined AWS policy &lt;a href="https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSSMMaintenanceWindowRole">AmazonSSMMaintenanceWindowRole&lt;/a> to that role. This policy gives some basic permissions to the role which allow it to execute commands and more on the instances.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_policy_document&amp;#34; &amp;#34;patch_mw_role_assume&amp;#34;&lt;/span> {
+&lt;span style="color:#ff79c6">statement&lt;/span> {
+actions &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;sts:AssumeRole&amp;#34;&lt;/span>]
+&lt;span style="color:#ff79c6">principals&lt;/span> {
+type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Service&amp;#34;&lt;/span>
+identifiers &lt;span style="color:#ff79c6">=&lt;/span> [
+&lt;span style="color:#f1fa8c">&amp;#34;ec2.amazonaws.com&amp;#34;&lt;/span>,
+&lt;span style="color:#f1fa8c">&amp;#34;ssm.amazonaws.com&amp;#34;&lt;/span>,
+]
+}
+}
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_role&amp;#34; &amp;#34;patch_mw_role&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;PatchingMaintWindow&amp;#34;&lt;/span>
+assume_role_policy &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">aws_iam_policy_document&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role_assume&lt;/span>.&lt;span style="color:#ff79c6">json&lt;/span>
+}
+&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_policy&amp;#34; &amp;#34;ssm_maintenance_window&amp;#34;&lt;/span> {
+arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;arn:aws:iam::aws:policy/service-role/AmazonSSMMaintenanceWindowRole&amp;#34;&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_role_policy_attachment&amp;#34; &amp;#34;patch_mw_role_attach&amp;#34;&lt;/span> {
+role &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">name&lt;/span>
+policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">aws_iam_policy&lt;/span>.&lt;span style="color:#ff79c6">ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing-the-barebones-maintenance-window">Testing the barebones maintenance window&lt;/h3>
+&lt;p>Once we&amp;rsquo;ve ran &lt;code>terraform apply&lt;/code> on all the above, we can test the maintenance window out. Currently we have it set to run at 9am UK time, which may or may not be a long time away - so change it manually in &lt;a href="https://console.aws.amazon.com/systems-manager/maintenance-windows">the console&lt;/a> to a time not far away from your time now.&lt;/p>
+&lt;p>Once it&amp;rsquo;s done executing, you can navigate to the history tab to view the execution.&lt;/p>
+&lt;figure class="center">&lt;a href="maintenance-window-history.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/maintenance-window-history.png"
+alt="The execution history for the maintenance window, showing both successful and failed executions"/> &lt;/a>&lt;figcaption>
+&lt;p>Let&amp;rsquo;s hope you have more luck on your first attempts running this than I did!&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>You can select any execution and drill down into it with the &lt;strong>View details&lt;/strong> button.&lt;/p>
+&lt;figure class="center">&lt;a href="mw-execution-details.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/mw-execution-details.png"
+alt="A detailed look into a maintenance window execution"/> &lt;/a>&lt;figcaption>
+&lt;p>You can see that the tasks got executed in the order we defined them in&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We can go deeper in the execution details and pull out the result of individual commands by selecting &lt;strong>View details&lt;/strong> on the task invocation.&lt;/p>
+&lt;figure class="center">&lt;a href="task-invocation-command-detail.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/task-invocation-command-detail.png"
+alt="Detailed breakdown of the RunPatchBaseline command, showing success all round"/> &lt;/a>&lt;figcaption>
+&lt;p>The maintenance window has redirected us to the same page as when we manually invoked the command documents in the last post&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Clicking on one of the instance IDs in the above screenshot will take us to the command output for that instance.&lt;/p>
+&lt;h2 id="logging-command-output-to-s3">Logging command output to S3&lt;/h2>
+&lt;p>Maintenance windows by default only capture the first 2500 characters of a command output, if your command outputs more than this then it gets truncated. This can be a problem if you have a task failure and need to examine the output for the reason why it failed.&lt;/p>
+&lt;p>Take the &lt;strong>AWS-RunPatchBaseline&lt;/strong> output on a Linux instance for example. It&amp;rsquo;s pretty hefty, and so we lose a lot of context on what actually happened:&lt;/p>
+&lt;figure class="center">&lt;a href="truncated-command-output.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/truncated-command-output.png"
+alt="Log output of the patch event on a Linux instance, with the words Output Truncated at the end."/> &lt;/a>
+&lt;/figure>
+&lt;h3 id="method">Method&lt;/h3>
+&lt;p>To combat this, maintenance windows allow you to dump command output to an S3 bucket, so that you can retrieve it later. In the last post we created an S3 bucket to store our SSM scripts (&lt;code>aws_s3_bucket.script_bucket.arn&lt;/code>), we can reuse that bucket to store our command logs too.&lt;/p>
+&lt;p>In order to do this there are some steps we need to take:&lt;/p>
+&lt;ol>
+&lt;li>The S3 bucket policy needs to permit the EC2 instance role &lt;code>aws_iam_role.vm_base&lt;/code> to &lt;code>s3:PutObject&lt;/code> on &lt;code>&amp;quot;${aws_s3_bucket.script_bucket.arn}/ssm_output/*&amp;quot;&lt;/code>
+&lt;ul>
+&lt;li>&lt;code>ssm_output/&lt;/code> is the directory/prefix in the S3 bucket where we will store the logs&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>The KMS key used to encrypt objects in the target S3 bucket needs to permit instance role &lt;code>aws_iam_role.vm_base&lt;/code> to &lt;code>kms:GenerateDataKey&lt;/code>&lt;/li>
+&lt;li>The instance role &lt;code>aws_iam_role.vm_base&lt;/code> needs permissions to do the above on its respective side&lt;/li>
+&lt;/ol>
+&lt;p>You can view the changes required in &lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">GitHub&lt;/a>:&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-1-logging/ssm_command_s3.tf#L99">S3 bucket policy&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-1-logging/ssm_command_s3.tf#L35">KMS key policy&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-1-logging/ec2_iam.tf#L33">EC2 instance role&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>Once that is done we&amp;rsquo;ll need to add some new attributes to the maintenance window tasks, telling it where to dump the command output to.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;task_name&amp;#34;&lt;/span> {&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # ... other attributes hidden
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span>
+&lt;span style="color:#ff79c6">task_invocation_parameters&lt;/span> {
+&lt;span style="color:#ff79c6">run_command_parameters&lt;/span> {
+output_s3_bucket &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_s3_bucket&lt;/span>.&lt;span style="color:#ff79c6">script_bucket&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ssm_output/&amp;#34;&lt;/span>&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # ... other attributes hidden
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>When you have the new config written, then you can &lt;code>terraform apply&lt;/code> and run another test on the maintenance window.&lt;/p>
+&lt;figure class="center">&lt;a href="command-s3-output-button.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/command-s3-output-button.png"
+alt="Detailed view of the run patch baseline task, showing a button called Amazon S3 which redirects us to where the logs are stored in S3"/> &lt;/a>&lt;figcaption>
+&lt;p>We now get a button that can redirect us to where the logs are stored in S3&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>If we click on this button, we can view the logs being stored in S3. Follow the path in S3 until you reach the S3 object containing the logs.&lt;/p>
+&lt;figure class="center">&lt;a href="log-object-in-s3.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/log-object-in-s3.png"
+alt="The S3 object containing the logs"/> &lt;/a>
+&lt;/figure>
+&lt;p>Now you can open this using the &lt;strong>Object actions&lt;/strong> button in the top-right hand corner to view the entire logs!&lt;/p>
+&lt;figure class="center">&lt;a href="open-logs-in-browser.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/open-logs-in-browser.png"
+alt="Opening the logs in the browser, we see the complete text output of the run patch baseline command invoked"/> &lt;/a>
+&lt;/figure>
+&lt;h3 id="logging-problems">Logging problems&lt;/h3>
+&lt;p>It&amp;rsquo;s worth noting that SSM does not raise an error if an instance cannot push logs to S3 - the &lt;strong>Amazon S3&lt;/strong> button will redirect you to an object in S3 that does not exist. So if your logs are not appearing in S3 then ensure you&amp;rsquo;ve followed the steps above.&lt;/p>
+&lt;figure class="center">&lt;a href="failed-log-upload-to-s3.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/failed-log-upload-to-s3.png"
+alt="An empty S3 object page, caused by incorrectly setting up S3 output logging"/> &lt;/a>&lt;figcaption>
+&lt;p>An example showing if logs were not successfully uploaded to S3 - if you get this then double check you&amp;rsquo;ve set everything up right!&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="removing-old-command-logs">Removing old command logs&lt;/h3>
+&lt;p>Now that we have maintenance windows storing our logs in S3, we should ensure we&amp;rsquo;re maintaining a good level of hygiene by removing old logs - otherwise our S3 bucket is going to store more and more logs, costing us more money.&lt;/p>
+&lt;p>S3 has a feature called &lt;a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html">Lifecycle Rules&lt;/a> which tells S3 how to handle objects throughout their lifecycle. We can tell it to move old files to a cheaper storage class, archive them to &lt;a href="https://aws.amazon.com/glacier/">S3 Glacier&lt;/a> (AWS&amp;rsquo;s long-term storage service), or just simply delete them!&lt;/p>
+&lt;p>Given we&amp;rsquo;re not exactly sentimental with logs, we can define a policy that will remove any logs older than 3 months (90 days).&lt;/p>
+&lt;p>This is very easy for us to add, we simply need to make the addition below to our &lt;code>aws_s3_bucket&lt;/code> resource.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_s3_bucket&amp;#34; &amp;#34;script_bucket&amp;#34;&lt;/span> {&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # ... other attributes hidden
+&lt;/span>&lt;span style="color:#6272a4">
+&lt;/span>&lt;span style="color:#6272a4"> # Remove old SSM command output logs
+&lt;/span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">lifecycle_rule&lt;/span> {
+id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;RemoveOldSSMOutputLogs&amp;#34;&lt;/span>
+enabled &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#8be9fd">true&lt;/span>
+prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ssm_output/&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">expiration&lt;/span> {
+days &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">90&lt;/span>
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can add more rules if you like, such as a &lt;code>transition&lt;/code> block to move it to cold storage before deleting if you wish. Take a look at the &lt;a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#using-object-lifecycle">Terraform documentation&lt;/a> for the resource for example of this.&lt;/p>
+&lt;figure class="center">&lt;a href="s3-lifecycle-policy.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/s3-lifecycle-policy.png"
+alt="The created S3 lifecycle rule can be seen here, indicating that objects in the ssm_output directory are discarded after 90 days"/> &lt;/a>&lt;figcaption>
+&lt;p>Logs older than 90 days certainly do not spark joy&amp;hellip;!&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>With the first two posts of this series, you have enough to be able to create your own automated series of commands that can be executed on your EC2 instances.&lt;/p>
+&lt;p>You can also use SSM documents to retrieve files from instances - such as log files. Or even use them to update third-party software on the instances.&lt;/p>
+&lt;p>The next post and thereafter we&amp;rsquo;ll be exploring the Command Documents sibling; Automation Documents, and exploring how these can further enhance automation to other AWS services beyond EC2 instances.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
 &lt;p>In this post I want to talk a little bit more about &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">AWS SSM&lt;/a>. This was something I touched on when discussing patch baselines in a &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">previous post&lt;/a>, and within there is another service known as &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html">Automation&lt;/a>. On first glance it may look pretty dull, but once you scratch the surface there are a number of capabilities it can unlock for you. I found a distinct lack of resources on how to write these documents, so this post will aim to help you get started on doing so!&lt;/p>
 &lt;p>This will be part one of a four part series about SSM Automation. The outline of the posts will be:&lt;/p>
 &lt;ol>
