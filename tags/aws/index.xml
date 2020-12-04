@@ -1,4 +1,404 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>aws on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/aws/</link><description>Recent content in aws on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 16 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/aws/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>aws on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/aws/</link><description>Recent content in aws on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/aws/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</link><pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</guid><description>&lt;p>In &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">part two&lt;/a> of this &lt;a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series&lt;/a> we looked at how we can automate SSM command documents using SSM Maintenance Windows.&lt;/p>
+&lt;p>This part will now explore another type of SSM Document; Automation.&lt;/p>
+&lt;h2 id="tldr">tl;dr&lt;/h2>
+&lt;ul>
+&lt;li>Automation documents can allow us to combine command documents together&lt;/li>
+&lt;li>With this, we can utilise maintenance window error thresholds to stop further invocations&lt;/li>
+&lt;li>Dynamic invocation of command documents can also be achieved with automation documents&lt;/li>
+&lt;/ul>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;p>All the code for this post can be found on &lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-2">GitHub&lt;/a>.&lt;/p>
+&lt;p>You&amp;rsquo;ll notice that we have changed some things around in this post, so if you&amp;rsquo;ve been using &lt;code>terraform apply&lt;/code> in other posts to deploy to your AWS environment, you will notice some destructions.&lt;/p>
+&lt;p>Instead of having 1 Windows and 1 Linux EC2 instance, we&amp;rsquo;re now using &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ec2.tf">3 Linux EC2 instances&lt;/a> - to emulate an application running across multiple instances for redundancy. You don&amp;rsquo;t actually need anything to be running on these instances, just have them visible in the &lt;a href="https://console.aws.amazon.com/systems-manager/managed-instances">Managed Instances&lt;/a> console.&lt;/p>
+&lt;blockquote>
+&lt;p>Note that the EC2 instances are tagged with the key &lt;code>App&lt;/code> and value &lt;code>HelloWorld&lt;/code> - we&amp;rsquo;ll be using this to specify our automation document targets.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="automation-documents">Automation Documents&lt;/h2>
+&lt;p>Back in &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">part one&lt;/a> I gave a brief intro to automation documents. To save the click:&lt;/p>
+&lt;blockquote>
+&lt;p>Automation document can call and orchestrate AWS API endpoints on your behalf, including executing Command documents on instances&lt;/p>
+&lt;/blockquote>
+&lt;p>Essentially we can combine two command documents into one with an automation document. But why would we want to do this?&lt;/p>
+&lt;h3 id="introducing-proactive-healthchecks">Introducing proactive healthchecks&lt;/h3>
+&lt;p>Well in the last post, we set up a maintenance window with two tasks; one for invoking &lt;strong>AWS-RunPatchBaseline&lt;/strong> and another for &lt;strong>PerformHealthcheckS3&lt;/strong> (our healthcheck SSM Document) - both of these are &lt;em>command documents&lt;/em>. Say if we had a policy that wanted to ensure that after &lt;strong>AWS-RunPatchBaseline&lt;/strong> was invoked, we would &lt;em>always&lt;/em> want the &lt;strong>PerformHealthcheckS3&lt;/strong> invoked afterward&amp;hellip; the Automation Document would help us get there.&lt;/p>
+&lt;p>Not only that, the way that our maintenance window is &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#maintenance-window-tasks">currently structured&lt;/a> is it will invoke &lt;strong>AWS-RunPatchBaseline&lt;/strong> across all instances in scope at the same time. Once they are all done then it will invoke &lt;strong>PerformHealthcheckS3&lt;/strong> across all instances at the same time. This looks like this:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">Given we have 2 instances; i-111, i-222
+T+0: Invoke AWS-RunPatchBaseline on i-111, i-222
+T+1: AWS-RunPatchBaseline finishes: i-111, i-222
+T+2: Invoke PerformHealthcheckS3 on i-111, i-222
+T+3: PerformHealthcheckS3 finishes: i-111, i-222
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Say if you wanted to limit the rate of patching across these instances so that only one instance at a time was patched, and any healthcheck failures aborted the rest of patching, then simply changing &lt;code>max_concurrency&lt;/code> from &lt;code>100%&lt;/code> to &lt;code>1&lt;/code> for each maintenance window task &lt;em>will not achieve this&lt;/em>.&lt;/p>
+&lt;p>Maintenance windows complete one task across all instances in scope before moving onto the next task. If we have Task 1 for Patching and Task 2 for Healthchecking (is that even a word?), then the maintenance window is going to patch &lt;strong>all&lt;/strong> instances first before it performs healthchecks on the instances. There is no way to execute the tasks synchronously on one instance at a time.&lt;/p>
+&lt;p>This means that if a bad patch were to be installed in your estate, you could have this order of events:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">Given we have 2 instances; i-111, i-222
+T+0: Invoke AWS-RunPatchBaseline on i-111
+T+1: AWS-RunPatchBaseline finishes: i-111
+T+2: Invoke AWS-RunPatchBaseline on i-222
+T+3: AWS-RunPatchBaseline finishes: i-222
+T+4: Invoke PerformHealthcheckS3 on i-111
+T+5: PerformHealthcheckS3 FAILS: i-111
+T+6: Invoke PerformHealthcheckS3 on i-222
+T+7: PerformHealthcheckS3 FAILS: i-222
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now the healthcheck has failed for &lt;code>i-222&lt;/code> as well because the bad patch landed on both instances, and production now has an outage.&lt;/p>
+&lt;h4 id="solution">Solution&lt;/h4>
+&lt;p>Thankfully, Automation Documents help us avoid that - by combining the two command documents (AWS-RunPatchBaseline and PerformHealthcheckS3), we can mark this new automation document as a &lt;em>solo maintenance window task&lt;/em> and have it invoked one at a time on instances, and have it abort further invocations if any sub-documents failed within in:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">Given we have 2 instances; i-111, i-222
+T+0: Invoke AWS-RunPatchBaseline on i-111
+T+1: AWS-RunPatchBaseline finishes: i-111
+T+2: Invoke PerformHealthcheckS3 on i-111
+T+3: PerformHealthcheckS3 FAILS: i-111
+T+4: Abort invoking AWS-RunPatchBaseline on i-222
+T+5: Abort invoking PerformHealthcheckS3 on i-222
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Notice how the failed healthcheck on the first instance caused the rest of task invocations to abort? Here is the order of events for a happy path.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">Given we have 2 instances; i-111, i-222
+T+0: Invoke AWS-RunPatchBaseline on i-111
+T+1: AWS-RunPatchBaseline finishes: i-111
+T+2: Invoke PerformHealthcheckS3 on i-111
+T+3: PerformHealthcheckS3 succeeds: i-111
+T+4: Invoke AWS-RunPatchBaseline on i-222
+T+5: AWS-RunPatchBaseline finishes: i-222
+T+6: Invoke PerformHealthcheckS3 on i-222
+T+7: PerformHealthcheckS3 succeeds: i-222
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>So we know that automation documents allow us to combine command documents together - this is done using the &lt;code>aws:runCommand&lt;/code> action, though there are &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-actions.html">many more&lt;/a> actions available to you, some of which we&amp;rsquo;ll explore later.&lt;/p>
+&lt;h2 id="combining-command-docs-into-automation">Combining command docs into automation&lt;/h2>
+&lt;p>We combine command documents as below in YAML; like command documents they can also be defined in JSON.&lt;/p>
+&lt;p>For the first time we are defining a parameter called &lt;code>InstanceIds&lt;/code>, which takes in a list of instance IDs to then pass down to the command documents, as they will need to know what instances to invoke the commands on. The value assigned to this parameter is retrieved back with the notation &lt;code>&amp;quot;{{ InstanceIds }}&amp;quot;&lt;/code>, which you can see being passed into the inputs of the sub-documents.&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;code>InstanceIds&lt;/code> is a special parameter name that AWS recognises and so will provide an instance picker in the GUI of Execute Automation, as shown below.&lt;/p>
+&lt;/blockquote>
+&lt;figure class="center">&lt;a href="instance-id-picker.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/instance-id-picker.png"
+alt="A screenshot of the execute automation page with the instance ID picker being used to select instances in scope"/> &lt;/a>&lt;figcaption>
+&lt;p>The instance picker can be helpful if you only want to target a subset of instances in your estate.&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We&amp;rsquo;re also following logging best practices by having the command output logged to S3.&lt;/p>
+&lt;p>Other than that, there&amp;rsquo;s not really a whole lot of difference between this and a command document, so far!&lt;/p>
+&lt;blockquote>
+&lt;p>It&amp;rsquo;s important to note the &lt;code>schemaVersion&lt;/code> must be &lt;code>0.3&lt;/code> for automation documents.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">---
+&lt;span style="color:#ff79c6">schemaVersion&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;0.3&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">description&lt;/span>: Executes a patching event on the instance followed by a healthcheck
+&lt;span style="color:#ff79c6">parameters&lt;/span>:
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>:
+&lt;span style="color:#ff79c6">type&lt;/span>: StringList
+&lt;span style="color:#ff79c6">description&lt;/span>: The instance to target
+&lt;span style="color:#ff79c6">mainSteps&lt;/span>:
+- &lt;span style="color:#ff79c6">name&lt;/span>: InvokePatchEvent
+&lt;span style="color:#ff79c6">action&lt;/span>: aws:runCommand
+&lt;span style="color:#ff79c6">inputs&lt;/span>:
+&lt;span style="color:#ff79c6">DocumentName&lt;/span>: AWS-RunPatchBaseline
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">OutputS3BucketName&lt;/span>: jdheyburn-scripts
+&lt;span style="color:#ff79c6">OutputS3KeyPrefix&lt;/span>: ssm_output/
+&lt;span style="color:#ff79c6">Parameters&lt;/span>:
+&lt;span style="color:#ff79c6">Operation&lt;/span>: Scan
+- &lt;span style="color:#ff79c6">name&lt;/span>: ExecuteHealthcheck
+&lt;span style="color:#ff79c6">action&lt;/span>: aws:runCommand
+&lt;span style="color:#ff79c6">inputs&lt;/span>:
+&lt;span style="color:#ff79c6">DocumentName&lt;/span>: PerformHealthcheckS3
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">OutputS3BucketName&lt;/span>: jdheyburn-scripts
+&lt;span style="color:#ff79c6">OutputS3KeyPrefix&lt;/span>: ssm_output/
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="terraform-automation-documents">Terraform automation documents&lt;/h3>
+&lt;p>We can deploy these to AWS using Terraform once again. Note that the &lt;code>document_type&lt;/code> is &lt;code>Automation&lt;/code> and that we&amp;rsquo;re using templating to set the variables in the document, such as referencing the PerformHealthcheckS3 command document ARN.&lt;/p>
+&lt;p>You can see the templated version of the document in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/documents/patch_with_healthcheck_template.yml">GitHub&lt;/a>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span>
+document_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Automation&amp;#34;&lt;/span>
+document_format &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;YAML&amp;#34;&lt;/span>
+content &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">templatefile&lt;/span>(
+&lt;span style="color:#f1fa8c">&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span>,
+{
+healthcheck_document_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_document&lt;/span>.&lt;span style="color:#ff79c6">perform_healthcheck_s3&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>,
+output_s3_bucket_name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_s3_bucket&lt;/span>.&lt;span style="color:#ff79c6">script_bucket&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>,
+output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ssm_output/&amp;#34;&lt;/span>,
+}
+)
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>View the above resource in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ssm_combined_command.tf">GitHub&lt;/a>.&lt;/p>
+&lt;h3 id="testing-automation-documents">Testing automation documents&lt;/h3>
+&lt;p>Now let&amp;rsquo;s go and test this by manually invoking it. This can be done by navigating to &lt;a href="https://console.aws.amazon.com/systems-manager/automation/executions">Automation&lt;/a> within Systems Manager and clicking &lt;a href="https://console.aws.amazon.com/systems-manager/automation/execute">Execute Automation&lt;/a>.&lt;/p>
+&lt;blockquote>
+&lt;p>For a shortcut of invoking the commands, you can use the below command to invoke the below CLI command. Then you may skip to &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#results">the results&lt;/a>.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">aws ssm start-automation-execution &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --document-name &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --document-version &lt;span style="color:#f1fa8c">&amp;#34;\$DEFAULT&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --target-parameter-name InstanceIds &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --max-errors &lt;span style="color:#f1fa8c">&amp;#34;0&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --max-concurrency &lt;span style="color:#f1fa8c">&amp;#34;1&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --region eu-west-1
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="setup">Setup&lt;/h4>
+&lt;p>Navigate to the &lt;strong>Owned by me&lt;/strong> tab and select the name of your created document, &lt;strong>PatchWithHealthcheck&lt;/strong>, then click &lt;strong>Next&lt;/strong>.&lt;/p>
+&lt;p>Because we want to test this document executing one at a time on an instance, we&amp;rsquo;ll need to select the &lt;strong>Rate control&lt;/strong> option.&lt;/p>
+&lt;figure class="center">&lt;a href="execute-automation-1.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-1.png"
+alt="Execute automation document page for PatchHealthcheck, Rate Control is selected"/> &lt;/a>
+&lt;/figure>
+&lt;p>We&amp;rsquo;ll need to select what instances are our targets. The instances in scope for this document are &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ec2.tf#L23">tagged&lt;/a> with the key &lt;code>App&lt;/code> with the value &lt;code>HelloWorld&lt;/code>, so let&amp;rsquo;s use that as our criteria. Note this is the most scalable solution for targeting instances.&lt;/p>
+&lt;figure class="center">&lt;a href="execute-automation-2.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-2.png"
+alt="A screenshot of the execute automation page with tag key App and tag value HelloWorld specified"/> &lt;/a>
+&lt;/figure>
+&lt;p>Then we need to specify how the rate of invocation should be controlled. Our criteria for this is:&lt;/p>
+&lt;ul>
+&lt;li>Execute on 1 instance at a time&lt;/li>
+&lt;li>Abort further invocations if any produce a error&lt;/li>
+&lt;/ul>
+&lt;p>Therefore we need to set the concurrency to 1 and the error threshold to 0.&lt;/p>
+&lt;figure class="center">&lt;a href="execute-automation-3.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-3.png"
+alt="A screenshot of the execute automation page with concurrency set to 1 and the error threshold set to 0"/> &lt;/a>
+&lt;/figure>
+&lt;p>Once all done then click &lt;strong>Execute&lt;/strong>.&lt;/p>
+&lt;h4 id="results">Results&lt;/h4>
+&lt;p>As the execution progresses you&amp;rsquo;ll notice it invokes the document on one instance at a time. As it completes you&amp;rsquo;ll have a screen that looks like the below as you click onto the execution detail page. Notice that the start and end times of each instance invocation do not overlap with one another.&lt;/p>
+&lt;blockquote>
+&lt;p>Step name is the same as the instance ID in this case&lt;/p>
+&lt;/blockquote>
+&lt;figure class="center">&lt;a href="execute-automation-4.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-4.png"
+alt="A screenshot of the successfully completed execution detail page, all executed steps across all instances are successful and did not overlap one another"/> &lt;/a>
+&lt;/figure>
+&lt;p>We can dive into each step invocation (the blue text in the above screenshot) to view the commands that were invoked.&lt;/p>
+&lt;figure class="center">&lt;a href="execute-automation-5.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-5.png"
+alt="A screenshot of a successful automation step, there is a clickable URL for the step execution ID"/> &lt;/a>
+&lt;/figure>
+&lt;figure class="center">&lt;a href="execute-automation-6.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-6.png"
+alt="A screenshot of a successful automation document PatchWithHealthcheck - both patching and healthcheck run command steps are successful"/> &lt;/a>
+&lt;/figure>
+&lt;p>At this detail we can see the individual &lt;code>aws:runCommand&lt;/code> actions performed on the instance.&lt;/p>
+&lt;h3 id="failure-testing">Failure testing&lt;/h3>
+&lt;p>Okay so we&amp;rsquo;ve confirmed the document now only invokes synchronously. Let&amp;rsquo;s now test to see if further invocations are aborted when there is a failure.&lt;/p>
+&lt;p>To simulate the failure, we can borrow a trick from the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#testing-in-aws-ssm-console">first post&lt;/a> in this series by flipping the healthcheck script from &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>. Once that change is deployed we can re-run the document using the same method as &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents">above&lt;/a>.&lt;/p>
+&lt;figure class="center">&lt;a href="failed-automation-1.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-1.png"
+alt="Simulating a failure, now the rate-limited automation document fails on the first instance invocation"/> &lt;/a>
+&lt;/figure>
+&lt;p>We can see the failure, and that the automation did not invoke on more instances! We can drill down into the invocation to see why it failed.&lt;/p>
+&lt;figure class="center">&lt;a href="failed-automation-2.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-2.png"
+alt="The execution detail page for PatchWithHealthcheck, the patch event succeeded but the healthcheck is marked as failed"/> &lt;/a>
+&lt;/figure>
+&lt;p>From this page you can then continue to drill down to the run command output to determine the cause of the failure.&lt;/p>
+&lt;h2 id="configuring-automation-tasks-for-maintenance-windows">Configuring automation tasks for maintenance windows&lt;/h2>
+&lt;p>Now that we&amp;rsquo;ve tested the automation document and we&amp;rsquo;re happy to have it automated, let&amp;rsquo;s get this added to a maintenance window task. We can reuse the same maintenance window as we created last time, but with some differences.&lt;/p>
+&lt;h3 id="maintenance-window-task">Maintenance window task&lt;/h3>
+&lt;p>Since we are targeting an automation document, there are some differences we need to account for when compared to &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#maintenance-window-tasks">command tasks&lt;/a>.&lt;/p>
+&lt;ol>
+&lt;li>Specify the &lt;code>task_type&lt;/code> as &lt;code>AUTOMATION&lt;/code>&lt;/li>
+&lt;li>Update the &lt;code>task_arn&lt;/code> to our new document accordingly&lt;/li>
+&lt;li>Ensure our new combined document is only invoked on one instance at a time, so &lt;code>max_concurrency&lt;/code> is set to &lt;code>1&lt;/code>&lt;/li>
+&lt;li>Within &lt;code>task_invocation_parameters&lt;/code> we use &lt;code>automation_parameters&lt;/code> as opposed to &lt;code>run_command_parameters&lt;/code>.
+&lt;ul>
+&lt;li>&lt;code>document_version&lt;/code> allows us to target a specific document version&lt;/li>
+&lt;li>any parameters required by the document are defined within &lt;code>parameter&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Remember that our document takes in &lt;code>InstanceIds&lt;/code> as a parameter? Well you&amp;rsquo;ll notice that the value is set to &lt;code>&amp;quot;{{ TARGET_ID }}&amp;quot;&lt;/code>. This is known in AWS as a &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/mw-cli-register-tasks-parameters.html">pseudo parameter&lt;/a>, whereby the instance ID returned by &lt;code>WindowTargetIds&lt;/code> will be passed into the automation document.&lt;/p>
+&lt;blockquote>
+&lt;p>Depending on what &lt;code>resource_type&lt;/code> your &lt;code>aws_ssm_maintenance_window_target&lt;/code> is set up as will result in a different value to &lt;code>{{ TARGET_ID }}&lt;/code> - in our case ours is &lt;code>INSTANCE&lt;/code>, so this becomes the instance ID.&lt;/p>
+&lt;p>See the &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/mw-cli-register-tasks-parameters.html#pseudo-parameters">AWS docs&lt;/a> for a full breakdown.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+task_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AUTOMATION&amp;#34;&lt;/span>
+task_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_document&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+priority &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">10&lt;/span>
+service_role_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+max_concurrency &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;1&amp;#34;&lt;/span>
+max_errors &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;0&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;WindowTargetIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#ff79c6">aws_ssm_maintenance_window_target&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck_target&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>]
+}
+&lt;span style="color:#ff79c6">task_invocation_parameters&lt;/span> {
+&lt;span style="color:#ff79c6">automation_parameters&lt;/span> {
+document_version &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;$LATEST&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">parameter&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;InstanceIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;{{ TARGET_ID }}&amp;#34;&lt;/span>]
+}
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can view the above resource in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/maintenance_window.tf#L22">GitHub&lt;/a>.&lt;/p>
+&lt;h3 id="maintenance-window-target">Maintenance window target&lt;/h3>
+&lt;p>We need to update the target to use tag lookups against the instances - this mimics how we tested our automation document earlier on.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_target&amp;#34; &amp;#34;patch_with_healthcheck_target&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheckTargets&amp;#34;&lt;/span>
+description &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;All instances that should be patched with a healthcheck after&amp;#34;&lt;/span>
+resource_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;INSTANCE&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;tag:App&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;HelloWorld&amp;#34;&lt;/span>]
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can view the above resource in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/maintenance_window.tf#L10">GitHub&lt;/a>.&lt;/p>
+&lt;h3 id="additional-iam-policies">Additional IAM policies&lt;/h3>
+&lt;p>We&amp;rsquo;ll need to also attach some new permissions to the IAM role for the maintenance window, &lt;code>aws_iam_role.patch_mw_role.arn&lt;/code>, to allow the automation document to perform a lookup on instances by their tag as defined in the updated &lt;code>aws_ssm_maintenance_window_target.patch_with_healthcheck_target&lt;/code> resource.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">data&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_policy_document&amp;#34; &amp;#34;mw_role_additional&amp;#34;&lt;/span> {
+&lt;span style="color:#ff79c6">statement&lt;/span> {
+sid &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AllowSSM&amp;#34;&lt;/span>
+effect &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Allow&amp;#34;&lt;/span>
+actions &lt;span style="color:#ff79c6">=&lt;/span> [
+&lt;span style="color:#f1fa8c">&amp;#34;ssm:DescribeInstanceInformation&amp;#34;&lt;/span>,
+&lt;span style="color:#f1fa8c">&amp;#34;ssm:ListCommandInvocations&amp;#34;&lt;/span>,
+]
+resources &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;*&amp;#34;&lt;/span>]
+}
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_policy&amp;#34; &amp;#34;mw_role_add&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;MwRoleAdd&amp;#34;&lt;/span>
+description &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Additonal permissions needed for MW&amp;#34;&lt;/span>
+policy &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">data&lt;/span>.&lt;span style="color:#ff79c6">aws_iam_policy_document&lt;/span>.&lt;span style="color:#ff79c6">mw_role_additional&lt;/span>.&lt;span style="color:#ff79c6">json&lt;/span>
+}
+&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_iam_role_policy_attachment&amp;#34; &amp;#34;mw_role_add&amp;#34;&lt;/span> {
+role &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">name&lt;/span>
+policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_policy&lt;/span>.&lt;span style="color:#ff79c6">mw_role_add&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can view the above resources in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/maintenance_window_iam.tf#L30">GitHub&lt;/a>.&lt;/p>
+&lt;p>Simply put, we&amp;rsquo;re creating an new IAM policy with anything additional that the maintenance window requires for it to operate. We&amp;rsquo;ll use this policy to add any new actions if we need to in the future.&lt;/p>
+&lt;h3 id="testing-automation-documents-in-maintenance-windows">Testing automation documents in maintenance windows&lt;/h3>
+&lt;p>Once you&amp;rsquo;ve got the config above applied you&amp;rsquo;ll need to run a test. Just like &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#testing-the-barebones-maintenance-window">last time&lt;/a>, you can do this by changing the maintenance window execution time to something relatively close to your current time.&lt;/p>
+&lt;p>Once the execution is complete (and hopefully it was successful, if not then check back at the configuration), you&amp;rsquo;ll see that there will be 3 task invocations, one for each instance, and that none of them overlapped one another.&lt;/p>
+&lt;figure class="center">&lt;a href="automation-maint-window-success.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success.png"
+alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance and all successful, for which only one was invoked at a time"/> &lt;/a>&lt;figcaption>
+&lt;p>Notice how the start and end times don&amp;rsquo;t overlap&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Just like for command documents, you can view the detail for each invocation made on the instance. Here we can see the two steps that make up our newly created command document.&lt;/p>
+&lt;figure class="center">&lt;a href="automation-maint-window-success-detail.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success-detail.png"
+alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - both are successful"/> &lt;/a>
+&lt;/figure>
+&lt;p>But the whole point of this exercise was to proactively handle errors right? So let&amp;rsquo;s introduce some by doing what we&amp;rsquo;ve done &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#failure-testing">before&lt;/a> and change the healthcheck script to fail.&lt;/p>
+&lt;p>Once the new &amp;ldquo;broken&amp;rdquo; script is applied we can rerun another test of the maintenance window.&lt;/p>
+&lt;figure class="center">&lt;a href="automation-maint-window-failure.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure.png"
+alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance, 1 failed which then aborted further task invocations on the remaining instances"/> &lt;/a>
+&lt;/figure>
+&lt;p>This time round we can see that there was a failure in one task invocation, which then aborted further invocations on the remaining instances! Just as before, we can do a deep dive into the invocation to determine why it had failed.&lt;/p>
+&lt;figure class="center">&lt;a href="automation-maint-window-failure-detail.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure-detail.png"
+alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - the patch was successful but the healthcheck failed"/> &lt;/a>&lt;figcaption>
+&lt;p>From here you can follow the command invoked by the step to troubleshoot the failure&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="bonus-using-automation-to-dynamically-invoke-command-documents">Bonus: Using automation to dynamically invoke command documents&lt;/h2>
+&lt;p>In this post we&amp;rsquo;ve looked at a common maintenance task in the form of an SSM command document called &lt;strong>AWS-RunPatchBaseline&lt;/strong>, and created an automation document that will always invoke our healthcheck script after this invocation.&lt;/p>
+&lt;p>You may have more command documents that perform some form of maintenance on instances, for which you would also want the healthcheck script to execute after as well.&lt;/p>
+&lt;p>Instead of copying and pasting these automation documents, we can create just one automation document which takes in the command document ARN as a parameter, dynamically invoke it, and then have a hardcoded step afterward for executing a healthcheck!&lt;/p>
+&lt;p>In it&amp;rsquo;s raw YAML form, we would get a document that looks like this:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">---
+&lt;span style="color:#ff79c6">schemaVersion&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;0.3&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">description&lt;/span>: Executes a maintenance event on the instance followed by a healthcheck
+&lt;span style="color:#ff79c6">parameters&lt;/span>:
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>:
+&lt;span style="color:#ff79c6">type&lt;/span>: StringList
+&lt;span style="color:#ff79c6">description&lt;/span>: The instance to target
+&lt;span style="color:#ff79c6">DocumentArn&lt;/span>:
+&lt;span style="color:#ff79c6">type&lt;/span>: String
+&lt;span style="color:#ff79c6">description&lt;/span>: The document arn to invoke
+&lt;span style="color:#ff79c6">InputParameters&lt;/span>:
+&lt;span style="color:#ff79c6">type&lt;/span>: StringMap
+&lt;span style="color:#ff79c6">description&lt;/span>: Parameters that should be passed to the document specified in DocumentArn
+&lt;span style="color:#ff79c6">default&lt;/span>: {}
+&lt;span style="color:#ff79c6">mainSteps&lt;/span>:
+- &lt;span style="color:#ff79c6">name&lt;/span>: InvokeMaintenanceEvent
+&lt;span style="color:#ff79c6">action&lt;/span>: aws:runCommand
+&lt;span style="color:#ff79c6">inputs&lt;/span>:
+&lt;span style="color:#ff79c6">DocumentName&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ DocumentArn }}&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">OutputS3BucketName&lt;/span>: ${output_s3_bucket_name}
+&lt;span style="color:#ff79c6">OutputS3KeyPrefix&lt;/span>: ${output_s3_key_prefix}
+&lt;span style="color:#ff79c6">Parameters&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ InputParameters }}&amp;#34;&lt;/span>
+- &lt;span style="color:#ff79c6">name&lt;/span>: ExecuteHealthcheck
+&lt;span style="color:#ff79c6">action&lt;/span>: aws:runCommand
+&lt;span style="color:#ff79c6">inputs&lt;/span>:
+&lt;span style="color:#ff79c6">DocumentName&lt;/span>: ${healthcheck_document_arn}
+&lt;span style="color:#ff79c6">InstanceIds&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">OutputS3BucketName&lt;/span>: ${output_s3_bucket_name}
+&lt;span style="color:#ff79c6">OutputS3KeyPrefix&lt;/span>: ${output_s3_key_prefix}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Just like what we&amp;rsquo;ve done for &lt;code>InstanceIds&lt;/code>, we&amp;rsquo;re taking in the &lt;code>DocumentArn&lt;/code> as a parameter and providing it as the input for the &lt;code>aws:runCommand&lt;/code> step. Some documents will also take parameters, so we can allow the caller to specify them using &lt;code>InputParameters&lt;/code>, which is defined as a &lt;code>StringMap&lt;/code> type - allowing it to then be used in as parameters for the document we are invoking.&lt;/p>
+&lt;p>When we create this document in the console and then execute it, we can then dynamically add in the document we want to invoke.&lt;/p>
+&lt;figure class="center">&lt;a href="maintenance-wrapper-setup.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-setup.png"
+alt="The setup page for the maintenance wrapper document, we&amp;#39;re specifying in the text field the command document to invoke, which is AWS-RunPatchBaseline. We&amp;#39;ve also added in the parameters for the document to run under InputParameters"/> &lt;/a>
+&lt;/figure>
+&lt;p>Then just like any other document we can invoke it.&lt;/p>
+&lt;figure class="center">&lt;a href="maintenance-wrapper-success.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-success.png"
+alt="The automation execution overview page shows that two steps were invoked, InvokeMaintenanceEvent and ExecuteHealthcheck, both are successful. We can also see the input for InvokeMaintenanceEvent is specified as AWS-RunPatchBaseline, and the parameters we used previously."/> &lt;/a>
+&lt;/figure>
+&lt;p>We can see that the input from the previous screen was passed to the step. Let&amp;rsquo;s keep going until we hit the command invocation.&lt;/p>
+&lt;figure class="center">&lt;a href="maintenance-wrapper-command-detail.png">
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-command-detail.png"
+alt="A screenshot of the command invocation page - it executed successfully and the document listed as being invoked was AWS-RunPatchBaseline"/> &lt;/a>&lt;figcaption>
+&lt;p>The document name was dynamically passed to the command execution&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="terraforming-dynamic-command-documents">Terraforming dynamic command documents&lt;/h3>
+&lt;p>So now we&amp;rsquo;ve confirmed that documents can be dynamically invoked, let&amp;rsquo;s get this Terraformed. You can view this in &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ssm_maintenance_document.tf">GitHub&lt;/a>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_document&amp;#34; &amp;#34;maintenance_wrapper&amp;#34;&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;MaintenanceWithHealthcheck&amp;#34;&lt;/span>
+document_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Automation&amp;#34;&lt;/span>
+document_format &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;YAML&amp;#34;&lt;/span>
+content &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">templatefile&lt;/span>(
+&lt;span style="color:#f1fa8c">&amp;#34;documents/maintenance_wrapper_template.yml&amp;#34;&lt;/span>,
+{
+healthcheck_document_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_document&lt;/span>.&lt;span style="color:#ff79c6">perform_healthcheck_s3&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>,
+output_s3_bucket_name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_s3_bucket&lt;/span>.&lt;span style="color:#ff79c6">script_bucket&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>,
+output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;ssm_output/&amp;#34;&lt;/span>,
+}
+)
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Not a lot has really changed in this when we compare it to our &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ssm_combined_command.tf">one from earlier&lt;/a>, but the difference is in the &lt;code>parameters&lt;/code> field for the &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/documents/maintenance_wrapper_template.yml">document&lt;/a>.&lt;/p>
+&lt;p>And then you can include it as a maintenance window task as below; I&amp;rsquo;m reusing the same maintenance window task as before.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-hcl" data-lang="hcl">&lt;span style="color:#ff79c6">resource&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span> {
+window_id &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_maintenance_window&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>
+task_type &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;AUTOMATION&amp;#34;&lt;/span>
+task_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_ssm_document&lt;/span>.&lt;span style="color:#ff79c6">maintenance_wrapper&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+priority &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">10&lt;/span>
+service_role_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">aws_iam_role&lt;/span>.&lt;span style="color:#ff79c6">patch_mw_role&lt;/span>.&lt;span style="color:#ff79c6">arn&lt;/span>
+max_concurrency &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;1&amp;#34;&lt;/span>
+max_errors &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;0&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">targets&lt;/span> {
+key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;WindowTargetIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#ff79c6">aws_ssm_maintenance_window_target&lt;/span>.&lt;span style="color:#ff79c6">patch_with_healthcheck_target&lt;/span>.&lt;span style="color:#ff79c6">id&lt;/span>]
+}
+&lt;span style="color:#ff79c6">task_invocation_parameters&lt;/span> {
+&lt;span style="color:#ff79c6">automation_parameters&lt;/span> {
+document_version &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;$LATEST&amp;#34;&lt;/span>
+&lt;span style="color:#ff79c6">parameter&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;InstanceIds&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;{{ TARGET_ID }}&amp;#34;&lt;/span>]
+}
+&lt;span style="color:#ff79c6">parameter&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;DocumentArn&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c">&amp;#34;AWS-RunPatchBaseline&amp;#34;&lt;/span>]
+}
+&lt;span style="color:#ff79c6">parameter&lt;/span> {
+name &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;InputParameters&amp;#34;&lt;/span>
+values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;Scan&amp;#34;&lt;/span> })]
+}
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can then copy and paste the same task resource, only changing the values for the &lt;code>InputParameters&lt;/code> and &lt;code>DocumentArn&lt;/code> parameters accordingly. If the document you are calling doesn&amp;rsquo;t take any parameters, then you can just omit that block.&lt;/p>
+&lt;blockquote>
+&lt;p>You&amp;rsquo;ll have to ensure that the IAM role the maintenance window task is assuming has the correct IAM permissions as required by the document you&amp;rsquo;re calling.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>What we&amp;rsquo;ve done in this post is taken our rudimentary command document, prone to introducing errors into our estate, and converted it to an automation document. With the right SSM maintenance window settings, you can ensure that any maintenance tasks you need to perform on your EC2 instances are done so in a manner that reduces the risk of errors in your environment.&lt;/p>
+&lt;p>Next time, we&amp;rsquo;ll be taking this a &lt;em>step further&lt;/em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
 &lt;p>In this post we&amp;rsquo;ll be exploring how we can automate this using maintenance windows - also within the SSM suite. This is something I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">covered before&lt;/a>, but want to extend on that to show how its done.&lt;/p>
 &lt;h2 id="tldr">tl;dr&lt;/h2>
 &lt;ul>
