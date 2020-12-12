@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>certificates on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/certificates/</link><description>Recent content in certificates on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/certificates/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid><description>&amp;lt;p&amp;gt;During lockdown, I&amp;amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &amp;lt;a href=&amp;#34;https://caddyserver.com/&amp;#34;&amp;gt;Caddy 2&amp;lt;/a&amp;gt; as a reverse proxy for multiple domains used internally.&amp;lt;/p&amp;gt;
-&amp;lt;p&amp;gt;If you&amp;amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &amp;lt;a href=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration&amp;#34;&amp;gt;skip there&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;If you&amp;amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &amp;lt;a href=&amp;#34;#caddy-configuration&amp;#34;&amp;gt;skip there&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
 &amp;lt;h2 id=&amp;#34;background&amp;#34;&amp;gt;Background&amp;lt;/h2&amp;gt;
 &amp;lt;p&amp;gt;A few months back I kitted out my home with some &amp;lt;a href=&amp;#34;https://www.ui.com/products/#unifi&amp;#34;&amp;gt;Ubiquiti UniFi&amp;lt;/a&amp;gt; gear to fix our crappy Wifi at home, following inspiration from &amp;lt;a href=&amp;#34;https://www.troyhunt.com/ubiquiti-all-the-things-how-i-finally-fixed-my-dodgy-wifi/&amp;#34;&amp;gt;Troy Hunt&amp;lt;/a&amp;gt; and &amp;lt;a href=&amp;#34;https://scotthelme.co.uk/my-ubiquiti-home-network/&amp;#34;&amp;gt;Scott Helme&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;In order to administrate UniFi devices, you&amp;amp;rsquo;ll need the &amp;lt;a href=&amp;#34;https://www.ui.com/unifi/unifi-cloud-key/&amp;#34;&amp;gt;UniFi Cloud Key&amp;lt;/a&amp;gt; which runs the Controller software to do just that. Although if you have a spare Raspberry Pi lying around, you can download the &amp;lt;a href=&amp;#34;https://www.ui.com/download/unifi/&amp;#34;&amp;gt;software&amp;lt;/a&amp;gt; for free and run it on there - this is what I did.&amp;lt;/p&amp;gt;
@@ -8,7 +8,7 @@
 &amp;lt;h3 id=&amp;#34;securing-with-https&amp;#34;&amp;gt;Securing with HTTPS&amp;lt;/h3&amp;gt;
 &amp;lt;p&amp;gt;The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;insecure-pihole.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&amp;#34;
+&amp;lt;img src=&amp;#34;insecure-pihole.png&amp;#34;
 alt=&amp;#34;Insecure PiHole connection&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -26,7 +26,7 @@ alt=&amp;#34;Insecure PiHole connection&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp
 &amp;lt;blockquote&amp;gt;
 &amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;UPDATE 2020-09-30&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;Looks like Caddy now comes with a &amp;lt;a href=&amp;#34;https://caddyserver.com/download&amp;#34;&amp;gt;nice web interface&amp;lt;/a&amp;gt; for downloading a Caddy binary with whatever plugins you desire. I just tested out the &amp;lt;code&amp;gt;Linux arm 7&amp;lt;/code&amp;gt; platform with just the &amp;lt;code&amp;gt;github.com/caddy-dns/cloudflare&amp;lt;/code&amp;gt; plugin, and it was able to run my Caddy configuration below perfectly!&amp;lt;/p&amp;gt;
-&amp;lt;p&amp;gt;Once you&amp;amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &amp;lt;a href=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration&amp;#34;&amp;gt;Caddy Configuration&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Once you&amp;amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &amp;lt;a href=&amp;#34;#caddy-configuration&amp;#34;&amp;gt;Caddy Configuration&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
 &amp;lt;/blockquote&amp;gt;
 &amp;lt;p&amp;gt;To build using xcaddy, you need to make sure you have &amp;lt;a href=&amp;#34;https://golang.org/doc/install&amp;#34;&amp;gt;Go installed&amp;lt;/a&amp;gt; on your machine.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;Note that I am building Caddy on my laptop, but running it on a Pi, so I will have to specify the architecture that Pi is running on so that Go can correctly build it.&amp;lt;/p&amp;gt;
@@ -70,7 +70,7 @@ scp caddy pi:/home/pi/caddy/
 &amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-bash&amp;#34; data-lang=&amp;#34;bash&amp;#34;&amp;gt;sudo sh -c &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;echo \&amp;amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;amp;#34; &amp;amp;gt;&amp;amp;gt; /etc/hosts&amp;amp;#34;&amp;lt;/span&amp;gt;
 &amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;However, we&amp;amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;pihole-dns-records.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&amp;#34;
+&amp;lt;img src=&amp;#34;pihole-dns-records.png&amp;#34;
 alt=&amp;#34;Adding domain records to DNS server&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;PiHole let&amp;amp;rsquo;s you specify where local domain names should resolve to&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -83,16 +83,16 @@ alt=&amp;#34;Adding domain records to DNS server&amp;#34;/&amp;gt; &amp;lt;/a&am
 &amp;lt;p&amp;gt;We need to execute using &amp;lt;code&amp;gt;sudo&amp;lt;/code&amp;gt; so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&amp;lt;/p&amp;gt;
 &amp;lt;/blockquote&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;proxied-pihole.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&amp;#34;
+&amp;lt;img src=&amp;#34;proxied-pihole.png&amp;#34;
 alt=&amp;#34;PiHole appearing in browser through a domain name&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;proxied-unifi.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&amp;#34;
+&amp;lt;img src=&amp;#34;proxied-unifi.png&amp;#34;
 alt=&amp;#34;UniFi Controller appearing in browser through a domain name&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;pihole-certificate.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&amp;#34;
+&amp;lt;img src=&amp;#34;pihole-certificate.png&amp;#34;
 alt=&amp;#34;Certificate used by PiHole&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;h2 id=&amp;#34;enabling-caddy-service&amp;#34;&amp;gt;Enabling Caddy Service&amp;lt;/h2&amp;gt;

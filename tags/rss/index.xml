@@ -3,7 +3,7 @@
 &amp;lt;h2 id=&amp;#34;what-is-rss&amp;#34;&amp;gt;What is RSS?&amp;lt;/h2&amp;gt;
 &amp;lt;p&amp;gt;&amp;lt;a href=&amp;#34;https://en.wikipedia.org/wiki/RSS&amp;#34;&amp;gt;RSS&amp;lt;/a&amp;gt; is a great way to &amp;amp;ldquo;subscribe&amp;amp;rdquo; to websites to ensure that you don&amp;amp;rsquo;t miss content from them. The standard for how it is generated has been the same for decades now - however its still the best supported and most accepted way to receive updates. It is simply a standardised XML file that allows consumers such as RSS aggregators to parse the content of the post - for which there are many to choose from (RIP &amp;lt;a href=&amp;#34;https://en.wikipedia.org/wiki/Google_Reader&amp;#34;&amp;gt;Google Reader&amp;lt;/a&amp;gt;).&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;inoreader-complete.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png&amp;#34;
+&amp;lt;img src=&amp;#34;inoreader-complete.png&amp;#34;
 alt=&amp;#34;inoreader as an RSS feed aggregator&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;My RSS aggregator of choice currently is &amp;lt;a href=&amp;#34;https://www.inoreader.com/&amp;#34;&amp;gt;inoreader&amp;lt;/a&amp;gt; - I&amp;amp;rsquo;ll be using this in my examples&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -14,14 +14,14 @@ alt=&amp;#34;inoreader as an RSS feed aggregator&amp;#34;/&amp;gt; &amp;lt;/a&am
 &amp;lt;p&amp;gt;Some (but not all) websites only include the first paragraph of their post in an RSS update (aka summary), along with a message after that paragraph requesting the reader to visit the site in a browser to view the rest of the content.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;This is a common feature of WordPress blogs - and it is done to have you load the full website and along with it, all the code for providing the owner with user analytics, and advertising - if they have it. So really they&amp;amp;rsquo;re getting the benefit of being able to publish updates via a standardised approach (RSS), to then lure you onto the website.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;rss-post-show-more-content.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png&amp;#34;
+&amp;lt;img src=&amp;#34;rss-post-show-more-content.png&amp;#34;
 alt=&amp;#34;An RSS post loading incompletely&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;Hugo &amp;lt;em&amp;gt;kind of&amp;lt;/em&amp;gt; does this through the highlighted line in the &amp;lt;a href=&amp;#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml&amp;#34;&amp;gt;templated RSS XML file&amp;lt;/a&amp;gt;:&amp;lt;/p&amp;gt;
 &amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-xml&amp;#34; data-lang=&amp;#34;xml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;&amp;amp;lt;description&amp;amp;gt;&amp;lt;/span&amp;gt;{{ .Summary | html }}&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;&amp;amp;lt;/description&amp;amp;gt;&amp;lt;/span&amp;gt;
 &amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;.Summary&amp;lt;/code&amp;gt; will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;amp;rsquo;ve produced a very short article!&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;hugo-incomplete-post.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png&amp;#34;
+&amp;lt;img src=&amp;#34;hugo-incomplete-post.png&amp;#34;
 alt=&amp;#34;Hugo producing a summarised RSS post&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;I&amp;amp;rsquo;m not against the practice of previewing the post, if a blog provides revenue for the author(s) then you will need to force readers to view the full website for analytics and advertising (businesses gotta make money!).&amp;lt;/p&amp;gt;
@@ -68,7 +68,7 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
 &amp;lt;/div&amp;gt;
 &amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Let&amp;amp;rsquo;s now view the changes in the RSS reader.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;hugo-complete-post.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png&amp;#34;
+&amp;lt;img src=&amp;#34;hugo-complete-post.png&amp;#34;
 alt=&amp;#34;Hugo RSS post displaying all content&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;We can now see much more content is being produced - and with proper HTML this time!&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -76,7 +76,7 @@ alt=&amp;#34;Hugo RSS post displaying all content&amp;#34;/&amp;gt; &amp;lt;/a&a
 &amp;lt;h2 id=&amp;#34;rendering-images-in-rss-posts&amp;#34;&amp;gt;Rendering images in RSS posts&amp;lt;/h2&amp;gt;
 &amp;lt;p&amp;gt;Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&amp;lt;code&amp;gt;alt&amp;lt;/code&amp;gt;) text is being displayed instead.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;hugo-missing-images-post.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png&amp;#34;
+&amp;lt;img src=&amp;#34;hugo-missing-images-post.png&amp;#34;
 alt=&amp;#34;Hugo RSS post with missing images, alt text displayed instead&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;Note the highlighted alt texts of images&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -133,7 +133,7 @@ content/blog
 &amp;lt;p&amp;gt;&amp;lt;code&amp;gt;INPUT&amp;lt;/code&amp;gt; will be the page &amp;lt;code&amp;gt;.Content&amp;lt;/code&amp;gt;, what we were printing out before.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;Once we&amp;amp;rsquo;ve made the change, images are now rendered properly!&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;hugo-images-post.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png&amp;#34;
+&amp;lt;img src=&amp;#34;hugo-images-post.png&amp;#34;
 alt=&amp;#34;Hugo RSS post with images being correctly rendered&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;blockquote&amp;gt;
@@ -150,7 +150,7 @@ alt=&amp;#34;Hugo RSS post with images being correctly rendered&amp;#34;/&amp;gt
 &amp;lt;h2 id=&amp;#34;adding-cards-for-posts&amp;#34;&amp;gt;Adding cards for posts&amp;lt;/h2&amp;gt;
 &amp;lt;p&amp;gt;Not dissimilar to &amp;lt;a href=&amp;#34;https://barkersocial.com/social-cards/&amp;#34;&amp;gt;social media cards&amp;lt;/a&amp;gt;, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;inoreader-enclosure-card-view.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png&amp;#34;
+&amp;lt;img src=&amp;#34;inoreader-enclosure-card-view.png&amp;#34;
 alt=&amp;#34;inoreader displaying images for each post when in card view&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;While in card view for inoreader, we can see featured images being displayed&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -255,14 +255,14 @@ alt=&amp;#34;inoreader displaying images for each post when in card view&amp;#34
 &amp;lt;li&amp;gt;Line 8 will revert to an image containing either &amp;lt;code&amp;gt;cover&amp;lt;/code&amp;gt; or &amp;lt;code&amp;gt;thumbnail&amp;lt;/code&amp;gt;, if an image is not found previously&amp;lt;/li&amp;gt;
 &amp;lt;li&amp;gt;Lines 12-13 will default to the image defined at the site level params&amp;lt;/li&amp;gt;
 &amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;With lessons learnt trying to get &amp;lt;a href=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/#rendering-images-in-rss-posts&amp;#34;&amp;gt;images to display in RSS content&amp;lt;/a&amp;gt;, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;With lessons learnt trying to get &amp;lt;a href=&amp;#34;#rendering-images-in-rss-posts&amp;#34;&amp;gt;images to display in RSS content&amp;lt;/a&amp;gt;, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;I&amp;amp;rsquo;m going to follow lines 12-13 above and have a default card defined at the site level parameters. In my &amp;lt;code&amp;gt;config.toml&amp;lt;/code&amp;gt; I&amp;amp;rsquo;ll need to add the following&amp;amp;hellip;&amp;lt;/p&amp;gt;
 &amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-toml&amp;#34; data-lang=&amp;#34;toml&amp;#34;&amp;gt;[params]
 images = [&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;images/jdheyburn_co_uk_card.png&amp;amp;#34;&amp;lt;/span&amp;gt;]
 &amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;&amp;amp;hellip;while also ensuring that I&amp;amp;rsquo;ve placed the image under &amp;lt;code&amp;gt;static/images/jdheyburn_co_uk_card.png&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
 &amp;lt;p&amp;gt;Once all that is done and deployed - we will have an RSS post card that looks like this 🙌&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;hugo-enclosure-card-view.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png&amp;#34;
+&amp;lt;img src=&amp;#34;hugo-enclosure-card-view.png&amp;#34;
 alt=&amp;#34;inoreader displaying an image for a Hugo post&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;We can now advertise our RSS subscription URL to readers. My theme &amp;lt;code&amp;gt;hugo-coder&amp;lt;/code&amp;gt; supports this as a social button on the home page. We just need to add the below block to the &amp;lt;code&amp;gt;config.toml&amp;lt;/code&amp;gt; file.&amp;lt;/p&amp;gt;
@@ -275,7 +275,7 @@ rel = &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;alt
 type = &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;application/rss+xml&amp;amp;#34;&amp;lt;/span&amp;gt;
 &amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Once done - our homepage will have the button displayed.&amp;lt;/p&amp;gt;
 &amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;rss-subscription-button.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png&amp;#34;
+&amp;lt;img src=&amp;#34;rss-subscription-button.png&amp;#34;
 alt=&amp;#34;RSS subscription button displayed on the homepage&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;h2 id=&amp;#34;summarising-changes-to-rss-xml&amp;#34;&amp;gt;Summarising changes to RSS XML&amp;lt;/h2&amp;gt;

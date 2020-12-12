@@ -141,7 +141,7 @@ git add &amp;lt;span style=&amp;#34;color:#8be9fd;font-style:italic&amp;#34;&amp
 &amp;lt;li&amp;gt;Blog landing page is now &amp;lt;strong&amp;gt;Blogs&amp;lt;/strong&amp;gt;?? (see below)&amp;lt;/li&amp;gt;
 &amp;lt;/ol&amp;gt;
 &amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;blogs-landing-page.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&amp;#34;
+&amp;lt;img src=&amp;#34;blogs-landing-page.png&amp;#34;
 alt=&amp;#34;Screenshot of Blog landing page with incorrect Blogs title&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;Let&amp;amp;rsquo;s walk through them one by one.&amp;lt;/p&amp;gt;
@@ -171,7 +171,7 @@ themes/hugo-coder/layouts/posts
 &amp;lt;span style=&amp;#34;color:#bd93f9&amp;#34;&amp;gt;0&amp;lt;/span&amp;gt; directories, &amp;lt;span style=&amp;#34;color:#bd93f9&amp;#34;&amp;gt;3&amp;lt;/span&amp;gt; files
 &amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&amp;lt;/p&amp;gt;
 &amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;posts-blog-rendering-error.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&amp;#34;
+&amp;lt;img src=&amp;#34;posts-blog-rendering-error.png&amp;#34;
 alt=&amp;#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
 &amp;lt;p&amp;gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&amp;lt;/p&amp;gt;
 &amp;lt;/figcaption&amp;gt;
@@ -223,7 +223,7 @@ type: posts
 &amp;lt;h3 id=&amp;#34;from-blogs-to-blog&amp;#34;&amp;gt;From Blogs to Blog&amp;lt;/h3&amp;gt;
 &amp;lt;p&amp;gt;Earlier on, we came across this weird bug&amp;amp;hellip;&amp;lt;/p&amp;gt;
 &amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;blogs-landing-page.png&amp;#34;&amp;gt;
-&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&amp;#34;
+&amp;lt;img src=&amp;#34;blogs-landing-page.png&amp;#34;
 alt=&amp;#34;Screenshot of Blog landing page with incorrect Blogs title&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
 &amp;lt;/figure&amp;gt;
 &amp;lt;p&amp;gt;This is occurring because of the translation feature of Hugo (sourced from &amp;lt;a href=&amp;#34;https://gohugo.io/functions/i18n/&amp;#34;&amp;gt;i18n&amp;lt;/a&amp;gt;) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;amp;rsquo;d rather it have say blog.&amp;lt;/p&amp;gt;
