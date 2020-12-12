@@ -1,367 +1,367 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github-actions on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/github-actions/</link><description>Recent content in github-actions on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 10 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid><description>&lt;h2 id="from-travisci-to-github-actions">From TravisCI to GitHub Actions&lt;/h2>
-&lt;p>In the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-3-1-deployment-methods-travisci/">previous post&lt;/a> we looked at moving to a CI/CD model by moving from the &lt;code>deploy.sh&lt;/code> script to TravisCI.&lt;/p>
-&lt;p>In this post we will look at how we can migrate from TravisCI to &lt;a href="https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions">GitHub Actions&lt;/a>, GitHub&amp;rsquo;s own CI/CD tool.&lt;/p>
-&lt;p>This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! 🚀&lt;/p>
-&lt;h3 id="benefits-">Benefits ✅&lt;/h3>
-&lt;p>Let&amp;rsquo;s talk about why we want to migrate away from TravisCI in the first place.&lt;/p>
-&lt;p>&lt;strong>Firstly and most importantly&lt;/strong>, there is a whole community of shared actions (a set of build instructions) which can save you a &lt;em>huge&lt;/em> amount of time when it comes to piecing together a CI pipeline. If the TravisCI config seemed a bit intimidating, then these will be a whole lot more gentler to you.&lt;/p>
-&lt;p>Whereas in our Travis config we had to define the individual commands needed to set up our environment and then how to build it, there&amp;rsquo;s an &lt;a href="https://github.com/marketplace/actions/hugo-setup">action&lt;/a> for that! Want to include some markdown linting? There&amp;rsquo;s an &lt;a href="https://github.com/marketplace/actions/markdownlint-cli">action&lt;/a> for that!&lt;/p>
-&lt;p>I think you folks get the picture now. There&amp;rsquo;s an &lt;a href="https://github.com/sdras/awesome-actions">awesome-actions&lt;/a> repository worth checking out for more actions.&lt;/p>
-&lt;p>&lt;strong>Secondly&lt;/strong>, all your DevOps tools are in one place! I&amp;rsquo;m a big sucker for &lt;a href="https://about.gitlab.com/">GitLab&lt;/a> and while I don&amp;rsquo;t use it for my personal projects, I&amp;rsquo;ve used it in a past life and found its seamless integration with all other tools second-to-none. Not having to worry about integrating between multiple services can only increase your productivity - allowing you to focus more on the application you&amp;rsquo;re writing.&lt;/p>
-&lt;p>&lt;strong>Lastly&lt;/strong>, all configuration is managed in the workflow configuration file. One enhancement in particular that we will be introducing can be achieved with an additional setting in the workflow config file; for us to achieve the same in Travis would have to be done via the GUI. I&amp;rsquo;m a big sucker for having configuration baked into code so this is a very good plus.&lt;/p>
-&lt;h3 id="pricing-">Pricing ⏰&lt;/h3>
-&lt;p>&lt;strong>However&lt;/strong> - one downsides to GitHub Actions is how many build minutes you get. Remember Travis allowed unlimited build minutes for a public repository? With Actions - you are limited to &lt;a href="https://github.com/pricing">2,000 minutes in their free plan&lt;/a>.&lt;/p>
-&lt;p>If you&amp;rsquo;ve been building your project in Travis already, you&amp;rsquo;ll notice it has been building (in my case at least) in ~30 seconds. With a bit of maths we can then say we will have 4,000 builds in a month on GitHub Actions.&lt;/p>
-&lt;p>Given that this isn&amp;rsquo;t a huge project with multiple contributors working on it, I think it&amp;rsquo;s safe to say we won&amp;rsquo;t ever reach this limit - unless you&amp;rsquo;re churning out blog posts left right and centre!&lt;/p>
-&lt;p>Sound good? Let&amp;rsquo;s go.&lt;/p>
-&lt;h2 id="creating-our-workflow">Creating Our Workflow&lt;/h2>
-&lt;p>Like all great services in the world, there is &lt;a href="https://help.github.com/en/actions">great documentation&lt;/a> to go along with them. Take a look over there if you&amp;rsquo;d like the detailed version.&lt;/p>
-&lt;p>What I will be focusing on is the documentation for two sets of predefined actions; &lt;a href="https://github.com/peaceiris/actions-hugo">actions-hugo&lt;/a> for building our website, and &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a> for deploying it to GitHub Pages.&lt;/p>
-&lt;h3 id="deployment-keys-setup">Deployment Keys Setup&lt;/h3>
-&lt;p>The very first thing we need to do is set up some keys that will allow our source repository (where the workflow will reside on) to push the built project to the GitHub Pages repo.&lt;/p>
-&lt;p>In your terminal, create those keys now and copy the contents of the public key to your clipboard.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ ssh-keygen -t rsa -b &lt;span style="color:#bd93f9">4096&lt;/span> -C &lt;span style="color:#f1fa8c">&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">$(&lt;/span>git config user.email&lt;span style="color:#ff79c6">)&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;&lt;/span> -f ~/.ssh/gh-pages -N &lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&lt;/span>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github-actions on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/github-actions/</link><description>Recent content in github-actions on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 10 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid><description>&amp;lt;h2 id=&amp;#34;from-travisci-to-github-actions&amp;#34;&amp;gt;From TravisCI to GitHub Actions&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;In the &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-3-1-deployment-methods-travisci/&amp;#34;&amp;gt;previous post&amp;lt;/a&amp;gt; we looked at moving to a CI/CD model by moving from the &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; script to TravisCI.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;In this post we will look at how we can migrate from TravisCI to &amp;lt;a href=&amp;#34;https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions&amp;#34;&amp;gt;GitHub Actions&amp;lt;/a&amp;gt;, GitHub&amp;amp;rsquo;s own CI/CD tool.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! 🚀&amp;lt;/p&amp;gt;
+&amp;lt;h3 id=&amp;#34;benefits-&amp;#34;&amp;gt;Benefits ✅&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;Let&amp;amp;rsquo;s talk about why we want to migrate away from TravisCI in the first place.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;Firstly and most importantly&amp;lt;/strong&amp;gt;, there is a whole community of shared actions (a set of build instructions) which can save you a &amp;lt;em&amp;gt;huge&amp;lt;/em&amp;gt; amount of time when it comes to piecing together a CI pipeline. If the TravisCI config seemed a bit intimidating, then these will be a whole lot more gentler to you.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Whereas in our Travis config we had to define the individual commands needed to set up our environment and then how to build it, there&amp;amp;rsquo;s an &amp;lt;a href=&amp;#34;https://github.com/marketplace/actions/hugo-setup&amp;#34;&amp;gt;action&amp;lt;/a&amp;gt; for that! Want to include some markdown linting? There&amp;amp;rsquo;s an &amp;lt;a href=&amp;#34;https://github.com/marketplace/actions/markdownlint-cli&amp;#34;&amp;gt;action&amp;lt;/a&amp;gt; for that!&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;I think you folks get the picture now. There&amp;amp;rsquo;s an &amp;lt;a href=&amp;#34;https://github.com/sdras/awesome-actions&amp;#34;&amp;gt;awesome-actions&amp;lt;/a&amp;gt; repository worth checking out for more actions.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;Secondly&amp;lt;/strong&amp;gt;, all your DevOps tools are in one place! I&amp;amp;rsquo;m a big sucker for &amp;lt;a href=&amp;#34;https://about.gitlab.com/&amp;#34;&amp;gt;GitLab&amp;lt;/a&amp;gt; and while I don&amp;amp;rsquo;t use it for my personal projects, I&amp;amp;rsquo;ve used it in a past life and found its seamless integration with all other tools second-to-none. Not having to worry about integrating between multiple services can only increase your productivity - allowing you to focus more on the application you&amp;amp;rsquo;re writing.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;Lastly&amp;lt;/strong&amp;gt;, all configuration is managed in the workflow configuration file. One enhancement in particular that we will be introducing can be achieved with an additional setting in the workflow config file; for us to achieve the same in Travis would have to be done via the GUI. I&amp;amp;rsquo;m a big sucker for having configuration baked into code so this is a very good plus.&amp;lt;/p&amp;gt;
+&amp;lt;h3 id=&amp;#34;pricing-&amp;#34;&amp;gt;Pricing ⏰&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;However&amp;lt;/strong&amp;gt; - one downsides to GitHub Actions is how many build minutes you get. Remember Travis allowed unlimited build minutes for a public repository? With Actions - you are limited to &amp;lt;a href=&amp;#34;https://github.com/pricing&amp;#34;&amp;gt;2,000 minutes in their free plan&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;If you&amp;amp;rsquo;ve been building your project in Travis already, you&amp;amp;rsquo;ll notice it has been building (in my case at least) in ~30 seconds. With a bit of maths we can then say we will have 4,000 builds in a month on GitHub Actions.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Given that this isn&amp;amp;rsquo;t a huge project with multiple contributors working on it, I think it&amp;amp;rsquo;s safe to say we won&amp;amp;rsquo;t ever reach this limit - unless you&amp;amp;rsquo;re churning out blog posts left right and centre!&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Sound good? Let&amp;amp;rsquo;s go.&amp;lt;/p&amp;gt;
+&amp;lt;h2 id=&amp;#34;creating-our-workflow&amp;#34;&amp;gt;Creating Our Workflow&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Like all great services in the world, there is &amp;lt;a href=&amp;#34;https://help.github.com/en/actions&amp;#34;&amp;gt;great documentation&amp;lt;/a&amp;gt; to go along with them. Take a look over there if you&amp;amp;rsquo;d like the detailed version.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;What I will be focusing on is the documentation for two sets of predefined actions; &amp;lt;a href=&amp;#34;https://github.com/peaceiris/actions-hugo&amp;#34;&amp;gt;actions-hugo&amp;lt;/a&amp;gt; for building our website, and &amp;lt;a href=&amp;#34;https://github.com/peaceiris/actions-gh-pages&amp;#34;&amp;gt;actions-gh-pages&amp;lt;/a&amp;gt; for deploying it to GitHub Pages.&amp;lt;/p&amp;gt;
+&amp;lt;h3 id=&amp;#34;deployment-keys-setup&amp;#34;&amp;gt;Deployment Keys Setup&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;The very first thing we need to do is set up some keys that will allow our source repository (where the workflow will reside on) to push the built project to the GitHub Pages repo.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;In your terminal, create those keys now and copy the contents of the public key to your clipboard.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-bash&amp;#34; data-lang=&amp;#34;bash&amp;#34;&amp;gt;$ ssh-keygen -t rsa -b &amp;lt;span style=&amp;#34;color:#bd93f9&amp;#34;&amp;gt;4096&amp;lt;/span&amp;gt; -C &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;&amp;lt;/span&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;$(&amp;lt;/span&amp;gt;git config user.email&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;)&amp;lt;/span&amp;gt;&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;&amp;lt;/span&amp;gt; -f ~/.ssh/gh-pages -N &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;&amp;amp;#34;&amp;lt;/span&amp;gt;
 Generating public/private rsa key pair.
 Your identification has been saved in /home/jdheyburn/.ssh/gh-pages.
 Your public key has been saved in /home/jdheyburn/.ssh/gh-pages.pub
-&lt;span style="color:#6272a4"># ...&lt;/span>
-$ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
-&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>macOS has a handy terminal command to copy file contents to the clipboard called &lt;code>pbcopy&lt;/code>. I&amp;rsquo;ve created an alias on my Linux laptop that does the same.&lt;/p>
-&lt;p>&lt;code>alias pbcopy=&amp;quot;xclip -selection clipboard&amp;quot;&lt;/code>&lt;/p>
-&lt;/blockquote>
-&lt;p>In GitHub load up your GitHub Pages repo and navigate to &lt;code>Settings&lt;/code> and then &lt;code>Deploy keys&lt;/code>. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code>Allow write access&lt;/code>.&lt;/p>
-&lt;figure>&lt;a href="gha-deploy-key.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png"
-alt="GitHub Pages repo deploy keys page"/> &lt;/a>
-&lt;/figure>
-&lt;p>Copy the contents of the &lt;em>private key&lt;/em> you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code>Settings&lt;/code> page, then &lt;code>Secrets&lt;/code>. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p>
-&lt;figure>&lt;a href="gha-secrets-key.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png"
-alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
-&lt;p>No secrets here!&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h3 id="workflow-configuration">Workflow Configuration&lt;/h3>
-&lt;p>In the root directory of your source code repo, create a directory called &lt;code>.github/workflows&lt;/code>. In this directory is where GitHub Actions will look for jobs to do. Create a &lt;code>yml&lt;/code> file in this directory to contain your build job definition. I went ahead and named mine &lt;code>deploy.yml&lt;/code>, but you can name it whatever you like.&lt;/p>
-&lt;p>I used the &lt;a href="https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-repository-type---project">example&lt;/a> provided in the &lt;code>actions-gh-pages&lt;/code> documentation as a base for my build definition.&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/b4b2cad15604de30f21ad0e1a85ee6b9.js">&lt;/script>
-&lt;p>This config is much simpler to understand than the Travis one - let&amp;rsquo;s break it down once more.&lt;/p>
-&lt;h4 id="build-metadata-and-environment">Build Metadata and Environment&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">name&lt;/span>: Build and deploy to jdheyburn.github.io
-&lt;span style="color:#ff79c6">on&lt;/span>:
-&lt;span style="color:#ff79c6">push&lt;/span>:
-&lt;span style="color:#ff79c6">branches&lt;/span>:
+&amp;lt;span style=&amp;#34;color:#6272a4&amp;#34;&amp;gt;# ...&amp;lt;/span&amp;gt;
+$ pbcopy &amp;amp;lt; ~/.ssh/gh-pages.pub
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;macOS has a handy terminal command to copy file contents to the clipboard called &amp;lt;code&amp;gt;pbcopy&amp;lt;/code&amp;gt;. I&amp;amp;rsquo;ve created an alias on my Linux laptop that does the same.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;alias pbcopy=&amp;amp;quot;xclip -selection clipboard&amp;amp;quot;&amp;lt;/code&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;p&amp;gt;In GitHub load up your GitHub Pages repo and navigate to &amp;lt;code&amp;gt;Settings&amp;lt;/code&amp;gt; and then &amp;lt;code&amp;gt;Deploy keys&amp;lt;/code&amp;gt;. Give it an appropriate name, and paste in the public key. Make sure you check &amp;lt;code&amp;gt;Allow write access&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;gha-deploy-key.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png&amp;#34;
+alt=&amp;#34;GitHub Pages repo deploy keys page&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;Copy the contents of the &amp;lt;em&amp;gt;private key&amp;lt;/em&amp;gt; you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;amp;rsquo;s &amp;lt;code&amp;gt;Settings&amp;lt;/code&amp;gt; page, then &amp;lt;code&amp;gt;Secrets&amp;lt;/code&amp;gt;. You&amp;amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&amp;lt;/p&amp;gt;
+&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;gha-secrets-key.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png&amp;#34;
+alt=&amp;#34;GitHub source code repo secrets page&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;No secrets here!&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;h3 id=&amp;#34;workflow-configuration&amp;#34;&amp;gt;Workflow Configuration&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;In the root directory of your source code repo, create a directory called &amp;lt;code&amp;gt;.github/workflows&amp;lt;/code&amp;gt;. In this directory is where GitHub Actions will look for jobs to do. Create a &amp;lt;code&amp;gt;yml&amp;lt;/code&amp;gt; file in this directory to contain your build job definition. I went ahead and named mine &amp;lt;code&amp;gt;deploy.yml&amp;lt;/code&amp;gt;, but you can name it whatever you like.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;I used the &amp;lt;a href=&amp;#34;https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-repository-type---project&amp;#34;&amp;gt;example&amp;lt;/a&amp;gt; provided in the &amp;lt;code&amp;gt;actions-gh-pages&amp;lt;/code&amp;gt; documentation as a base for my build definition.&amp;lt;/p&amp;gt;
+&amp;lt;script type=&amp;#34;application/javascript&amp;#34; src=&amp;#34;https://gist.github.com/jdheyburn/b4b2cad15604de30f21ad0e1a85ee6b9.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;p&amp;gt;This config is much simpler to understand than the Travis one - let&amp;amp;rsquo;s break it down once more.&amp;lt;/p&amp;gt;
+&amp;lt;h4 id=&amp;#34;build-metadata-and-environment&amp;#34;&amp;gt;Build Metadata and Environment&amp;lt;/h4&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Build and deploy to jdheyburn.github.io
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;on&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;push&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;branches&amp;lt;/span&amp;gt;:
 - master
-&lt;span style="color:#ff79c6">schedule&lt;/span>:
-- &lt;span style="color:#ff79c6">cron&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;0 10 * * *&amp;#34;&lt;/span>
-&lt;span style="color:#ff79c6">jobs&lt;/span>:
-&lt;span style="color:#ff79c6">deploy&lt;/span>:
-&lt;span style="color:#ff79c6">runs-on&lt;/span>: ubuntu-18.04
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is pretty box standard at this point. We&amp;rsquo;re simply giving the name to the workflow and saying to run it on every push to the &lt;code>master&lt;/code> branch.&lt;/p>
-&lt;p>An enhancement that we&amp;rsquo;re adding is the &lt;code>on.schedule.cron&lt;/code> setting. This tells Actions not only to build the project on every push to the &lt;code>master&lt;/code> branch but on a timed schedule too - in my example this is at 10am everyday. We could have done the same via Travis, but that can only be &lt;a href="https://docs.travis-ci.com/user/cron-jobs/">configured via the GUI&lt;/a>.&lt;/p>
-&lt;blockquote>
-&lt;p>The benefit to this is the way in which Hugo generates content. Hugo will only build content pages where the date on the content is either today or in the past, and is not a draft.&lt;/p>
-&lt;p>Therefore if you had written a post due to be published in the future, you can define that date and have the daily Hugo build publish it when that date has been reached - which is exactly how this blog post was published!&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;code>jobs&lt;/code> is the field that contains the work we want to run. We&amp;rsquo;re giving the job a name of &lt;code>deploy&lt;/code> and telling it to run on &lt;code>ubuntu-18.04&lt;/code> - which is the equivalent to &lt;code>bionic&lt;/code> in Ubuntu.&lt;/p>
-&lt;blockquote>
-&lt;p>In order to keep our build the same as Travis&amp;rsquo;s, we could instruct the job to run on &lt;code>ubuntu-16.04&lt;/code>, nonetheless I&amp;rsquo;m pretty confident it will run on the next &lt;a href="https://wiki.ubuntu.com/Releases">LTS of Ubuntu&lt;/a>.&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="project-checkout">Project Checkout&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#6272a4"># ...&lt;/span>
-&lt;span style="color:#ff79c6">steps&lt;/span>:
-- &lt;span style="color:#ff79c6">uses&lt;/span>: actions/checkout@v2
-- &lt;span style="color:#ff79c6">name&lt;/span>: Checkout submodules
-&lt;span style="color:#ff79c6">shell&lt;/span>: bash
-&lt;span style="color:#ff79c6">run&lt;/span>: |&lt;span style="color:#f1fa8c">
-&lt;/span>&lt;span style="color:#f1fa8c"> auth_header=&amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;#34;
-&lt;/span>&lt;span style="color:#f1fa8c"> git submodule sync --recursive
-&lt;/span>&lt;span style="color:#f1fa8c"> git -c &amp;#34;http.extraheader=$auth_header&amp;#34; -c protocol.version=2 submodule update --init --force --recursive --depth=1&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re executing the GitHub &lt;a href="https://github.com/actions/checkout">checkout action&lt;/a> which will pull the repo to the build server. It&amp;rsquo;s worth noting that this action version I&amp;rsquo;m using here doesn&amp;rsquo;t checkout git submodules too - which is a problem for us as that&amp;rsquo;s how we&amp;rsquo;re currently pulling the theme for our Hugo site. We can workaround it with the next step in the build - &lt;code>Checkout submodules&lt;/code>.&lt;/p>
-&lt;p>This functionality was available in v1 of the action, so you can use that if you&amp;rsquo;d prefer:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">steps&lt;/span>:
-- &lt;span style="color:#ff79c6">uses&lt;/span>: actions/checkout@v2
-&lt;span style="color:#ff79c6">with&lt;/span>:
-&lt;span style="color:#ff79c6">submodules&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>It&amp;rsquo;s worth noting that we didn&amp;rsquo;t have to do this step for Travis - since it will checkout the repository with submodules already.&lt;/p>
-&lt;p>This is because GitHub Actions can be used for many more things than just repository code manipulation where you may not necessarily need the repo checked out.&lt;/p>
-&lt;/blockquote>
-&lt;h4 id="build-and-deploy-setup">Build and Deploy Setup&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">- &lt;span style="color:#ff79c6">name&lt;/span>: Setup Hugo
-&lt;span style="color:#ff79c6">uses&lt;/span>: peaceiris/actions-hugo@v2
-&lt;span style="color:#ff79c6">with&lt;/span>:
-&lt;span style="color:#ff79c6">hugo-version&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;0.58.3&amp;#34;&lt;/span>
-&lt;span style="color:#ff79c6">extended&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>As stated we&amp;rsquo;re going to be using the Action &lt;a href="https://github.com/peaceiris/actions-hugo">actions-hugo&lt;/a> to set up &lt;code>hugo&lt;/code> on our build server. It can take in a number of parameters to allow us to customise it; for us we&amp;rsquo;re only concerned with hardcoding the version of Hugo, and to use the Hugo Extended binary as required by our theme.&lt;/p>
-&lt;blockquote>
-&lt;p>At the time of writing 0.58.3 is not the latest version of Hugo, whereas when I wrote &lt;code>.travis.yml&lt;/code> it was. I want the GitHub Actions build to be as close as possible to the TravisCI build in order to make them as similar as possible to prevent any unexpected build errors.&lt;/p>
-&lt;p>Once I&amp;rsquo;ve achieved a successful build - I&amp;rsquo;ll look to upgrade to a newer version, and then iron out any issues from there.&lt;/p>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">- &lt;span style="color:#ff79c6">name&lt;/span>: Build
-&lt;span style="color:#ff79c6">run&lt;/span>: hugo --gc --minify
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once &lt;code>hugo&lt;/code> is set up we can then build it easily enough, as self-documented in the code.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">- &lt;span style="color:#ff79c6">name&lt;/span>: Copy CNAME
-&lt;span style="color:#ff79c6">run&lt;/span>: cp CNAME ./public/
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Lastly, we can&amp;rsquo;t forget to copy the &lt;code>CNAME&lt;/code> file we made in &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#solidying-our-changes-with-a-cname-file">part 2&lt;/a>.&lt;/p>
-&lt;h4 id="deployment-to-github-pages">Deployment to GitHub Pages&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">- &lt;span style="color:#ff79c6">name&lt;/span>: Deploy
-&lt;span style="color:#ff79c6">uses&lt;/span>: peaceiris/actions-gh-pages@v3
-&lt;span style="color:#ff79c6">with&lt;/span>:
-&lt;span style="color:#ff79c6">deploy_key&lt;/span>: ${{ secrets.DEPLOY_KEY }}
-&lt;span style="color:#ff79c6">external_repository&lt;/span>: jdheyburn/jdheyburn.github.io
-&lt;span style="color:#ff79c6">publish_branch&lt;/span>: master
-&lt;span style="color:#ff79c6">publish_dir&lt;/span>: ./public
-&lt;span style="color:#ff79c6">commit_message&lt;/span>: ${{ github.event.head_commit.message }}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a>. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
-&lt;ul>
-&lt;li>If you didn&amp;rsquo;t name yours &lt;code>DEPLOY_KEY&lt;/code> then you&amp;rsquo;ll need to change it here too.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>external_repository&lt;/code> tells the action where we want the built website to go to - we set this to our GitHub Pages repo&lt;/li>
-&lt;li>&lt;code>publish_branch&lt;/code> is the branch of the repo we publish to&lt;/li>
-&lt;li>&lt;code>publish_dir&lt;/code> is the directory on the build server that we want to push to the repo
-&lt;ul>
-&lt;li>Remember that &lt;code>hugo&lt;/code> builds the website to the &lt;code>public&lt;/code> directory locally&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>commit_message&lt;/code> allows us to specify a custom commit message to the target repo
-&lt;ul>
-&lt;li>Here I am telling it to inherit the commit message used in the source repo&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="bringing-it-all-together-again">Bringing It All Together (Again)&lt;/h2>
-&lt;p>If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p>
-&lt;p>For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href="https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings">https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a> for me) and disabling &lt;code>Build pushed branches&lt;/code>.&lt;/p>
-&lt;figure class="center">&lt;a href="travis-disable-build.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png"
-alt="Build pushed branches disabled on Travis"/> &lt;/a>
-&lt;/figure>
-&lt;p>Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code>Actions&lt;/code> tab of your source code repo on GitHub.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add --all
-git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span>
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;schedule&amp;lt;/span&amp;gt;:
+- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;cron&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;0 10 * * *&amp;amp;#34;&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;jobs&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;deploy&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;runs-on&amp;lt;/span&amp;gt;: ubuntu-18.04
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;This is pretty box standard at this point. We&amp;amp;rsquo;re simply giving the name to the workflow and saying to run it on every push to the &amp;lt;code&amp;gt;master&amp;lt;/code&amp;gt; branch.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;An enhancement that we&amp;amp;rsquo;re adding is the &amp;lt;code&amp;gt;on.schedule.cron&amp;lt;/code&amp;gt; setting. This tells Actions not only to build the project on every push to the &amp;lt;code&amp;gt;master&amp;lt;/code&amp;gt; branch but on a timed schedule too - in my example this is at 10am everyday. We could have done the same via Travis, but that can only be &amp;lt;a href=&amp;#34;https://docs.travis-ci.com/user/cron-jobs/&amp;#34;&amp;gt;configured via the GUI&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;The benefit to this is the way in which Hugo generates content. Hugo will only build content pages where the date on the content is either today or in the past, and is not a draft.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Therefore if you had written a post due to be published in the future, you can define that date and have the daily Hugo build publish it when that date has been reached - which is exactly how this blog post was published!&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;jobs&amp;lt;/code&amp;gt; is the field that contains the work we want to run. We&amp;amp;rsquo;re giving the job a name of &amp;lt;code&amp;gt;deploy&amp;lt;/code&amp;gt; and telling it to run on &amp;lt;code&amp;gt;ubuntu-18.04&amp;lt;/code&amp;gt; - which is the equivalent to &amp;lt;code&amp;gt;bionic&amp;lt;/code&amp;gt; in Ubuntu.&amp;lt;/p&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;In order to keep our build the same as Travis&amp;amp;rsquo;s, we could instruct the job to run on &amp;lt;code&amp;gt;ubuntu-16.04&amp;lt;/code&amp;gt;, nonetheless I&amp;amp;rsquo;m pretty confident it will run on the next &amp;lt;a href=&amp;#34;https://wiki.ubuntu.com/Releases&amp;#34;&amp;gt;LTS of Ubuntu&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;h4 id=&amp;#34;project-checkout&amp;#34;&amp;gt;Project Checkout&amp;lt;/h4&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#6272a4&amp;#34;&amp;gt;# ...&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;steps&amp;lt;/span&amp;gt;:
+- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;uses&amp;lt;/span&amp;gt;: actions/checkout@v2
+- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Checkout submodules
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;shell&amp;lt;/span&amp;gt;: bash
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;run&amp;lt;/span&amp;gt;: |&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;
+&amp;lt;/span&amp;gt;&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt; auth_header=&amp;amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;amp;#34;
+&amp;lt;/span&amp;gt;&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt; git submodule sync --recursive
+&amp;lt;/span&amp;gt;&amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt; git -c &amp;amp;#34;http.extraheader=$auth_header&amp;amp;#34; -c protocol.version=2 submodule update --init --force --recursive --depth=1&amp;lt;/span&amp;gt;
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Here we&amp;amp;rsquo;re executing the GitHub &amp;lt;a href=&amp;#34;https://github.com/actions/checkout&amp;#34;&amp;gt;checkout action&amp;lt;/a&amp;gt; which will pull the repo to the build server. It&amp;amp;rsquo;s worth noting that this action version I&amp;amp;rsquo;m using here doesn&amp;amp;rsquo;t checkout git submodules too - which is a problem for us as that&amp;amp;rsquo;s how we&amp;amp;rsquo;re currently pulling the theme for our Hugo site. We can workaround it with the next step in the build - &amp;lt;code&amp;gt;Checkout submodules&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;This functionality was available in v1 of the action, so you can use that if you&amp;amp;rsquo;d prefer:&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;steps&amp;lt;/span&amp;gt;:
+- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;uses&amp;lt;/span&amp;gt;: actions/checkout@v2
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;with&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;submodules&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;true&amp;lt;/span&amp;gt;
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;It&amp;amp;rsquo;s worth noting that we didn&amp;amp;rsquo;t have to do this step for Travis - since it will checkout the repository with submodules already.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;This is because GitHub Actions can be used for many more things than just repository code manipulation where you may not necessarily need the repo checked out.&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;h4 id=&amp;#34;build-and-deploy-setup&amp;#34;&amp;gt;Build and Deploy Setup&amp;lt;/h4&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Setup Hugo
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;uses&amp;lt;/span&amp;gt;: peaceiris/actions-hugo@v2
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;with&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;hugo-version&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;0.58.3&amp;amp;#34;&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;extended&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;true&amp;lt;/span&amp;gt;
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;As stated we&amp;amp;rsquo;re going to be using the Action &amp;lt;a href=&amp;#34;https://github.com/peaceiris/actions-hugo&amp;#34;&amp;gt;actions-hugo&amp;lt;/a&amp;gt; to set up &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; on our build server. It can take in a number of parameters to allow us to customise it; for us we&amp;amp;rsquo;re only concerned with hardcoding the version of Hugo, and to use the Hugo Extended binary as required by our theme.&amp;lt;/p&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;At the time of writing 0.58.3 is not the latest version of Hugo, whereas when I wrote &amp;lt;code&amp;gt;.travis.yml&amp;lt;/code&amp;gt; it was. I want the GitHub Actions build to be as close as possible to the TravisCI build in order to make them as similar as possible to prevent any unexpected build errors.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Once I&amp;amp;rsquo;ve achieved a successful build - I&amp;amp;rsquo;ll look to upgrade to a newer version, and then iron out any issues from there.&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Build
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;run&amp;lt;/span&amp;gt;: hugo --gc --minify
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Once &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; is set up we can then build it easily enough, as self-documented in the code.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Copy CNAME
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;run&amp;lt;/span&amp;gt;: cp CNAME ./public/
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Lastly, we can&amp;amp;rsquo;t forget to copy the &amp;lt;code&amp;gt;CNAME&amp;lt;/code&amp;gt; file we made in &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-2-custom-domain/#solidying-our-changes-with-a-cname-file&amp;#34;&amp;gt;part 2&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;h4 id=&amp;#34;deployment-to-github-pages&amp;#34;&amp;gt;Deployment to GitHub Pages&amp;lt;/h4&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;- &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;name&amp;lt;/span&amp;gt;: Deploy
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;uses&amp;lt;/span&amp;gt;: peaceiris/actions-gh-pages@v3
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;with&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;deploy_key&amp;lt;/span&amp;gt;: ${{ secrets.DEPLOY_KEY }}
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;external_repository&amp;lt;/span&amp;gt;: jdheyburn/jdheyburn.github.io
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;publish_branch&amp;lt;/span&amp;gt;: master
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;publish_dir&amp;lt;/span&amp;gt;: ./public
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;commit_message&amp;lt;/span&amp;gt;: ${{ github.event.head_commit.message }}
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;For the deployment to GitHub Pages I&amp;amp;rsquo;m using the action &amp;lt;a href=&amp;#34;https://github.com/peaceiris/actions-gh-pages&amp;#34;&amp;gt;actions-gh-pages&amp;lt;/a&amp;gt;. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;amp;rsquo;m using is:&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;deploy_key&amp;lt;/code&amp;gt; is the &amp;lt;em&amp;gt;private key&amp;lt;/em&amp;gt; we set up &amp;lt;a href=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup&amp;#34;&amp;gt;earlier in this post&amp;lt;/a&amp;gt; in &amp;lt;code&amp;gt;Settings&amp;lt;/code&amp;gt; -&amp;amp;gt; &amp;lt;code&amp;gt;Secrets&amp;lt;/code&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;If you didn&amp;amp;rsquo;t name yours &amp;lt;code&amp;gt;DEPLOY_KEY&amp;lt;/code&amp;gt; then you&amp;amp;rsquo;ll need to change it here too.&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;external_repository&amp;lt;/code&amp;gt; tells the action where we want the built website to go to - we set this to our GitHub Pages repo&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;publish_branch&amp;lt;/code&amp;gt; is the branch of the repo we publish to&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;publish_dir&amp;lt;/code&amp;gt; is the directory on the build server that we want to push to the repo
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Remember that &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; builds the website to the &amp;lt;code&amp;gt;public&amp;lt;/code&amp;gt; directory locally&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;commit_message&amp;lt;/code&amp;gt; allows us to specify a custom commit message to the target repo
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Here I am telling it to inherit the commit message used in the source repo&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;h2 id=&amp;#34;bringing-it-all-together-again&amp;#34;&amp;gt;Bringing It All Together (Again)&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;If you&amp;amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;For Travis, you can do that by navigating to your source code repo settings on Travis (&amp;lt;a href=&amp;#34;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&amp;#34;&amp;gt;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&amp;lt;/a&amp;gt; for me) and disabling &amp;lt;code&amp;gt;Build pushed branches&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;travis-disable-build.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png&amp;#34;
+alt=&amp;#34;Build pushed branches disabled on Travis&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;Now that&amp;amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &amp;lt;code&amp;gt;Actions&amp;lt;/code&amp;gt; tab of your source code repo on GitHub.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-bash&amp;#34; data-lang=&amp;#34;bash&amp;#34;&amp;gt;git add --all
+git commit -m &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#39;Migrate to GitHub Actions&amp;amp;#39;&amp;lt;/span&amp;gt;
 git push
-&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;a href="github-actions-build.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png"
-alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
-&lt;p>Great success!&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Hopefully your build went to success! If it didn&amp;rsquo;t have a look through the logs and see what the issue was. It took me a few builds to determine my finalised workflow config. You can even see it at my &lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk/actions">source code repo Actions page&lt;/a>.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>Now that we&amp;rsquo;ve migrated across over to GitHub Actions, we can close out the permissions that TravisCI has on our projects, and demise any secret keys we gave it.&lt;/p>
-&lt;p>From the tone of my writing you can probably tell which one I favour. That&amp;rsquo;s not to say I do not like TravisCI - each service has its own pros and cons. For this particular project, I prefer the one platform approach for which I am used to in GitLab. The number of build minutes available for GA is a concern, but not one I will have to worry about for now.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid><description>&lt;h2 id="recap">Recap&lt;/h2>
-&lt;p>Since &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/">part 1&lt;/a>, we have been using a simple bash script called &lt;code>deploy.sh&lt;/code> to build our Hugo website and upload it to our GitHub Pages repo. In &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/">part 2&lt;/a> we modified it slightly to include the &lt;code>CNAME&lt;/code> file post-build to ensure GitHub Pages uses the custom domain we set up in that same part.&lt;/p>
-&lt;p>For this part, I will tell you about how I migrated from deploying via a script, to a CI/CD tool - namely &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>. Then I will document how I migrated from this, to the new &lt;a href="https://github.com/features/actions">GitHub Actions&lt;/a>; GitHub&amp;rsquo;s offering into the CI/CD space.&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;code>CI/CD&lt;/code> is an acronym for Continuous Integration / Continuous Deployment which is a very important concept in the DevOps culture.
-If you would like to find out more about that and DevOps culture, check out these resources 👇&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.atlassian.com/devops">https://www.atlassian.com/devops&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0">https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.redhat.com/en/topics/devops/what-is-ci-cd">https://www.redhat.com/en/topics/devops/what-is-ci-cd&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.atlassian.com/devops">https://www.atlassian.com/devops&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.amazon.co.uk/dp/B07B9F83WM">https://www.amazon.co.uk/dp/B07B9F83WM&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;p>I had originally planned this to be one post, but it soon became far too long - and I&amp;rsquo;m a fan of taking in content in sizeable chunks.&lt;/p>
-&lt;p>So this post will focus on migrating to TravisCI from the &lt;code>deploy.sh&lt;/code> script. Whereas the next post will focus on migrating to, and setting up GitHub Actions. If you&amp;rsquo;re only interested in using that as your CI tool then I&amp;rsquo;ll provide a link to that here when it is posted.&lt;/p>
-&lt;h2 id="moving-away-from-deploysh">Moving Away From deploy.sh&lt;/h2>
-&lt;p>There&amp;rsquo;s nothing necessarily wrong with using &lt;code>deploy.sh&lt;/code> to push our code, however we want to get all the bells and whistles that Continuous Integration can provide to us such as running a series of tests and checks automatically against every commit to our repository. Once those tests and checks pass then we can automate the deployment of our website.&lt;/p>
-&lt;p>Now there are many CI tools out there with the most well known likely to be &lt;a href="https://jenkins.io/">Jenkins&lt;/a>, but there are also hosted solutions available which will take your code and perform your pipelines against them.&lt;/p>
-&lt;p>One of those hosted solutions is &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>, where they integrate quite nicely with GitHub repositories to attach &lt;a href="https://developer.github.com/webhooks/">webhooks&lt;/a> against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p>
-&lt;p>So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p>
-&lt;figure>&lt;a href="travis-free.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png"
-alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
-&lt;p>Free is definitely a thing you love to see&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="travisci-account-setup">TravisCI Account Setup&lt;/h2>
-&lt;p>The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em>another&lt;/em> account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href="https://travis-ci.com/">https://travis-ci.com/&lt;/a> and click on &lt;code>Sign in with GitHub&lt;/code>.&lt;/p>
-&lt;figure>&lt;a href="travis-landing.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png"
-alt="Screenshot of Travis landing page"/> &lt;/a>&lt;figcaption>
-&lt;p>You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>GitHub will ask you if you &lt;em>really&lt;/em> want to share some of your GitHub data with Travis.&lt;/p>
-&lt;figure class="center">&lt;a href="travis-github-authorise.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png"
-alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
-&lt;p>Another green button? Why not!&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p>
-&lt;p>All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href="https://travis-ci.com/account/repositories">https://travis-ci.com/account/repositories&lt;/a> page is what you need for that - then click on the &lt;code>Activate&lt;/code> button.&lt;/p>
-&lt;figure>&lt;a href="travis-github-apps-integration.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png"
-alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
-&lt;p>&amp;hellip;More green buttons?!&lt;/p>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Now on the next screen you may or may not want the default selection of &lt;code>All repositories&lt;/code> which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">&lt;em>principle of least privilege&lt;/em>&lt;/a> (POLP); not just for users but for services too.&lt;/p>
-&lt;p>For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code>jdheyburn.co.uk&lt;/code> and &lt;code>jdheyburn.github.io&lt;/code> - it also gives you a cleaner Travis dashboard too.&lt;/p>
-&lt;figure class="center">&lt;a href="travis-github-repos-selection.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png"
-alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
-&lt;/figure>
-&lt;h3 id="back-to-github">Back to GitHub&lt;/h3>
-&lt;p>The next step is required to permit Travis to push the built project to our GitHub Pages repo. We need to generate a secret with the permissions that Travis requires and keep it aside for the Travis config file later.&lt;/p>
-&lt;p>Navigate to the &lt;a href="https://github.com/settings/tokens">GitHub Personal Access Tokens&lt;/a> page and click on &lt;code>Generate new token&lt;/code>.&lt;/p>
-&lt;p>You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code>repo&lt;/code> checkbox as done so below.&lt;/p>
-&lt;p>After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code>Generate token&lt;/code>.&lt;/p>
-&lt;figure class="center">&lt;a href="travis-github-pat.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png"
-alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/> &lt;/a>
-&lt;/figure>
-&lt;p>The token&amp;rsquo;s secret will display on the next screen. &lt;strong>Make sure you copy it&lt;/strong> and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p>
-&lt;figure class="center">&lt;a href="travis-github-pat-created.png">
-&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png"
-alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt;/a>
-&lt;/figure>
-&lt;h2 id="travisci-configuration">TravisCI Configuration&lt;/h2>
-&lt;p>Once we have our Travis account set up, we need to add in a &lt;a href="https://docs.travis-ci.com/user/tutorial/">configuration file&lt;/a> that Travis will read from to determine what steps we&amp;rsquo;d like it to perform.&lt;/p>
-&lt;p>In our source code repository (&lt;code>jdheyburn.co.uk&lt;/code> in my case) we want to create a file at the root directory and call it &lt;code>.travis.yml&lt;/code>. See below for an example of how I configured mine.&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/073bd6d4cb9284774e7e7feee093d86f.js">&lt;/script>
-&lt;p>Let&amp;rsquo;s break it down section by section.&lt;/p>
-&lt;h3 id="build-environment">Build Environment&lt;/h3>
-&lt;p>These settings here all refer to the build environment that we&amp;rsquo;d like our project to build on.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">dist&lt;/span>: xenial
-&lt;span style="color:#ff79c6">git&lt;/span>:
-&lt;span style="color:#ff79c6">depth&lt;/span>: &lt;span style="color:#ff79c6">false&lt;/span>
-&lt;span style="color:#ff79c6">env&lt;/span>:
-&lt;span style="color:#ff79c6">global&lt;/span>:
-- HUGO_VERSION=&amp;#34;0.58.3&amp;#34;
-&lt;span style="color:#ff79c6">matrix&lt;/span>:
-&lt;span style="color:#ff79c6">secure&lt;/span>: REDACTED
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>dist&lt;/code> specifies what platform Travis should build the project on. In this case &lt;code>xenial&lt;/code> refers to Ubuntu 16.04, which is a Linux distribution. There are &lt;a href="https://docs.travis-ci.com/user/reference/overview/">several others&lt;/a> to choose from and more likely than not you&amp;rsquo;ll want the platform to be Linux. However if you had a Windows application written in &lt;code>.NET&lt;/code> then you would likely want it built on a Windows Server since that is what supports it.&lt;/p>
-&lt;p>&lt;code>git.depth&lt;/code> tells Travis how many commits of your project to check out. This is passed directory to the &lt;code>git&lt;/code> parameter &lt;code>--depth&lt;/code> (more info on that &lt;a href="https://git-scm.com/docs/git-clone">here&lt;/a>). For our use case we&amp;rsquo;re not interested in this option so we set it to &lt;code>false&lt;/code> to disable the flag being passed to &lt;code>git&lt;/code>.&lt;/p>
-&lt;p>&lt;code>env.global&lt;/code> allows us to define what variables should be set in the environment. This is done in the form of an array of strings in the format &lt;code>key=value&lt;/code>. So given the example, &lt;code>HUGO_VERSION&lt;/code> will be set to &lt;code>0.58.3&lt;/code>. We&amp;rsquo;ll come back to this later.&lt;/p>
-&lt;p>&lt;code>env.matrix&lt;/code> is the encrypted value that gets passed to the &lt;code>GITHUB_TOKEN&lt;/code> environment variable which is used to allow Travis to commit the built project to our GitHub Pages repo.&lt;/p>
-&lt;ul>
-&lt;li>You&amp;rsquo;re going to want to take the personal access token generated from GitHub in the earlier step and encrypt it using &lt;a href="https://docs.travis-ci.com/user/environment-variables#encrypting-environment-variables">this method&lt;/a>, then add it back to this setting&lt;/li>
-&lt;/ul>
-&lt;h3 id="external-dependencies">External Dependencies&lt;/h3>
-&lt;p>Once the build environment is defined, we can tell Travis to pull in some additional dependencies or files required for our project. Now remember this is a &lt;code>hugo&lt;/code> project and we needed to install it on our local machines to run &lt;code>deploy.sh&lt;/code>, we need to do the same for Travis too.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">install&lt;/span>:
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;github-actions-build.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png&amp;#34;
+alt=&amp;#34;Successful build on GitHub Actions&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;Great success!&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;Hopefully your build went to success! If it didn&amp;amp;rsquo;t have a look through the logs and see what the issue was. It took me a few builds to determine my finalised workflow config. You can even see it at my &amp;lt;a href=&amp;#34;https://github.com/jdheyburn/jdheyburn.co.uk/actions&amp;#34;&amp;gt;source code repo Actions page&amp;lt;/a&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;h2 id=&amp;#34;conclusion&amp;#34;&amp;gt;Conclusion&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Now that we&amp;amp;rsquo;ve migrated across over to GitHub Actions, we can close out the permissions that TravisCI has on our projects, and demise any secret keys we gave it.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;From the tone of my writing you can probably tell which one I favour. That&amp;amp;rsquo;s not to say I do not like TravisCI - each service has its own pros and cons. For this particular project, I prefer the one platform approach for which I am used to in GitLab. The number of build minutes available for GA is a concern, but not one I will have to worry about for now.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Thanks for reading! 🌝&amp;lt;/p&amp;gt;</description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid><description>&amp;lt;h2 id=&amp;#34;recap&amp;#34;&amp;gt;Recap&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Since &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-1-getting-started/&amp;#34;&amp;gt;part 1&amp;lt;/a&amp;gt;, we have been using a simple bash script called &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; to build our Hugo website and upload it to our GitHub Pages repo. In &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-2-custom-domain/&amp;#34;&amp;gt;part 2&amp;lt;/a&amp;gt; we modified it slightly to include the &amp;lt;code&amp;gt;CNAME&amp;lt;/code&amp;gt; file post-build to ensure GitHub Pages uses the custom domain we set up in that same part.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;For this part, I will tell you about how I migrated from deploying via a script, to a CI/CD tool - namely &amp;lt;a href=&amp;#34;https://travis-ci.com/&amp;#34;&amp;gt;TravisCI&amp;lt;/a&amp;gt;. Then I will document how I migrated from this, to the new &amp;lt;a href=&amp;#34;https://github.com/features/actions&amp;#34;&amp;gt;GitHub Actions&amp;lt;/a&amp;gt;; GitHub&amp;amp;rsquo;s offering into the CI/CD space.&amp;lt;/p&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;CI/CD&amp;lt;/code&amp;gt; is an acronym for Continuous Integration / Continuous Deployment which is a very important concept in the DevOps culture.
+If you would like to find out more about that and DevOps culture, check out these resources 👇&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;https://www.atlassian.com/devops&amp;#34;&amp;gt;https://www.atlassian.com/devops&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0&amp;#34;&amp;gt;https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;https://www.redhat.com/en/topics/devops/what-is-ci-cd&amp;#34;&amp;gt;https://www.redhat.com/en/topics/devops/what-is-ci-cd&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;https://www.atlassian.com/devops&amp;#34;&amp;gt;https://www.atlassian.com/devops&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;https://www.amazon.co.uk/dp/B07B9F83WM&amp;#34;&amp;gt;https://www.amazon.co.uk/dp/B07B9F83WM&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;p&amp;gt;I had originally planned this to be one post, but it soon became far too long - and I&amp;amp;rsquo;m a fan of taking in content in sizeable chunks.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;So this post will focus on migrating to TravisCI from the &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; script. Whereas the next post will focus on migrating to, and setting up GitHub Actions. If you&amp;amp;rsquo;re only interested in using that as your CI tool then I&amp;amp;rsquo;ll provide a link to that here when it is posted.&amp;lt;/p&amp;gt;
+&amp;lt;h2 id=&amp;#34;moving-away-from-deploysh&amp;#34;&amp;gt;Moving Away From deploy.sh&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;There&amp;amp;rsquo;s nothing necessarily wrong with using &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; to push our code, however we want to get all the bells and whistles that Continuous Integration can provide to us such as running a series of tests and checks automatically against every commit to our repository. Once those tests and checks pass then we can automate the deployment of our website.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Now there are many CI tools out there with the most well known likely to be &amp;lt;a href=&amp;#34;https://jenkins.io/&amp;#34;&amp;gt;Jenkins&amp;lt;/a&amp;gt;, but there are also hosted solutions available which will take your code and perform your pipelines against them.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;One of those hosted solutions is &amp;lt;a href=&amp;#34;https://travis-ci.com/&amp;#34;&amp;gt;TravisCI&amp;lt;/a&amp;gt;, where they integrate quite nicely with GitHub repositories to attach &amp;lt;a href=&amp;#34;https://developer.github.com/webhooks/&amp;#34;&amp;gt;webhooks&amp;lt;/a&amp;gt; against them. They have several pricing options available, but for public open source projects, it is completely free!&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&amp;lt;/p&amp;gt;
+&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;travis-free.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png&amp;#34;
+alt=&amp;#34;Screenshot of Travis free pricing plan&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;Free is definitely a thing you love to see&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;h2 id=&amp;#34;travisci-account-setup&amp;#34;&amp;gt;TravisCI Account Setup&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;The TravisCI account setup for TravisCI is very streamlined - instead of creating &amp;lt;em&amp;gt;another&amp;lt;/em&amp;gt; account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &amp;lt;a href=&amp;#34;https://travis-ci.com/&amp;#34;&amp;gt;https://travis-ci.com/&amp;lt;/a&amp;gt; and click on &amp;lt;code&amp;gt;Sign in with GitHub&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;travis-landing.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png&amp;#34;
+alt=&amp;#34;Screenshot of Travis landing page&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;You can&amp;amp;rsquo;t resist a big green button&amp;amp;hellip;&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;GitHub will ask you if you &amp;lt;em&amp;gt;really&amp;lt;/em&amp;gt; want to share some of your GitHub data with Travis.&amp;lt;/p&amp;gt;
+&amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;travis-github-authorise.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png&amp;#34;
+alt=&amp;#34;Screenshot of GitHub authorising Travis&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;Another green button? Why not!&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;Once you&amp;amp;rsquo;ve done that, you&amp;amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;amp;hellip; is looking rather lonely 😦 - let&amp;amp;rsquo;s fix that!&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;All we&amp;amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &amp;lt;a href=&amp;#34;https://travis-ci.com/account/repositories&amp;#34;&amp;gt;https://travis-ci.com/account/repositories&amp;lt;/a&amp;gt; page is what you need for that - then click on the &amp;lt;code&amp;gt;Activate&amp;lt;/code&amp;gt; button.&amp;lt;/p&amp;gt;
+&amp;lt;figure&amp;gt;&amp;lt;a href=&amp;#34;travis-github-apps-integration.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png&amp;#34;
+alt=&amp;#34;Screenshot of GitHub Apps Integration&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;&amp;lt;figcaption&amp;gt;
+&amp;lt;p&amp;gt;&amp;amp;hellip;More green buttons?!&amp;lt;/p&amp;gt;
+&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;Now on the next screen you may or may not want the default selection of &amp;lt;code&amp;gt;All repositories&amp;lt;/code&amp;gt; which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &amp;lt;a href=&amp;#34;https://en.wikipedia.org/wiki/Principle_of_least_privilege&amp;#34;&amp;gt;&amp;lt;em&amp;gt;principle of least privilege&amp;lt;/em&amp;gt;&amp;lt;/a&amp;gt; (POLP); not just for users but for services too.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;For the scope of this effort we&amp;amp;rsquo;re only wanting Travis to read and manipulate against two repos, &amp;lt;code&amp;gt;jdheyburn.co.uk&amp;lt;/code&amp;gt; and &amp;lt;code&amp;gt;jdheyburn.github.io&amp;lt;/code&amp;gt; - it also gives you a cleaner Travis dashboard too.&amp;lt;/p&amp;gt;
+&amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;travis-github-repos-selection.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png&amp;#34;
+alt=&amp;#34;Screenshot of GitHub Travis Repository Authorisation&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;h3 id=&amp;#34;back-to-github&amp;#34;&amp;gt;Back to GitHub&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;The next step is required to permit Travis to push the built project to our GitHub Pages repo. We need to generate a secret with the permissions that Travis requires and keep it aside for the Travis config file later.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Navigate to the &amp;lt;a href=&amp;#34;https://github.com/settings/tokens&amp;#34;&amp;gt;GitHub Personal Access Tokens&amp;lt;/a&amp;gt; page and click on &amp;lt;code&amp;gt;Generate new token&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;You&amp;amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;amp;rsquo;re also going to want to select the &amp;lt;code&amp;gt;repo&amp;lt;/code&amp;gt; checkbox as done so below.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;After this you don&amp;amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &amp;lt;code&amp;gt;Generate token&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;travis-github-pat.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png&amp;#34;
+alt=&amp;#34;Screenshot of GitHub Personal Access Token Creation - repos is checked&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;p&amp;gt;The token&amp;amp;rsquo;s secret will display on the next screen. &amp;lt;strong&amp;gt;Make sure you copy it&amp;lt;/strong&amp;gt; and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;amp;rsquo;ll need it again in the next section.&amp;lt;/p&amp;gt;
+&amp;lt;figure class=&amp;#34;center&amp;#34;&amp;gt;&amp;lt;a href=&amp;#34;travis-github-pat-created.png&amp;#34;&amp;gt;
+&amp;lt;img src=&amp;#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png&amp;#34;
+alt=&amp;#34;Screenshot of GitHub Personal Access Token Creation - token complete&amp;#34;/&amp;gt; &amp;lt;/a&amp;gt;
+&amp;lt;/figure&amp;gt;
+&amp;lt;h2 id=&amp;#34;travisci-configuration&amp;#34;&amp;gt;TravisCI Configuration&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Once we have our Travis account set up, we need to add in a &amp;lt;a href=&amp;#34;https://docs.travis-ci.com/user/tutorial/&amp;#34;&amp;gt;configuration file&amp;lt;/a&amp;gt; that Travis will read from to determine what steps we&amp;amp;rsquo;d like it to perform.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;In our source code repository (&amp;lt;code&amp;gt;jdheyburn.co.uk&amp;lt;/code&amp;gt; in my case) we want to create a file at the root directory and call it &amp;lt;code&amp;gt;.travis.yml&amp;lt;/code&amp;gt;. See below for an example of how I configured mine.&amp;lt;/p&amp;gt;
+&amp;lt;script type=&amp;#34;application/javascript&amp;#34; src=&amp;#34;https://gist.github.com/jdheyburn/073bd6d4cb9284774e7e7feee093d86f.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;p&amp;gt;Let&amp;amp;rsquo;s break it down section by section.&amp;lt;/p&amp;gt;
+&amp;lt;h3 id=&amp;#34;build-environment&amp;#34;&amp;gt;Build Environment&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;These settings here all refer to the build environment that we&amp;amp;rsquo;d like our project to build on.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;dist&amp;lt;/span&amp;gt;: xenial
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;git&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;depth&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;false&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;env&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;global&amp;lt;/span&amp;gt;:
+- HUGO_VERSION=&amp;amp;#34;0.58.3&amp;amp;#34;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;matrix&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;secure&amp;lt;/span&amp;gt;: REDACTED
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;dist&amp;lt;/code&amp;gt; specifies what platform Travis should build the project on. In this case &amp;lt;code&amp;gt;xenial&amp;lt;/code&amp;gt; refers to Ubuntu 16.04, which is a Linux distribution. There are &amp;lt;a href=&amp;#34;https://docs.travis-ci.com/user/reference/overview/&amp;#34;&amp;gt;several others&amp;lt;/a&amp;gt; to choose from and more likely than not you&amp;amp;rsquo;ll want the platform to be Linux. However if you had a Windows application written in &amp;lt;code&amp;gt;.NET&amp;lt;/code&amp;gt; then you would likely want it built on a Windows Server since that is what supports it.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;git.depth&amp;lt;/code&amp;gt; tells Travis how many commits of your project to check out. This is passed directory to the &amp;lt;code&amp;gt;git&amp;lt;/code&amp;gt; parameter &amp;lt;code&amp;gt;--depth&amp;lt;/code&amp;gt; (more info on that &amp;lt;a href=&amp;#34;https://git-scm.com/docs/git-clone&amp;#34;&amp;gt;here&amp;lt;/a&amp;gt;). For our use case we&amp;amp;rsquo;re not interested in this option so we set it to &amp;lt;code&amp;gt;false&amp;lt;/code&amp;gt; to disable the flag being passed to &amp;lt;code&amp;gt;git&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;env.global&amp;lt;/code&amp;gt; allows us to define what variables should be set in the environment. This is done in the form of an array of strings in the format &amp;lt;code&amp;gt;key=value&amp;lt;/code&amp;gt;. So given the example, &amp;lt;code&amp;gt;HUGO_VERSION&amp;lt;/code&amp;gt; will be set to &amp;lt;code&amp;gt;0.58.3&amp;lt;/code&amp;gt;. We&amp;amp;rsquo;ll come back to this later.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;env.matrix&amp;lt;/code&amp;gt; is the encrypted value that gets passed to the &amp;lt;code&amp;gt;GITHUB_TOKEN&amp;lt;/code&amp;gt; environment variable which is used to allow Travis to commit the built project to our GitHub Pages repo.&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;You&amp;amp;rsquo;re going to want to take the personal access token generated from GitHub in the earlier step and encrypt it using &amp;lt;a href=&amp;#34;https://docs.travis-ci.com/user/environment-variables#encrypting-environment-variables&amp;#34;&amp;gt;this method&amp;lt;/a&amp;gt;, then add it back to this setting&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;h3 id=&amp;#34;external-dependencies&amp;#34;&amp;gt;External Dependencies&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;Once the build environment is defined, we can tell Travis to pull in some additional dependencies or files required for our project. Now remember this is a &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; project and we needed to install it on our local machines to run &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt;, we need to do the same for Travis too.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;install&amp;lt;/span&amp;gt;:
 - wget -q https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
 - tar xf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
 - mv hugo ~/bin/
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Remember we defined &lt;code>HUGO_VERSION&lt;/code> earlier? This is where it is called back again. In order, the steps we&amp;rsquo;re performing are:&lt;/p>
-&lt;ol>
-&lt;li>Downloading the archive containing the specified &lt;code>hugo&lt;/code> version&lt;/li>
-&lt;li>Extracting all contents of the archive&lt;/li>
-&lt;li>Moving the &lt;code>hugo&lt;/code> binary to the &lt;code>~/bin/&lt;/code> directory
-&lt;ul>
-&lt;li>This directory is on the build servers &lt;code>PATH&lt;/code>, which enables us to execute the binary using just the &lt;code>hugo&lt;/code> command later&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;h4 id="previous-issues">Previous Issues&lt;/h4>
-&lt;p>In a previous version of &lt;code>hugo&lt;/code> I used, there was an additional dependency I needed to include. The &lt;code>hugo-coder&lt;/code> theme requires to be built with Hugo Extended since it requires Sass/SCSS support.&lt;/p>
-&lt;p>For this particular Hugo Extended version, it required a library which was not included in the build server distribution in the past. On the plus side - Travis allows us to define additional build steps to ensure all required libraries are on the build server beforehand.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">before_install&lt;/span>:
-&lt;span style="color:#6272a4"># This workaround is required to avoid libstdc++ errors while running &amp;#34;extended&amp;#34; hugo with SASS support.&lt;/span>
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Remember we defined &amp;lt;code&amp;gt;HUGO_VERSION&amp;lt;/code&amp;gt; earlier? This is where it is called back again. In order, the steps we&amp;amp;rsquo;re performing are:&amp;lt;/p&amp;gt;
+&amp;lt;ol&amp;gt;
+&amp;lt;li&amp;gt;Downloading the archive containing the specified &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; version&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;Extracting all contents of the archive&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;Moving the &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; binary to the &amp;lt;code&amp;gt;~/bin/&amp;lt;/code&amp;gt; directory
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;This directory is on the build servers &amp;lt;code&amp;gt;PATH&amp;lt;/code&amp;gt;, which enables us to execute the binary using just the &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; command later&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;/ol&amp;gt;
+&amp;lt;h4 id=&amp;#34;previous-issues&amp;#34;&amp;gt;Previous Issues&amp;lt;/h4&amp;gt;
+&amp;lt;p&amp;gt;In a previous version of &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; I used, there was an additional dependency I needed to include. The &amp;lt;code&amp;gt;hugo-coder&amp;lt;/code&amp;gt; theme requires to be built with Hugo Extended since it requires Sass/SCSS support.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;For this particular Hugo Extended version, it required a library which was not included in the build server distribution in the past. On the plus side - Travis allows us to define additional build steps to ensure all required libraries are on the build server beforehand.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;before_install&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#6272a4&amp;#34;&amp;gt;# This workaround is required to avoid libstdc++ errors while running &amp;amp;#34;extended&amp;amp;#34; hugo with SASS support.&amp;lt;/span&amp;gt;
 - wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb
 - sudo dpkg --force-all -i libstdc++6
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>However in later versions of Hugo (including the one I am using today) this dependency is no longer required, hence why it is commented out in &lt;code>.travis.yml&lt;/code>.&lt;/p>
-&lt;p>You may not need this stage in your pipeline, I know my project no longer requires it. However this may come in handy later knowing that you have the option of specifying more pipeline steps if the build distribution you&amp;rsquo;re using requires some additional dependencies.&lt;/p>
-&lt;h3 id="build-script">Build Script&lt;/h3>
-&lt;p>Now onto the juicy stuff - building the project. This is pretty much where the &lt;code>deploy.sh&lt;/code> starts from, since on our local machines we already had the &lt;code>hugo&lt;/code> binary installed.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">script&lt;/span>:
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;However in later versions of Hugo (including the one I am using today) this dependency is no longer required, hence why it is commented out in &amp;lt;code&amp;gt;.travis.yml&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;You may not need this stage in your pipeline, I know my project no longer requires it. However this may come in handy later knowing that you have the option of specifying more pipeline steps if the build distribution you&amp;amp;rsquo;re using requires some additional dependencies.&amp;lt;/p&amp;gt;
+&amp;lt;h3 id=&amp;#34;build-script&amp;#34;&amp;gt;Build Script&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;Now onto the juicy stuff - building the project. This is pretty much where the &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; starts from, since on our local machines we already had the &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; binary installed.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;script&amp;lt;/span&amp;gt;:
 - hugo version
 - hugo --gc --minify
 - cp CNAME public/
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Not a lot is going on here, but to detail what each step is doing:&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>Print out the version of &lt;code>hugo&lt;/code> being used&lt;/p>
-&lt;ul>
-&lt;li>This is helpful for debugging the build. By printing out the version used we can try to replicate the bug locally for troubleshooting.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Build the project&lt;/p>
-&lt;ul>
-&lt;li>We do this with two flags, &lt;code>--gc&lt;/code> and &lt;code>--minify&lt;/code>. These weren&amp;rsquo;t defined in the &lt;code>deploy.sh&lt;/code> script we used earlier so let&amp;rsquo;s cover them here.
-&lt;ul>
-&lt;li>&lt;code>--gc&lt;/code> tells &lt;code>hugo&lt;/code> to cleanup some unused cache files after the build
-&lt;ul>
-&lt;li>This helps keep a tidy environment for the build server.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>--minify&lt;/code> performs &lt;a href="https://en.wikipedia.org/wiki/Minification_(programming)">minification&lt;/a> on your website to reduce the size of the generated content, enabling it to load faster on your users' devices
-&lt;ul>
-&lt;li>Coupled with a CDN like in the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#adding-our-cdn-layer">previous part&lt;/a>, your website will load almost instantly&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Copy the &lt;code>CNAME&lt;/code> file from the project root to the generated &lt;code>public/&lt;/code> directory.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>This ensures that the custom domain name we set up in the previous part continues to be set in the generated website code that gets pushed to our GitHub Pages repo. &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#building-into-our-deploy-script">See here&lt;/a> for a refresher.&lt;/p>
-&lt;blockquote>
-&lt;p>This section is effectively the &amp;lsquo;CI&amp;rsquo; part of &amp;lsquo;CI/CD&amp;rsquo;. We could stop here and just use Travis as a build server to determine whether the website is able to be built successfully. Any errors in the pipeline would have resulted in a failed build.&lt;/p>
-&lt;p>The next section details the Continuous Deployment, ensuring that on the successful build of a project we deploy it to our production environment.&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="deploy-to-github-pages">Deploy to GitHub Pages&lt;/h3>
-&lt;p>Once the project has been built, we need to push it to the GitHub Pages repository. Travis has &lt;a href="https://docs.travis-ci.com/user/deployment/pages/">good documentation&lt;/a> on this. My setup follows the below:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">deploy&lt;/span>:
-&lt;span style="color:#ff79c6">provider&lt;/span>: pages
-&lt;span style="color:#ff79c6">skip-cleanup&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
-&lt;span style="color:#ff79c6">github-token&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;$GITHUB_TOKEN&amp;#34;&lt;/span>
-&lt;span style="color:#ff79c6">keep-history&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
-&lt;span style="color:#ff79c6">local-dir&lt;/span>: public
-&lt;span style="color:#ff79c6">repo&lt;/span>: jdheyburn/jdheyburn.github.io
-&lt;span style="color:#ff79c6">target-branch&lt;/span>: master
-&lt;span style="color:#ff79c6">verbose&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>For the last time, let&amp;rsquo;s walk through what each of these is doing.&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>provider&lt;/code> tells Travis this is a GitHub Pages deployment&lt;/li>
-&lt;li>&lt;code>skip-cleanup&lt;/code> set to &lt;code>true&lt;/code>, so that Travis does not delete the build before we&amp;rsquo;ve got the chance to upload it&lt;/li>
-&lt;li>&lt;code>github-token&lt;/code> is set to the environment variable &lt;code>$GITHUB_TOKEN&lt;/code> which was set for us earlier on in the build environment.
-&lt;ul>
-&lt;li>This is passed to the provider so that it has valid credentials to push the code to the GitHub Pages repo.&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>keep-history&lt;/code> performs an incremental commit against the project
-&lt;ul>
-&lt;li>Setting it to &lt;code>true&lt;/code> allows us to view back the changes in the commit history such as &lt;a href="https://github.com/jdheyburn/jdheyburn.github.io/commit/419da0cc71415d0253996b823d4ccf6844db4042">this one&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>local-dir&lt;/code> specifies the directory that should be pushed to the target repo
-&lt;ul>
-&lt;li>We set it to &lt;code>public&lt;/code> because that is the name of the generated website directory from the previous &lt;code>script&lt;/code> step&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>repo&lt;/code> is the target repo where we should be deploying to&lt;/li>
-&lt;li>&lt;code>target-branch&lt;/code> is the branch that we want &lt;code>local-dir&lt;/code> to be pushed to
-&lt;ul>
-&lt;li>For our setup we are using &lt;code>master&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>verbose&lt;/code> specifies how much detail Travis will log about its deploy activities&lt;/li>
-&lt;/ul>
-&lt;p>That concludes the configuration section. Remember to change it or add in some other functionality needed for your project and save it to &lt;code>.travis.yml&lt;/code>.&lt;/p>
-&lt;h2 id="bringing-it-all-together">Bringing It All Together&lt;/h2>
-&lt;p>Now you&amp;rsquo;ve completed your config file, let&amp;rsquo;s check it all in to GitHub.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git add --all
-git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Adding CI&amp;#39;&lt;/span>
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Not a lot is going on here, but to detail what each step is doing:&amp;lt;/p&amp;gt;
+&amp;lt;ol&amp;gt;
+&amp;lt;li&amp;gt;
+&amp;lt;p&amp;gt;Print out the version of &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; being used&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;This is helpful for debugging the build. By printing out the version used we can try to replicate the bug locally for troubleshooting.&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;
+&amp;lt;p&amp;gt;Build the project&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;We do this with two flags, &amp;lt;code&amp;gt;--gc&amp;lt;/code&amp;gt; and &amp;lt;code&amp;gt;--minify&amp;lt;/code&amp;gt;. These weren&amp;amp;rsquo;t defined in the &amp;lt;code&amp;gt;deploy.sh&amp;lt;/code&amp;gt; script we used earlier so let&amp;amp;rsquo;s cover them here.
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;--gc&amp;lt;/code&amp;gt; tells &amp;lt;code&amp;gt;hugo&amp;lt;/code&amp;gt; to cleanup some unused cache files after the build
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;This helps keep a tidy environment for the build server.&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;--minify&amp;lt;/code&amp;gt; performs &amp;lt;a href=&amp;#34;https://en.wikipedia.org/wiki/Minification_(programming)&amp;#34;&amp;gt;minification&amp;lt;/a&amp;gt; on your website to reduce the size of the generated content, enabling it to load faster on your users&amp;#39; devices
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Coupled with a CDN like in the &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-2-custom-domain/#adding-our-cdn-layer&amp;#34;&amp;gt;previous part&amp;lt;/a&amp;gt;, your website will load almost instantly&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;
+&amp;lt;p&amp;gt;Copy the &amp;lt;code&amp;gt;CNAME&amp;lt;/code&amp;gt; file from the project root to the generated &amp;lt;code&amp;gt;public/&amp;lt;/code&amp;gt; directory.&amp;lt;/p&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;/ol&amp;gt;
+&amp;lt;p&amp;gt;This ensures that the custom domain name we set up in the previous part continues to be set in the generated website code that gets pushed to our GitHub Pages repo. &amp;lt;a href=&amp;#34;/posts/who-goes-blogging-2-custom-domain/#building-into-our-deploy-script&amp;#34;&amp;gt;See here&amp;lt;/a&amp;gt; for a refresher.&amp;lt;/p&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;This section is effectively the &amp;amp;lsquo;CI&amp;amp;rsquo; part of &amp;amp;lsquo;CI/CD&amp;amp;rsquo;. We could stop here and just use Travis as a build server to determine whether the website is able to be built successfully. Any errors in the pipeline would have resulted in a failed build.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;The next section details the Continuous Deployment, ensuring that on the successful build of a project we deploy it to our production environment.&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;h3 id=&amp;#34;deploy-to-github-pages&amp;#34;&amp;gt;Deploy to GitHub Pages&amp;lt;/h3&amp;gt;
+&amp;lt;p&amp;gt;Once the project has been built, we need to push it to the GitHub Pages repository. Travis has &amp;lt;a href=&amp;#34;https://docs.travis-ci.com/user/deployment/pages/&amp;#34;&amp;gt;good documentation&amp;lt;/a&amp;gt; on this. My setup follows the below:&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-yml&amp;#34; data-lang=&amp;#34;yml&amp;#34;&amp;gt;&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;deploy&amp;lt;/span&amp;gt;:
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;provider&amp;lt;/span&amp;gt;: pages
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;skip-cleanup&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;true&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;github-token&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#34;$GITHUB_TOKEN&amp;amp;#34;&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;keep-history&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;true&amp;lt;/span&amp;gt;
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;local-dir&amp;lt;/span&amp;gt;: public
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;repo&amp;lt;/span&amp;gt;: jdheyburn/jdheyburn.github.io
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;target-branch&amp;lt;/span&amp;gt;: master
+&amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;verbose&amp;lt;/span&amp;gt;: &amp;lt;span style=&amp;#34;color:#ff79c6&amp;#34;&amp;gt;true&amp;lt;/span&amp;gt;
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;For the last time, let&amp;amp;rsquo;s walk through what each of these is doing.&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;provider&amp;lt;/code&amp;gt; tells Travis this is a GitHub Pages deployment&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;skip-cleanup&amp;lt;/code&amp;gt; set to &amp;lt;code&amp;gt;true&amp;lt;/code&amp;gt;, so that Travis does not delete the build before we&amp;amp;rsquo;ve got the chance to upload it&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;github-token&amp;lt;/code&amp;gt; is set to the environment variable &amp;lt;code&amp;gt;$GITHUB_TOKEN&amp;lt;/code&amp;gt; which was set for us earlier on in the build environment.
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;This is passed to the provider so that it has valid credentials to push the code to the GitHub Pages repo.&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;keep-history&amp;lt;/code&amp;gt; performs an incremental commit against the project
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Setting it to &amp;lt;code&amp;gt;true&amp;lt;/code&amp;gt; allows us to view back the changes in the commit history such as &amp;lt;a href=&amp;#34;https://github.com/jdheyburn/jdheyburn.github.io/commit/419da0cc71415d0253996b823d4ccf6844db4042&amp;#34;&amp;gt;this one&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;local-dir&amp;lt;/code&amp;gt; specifies the directory that should be pushed to the target repo
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;We set it to &amp;lt;code&amp;gt;public&amp;lt;/code&amp;gt; because that is the name of the generated website directory from the previous &amp;lt;code&amp;gt;script&amp;lt;/code&amp;gt; step&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;repo&amp;lt;/code&amp;gt; is the target repo where we should be deploying to&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;target-branch&amp;lt;/code&amp;gt; is the branch that we want &amp;lt;code&amp;gt;local-dir&amp;lt;/code&amp;gt; to be pushed to
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;For our setup we are using &amp;lt;code&amp;gt;master&amp;lt;/code&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;&amp;lt;code&amp;gt;verbose&amp;lt;/code&amp;gt; specifies how much detail Travis will log about its deploy activities&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&amp;lt;p&amp;gt;That concludes the configuration section. Remember to change it or add in some other functionality needed for your project and save it to &amp;lt;code&amp;gt;.travis.yml&amp;lt;/code&amp;gt;.&amp;lt;/p&amp;gt;
+&amp;lt;h2 id=&amp;#34;bringing-it-all-together&amp;#34;&amp;gt;Bringing It All Together&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;Now you&amp;amp;rsquo;ve completed your config file, let&amp;amp;rsquo;s check it all in to GitHub.&amp;lt;/p&amp;gt;
+&amp;lt;div class=&amp;#34;highlight&amp;#34;&amp;gt;&amp;lt;pre style=&amp;#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&amp;#34;&amp;gt;&amp;lt;code class=&amp;#34;language-bash&amp;#34; data-lang=&amp;#34;bash&amp;#34;&amp;gt;git add --all
+git commit -m &amp;lt;span style=&amp;#34;color:#f1fa8c&amp;#34;&amp;gt;&amp;amp;#39;Adding CI&amp;amp;#39;&amp;lt;/span&amp;gt;
 git push
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Travis will automatically detect that a new change has been made against your repo. And with the inclusion of &lt;code>.travis.yml&lt;/code>, it will now work against that file.&lt;/p>
-&lt;p>You can view the status of your repository&amp;rsquo;s build by navigating to it from the &lt;a href="https://travis-ci.com/dashboard">dashboard&lt;/a> and clicking on it.&lt;/p>
-&lt;p>If any of the commands in the &lt;code>script&lt;/code> section of the config return a &lt;a href="https://en.wikipedia.org/wiki/Exit_status#Shell_and_scripts">nonzero status code&lt;/a>, the build will fail. If this happens then have a look at a build log and investigate the issue. More likely than not someone else has encountered the problem before, so Google is your gatekeeper to solutions!&lt;/p>
-&lt;p>Once you&amp;rsquo;ve got a successful build, that means your website has been deployed to the GitHub Pages repo and will be available on the web to view. In a browser you can now view your changes on the website.&lt;/p>
-&lt;p>If they aren&amp;rsquo;t there then your browser is most likely caching an older version. By default, websites served by GitHub Pages have a browser cache TTL &lt;a href="https://webapps.stackexchange.com/questions/119286/caching-assets-in-website-served-from-github-pages">set to 10 minutes&lt;/a>. So you can either wait 10 minutes, or clear your browser cache!&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>You&amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;rsquo;re happy with TravisCI then there&amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines 🙌&lt;/p></description></item></channel></rss>
+&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;p&amp;gt;Travis will automatically detect that a new change has been made against your repo. And with the inclusion of &amp;lt;code&amp;gt;.travis.yml&amp;lt;/code&amp;gt;, it will now work against that file.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;You can view the status of your repository&amp;amp;rsquo;s build by navigating to it from the &amp;lt;a href=&amp;#34;https://travis-ci.com/dashboard&amp;#34;&amp;gt;dashboard&amp;lt;/a&amp;gt; and clicking on it.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;If any of the commands in the &amp;lt;code&amp;gt;script&amp;lt;/code&amp;gt; section of the config return a &amp;lt;a href=&amp;#34;https://en.wikipedia.org/wiki/Exit_status#Shell_and_scripts&amp;#34;&amp;gt;nonzero status code&amp;lt;/a&amp;gt;, the build will fail. If this happens then have a look at a build log and investigate the issue. More likely than not someone else has encountered the problem before, so Google is your gatekeeper to solutions!&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;Once you&amp;amp;rsquo;ve got a successful build, that means your website has been deployed to the GitHub Pages repo and will be available on the web to view. In a browser you can now view your changes on the website.&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;If they aren&amp;amp;rsquo;t there then your browser is most likely caching an older version. By default, websites served by GitHub Pages have a browser cache TTL &amp;lt;a href=&amp;#34;https://webapps.stackexchange.com/questions/119286/caching-assets-in-website-served-from-github-pages&amp;#34;&amp;gt;set to 10 minutes&amp;lt;/a&amp;gt;. So you can either wait 10 minutes, or clear your browser cache!&amp;lt;/p&amp;gt;
+&amp;lt;h2 id=&amp;#34;conclusion&amp;#34;&amp;gt;Conclusion&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;You&amp;amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;amp;rsquo;re happy with TravisCI then there&amp;amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines 🙌&amp;lt;/p&amp;gt;</description></item></channel></rss>
