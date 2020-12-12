@@ -343,7 +343,8 @@ t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c"
 }
 })
 }
-}&lt;/code>&lt;/pre>&lt;/div>
+}
+&lt;/code>&lt;/pre>&lt;/div>
 &lt;p>From the above there are three highlighted changes, let&amp;rsquo;s go over them individually:&lt;/p>
 &lt;ol>
 &lt;li>&lt;code>wantErr error&lt;/code>

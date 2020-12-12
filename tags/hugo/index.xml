@@ -524,7 +524,7 @@ type: posts
 &lt;span style="color:#ff79c6">description&lt;/span>: Migrating to GitHub Actions as our CI tool
 &lt;span style="color:#ff79c6">type&lt;/span>: posts
 &lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">aliases&lt;/span>:
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - /posts/who-goes-blogging&lt;span style="color:#bd93f9">-3-2&lt;/span>-deployment-methods-github-actions/
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
 &lt;/span>&lt;span style="color:#6272a4"># ...&lt;/span>
 ---&lt;/code>&lt;/pre>&lt;/div>
 &lt;p>You can read more about how &lt;code>aliases&lt;/code> does its operations &lt;a href="https://gohugo.io/content-management/urls/#aliases">here&lt;/a>.&lt;/p>

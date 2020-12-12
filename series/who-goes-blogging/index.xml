@@ -808,7 +808,7 @@ type: posts
 &lt;span style="color:#ff79c6">description&lt;/span>: Migrating to GitHub Actions as our CI tool
 &lt;span style="color:#ff79c6">type&lt;/span>: posts
 &lt;span style="display:block;width:100%;background-color:#3d3f4a">&lt;span style="color:#ff79c6">aliases&lt;/span>:
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - /posts/who-goes-blogging&lt;span style="color:#bd93f9">-3-2&lt;/span>-deployment-methods-github-actions/
+&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
 &lt;/span>&lt;span style="color:#6272a4"># ...&lt;/span>
 ---&lt;/code>&lt;/pre>&lt;/div>
 &lt;p>You can read more about how &lt;code>aliases&lt;/code> does its operations &lt;a href="https://gohugo.io/content-management/urls/#aliases">here&lt;/a>.&lt;/p>
@@ -891,7 +891,7 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 - &lt;span style="color:#ff79c6">cron&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;0 10 * * *&amp;#34;&lt;/span>
 &lt;span style="color:#ff79c6">jobs&lt;/span>:
 &lt;span style="color:#ff79c6">deploy&lt;/span>:
-&lt;span style="color:#ff79c6">runs-on&lt;/span>: ubuntu&lt;span style="color:#bd93f9">-18.04&lt;/span>
+&lt;span style="color:#ff79c6">runs-on&lt;/span>: ubuntu-18.04
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This is pretty box standard at this point. We&amp;rsquo;re simply giving the name to the workflow and saying to run it on every push to the &lt;code>master&lt;/code> branch.&lt;/p>
 &lt;p>An enhancement that we&amp;rsquo;re adding is the &lt;code>on.schedule.cron&lt;/code> setting. This tells Actions not only to build the project on every push to the &lt;code>master&lt;/code> branch but on a timed schedule too - in my example this is at 10am everyday. We could have done the same via Travis, but that can only be &lt;a href="https://docs.travis-ci.com/user/cron-jobs/">configured via the GUI&lt;/a>.&lt;/p>
 &lt;blockquote>
@@ -908,10 +908,10 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 - &lt;span style="color:#ff79c6">uses&lt;/span>: actions/checkout@v2
 - &lt;span style="color:#ff79c6">name&lt;/span>: Checkout submodules
 &lt;span style="color:#ff79c6">shell&lt;/span>: bash
-&lt;span style="color:#ff79c6">run&lt;/span>: &lt;span style="color:#f1fa8c">|
-&lt;/span>&lt;span style="color:#f1fa8c"> auth_header=&amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;#34;&lt;/span>
-git submodule sync --recursive
-git -c &lt;span style="color:#f1fa8c">&amp;#34;http.extraheader=$auth_header&amp;#34;&lt;/span> -c protocol.version=&lt;span style="color:#bd93f9">2&lt;/span> submodule update --init --force --recursive --depth=&lt;span style="color:#bd93f9">1&lt;/span>
+&lt;span style="color:#ff79c6">run&lt;/span>: |&lt;span style="color:#f1fa8c">
+&lt;/span>&lt;span style="color:#f1fa8c"> auth_header=&amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;#34;
+&lt;/span>&lt;span style="color:#f1fa8c"> git submodule sync --recursive
+&lt;/span>&lt;span style="color:#f1fa8c"> git -c &amp;#34;http.extraheader=$auth_header&amp;#34; -c protocol.version=2 submodule update --init --force --recursive --depth=1&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re executing the GitHub &lt;a href="https://github.com/actions/checkout">checkout action&lt;/a> which will pull the repo to the build server. It&amp;rsquo;s worth noting that this action version I&amp;rsquo;m using here doesn&amp;rsquo;t checkout git submodules too - which is a problem for us as that&amp;rsquo;s how we&amp;rsquo;re currently pulling the theme for our Hugo site. We can workaround it with the next step in the build - &lt;code>Checkout submodules&lt;/code>.&lt;/p>
 &lt;p>This functionality was available in v1 of the action, so you can use that if you&amp;rsquo;d prefer:&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">steps&lt;/span>:
@@ -1071,7 +1071,7 @@ alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt
 &lt;span style="color:#ff79c6">depth&lt;/span>: &lt;span style="color:#ff79c6">false&lt;/span>
 &lt;span style="color:#ff79c6">env&lt;/span>:
 &lt;span style="color:#ff79c6">global&lt;/span>:
-- HUGO_VERSION=&lt;span style="color:#f1fa8c">&amp;#34;0.58.3&amp;#34;&lt;/span>
+- HUGO_VERSION=&amp;#34;0.58.3&amp;#34;
 &lt;span style="color:#ff79c6">matrix&lt;/span>:
 &lt;span style="color:#ff79c6">secure&lt;/span>: REDACTED
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>dist&lt;/code> specifies what platform Travis should build the project on. In this case &lt;code>xenial&lt;/code> refers to Ubuntu 16.04, which is a Linux distribution. There are &lt;a href="https://docs.travis-ci.com/user/reference/overview/">several others&lt;/a> to choose from and more likely than not you&amp;rsquo;ll want the platform to be Linux. However if you had a Windows application written in &lt;code>.NET&lt;/code> then you would likely want it built on a Windows Server since that is what supports it.&lt;/p>
@@ -1102,8 +1102,8 @@ alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt
 &lt;p>For this particular Hugo Extended version, it required a library which was not included in the build server distribution in the past. On the plus side - Travis allows us to define additional build steps to ensure all required libraries are on the build server beforehand.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#ff79c6">before_install&lt;/span>:
 &lt;span style="color:#6272a4"># This workaround is required to avoid libstdc++ errors while running &amp;#34;extended&amp;#34; hugo with SASS support.&lt;/span>
-- wget -q -O libstdc++&lt;span style="color:#bd93f9">6&lt;/span> http://security.ubuntu.com/ubuntu/pool/main/g/gcc&lt;span style="color:#bd93f9">-5&lt;/span>/libstdc++6_5&lt;span style="color:#bd93f9">.4.0&lt;/span>-6ubuntu1~&lt;span style="color:#bd93f9">16.04&lt;/span>.10_amd64.deb
-- sudo dpkg --force-all -i libstdc++&lt;span style="color:#bd93f9">6&lt;/span>
+- wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb
+- sudo dpkg --force-all -i libstdc++6
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>However in later versions of Hugo (including the one I am using today) this dependency is no longer required, hence why it is commented out in &lt;code>.travis.yml&lt;/code>.&lt;/p>
 &lt;p>You may not need this stage in your pipeline, I know my project no longer requires it. However this may come in handy later knowing that you have the option of specifying more pipeline steps if the build distribution you&amp;rsquo;re using requires some additional dependencies.&lt;/p>
 &lt;h3 id="build-script">Build Script&lt;/h3>
@@ -1130,7 +1130,7 @@ alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt
 &lt;li>This helps keep a tidy environment for the build server.&lt;/li>
 &lt;/ul>
 &lt;/li>
-&lt;li>&lt;code>--minify&lt;/code> performs &lt;a href="https://en.wikipedia.org/wiki/Minification_(programming)">minification&lt;/a> on your website to reduce the size of the generated content, enabling it to load faster on your users&amp;rsquo; devices
+&lt;li>&lt;code>--minify&lt;/code> performs &lt;a href="https://en.wikipedia.org/wiki/Minification_(programming)">minification&lt;/a> on your website to reduce the size of the generated content, enabling it to load faster on your users' devices
 &lt;ul>
 &lt;li>Coupled with a CDN like in the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#adding-our-cdn-layer">previous part&lt;/a>, your website will load almost instantly&lt;/li>
 &lt;/ul>
