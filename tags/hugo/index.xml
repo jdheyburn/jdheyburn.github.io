@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hugo on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/hugo/</link><description>Recent content in hugo on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hugo on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/hugo/</link><description>Recent content in hugo on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid>--><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
 &lt;ol>
 &lt;li>Upgrading our Hugo theme&lt;/li>
 &lt;li>Upgrading the Hugo version&lt;/li>
@@ -31,7 +31,7 @@ rm &lt;span style="color:#f1fa8c">&amp;#34;hugo_extended_&lt;/span>&lt;span styl
 Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing-for-any-issues">Testing For Any Issues&lt;/h3>
 &lt;p>At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code>hugo serve&lt;/code> command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p>
-&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="#validation-and-testing">later in this post&lt;/a>.&lt;/p>
+&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#validation-and-testing">later in this post&lt;/a>.&lt;/p>
 &lt;h3 id="updating-hugo-in-cicd">Updating Hugo in CI/CD&lt;/h3>
 &lt;p>We&amp;rsquo;ve only upgrading Hugo on our machines, but we also need to upgrade it in our CI/CD pipeline to ensure it deploys with the correct rendering too. We set this up in parts &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/">3.1&lt;/a> and &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/">3.2&lt;/a>.&lt;/p>
 &lt;p>I&amp;rsquo;m using GitHub Actions for my CI/CD pipeline, so I need to head to &lt;code>.github/workflows/deploy.yml&lt;/code> and change &lt;code>hugo-version: &amp;quot;0.58.3&amp;quot;&lt;/code> to &lt;code>hugo-version: &amp;quot;0.68.3&amp;quot;&lt;/code>.&lt;/p>
@@ -74,7 +74,7 @@ e66c1740611b15eee0069811d10b5a22b0dc4332
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
 &lt;figure>&lt;a href="hugo-coder-commit.png">
-&lt;img src="hugo-coder-commit.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
 alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
@@ -90,16 +90,16 @@ alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcap
 &lt;h3 id="lists-not-rendering-as-before">Lists not rendering as before&lt;/h3>
 &lt;p>It turns out that my markdown for articles wasn&amp;rsquo;t as watertight as I thought; Hugo is now a whole lot more strict in ensuring your syntax is correct. Check these two before and after for comparison.&lt;/p>
 &lt;figure>
-&lt;img src="old-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/old-render-list.png" class="screenshotimg"
 alt="Screenshot showing old, proper list render"/>
 &lt;/figure>
 &lt;figure>
-&lt;img src="new-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/new-render-list.png" class="screenshotimg"
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
 &lt;figure>&lt;a href="git-diff-list.png">
-&lt;img src="git-diff-list.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
 alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
@@ -117,9 +117,9 @@ alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/span>&lt;span style="color:#ff79c6">tags&lt;/span>:
 &lt;span style="color:#6272a4">#...&lt;/span>
 ---
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
 &lt;figure>
-&lt;img src="series-footer-section.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png" class="screenshotimg"
 alt="Screenshot showing series rendered in the page footer"/>
 &lt;/figure>
 &lt;h2 id="adding-table-of-contents">Adding Table of Contents&lt;/h2>
@@ -177,7 +177,7 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This is similar to &lt;a href="https://gohugo.io/content-management/toc/#template-example-toc-partial">Hugo&amp;rsquo;s example&lt;/a> but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p>
 &lt;p>Previewing it by &lt;code>hugo serve&lt;/code> we should get something that appears as below.&lt;/p>
 &lt;figure>
-&lt;img src="completed-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/completed-toc.png" class="screenshotimg"
 alt="Screenshot showing rendered Table of Contents"/>
 &lt;/figure>
 &lt;h3 id="bugs-along-the-way">Bugs Along The Way&lt;/h3>
@@ -186,14 +186,14 @@ alt="Screenshot showing rendered Table of Contents"/>
 &lt;p>Per &lt;a href="https://gohugo.io/content-management/toc/#usage">Table of Contents Usage documentation&lt;/a>, Hugo will render from &lt;code>&amp;lt;h2&amp;gt;&lt;/code> headings, which are defined as &lt;code>##&lt;/code> in markdown. So &lt;code># Introduction&lt;/code> would not be included in the TOC, but &lt;code>## Introduction&lt;/code> will.&lt;/p>
 &lt;p>This is a problem for some of my articles since I&amp;rsquo;ve been writing headings liberally at the wrong level.&lt;/p>
 &lt;figure class="center">
-&lt;img src="improper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/improper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents not including all headings for a post"/> &lt;figcaption>
 &lt;p>Notice the &lt;strong>Applying Cartography&lt;/strong> heading doesn&amp;rsquo;t appear in the TOC&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>The given example above shows what happens when we use &lt;code># Heading Name&lt;/code> instead of &lt;code>## Heading Name&lt;/code>. To fix this I just need to go through each heading and make sure top-level headings begin with &lt;code>##&lt;/code> and any subheadings have an additional &lt;code>#&lt;/code>.&lt;/p>
 &lt;figure class="center">
-&lt;img src="proper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/proper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents fixed with correct heading indentation"/> &lt;figcaption>
 &lt;p>Much better!&lt;/p>
 &lt;/figcaption>
@@ -207,24 +207,24 @@ alt="Screenshot showing table of contents fixed with correct heading indentation
 &lt;/blockquote>
 &lt;p>Then in my markdown I would refer back to them such as &lt;code>{{&amp;lt; emoji &amp;quot;:wave:&amp;quot; &amp;gt;}}&lt;/code>. However in headings they rendered as below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="bad-emojis-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/bad-emojis-headings.png" class="screenshotimg"
 alt="Screenshot showing poorly rendered emojis in Table of Contents"/> &lt;figcaption>
 &lt;p>Hugo clearly finds this hysterical&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>It&amp;rsquo;s a weird one for sure - especially since they render fine in the headings themselves already&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-1.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-1.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 1"/>
 &lt;/figure>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-2.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-2.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 2"/>
 &lt;/figure>
 &lt;p>There is a fix for these, and it&amp;rsquo;s called &lt;em>rendering emojis the correct way!&lt;/em> 😅&lt;/p>
 &lt;p>Firstly in the site &lt;code>config.toml&lt;/code> I added &lt;code>enableEmoji = true&lt;/code> at the root level and then proceeded to change all occurrence of &lt;code>{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code> to &lt;code>:emoji_name:&lt;/code>. With that I can then remove &lt;code>layouts/shortcodes/emoji.html&lt;/code> since it&amp;rsquo;s not being referred back to anymore.&lt;/p>
 &lt;figure class="center">
-&lt;img src="correct-emoji-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png" class="screenshotimg"
 alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcaption>
 &lt;p>Nicely done&lt;/p>
 &lt;/figcaption>
@@ -232,12 +232,12 @@ alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcapt
 &lt;h4 id="markdown-not-rendering">Markdown Not Rendering&lt;/h4>
 &lt;p>I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code>## Spice Up Your ~~Life~~ Python 🐍&lt;/code>, which renders as a heading in the screenshot below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="markdown-heading-render.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png" class="screenshotimg"
 alt="Screenshot showing a heading formatted correctly with markdown"/>
 &lt;/figure>
 &lt;p>But in the table of contents it appears without the tilde strikethrough (&lt;code>~&lt;/code>) rendering.&lt;/p>
 &lt;figure class="center">
-&lt;img src="incorrect-markdown-rendering-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/incorrect-markdown-rendering-toc.png" class="screenshotimg"
 alt="Screenshot showing tilde strikethrough not appearing in table of content entry"/>
 &lt;/figure>
 &lt;p>This looks to be a bug within Hugo itself, since I was able to get &lt;strong>strong&lt;/strong> and &lt;em>emphasise&lt;/em> to render fine - I &lt;a href="https://github.com/gohugoio/hugo/issues/7169">raised an issue&lt;/a> on the project - I can live with it for now.&lt;/p>
@@ -251,22 +251,22 @@ alt="Screenshot showing tilde strikethrough not appearing in table of content en
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>(1)&lt;/strong> Post title&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
 &lt;figure class="center">&lt;a href="broken-emoji-browser-title.png">
-&lt;img src="broken-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
 alt="Screenshot of broken emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-list.png" class="screenshotimg"
 alt="Screenshot of broken emoji rendering on lists"/>
 &lt;/figure>
-&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
+&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
 &lt;h3 id="fix-post--browser-title">Fix Post &amp;amp; Browser Title&lt;/h3>
-&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
+&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
 &lt;p>We need to go back to that file and &lt;em>emojify&lt;/em> both the main article heading, alongside the browser title to change any occurrence of &lt;code>{{ .Title }}&lt;/code> to &lt;code>{{ .Title | emojify }}&lt;/code>.&lt;/p>
 &lt;p>By doing this we will &lt;em>always&lt;/em> emojify the titles even if in our &lt;code>config.toml&lt;/code> we specified &lt;code>enableEmoji = false&lt;/code>, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code>false&lt;/code>. We could do some conditional logic on the &lt;code>enableEmoji&lt;/code> setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code>{{ if .Site.enableEmoji }}&lt;/code>. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code>hugo-coder&lt;/code> theme. I&amp;rsquo;ve raised a &lt;a href="https://github.com/gohugoio/hugo/issues/7171">couple&lt;/a> of &lt;a href="https://github.com/gohugoio/hugo/issues/7170">issues&lt;/a> against Hugo requesting these features.&lt;/p>
 &lt;p>Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p>
@@ -275,12 +275,12 @@ alt="Screenshot of broken emoji rendering on lists"/>
 &lt;p>You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p>
 &lt;p>The end result for the title will look like this:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
 &lt;figure class="center">&lt;a href="fixed-emoji-browser-title.png">
-&lt;img src="fixed-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
 alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
@@ -290,7 +290,7 @@ alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js">&lt;/script>
 &lt;p>Once done, we can see it reflect nicely in the list:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-list.png" class="screenshotimg"
 alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;/figure>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
@@ -306,7 +306,7 @@ alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;li>Added support for emojis in post titles&lt;/li>
 &lt;/ol>
 &lt;p>You can view all the changes made in this post at this &lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk/pull/2">pull request&lt;/a>.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
+&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid>--><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
 &lt;ol>
 &lt;li>Moving content articles from a flat structure to a leaf bundle&lt;/li>
 &lt;li>Rename content section to &lt;strong>blog&lt;/strong> from &lt;strong>posts&lt;/strong>&lt;/li>
@@ -449,7 +449,7 @@ git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/sp
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
@@ -479,7 +479,7 @@ themes/hugo-coder/layouts/posts
 &lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
 &lt;figure>&lt;a href="posts-blog-rendering-error.png">
-&lt;img src="posts-blog-rendering-error.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
 alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;/a>&lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
@@ -531,7 +531,7 @@ type: posts
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>

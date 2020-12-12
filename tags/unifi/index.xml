@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>unifi on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/unifi/</link><description>Recent content in unifi on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/unifi/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
-&lt;p>If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href="#caddy-configuration">skip there&lt;/a>.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>unifi on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/unifi/</link><description>Recent content in unifi on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/unifi/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid>--><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
+&lt;p>If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration">skip there&lt;/a>.&lt;/p>
 &lt;h2 id="background">Background&lt;/h2>
 &lt;p>A few months back I kitted out my home with some &lt;a href="https://www.ui.com/products/#unifi">Ubiquiti UniFi&lt;/a> gear to fix our crappy Wifi at home, following inspiration from &lt;a href="https://www.troyhunt.com/ubiquiti-all-the-things-how-i-finally-fixed-my-dodgy-wifi/">Troy Hunt&lt;/a> and &lt;a href="https://scotthelme.co.uk/my-ubiquiti-home-network/">Scott Helme&lt;/a>.&lt;/p>
 &lt;p>In order to administrate UniFi devices, you&amp;rsquo;ll need the &lt;a href="https://www.ui.com/unifi/unifi-cloud-key/">UniFi Cloud Key&lt;/a> which runs the Controller software to do just that. Although if you have a spare Raspberry Pi lying around, you can download the &lt;a href="https://www.ui.com/download/unifi/">software&lt;/a> for free and run it on there - this is what I did.&lt;/p>
@@ -8,7 +8,7 @@
 &lt;h3 id="securing-with-https">Securing with HTTPS&lt;/h3>
 &lt;p>The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&lt;/p>
 &lt;figure class="center">&lt;a href="insecure-pihole.png">
-&lt;img src="insecure-pihole.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png"
 alt="Insecure PiHole connection"/> &lt;/a>&lt;figcaption>
 &lt;p>Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p>
 &lt;/figcaption>
@@ -26,7 +26,7 @@ alt="Insecure PiHole connection"/> &lt;/a>&lt;figcaption>
 &lt;blockquote>
 &lt;p>&lt;strong>UPDATE 2020-09-30&lt;/strong>&lt;/p>
 &lt;p>Looks like Caddy now comes with a &lt;a href="https://caddyserver.com/download">nice web interface&lt;/a> for downloading a Caddy binary with whatever plugins you desire. I just tested out the &lt;code>Linux arm 7&lt;/code> platform with just the &lt;code>github.com/caddy-dns/cloudflare&lt;/code> plugin, and it was able to run my Caddy configuration below perfectly!&lt;/p>
-&lt;p>Once you&amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &lt;a href="#caddy-configuration">Caddy Configuration&lt;/a>.&lt;/p>
+&lt;p>Once you&amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &lt;a href="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration">Caddy Configuration&lt;/a>.&lt;/p>
 &lt;/blockquote>
 &lt;p>To build using xcaddy, you need to make sure you have &lt;a href="https://golang.org/doc/install">Go installed&lt;/a> on your machine.&lt;/p>
 &lt;p>Note that I am building Caddy on my laptop, but running it on a Pi, so I will have to specify the architecture that Pi is running on so that Go can correctly build it.&lt;/p>
@@ -70,7 +70,7 @@ scp caddy pi:/home/pi/caddy/
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo sh -c &lt;span style="color:#f1fa8c">&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p>
 &lt;figure class="center">&lt;a href="pihole-dns-records.png">
-&lt;img src="pihole-dns-records.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png"
 alt="Adding domain records to DNS server"/> &lt;/a>&lt;figcaption>
 &lt;p>PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p>
 &lt;/figcaption>
@@ -83,16 +83,16 @@ alt="Adding domain records to DNS server"/> &lt;/a>&lt;figcaption>
 &lt;p>We need to execute using &lt;code>sudo&lt;/code> so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="proxied-pihole.png">
-&lt;img src="proxied-pihole.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png"
 alt="PiHole appearing in browser through a domain name"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="proxied-unifi.png">
-&lt;img src="proxied-unifi.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png"
 alt="UniFi Controller appearing in browser through a domain name"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&lt;/p>
 &lt;figure class="center">&lt;a href="pihole-certificate.png">
-&lt;img src="pihole-certificate.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png"
 alt="Certificate used by PiHole"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="enabling-caddy-service">Enabling Caddy Service&lt;/h2>

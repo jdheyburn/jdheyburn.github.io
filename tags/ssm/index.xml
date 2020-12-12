@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ssm on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/ssm/</link><description>Recent content in ssm on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/ssm/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</link><pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</guid><description>&lt;p>In &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">part two&lt;/a> of this &lt;a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series&lt;/a> we looked at how we can automate SSM command documents using SSM Maintenance Windows.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ssm on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/ssm/</link><description>Recent content in ssm on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/ssm/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</link><pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</guid>--><description>&lt;p>In &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">part two&lt;/a> of this &lt;a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series&lt;/a> we looked at how we can automate SSM command documents using SSM Maintenance Windows.&lt;/p>
 &lt;p>This part will now explore another type of SSM Document; Automation.&lt;/p>
 &lt;h2 id="tldr">tl;dr&lt;/h2>
 &lt;ul>
@@ -67,7 +67,7 @@ T+7: PerformHealthcheckS3 succeeds: i-222
 &lt;p>&lt;code>InstanceIds&lt;/code> is a special parameter name that AWS recognises and so will provide an instance picker in the GUI of Execute Automation, as shown below.&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="instance-id-picker.png">
-&lt;img src="instance-id-picker.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/instance-id-picker.png"
 alt="A screenshot of the execute automation page with the instance ID picker being used to select instances in scope"/> &lt;/a>&lt;figcaption>
 &lt;p>The instance picker can be helpful if you only want to target a subset of instances in your estate.&lt;/p>
 &lt;/figcaption>
@@ -121,7 +121,7 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 &lt;h3 id="testing-automation-documents">Testing automation documents&lt;/h3>
 &lt;p>Now let&amp;rsquo;s go and test this by manually invoking it. This can be done by navigating to &lt;a href="https://console.aws.amazon.com/systems-manager/automation/executions">Automation&lt;/a> within Systems Manager and clicking &lt;a href="https://console.aws.amazon.com/systems-manager/automation/execute">Execute Automation&lt;/a>.&lt;/p>
 &lt;blockquote>
-&lt;p>For a shortcut of invoking the commands, you can use the below command to invoke the below CLI command. Then you may skip to &lt;a href="#results">the results&lt;/a>.&lt;/p>
+&lt;p>For a shortcut of invoking the commands, you can use the below command to invoke the below CLI command. Then you may skip to &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#results">the results&lt;/a>.&lt;/p>
 &lt;/blockquote>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">aws ssm start-automation-execution &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --document-name &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
@@ -134,12 +134,12 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 &lt;p>Navigate to the &lt;strong>Owned by me&lt;/strong> tab and select the name of your created document, &lt;strong>PatchWithHealthcheck&lt;/strong>, then click &lt;strong>Next&lt;/strong>.&lt;/p>
 &lt;p>Because we want to test this document executing one at a time on an instance, we&amp;rsquo;ll need to select the &lt;strong>Rate control&lt;/strong> option.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-1.png">
-&lt;img src="execute-automation-1.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-1.png"
 alt="Execute automation document page for PatchHealthcheck, Rate Control is selected"/> &lt;/a>
 &lt;/figure>
 &lt;p>We&amp;rsquo;ll need to select what instances are our targets. The instances in scope for this document are &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ec2.tf#L23">tagged&lt;/a> with the key &lt;code>App&lt;/code> with the value &lt;code>HelloWorld&lt;/code>, so let&amp;rsquo;s use that as our criteria. Note this is the most scalable solution for targeting instances.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-2.png">
-&lt;img src="execute-automation-2.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-2.png"
 alt="A screenshot of the execute automation page with tag key App and tag value HelloWorld specified"/> &lt;/a>
 &lt;/figure>
 &lt;p>Then we need to specify how the rate of invocation should be controlled. Our criteria for this is:&lt;/p>
@@ -149,7 +149,7 @@ alt="A screenshot of the execute automation page with tag key App and tag value 
 &lt;/ul>
 &lt;p>Therefore we need to set the concurrency to 1 and the error threshold to 0.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-3.png">
-&lt;img src="execute-automation-3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-3.png"
 alt="A screenshot of the execute automation page with concurrency set to 1 and the error threshold set to 0"/> &lt;/a>
 &lt;/figure>
 &lt;p>Once all done then click &lt;strong>Execute&lt;/strong>.&lt;/p>
@@ -159,29 +159,29 @@ alt="A screenshot of the execute automation page with concurrency set to 1 and t
 &lt;p>Step name is the same as the instance ID in this case&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="execute-automation-4.png">
-&lt;img src="execute-automation-4.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-4.png"
 alt="A screenshot of the successfully completed execution detail page, all executed steps across all instances are successful and did not overlap one another"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can dive into each step invocation (the blue text in the above screenshot) to view the commands that were invoked.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-5.png">
-&lt;img src="execute-automation-5.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-5.png"
 alt="A screenshot of a successful automation step, there is a clickable URL for the step execution ID"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="execute-automation-6.png">
-&lt;img src="execute-automation-6.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-6.png"
 alt="A screenshot of a successful automation document PatchWithHealthcheck - both patching and healthcheck run command steps are successful"/> &lt;/a>
 &lt;/figure>
 &lt;p>At this detail we can see the individual &lt;code>aws:runCommand&lt;/code> actions performed on the instance.&lt;/p>
 &lt;h3 id="failure-testing">Failure testing&lt;/h3>
 &lt;p>Okay so we&amp;rsquo;ve confirmed the document now only invokes synchronously. Let&amp;rsquo;s now test to see if further invocations are aborted when there is a failure.&lt;/p>
-&lt;p>To simulate the failure, we can borrow a trick from the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#testing-in-aws-ssm-console">first post&lt;/a> in this series by flipping the healthcheck script from &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>. Once that change is deployed we can re-run the document using the same method as &lt;a href="#testing-automation-documents">above&lt;/a>.&lt;/p>
+&lt;p>To simulate the failure, we can borrow a trick from the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#testing-in-aws-ssm-console">first post&lt;/a> in this series by flipping the healthcheck script from &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>. Once that change is deployed we can re-run the document using the same method as &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents">above&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-automation-1.png">
-&lt;img src="failed-automation-1.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-1.png"
 alt="Simulating a failure, now the rate-limited automation document fails on the first instance invocation"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see the failure, and that the automation did not invoke on more instances! We can drill down into the invocation to see why it failed.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-automation-2.png">
-&lt;img src="failed-automation-2.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-2.png"
 alt="The execution detail page for PatchWithHealthcheck, the patch event succeeded but the healthcheck is marked as failed"/> &lt;/a>
 &lt;/figure>
 &lt;p>From this page you can then continue to drill down to the run command output to determine the cause of the failure.&lt;/p>
@@ -269,25 +269,25 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;p>Once you&amp;rsquo;ve got the config above applied you&amp;rsquo;ll need to run a test. Just like &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#testing-the-barebones-maintenance-window">last time&lt;/a>, you can do this by changing the maintenance window execution time to something relatively close to your current time.&lt;/p>
 &lt;p>Once the execution is complete (and hopefully it was successful, if not then check back at the configuration), you&amp;rsquo;ll see that there will be 3 task invocations, one for each instance, and that none of them overlapped one another.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-success.png">
-&lt;img src="automation-maint-window-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success.png"
 alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance and all successful, for which only one was invoked at a time"/> &lt;/a>&lt;figcaption>
 &lt;p>Notice how the start and end times don&amp;rsquo;t overlap&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Just like for command documents, you can view the detail for each invocation made on the instance. Here we can see the two steps that make up our newly created command document.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-success-detail.png">
-&lt;img src="automation-maint-window-success-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success-detail.png"
 alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - both are successful"/> &lt;/a>
 &lt;/figure>
-&lt;p>But the whole point of this exercise was to proactively handle errors right? So let&amp;rsquo;s introduce some by doing what we&amp;rsquo;ve done &lt;a href="#failure-testing">before&lt;/a> and change the healthcheck script to fail.&lt;/p>
+&lt;p>But the whole point of this exercise was to proactively handle errors right? So let&amp;rsquo;s introduce some by doing what we&amp;rsquo;ve done &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#failure-testing">before&lt;/a> and change the healthcheck script to fail.&lt;/p>
 &lt;p>Once the new &amp;ldquo;broken&amp;rdquo; script is applied we can rerun another test of the maintenance window.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-failure.png">
-&lt;img src="automation-maint-window-failure.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure.png"
 alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance, 1 failed which then aborted further task invocations on the remaining instances"/> &lt;/a>
 &lt;/figure>
 &lt;p>This time round we can see that there was a failure in one task invocation, which then aborted further invocations on the remaining instances! Just as before, we can do a deep dive into the invocation to determine why it had failed.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-failure-detail.png">
-&lt;img src="automation-maint-window-failure-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure-detail.png"
 alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - the patch was successful but the healthcheck failed"/> &lt;/a>&lt;figcaption>
 &lt;p>From here you can follow the command invoked by the step to troubleshoot the failure&lt;/p>
 &lt;/figcaption>
@@ -330,17 +330,17 @@ alt="Task invocation detail view for one instance. There are two steps, one for 
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Just like what we&amp;rsquo;ve done for &lt;code>InstanceIds&lt;/code>, we&amp;rsquo;re taking in the &lt;code>DocumentArn&lt;/code> as a parameter and providing it as the input for the &lt;code>aws:runCommand&lt;/code> step. Some documents will also take parameters, so we can allow the caller to specify them using &lt;code>InputParameters&lt;/code>, which is defined as a &lt;code>StringMap&lt;/code> type - allowing it to then be used in as parameters for the document we are invoking.&lt;/p>
 &lt;p>When we create this document in the console and then execute it, we can then dynamically add in the document we want to invoke.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-setup.png">
-&lt;img src="maintenance-wrapper-setup.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-setup.png"
 alt="The setup page for the maintenance wrapper document, we&amp;#39;re specifying in the text field the command document to invoke, which is AWS-RunPatchBaseline. We&amp;#39;ve also added in the parameters for the document to run under InputParameters"/> &lt;/a>
 &lt;/figure>
 &lt;p>Then just like any other document we can invoke it.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-success.png">
-&lt;img src="maintenance-wrapper-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-success.png"
 alt="The automation execution overview page shows that two steps were invoked, InvokeMaintenanceEvent and ExecuteHealthcheck, both are successful. We can also see the input for InvokeMaintenanceEvent is specified as AWS-RunPatchBaseline, and the parameters we used previously."/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see that the input from the previous screen was passed to the step. Let&amp;rsquo;s keep going until we hit the command invocation.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-command-detail.png">
-&lt;img src="maintenance-wrapper-command-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-command-detail.png"
 alt="A screenshot of the command invocation page - it executed successfully and the document listed as being invoked was AWS-RunPatchBaseline"/> &lt;/a>&lt;figcaption>
 &lt;p>The document name was dynamically passed to the command execution&lt;/p>
 &lt;/figcaption>
@@ -398,7 +398,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/blockquote>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>What we&amp;rsquo;ve done in this post is taken our rudimentary command document, prone to introducing errors into our estate, and converted it to an automation document. With the right SSM maintenance window settings, you can ensure that any maintenance tasks you need to perform on your EC2 instances are done so in a manner that reduces the risk of errors in your environment.&lt;/p>
-&lt;p>Next time, we&amp;rsquo;ll be taking this a &lt;em>step further&lt;/em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
+&lt;p>Next time, we&amp;rsquo;ll be taking this a &lt;em>step further&lt;/em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid>--><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
 &lt;p>In this post we&amp;rsquo;ll be exploring how we can automate this using maintenance windows - also within the SSM suite. This is something I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">covered before&lt;/a>, but want to extend on that to show how its done.&lt;/p>
 &lt;h2 id="tldr">tl;dr&lt;/h2>
 &lt;ul>
@@ -410,8 +410,8 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/ul>
 &lt;p>Once again all the Terraform code for this post is available on GitHub. It is split into two parts:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-barebones">aws-ssm-automation-1-barebones&lt;/a> is for the &lt;a href="#barebones-maintenance-window-with-aws-runpatchbaseline">barebones walkthrough&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">aws-ssm-automation-1-logging&lt;/a> is for the &lt;a href="#logging-command-output-to-s3">logging enhancement&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-barebones">aws-ssm-automation-1-barebones&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#barebones-maintenance-window-with-aws-runpatchbaseline">barebones walkthrough&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">aws-ssm-automation-1-logging&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#logging-command-output-to-s3">logging enhancement&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="intro-to-maintenance-windows">Intro to Maintenance Windows&lt;/h2>
 &lt;p>&lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-maintenance.html">Maintenance Windows&lt;/a>, are a means of executing some automation workflow in your AWS estate on a schedule. Got an SSM Document you&amp;rsquo;ve written and want it automated? What about a &lt;a href="https://aws.amazon.com/lambda/">Lambda&lt;/a> you want invoked at a regular schedule? Or maybe it&amp;rsquo;s a &lt;a href="https://aws.amazon.com/step-functions/">Step Function&lt;/a>? Whatever the use case, Maintenance Windows are for you - just don&amp;rsquo;t be fooled by the name - they don&amp;rsquo;t necessarily have to be &lt;em>just&lt;/em> for maintenance!&lt;/p>
@@ -421,7 +421,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/blockquote>
 &lt;p>Yes they do - both Maintenance Windows and &lt;a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html">EventBridge&lt;/a> Rules (the bigger sibling of CloudWatch Rules) use &lt;a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">cron expressions&lt;/a> to define the schedule they should run on. The primary difference between the two is that Maintenance Windows allow you to &lt;strong>specify the timezone&lt;/strong> that the cron expression adheres to, whereas EventBridge is &lt;a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html">&lt;strong>tied to UTC&lt;/strong>&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="eventbridge-rule-create.png">
-&lt;img src="eventbridge-rule-create.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/eventbridge-rule-create.png"
 alt="The EventBridge rule creation page, there is no option to schedule the rule to a timezone"/> &lt;/a>&lt;figcaption>
 &lt;p>No timezone, no party&lt;/p>
 &lt;/figcaption>
@@ -573,7 +573,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c
 &lt;/blockquote>
 &lt;p>A full list of available commands can be found in the AWS-RunPatchBaseline &lt;a href="https://console.aws.amazon.com/systems-manager/documents/AWS-RunPatchBaseline/content">command document&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="run-patch-baseline-parameters.png">
-&lt;img src="run-patch-baseline-parameters.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/run-patch-baseline-parameters.png"
 alt="Available parameters for the Run Patch Baseline document; Operation, Snapshot ID, Install Override List, and Reboot Option"/> &lt;/a>&lt;figcaption>
 &lt;p>In the console GUI we can see the available parameters for the AWS-RunPatchBaseline document&lt;/p>
 &lt;/figcaption>
@@ -635,21 +635,21 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;p>Once we&amp;rsquo;ve ran &lt;code>terraform apply&lt;/code> on all the above, we can test the maintenance window out. Currently we have it set to run at 9am UK time, which may or may not be a long time away - so change it manually in &lt;a href="https://console.aws.amazon.com/systems-manager/maintenance-windows">the console&lt;/a> to a time not far away from your time now.&lt;/p>
 &lt;p>Once it&amp;rsquo;s done executing, you can navigate to the history tab to view the execution.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-window-history.png">
-&lt;img src="maintenance-window-history.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/maintenance-window-history.png"
 alt="The execution history for the maintenance window, showing both successful and failed executions"/> &lt;/a>&lt;figcaption>
 &lt;p>Let&amp;rsquo;s hope you have more luck on your first attempts running this than I did!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>You can select any execution and drill down into it with the &lt;strong>View details&lt;/strong> button.&lt;/p>
 &lt;figure class="center">&lt;a href="mw-execution-details.png">
-&lt;img src="mw-execution-details.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/mw-execution-details.png"
 alt="A detailed look into a maintenance window execution"/> &lt;/a>&lt;figcaption>
 &lt;p>You can see that the tasks got executed in the order we defined them in&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>We can go deeper in the execution details and pull out the result of individual commands by selecting &lt;strong>View details&lt;/strong> on the task invocation.&lt;/p>
 &lt;figure class="center">&lt;a href="task-invocation-command-detail.png">
-&lt;img src="task-invocation-command-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/task-invocation-command-detail.png"
 alt="Detailed breakdown of the RunPatchBaseline command, showing success all round"/> &lt;/a>&lt;figcaption>
 &lt;p>The maintenance window has redirected us to the same page as when we manually invoked the command documents in the last post&lt;/p>
 &lt;/figcaption>
@@ -659,7 +659,7 @@ alt="Detailed breakdown of the RunPatchBaseline command, showing success all rou
 &lt;p>Maintenance windows by default only capture the first 2500 characters of a command output, if your command outputs more than this then it gets truncated. This can be a problem if you have a task failure and need to examine the output for the reason why it failed.&lt;/p>
 &lt;p>Take the &lt;strong>AWS-RunPatchBaseline&lt;/strong> output on a Linux instance for example. It&amp;rsquo;s pretty hefty, and so we lose a lot of context on what actually happened:&lt;/p>
 &lt;figure class="center">&lt;a href="truncated-command-output.png">
-&lt;img src="truncated-command-output.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/truncated-command-output.png"
 alt="Log output of the patch event on a Linux instance, with the words Output Truncated at the end."/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="method">Method&lt;/h3>
@@ -696,25 +696,25 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When you have the new config written, then you can &lt;code>terraform apply&lt;/code> and run another test on the maintenance window.&lt;/p>
 &lt;figure class="center">&lt;a href="command-s3-output-button.png">
-&lt;img src="command-s3-output-button.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/command-s3-output-button.png"
 alt="Detailed view of the run patch baseline task, showing a button called Amazon S3 which redirects us to where the logs are stored in S3"/> &lt;/a>&lt;figcaption>
 &lt;p>We now get a button that can redirect us to where the logs are stored in S3&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>If we click on this button, we can view the logs being stored in S3. Follow the path in S3 until you reach the S3 object containing the logs.&lt;/p>
 &lt;figure class="center">&lt;a href="log-object-in-s3.png">
-&lt;img src="log-object-in-s3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/log-object-in-s3.png"
 alt="The S3 object containing the logs"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now you can open this using the &lt;strong>Object actions&lt;/strong> button in the top-right hand corner to view the entire logs!&lt;/p>
 &lt;figure class="center">&lt;a href="open-logs-in-browser.png">
-&lt;img src="open-logs-in-browser.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/open-logs-in-browser.png"
 alt="Opening the logs in the browser, we see the complete text output of the run patch baseline command invoked"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="logging-problems">Logging problems&lt;/h3>
 &lt;p>It&amp;rsquo;s worth noting that SSM does not raise an error if an instance cannot push logs to S3 - the &lt;strong>Amazon S3&lt;/strong> button will redirect you to an object in S3 that does not exist. So if your logs are not appearing in S3 then ensure you&amp;rsquo;ve followed the steps above.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-log-upload-to-s3.png">
-&lt;img src="failed-log-upload-to-s3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/failed-log-upload-to-s3.png"
 alt="An empty S3 object page, caused by incorrectly setting up S3 output logging"/> &lt;/a>&lt;figcaption>
 &lt;p>An example showing if logs were not successfully uploaded to S3 - if you get this then double check you&amp;rsquo;ve set everything up right!&lt;/p>
 &lt;/figcaption>
@@ -739,7 +739,7 @@ days &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">9
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>You can add more rules if you like, such as a &lt;code>transition&lt;/code> block to move it to cold storage before deleting if you wish. Take a look at the &lt;a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#using-object-lifecycle">Terraform documentation&lt;/a> for the resource for example of this.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-lifecycle-policy.png">
-&lt;img src="s3-lifecycle-policy.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/s3-lifecycle-policy.png"
 alt="The created S3 lifecycle rule can be seen here, indicating that objects in the ssm_output directory are discarded after 90 days"/> &lt;/a>&lt;figcaption>
 &lt;p>Logs older than 90 days certainly do not spark joy&amp;hellip;!&lt;/p>
 &lt;/figcaption>
@@ -747,7 +747,7 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>With the first two posts of this series, you have enough to be able to create your own automated series of commands that can be executed on your EC2 instances.&lt;/p>
 &lt;p>You can also use SSM documents to retrieve files from instances - such as log files. Or even use them to update third-party software on the instances.&lt;/p>
-&lt;p>The next post and thereafter we&amp;rsquo;ll be exploring the Command Documents sibling; Automation Documents, and exploring how these can further enhance automation to other AWS services beyond EC2 instances.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
+&lt;p>The next post and thereafter we&amp;rsquo;ll be exploring the Command Documents sibling; Automation Documents, and exploring how these can further enhance automation to other AWS services beyond EC2 instances.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid>--><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
 &lt;p>In this post I want to talk a little bit more about &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">AWS SSM&lt;/a>. This was something I touched on when discussing patch baselines in a &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">previous post&lt;/a>, and within there is another service known as &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html">Automation&lt;/a>. On first glance it may look pretty dull, but once you scratch the surface there are a number of capabilities it can unlock for you. I found a distinct lack of resources on how to write these documents, so this post will aim to help you get started on doing so!&lt;/p>
 &lt;p>This will be part one of a four part series about SSM Automation. The outline of the posts will be:&lt;/p>
 &lt;ol>
@@ -761,8 +761,8 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;ul>
 &lt;li>SSM can be used to automate several parts of your estate&lt;/li>
 &lt;li>Command documents are a means of executing logically indifferent commands across multiple platforms&lt;/li>
-&lt;li>How to write a &lt;a href="#terraforming-command-documents">basic command document&lt;/a> in Terraform&lt;/li>
-&lt;li>How to write a &lt;a href="#terraforming-verbose-command-documents">verbose command document&lt;/a> in Terraform&lt;/li>
+&lt;li>How to write a &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-command-documents">basic command document&lt;/a> in Terraform&lt;/li>
+&lt;li>How to write a &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-verbose-command-documents">verbose command document&lt;/a> in Terraform&lt;/li>
 &lt;/ul>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>This series assumes you have some knowledge of:&lt;/p>
@@ -831,7 +831,7 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;li>&lt;strong>Optional&lt;/strong>: &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-instance-profile.html">additional policies&lt;/a> that may be required based on your use case&lt;/li>
 &lt;/ul>
 &lt;figure class="center">&lt;a href="managed-instances.png">
-&lt;img src="managed-instances.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/managed-instances.png"
 alt="AWS SSM Managed Instances view with two instances appearing as online and managed"/> &lt;/a>&lt;figcaption>
 &lt;p>If your instances are appearing in the &lt;a href="https://console.aws.amazon.com/systems-manager/managed-instances">managed instances console&lt;/a> then everything is set up correctly; if not then follow the &lt;a href="https://aws.amazon.com/premiumsupport/knowledge-center/systems-manager-ec2-instance-not-appear/">troubleshooting guide&lt;/a>.&lt;/p>
 &lt;/figcaption>
@@ -862,16 +862,16 @@ alt="AWS SSM Managed Instances view with two instances appearing as online and m
 &lt;h3 id="testing-in-aws-ssm-console">Testing in AWS SSM Console&lt;/h3>
 &lt;p>Let&amp;rsquo;s now test them in the AWS SSM Console. For this example I&amp;rsquo;ve spun up two EC2 instances, one Linux and one Windows, &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-0/ec2.tf">using Terraform&lt;/a>. To run the commands we can navigate to &lt;a href="https://console.aws.amazon.com/systems-manager/run-command/send-command">Run Command&lt;/a> in the console, and run &lt;code>AWS-RunPowerShellScript&lt;/code> and &lt;code>AWS-RunShellScript&lt;/code> for both Windows and Linux EC2s respectively. We don&amp;rsquo;t care about logging the output of the scripts just yet. Make sure when running the script you manually select what instance to run it on.&lt;/p>
 &lt;figure class="center">&lt;a href="run-command-script-success-linux.png">
-&lt;img src="run-command-script-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-success-linux.png"
 alt="Executing the Linux script successfully on the Linux instance"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="run-command-script-success-windows.png">
-&lt;img src="run-command-script-success-windows.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-success-windows.png"
 alt="Executing the Windows script successfully on the Windows instance"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see they have executed fine. Let&amp;rsquo;s flip the condition in the healthcheck script so we can test them failing (done by changing &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>).&lt;/p>
 &lt;figure class="center">&lt;a href="run-command-script-failure-linux.png">
-&lt;img src="run-command-script-failure-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-failure-linux.png"
 alt="AWS indicating a failure in the command due to a failure occuring in the script"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is cool - in the script we can define what constitutes as a failure and have this propagate up to AWS - notice how the status was Failed. This will come in use later on in the series.&lt;/p>
@@ -929,12 +929,12 @@ content &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6
 &lt;/blockquote>
 &lt;p>Once deployed, we can navigate to System Manager in the AWS Console to invoke the document on our estate. This is done in the same manner as when we ran &lt;code>AWS-RunShellScript&lt;/code> above, except now we are targeting &lt;code>PerformHealthcheck&lt;/code>. Since our document has commands for both Linux and Windows, we can have it invoked across both platform types and only the scripts written for their platform will be invoked.&lt;/p>
 &lt;figure class="center">&lt;a href="command-document-success.png">
-&lt;img src="command-document-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/command-document-success.png"
 alt="Successfully executing the new command document across both Linux and Windows instances"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see that both executed successfully! You can view the output of each command invocation on each instance like previously. For the screenshot below of the Linux instance, only the Linux step was executed, whereas the Windows step was skipped. You&amp;rsquo;ll notice our message from earlier &amp;ldquo;&lt;code> - Linux&lt;/code>&amp;rdquo; is there, reassuring us that only the Linux script was executed.&lt;/p>
 &lt;figure class="center">&lt;a href="command-document-success-linux.png">
-&lt;img src="command-document-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/command-document-success-linux.png"
 alt="Focusing on the Linux invocation, highlighting that only the Linux step was invoked"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s dive into some more intermediate documents.&lt;/p>
@@ -1147,7 +1147,7 @@ windows_key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff
 }
 )
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re creating an &lt;code>aws_ssm_document&lt;/code> as we had done &lt;a href="#terraforming-command-documents">before&lt;/a>, but the document file we&amp;rsquo;re targeting this time is a template file.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re creating an &lt;code>aws_ssm_document&lt;/code> as we had done &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-command-documents">before&lt;/a>, but the document file we&amp;rsquo;re targeting this time is a template file.&lt;/p>
 &lt;p>Notice how we have the presence of &lt;code>${bucket_name}&lt;/code> and others? These are template variables. With the use of the &lt;a href="https://www.terraform.io/docs/configuration/functions/templatefile.html">Terraform function&lt;/a> &lt;code>templatefile()&lt;/code>, we can insert Terraform variables into the config to have the template name replaced with the value we&amp;rsquo;re passing in. In this case, &lt;code>${bucket_name}&lt;/code> will get replaced with the output of &lt;code>aws_s3_bucket.script_bucket.id&lt;/code>, which is &lt;code>jdheyburn-scripts&lt;/code>, and the same for the remaining variables.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#6272a4"># documents/perform_healthcheck_s3_template.yml&lt;/span>
 ---
@@ -1226,7 +1226,7 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;h3 id="testing-verbose-documents">Testing verbose documents&lt;/h3>
 &lt;p>Now, let&amp;rsquo;s give this command a spin in the console. We&amp;rsquo;re going to execute it the same way we did for other documents earlier, except now targeting &lt;code>PerformHealthcheckS3&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-command-document-success.png">
-&lt;img src="s3-command-document-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success.png"
 alt="Successful invocations for the new document pulling the script to be executed from S3"/> &lt;/a>
 &lt;/figure>
 &lt;p>If you got any failures, make sure to dive into the failed invocation and see why it failed. Did it fail because of your healthcheck command? Then it is working as intended! Although if it failed on &lt;code>aws:downloadContent&lt;/code>, check to make sure your instances are running the latest version of SSM agent. You can do this with the &lt;code>AWS-UpdateSSMAgent&lt;/code> SSM document. Don&amp;rsquo;t be like me and spend hours troubleshooting against an out-of-date SSM agent! 😂&lt;/p>
@@ -1234,7 +1234,7 @@ alt="Successful invocations for the new document pulling the script to be execut
 &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8">&lt;/script>
 &lt;p>Let&amp;rsquo;s now dive into the output of the Linux instance.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-command-document-success-linux.png">
-&lt;img src="s3-command-document-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success-linux.png"
 alt="Breakdown of steps invoked on Linux for a the command document we executed earlier, Windows steps are skipped"/> &lt;/a>
 &lt;/figure>
 &lt;p>Just like with the previous document with the script embedded &lt;code>PerformHealthcheck&lt;/code>, we can see the steps conditioned for Windows have been skipped (steps 1-2). Step 3 is where the document is doing real work, downloading the Linux script from the S3 location into the temp directory for SSM, and then executing it in step 4.&lt;/p>
@@ -1247,4 +1247,4 @@ alt="Breakdown of steps invoked on Linux for a the command document we executed 
 &lt;li>Adopting best practices by storing scripts in S3 and have a command document orchestrate the download and execution of said scripts&lt;/li>
 &lt;li>&amp;hellip; all while written in Terraform!&lt;/li>
 &lt;/ul>
-&lt;p>If any mistakes were made in this post then please &lt;a href="#contact">contact&lt;/a> me - thanks for reading! 😃&lt;/p></description></item></channel></rss>
+&lt;p>If any mistakes were made in this post then please &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#contact">contact&lt;/a> me - thanks for reading! 😃&lt;/p></description></item></channel></rss>

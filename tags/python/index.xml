@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>python on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/python/</link><description>Recent content in python on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>python on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/python/</link><description>Recent content in python on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>--><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
 &lt;p>I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p>
 &lt;p>My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p>
 &lt;blockquote>
@@ -19,9 +19,9 @@
 &lt;/ol>
 &lt;p>From this list, we can include the following to solve the above:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#class-objects">Classes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="tests">Tests&lt;/h2>
 &lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>
@@ -122,13 +122,13 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
 &lt;figure class="center">&lt;a href="type_hinting.png">
-&lt;img src="type_hinting.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
 alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
 &lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking.png">
-&lt;img src="type_checking.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
 alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
 &lt;/figure>
 &lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
@@ -139,12 +139,12 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span s
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_return.png">
-&lt;img src="type_checking_bad_return.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
 alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
 &lt;/figure>
 &lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
-&lt;img src="type_checking_bad_assign.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
 alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
 &lt;/figure>
 &lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>

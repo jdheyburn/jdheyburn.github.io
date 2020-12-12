@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>content-organisation on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/content-organisation/</link><description>Recent content in content-organisation on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/content-organisation/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>content-organisation on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/content-organisation/</link><description>Recent content in content-organisation on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/content-organisation/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid>--><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
 &lt;ol>
 &lt;li>Moving content articles from a flat structure to a leaf bundle&lt;/li>
 &lt;li>Rename content section to &lt;strong>blog&lt;/strong> from &lt;strong>posts&lt;/strong>&lt;/li>
@@ -141,7 +141,7 @@ git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/sp
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
@@ -171,7 +171,7 @@ themes/hugo-coder/layouts/posts
 &lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
 &lt;figure>&lt;a href="posts-blog-rendering-error.png">
-&lt;img src="posts-blog-rendering-error.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
 alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;/a>&lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
@@ -223,7 +223,7 @@ type: posts
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>

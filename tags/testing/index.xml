@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>testing on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/testing/</link><description>Recent content in testing on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>testing on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/testing/</link><description>Recent content in testing on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid>--><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
 &lt;p>Today I&amp;rsquo;ll be talking about a small enhancement to how the tests are generated to make use of the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package within &lt;a href="https://github.com/stretchr/testify">testify&lt;/a>. Go already comes with enough for you to write tests, but &lt;code>assert&lt;/code> provides me with more options for comparison in a natural language form. I&amp;rsquo;ll also be adding support for when a test case returns an unexpected error.&lt;/p>
-&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
+&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
 &lt;h2 id="recap">Recap&lt;/h2>
 &lt;p>From the last time we visited this, our test code took the format below.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
@@ -126,7 +126,7 @@ got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa
 &lt;/ol>
 &lt;p>I have the &lt;a href="https://marketplace.visualstudio.com/items?itemName=golang.go">Go plugin&lt;/a> for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p>
 &lt;figure>&lt;a href="generate-unit-tests.png">
-&lt;img src="generate-unit-tests.png"
+&lt;img src="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png"
 alt="VSCode dropdown with Go plugin"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="only-returns-an-error">Only returns an error&lt;/h3>
@@ -241,7 +241,7 @@ assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="thats-it">That&amp;rsquo;s It!&lt;/h2>
-&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
+&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>--><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
 &lt;p>I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p>
 &lt;p>My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p>
 &lt;blockquote>
@@ -262,9 +262,9 @@ assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
 &lt;/ol>
 &lt;p>From this list, we can include the following to solve the above:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#class-objects">Classes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="tests">Tests&lt;/h2>
 &lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>
@@ -365,13 +365,13 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
 &lt;figure class="center">&lt;a href="type_hinting.png">
-&lt;img src="type_hinting.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
 alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
 &lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking.png">
-&lt;img src="type_checking.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
 alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
 &lt;/figure>
 &lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
@@ -382,12 +382,12 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span s
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_return.png">
-&lt;img src="type_checking_bad_return.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
 alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
 &lt;/figure>
 &lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
-&lt;img src="type_checking_bad_assign.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
 alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
 &lt;/figure>
 &lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>
@@ -504,7 +504,7 @@ OK
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Normal service is resumed!!&lt;/p>
 &lt;h2 id="closing">Closing&lt;/h2>
 &lt;p>I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p>
-&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>&lt;blockquote>
+&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid>--><description>&lt;blockquote>
 &lt;p>&lt;strong>UPDATE 2020-07-17&lt;/strong>&lt;/p>
 &lt;p>I wrote a follow up post to this one using the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package instead.&lt;/p>
 &lt;p>Awesome - &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">take me there&lt;/a>!&lt;/p>

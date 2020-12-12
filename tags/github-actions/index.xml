@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github-actions on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/github-actions/</link><description>Recent content in github-actions on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 10 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid><description>&lt;h2 id="from-travisci-to-github-actions">From TravisCI to GitHub Actions&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github-actions on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/github-actions/</link><description>Recent content in github-actions on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 10 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid>--><description>&lt;h2 id="from-travisci-to-github-actions">From TravisCI to GitHub Actions&lt;/h2>
 &lt;p>In the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-3-1-deployment-methods-travisci/">previous post&lt;/a> we looked at moving to a CI/CD model by moving from the &lt;code>deploy.sh&lt;/code> script to TravisCI.&lt;/p>
 &lt;p>In this post we will look at how we can migrate from TravisCI to &lt;a href="https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions">GitHub Actions&lt;/a>, GitHub&amp;rsquo;s own CI/CD tool.&lt;/p>
 &lt;p>This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! 🚀&lt;/p>
@@ -32,12 +32,12 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;/blockquote>
 &lt;p>In GitHub load up your GitHub Pages repo and navigate to &lt;code>Settings&lt;/code> and then &lt;code>Deploy keys&lt;/code>. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code>Allow write access&lt;/code>.&lt;/p>
 &lt;figure>&lt;a href="gha-deploy-key.png">
-&lt;img src="gha-deploy-key.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png"
 alt="GitHub Pages repo deploy keys page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Copy the contents of the &lt;em>private key&lt;/em> you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code>Settings&lt;/code> page, then &lt;code>Secrets&lt;/code>. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p>
 &lt;figure>&lt;a href="gha-secrets-key.png">
-&lt;img src="gha-secrets-key.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png"
 alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>No secrets here!&lt;/p>
 &lt;/figcaption>
@@ -116,7 +116,7 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;span style="color:#ff79c6">commit_message&lt;/span>: ${{ github.event.head_commit.message }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a>. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
+&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
 &lt;ul>
 &lt;li>If you didn&amp;rsquo;t name yours &lt;code>DEPLOY_KEY&lt;/code> then you&amp;rsquo;ll need to change it here too.&lt;/li>
 &lt;/ul>
@@ -138,7 +138,7 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p>
 &lt;p>For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href="https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings">https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a> for me) and disabling &lt;code>Build pushed branches&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-disable-build.png">
-&lt;img src="travis-disable-build.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png"
 alt="Build pushed branches disabled on Travis"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code>Actions&lt;/code> tab of your source code repo on GitHub.&lt;/p>
@@ -146,7 +146,7 @@ alt="Build pushed branches disabled on Travis"/> &lt;/a>
 git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span>
 git push
 &lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;a href="github-actions-build.png">
-&lt;img src="github-actions-build.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png"
 alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;p>Great success!&lt;/p>
 &lt;/figcaption>
@@ -155,7 +155,7 @@ alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>Now that we&amp;rsquo;ve migrated across over to GitHub Actions, we can close out the permissions that TravisCI has on our projects, and demise any secret keys we gave it.&lt;/p>
 &lt;p>From the tone of my writing you can probably tell which one I favour. That&amp;rsquo;s not to say I do not like TravisCI - each service has its own pros and cons. For this particular project, I prefer the one platform approach for which I am used to in GitLab. The number of build minutes available for GA is a concern, but not one I will have to worry about for now.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid><description>&lt;h2 id="recap">Recap&lt;/h2>
+&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid>--><description>&lt;h2 id="recap">Recap&lt;/h2>
 &lt;p>Since &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/">part 1&lt;/a>, we have been using a simple bash script called &lt;code>deploy.sh&lt;/code> to build our Hugo website and upload it to our GitHub Pages repo. In &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/">part 2&lt;/a> we modified it slightly to include the &lt;code>CNAME&lt;/code> file post-build to ensure GitHub Pages uses the custom domain we set up in that same part.&lt;/p>
 &lt;p>For this part, I will tell you about how I migrated from deploying via a script, to a CI/CD tool - namely &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>. Then I will document how I migrated from this, to the new &lt;a href="https://github.com/features/actions">GitHub Actions&lt;/a>; GitHub&amp;rsquo;s offering into the CI/CD space.&lt;/p>
 &lt;blockquote>
@@ -177,7 +177,7 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p>One of those hosted solutions is &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>, where they integrate quite nicely with GitHub repositories to attach &lt;a href="https://developer.github.com/webhooks/">webhooks&lt;/a> against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p>
 &lt;p>So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p>
 &lt;figure>&lt;a href="travis-free.png">
-&lt;img src="travis-free.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png"
 alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;p>Free is definitely a thing you love to see&lt;/p>
 &lt;/figcaption>
@@ -185,14 +185,14 @@ alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="travisci-account-setup">TravisCI Account Setup&lt;/h2>
 &lt;p>The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em>another&lt;/em> account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href="https://travis-ci.com/">https://travis-ci.com/&lt;/a> and click on &lt;code>Sign in with GitHub&lt;/code>.&lt;/p>
 &lt;figure>&lt;a href="travis-landing.png">
-&lt;img src="travis-landing.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png"
 alt="Screenshot of Travis landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>GitHub will ask you if you &lt;em>really&lt;/em> want to share some of your GitHub data with Travis.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-authorise.png">
-&lt;img src="travis-github-authorise.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png"
 alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Another green button? Why not!&lt;/p>
 &lt;/figcaption>
@@ -200,7 +200,7 @@ alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p>
 &lt;p>All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href="https://travis-ci.com/account/repositories">https://travis-ci.com/account/repositories&lt;/a> page is what you need for that - then click on the &lt;code>Activate&lt;/code> button.&lt;/p>
 &lt;figure>&lt;a href="travis-github-apps-integration.png">
-&lt;img src="travis-github-apps-integration.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png"
 alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>&amp;hellip;More green buttons?!&lt;/p>
 &lt;/figcaption>
@@ -208,7 +208,7 @@ alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>Now on the next screen you may or may not want the default selection of &lt;code>All repositories&lt;/code> which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">&lt;em>principle of least privilege&lt;/em>&lt;/a> (POLP); not just for users but for services too.&lt;/p>
 &lt;p>For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code>jdheyburn.co.uk&lt;/code> and &lt;code>jdheyburn.github.io&lt;/code> - it also gives you a cleaner Travis dashboard too.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-repos-selection.png">
-&lt;img src="travis-github-repos-selection.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png"
 alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="back-to-github">Back to GitHub&lt;/h3>
@@ -217,12 +217,12 @@ alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;p>You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code>repo&lt;/code> checkbox as done so below.&lt;/p>
 &lt;p>After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code>Generate token&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-pat.png">
-&lt;img src="travis-github-pat.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png"
 alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/> &lt;/a>
 &lt;/figure>
 &lt;p>The token&amp;rsquo;s secret will display on the next screen. &lt;strong>Make sure you copy it&lt;/strong> and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-pat-created.png">
-&lt;img src="travis-github-pat-created.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png"
 alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="travisci-configuration">TravisCI Configuration&lt;/h2>

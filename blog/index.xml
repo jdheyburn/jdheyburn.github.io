@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on JDHeyburn</title><link>https://jdheyburn.co.uk/blog/</link><description>Recent content in Blog on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</link><pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</guid><description>&lt;p>In &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">part two&lt;/a> of this &lt;a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series&lt;/a> we looked at how we can automate SSM command documents using SSM Maintenance Windows.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on JDHeyburn</title><link>https://jdheyburn.co.uk/blog/</link><description>Recent content in Blog on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</link><pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/</guid>--><description>&lt;p>In &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">part two&lt;/a> of this &lt;a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series&lt;/a> we looked at how we can automate SSM command documents using SSM Maintenance Windows.&lt;/p>
 &lt;p>This part will now explore another type of SSM Document; Automation.&lt;/p>
 &lt;h2 id="tldr">tl;dr&lt;/h2>
 &lt;ul>
@@ -67,7 +67,7 @@ T+7: PerformHealthcheckS3 succeeds: i-222
 &lt;p>&lt;code>InstanceIds&lt;/code> is a special parameter name that AWS recognises and so will provide an instance picker in the GUI of Execute Automation, as shown below.&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="instance-id-picker.png">
-&lt;img src="instance-id-picker.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/instance-id-picker.png"
 alt="A screenshot of the execute automation page with the instance ID picker being used to select instances in scope"/> &lt;/a>&lt;figcaption>
 &lt;p>The instance picker can be helpful if you only want to target a subset of instances in your estate.&lt;/p>
 &lt;/figcaption>
@@ -121,7 +121,7 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 &lt;h3 id="testing-automation-documents">Testing automation documents&lt;/h3>
 &lt;p>Now let&amp;rsquo;s go and test this by manually invoking it. This can be done by navigating to &lt;a href="https://console.aws.amazon.com/systems-manager/automation/executions">Automation&lt;/a> within Systems Manager and clicking &lt;a href="https://console.aws.amazon.com/systems-manager/automation/execute">Execute Automation&lt;/a>.&lt;/p>
 &lt;blockquote>
-&lt;p>For a shortcut of invoking the commands, you can use the below command to invoke the below CLI command. Then you may skip to &lt;a href="#results">the results&lt;/a>.&lt;/p>
+&lt;p>For a shortcut of invoking the commands, you can use the below command to invoke the below CLI command. Then you may skip to &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#results">the results&lt;/a>.&lt;/p>
 &lt;/blockquote>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">aws ssm start-automation-execution &lt;span style="color:#f1fa8c">\
 &lt;/span>&lt;span style="color:#f1fa8c">&lt;/span> --document-name &lt;span style="color:#f1fa8c">&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span> &lt;span style="color:#f1fa8c">\
@@ -134,12 +134,12 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 &lt;p>Navigate to the &lt;strong>Owned by me&lt;/strong> tab and select the name of your created document, &lt;strong>PatchWithHealthcheck&lt;/strong>, then click &lt;strong>Next&lt;/strong>.&lt;/p>
 &lt;p>Because we want to test this document executing one at a time on an instance, we&amp;rsquo;ll need to select the &lt;strong>Rate control&lt;/strong> option.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-1.png">
-&lt;img src="execute-automation-1.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-1.png"
 alt="Execute automation document page for PatchHealthcheck, Rate Control is selected"/> &lt;/a>
 &lt;/figure>
 &lt;p>We&amp;rsquo;ll need to select what instances are our targets. The instances in scope for this document are &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-2/ec2.tf#L23">tagged&lt;/a> with the key &lt;code>App&lt;/code> with the value &lt;code>HelloWorld&lt;/code>, so let&amp;rsquo;s use that as our criteria. Note this is the most scalable solution for targeting instances.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-2.png">
-&lt;img src="execute-automation-2.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-2.png"
 alt="A screenshot of the execute automation page with tag key App and tag value HelloWorld specified"/> &lt;/a>
 &lt;/figure>
 &lt;p>Then we need to specify how the rate of invocation should be controlled. Our criteria for this is:&lt;/p>
@@ -149,7 +149,7 @@ alt="A screenshot of the execute automation page with tag key App and tag value 
 &lt;/ul>
 &lt;p>Therefore we need to set the concurrency to 1 and the error threshold to 0.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-3.png">
-&lt;img src="execute-automation-3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-3.png"
 alt="A screenshot of the execute automation page with concurrency set to 1 and the error threshold set to 0"/> &lt;/a>
 &lt;/figure>
 &lt;p>Once all done then click &lt;strong>Execute&lt;/strong>.&lt;/p>
@@ -159,29 +159,29 @@ alt="A screenshot of the execute automation page with concurrency set to 1 and t
 &lt;p>Step name is the same as the instance ID in this case&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="execute-automation-4.png">
-&lt;img src="execute-automation-4.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-4.png"
 alt="A screenshot of the successfully completed execution detail page, all executed steps across all instances are successful and did not overlap one another"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can dive into each step invocation (the blue text in the above screenshot) to view the commands that were invoked.&lt;/p>
 &lt;figure class="center">&lt;a href="execute-automation-5.png">
-&lt;img src="execute-automation-5.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-5.png"
 alt="A screenshot of a successful automation step, there is a clickable URL for the step execution ID"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="execute-automation-6.png">
-&lt;img src="execute-automation-6.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/execute-automation-6.png"
 alt="A screenshot of a successful automation document PatchWithHealthcheck - both patching and healthcheck run command steps are successful"/> &lt;/a>
 &lt;/figure>
 &lt;p>At this detail we can see the individual &lt;code>aws:runCommand&lt;/code> actions performed on the instance.&lt;/p>
 &lt;h3 id="failure-testing">Failure testing&lt;/h3>
 &lt;p>Okay so we&amp;rsquo;ve confirmed the document now only invokes synchronously. Let&amp;rsquo;s now test to see if further invocations are aborted when there is a failure.&lt;/p>
-&lt;p>To simulate the failure, we can borrow a trick from the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#testing-in-aws-ssm-console">first post&lt;/a> in this series by flipping the healthcheck script from &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>. Once that change is deployed we can re-run the document using the same method as &lt;a href="#testing-automation-documents">above&lt;/a>.&lt;/p>
+&lt;p>To simulate the failure, we can borrow a trick from the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#testing-in-aws-ssm-console">first post&lt;/a> in this series by flipping the healthcheck script from &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>. Once that change is deployed we can re-run the document using the same method as &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents">above&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-automation-1.png">
-&lt;img src="failed-automation-1.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-1.png"
 alt="Simulating a failure, now the rate-limited automation document fails on the first instance invocation"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see the failure, and that the automation did not invoke on more instances! We can drill down into the invocation to see why it failed.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-automation-2.png">
-&lt;img src="failed-automation-2.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/failed-automation-2.png"
 alt="The execution detail page for PatchWithHealthcheck, the patch event succeeded but the healthcheck is marked as failed"/> &lt;/a>
 &lt;/figure>
 &lt;p>From this page you can then continue to drill down to the run command output to determine the cause of the failure.&lt;/p>
@@ -269,25 +269,25 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;p>Once you&amp;rsquo;ve got the config above applied you&amp;rsquo;ll need to run a test. Just like &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#testing-the-barebones-maintenance-window">last time&lt;/a>, you can do this by changing the maintenance window execution time to something relatively close to your current time.&lt;/p>
 &lt;p>Once the execution is complete (and hopefully it was successful, if not then check back at the configuration), you&amp;rsquo;ll see that there will be 3 task invocations, one for each instance, and that none of them overlapped one another.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-success.png">
-&lt;img src="automation-maint-window-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success.png"
 alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance and all successful, for which only one was invoked at a time"/> &lt;/a>&lt;figcaption>
 &lt;p>Notice how the start and end times don&amp;rsquo;t overlap&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Just like for command documents, you can view the detail for each invocation made on the instance. Here we can see the two steps that make up our newly created command document.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-success-detail.png">
-&lt;img src="automation-maint-window-success-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-success-detail.png"
 alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - both are successful"/> &lt;/a>
 &lt;/figure>
-&lt;p>But the whole point of this exercise was to proactively handle errors right? So let&amp;rsquo;s introduce some by doing what we&amp;rsquo;ve done &lt;a href="#failure-testing">before&lt;/a> and change the healthcheck script to fail.&lt;/p>
+&lt;p>But the whole point of this exercise was to proactively handle errors right? So let&amp;rsquo;s introduce some by doing what we&amp;rsquo;ve done &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#failure-testing">before&lt;/a> and change the healthcheck script to fail.&lt;/p>
 &lt;p>Once the new &amp;ldquo;broken&amp;rdquo; script is applied we can rerun another test of the maintenance window.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-failure.png">
-&lt;img src="automation-maint-window-failure.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure.png"
 alt="Execution overview for the maintenance window invocation - we have 3 task invocations, one for each instance, 1 failed which then aborted further task invocations on the remaining instances"/> &lt;/a>
 &lt;/figure>
 &lt;p>This time round we can see that there was a failure in one task invocation, which then aborted further invocations on the remaining instances! Just as before, we can do a deep dive into the invocation to determine why it had failed.&lt;/p>
 &lt;figure class="center">&lt;a href="automation-maint-window-failure-detail.png">
-&lt;img src="automation-maint-window-failure-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/automation-maint-window-failure-detail.png"
 alt="Task invocation detail view for one instance. There are two steps, one for invoking a patch event and another for performing a healthcheck - the patch was successful but the healthcheck failed"/> &lt;/a>&lt;figcaption>
 &lt;p>From here you can follow the command invoked by the step to troubleshoot the failure&lt;/p>
 &lt;/figcaption>
@@ -330,17 +330,17 @@ alt="Task invocation detail view for one instance. There are two steps, one for 
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Just like what we&amp;rsquo;ve done for &lt;code>InstanceIds&lt;/code>, we&amp;rsquo;re taking in the &lt;code>DocumentArn&lt;/code> as a parameter and providing it as the input for the &lt;code>aws:runCommand&lt;/code> step. Some documents will also take parameters, so we can allow the caller to specify them using &lt;code>InputParameters&lt;/code>, which is defined as a &lt;code>StringMap&lt;/code> type - allowing it to then be used in as parameters for the document we are invoking.&lt;/p>
 &lt;p>When we create this document in the console and then execute it, we can then dynamically add in the document we want to invoke.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-setup.png">
-&lt;img src="maintenance-wrapper-setup.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-setup.png"
 alt="The setup page for the maintenance wrapper document, we&amp;#39;re specifying in the text field the command document to invoke, which is AWS-RunPatchBaseline. We&amp;#39;ve also added in the parameters for the document to run under InputParameters"/> &lt;/a>
 &lt;/figure>
 &lt;p>Then just like any other document we can invoke it.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-success.png">
-&lt;img src="maintenance-wrapper-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-success.png"
 alt="The automation execution overview page shows that two steps were invoked, InvokeMaintenanceEvent and ExecuteHealthcheck, both are successful. We can also see the input for InvokeMaintenanceEvent is specified as AWS-RunPatchBaseline, and the parameters we used previously."/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see that the input from the previous screen was passed to the step. Let&amp;rsquo;s keep going until we hit the command invocation.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-wrapper-command-detail.png">
-&lt;img src="maintenance-wrapper-command-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/maintenance-wrapper-command-detail.png"
 alt="A screenshot of the command invocation page - it executed successfully and the document listed as being invoked was AWS-RunPatchBaseline"/> &lt;/a>&lt;figcaption>
 &lt;p>The document name was dynamically passed to the command execution&lt;/p>
 &lt;/figcaption>
@@ -398,7 +398,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/blockquote>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>What we&amp;rsquo;ve done in this post is taken our rudimentary command document, prone to introducing errors into our estate, and converted it to an automation document. With the right SSM maintenance window settings, you can ensure that any maintenance tasks you need to perform on your EC2 instances are done so in a manner that reduces the risk of errors in your environment.&lt;/p>
-&lt;p>Next time, we&amp;rsquo;ll be taking this a &lt;em>step further&lt;/em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
+&lt;p>Next time, we&amp;rsquo;ll be taking this a &lt;em>step further&lt;/em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Maintenance Windows</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</link><pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/</guid>--><description>&lt;p>&lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Last time&lt;/a> we looked at writing our own SSM Command Document for the purpose of executing a healthcheck script on a set of EC2 instances across multiple platforms.&lt;/p>
 &lt;p>In this post we&amp;rsquo;ll be exploring how we can automate this using maintenance windows - also within the SSM suite. This is something I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">covered before&lt;/a>, but want to extend on that to show how its done.&lt;/p>
 &lt;h2 id="tldr">tl;dr&lt;/h2>
 &lt;ul>
@@ -410,8 +410,8 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/ul>
 &lt;p>Once again all the Terraform code for this post is available on GitHub. It is split into two parts:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-barebones">aws-ssm-automation-1-barebones&lt;/a> is for the &lt;a href="#barebones-maintenance-window-with-aws-runpatchbaseline">barebones walkthrough&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">aws-ssm-automation-1-logging&lt;/a> is for the &lt;a href="#logging-command-output-to-s3">logging enhancement&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-barebones">aws-ssm-automation-1-barebones&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#barebones-maintenance-window-with-aws-runpatchbaseline">barebones walkthrough&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-1-logging">aws-ssm-automation-1-logging&lt;/a> is for the &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/#logging-command-output-to-s3">logging enhancement&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="intro-to-maintenance-windows">Intro to Maintenance Windows&lt;/h2>
 &lt;p>&lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-maintenance.html">Maintenance Windows&lt;/a>, are a means of executing some automation workflow in your AWS estate on a schedule. Got an SSM Document you&amp;rsquo;ve written and want it automated? What about a &lt;a href="https://aws.amazon.com/lambda/">Lambda&lt;/a> you want invoked at a regular schedule? Or maybe it&amp;rsquo;s a &lt;a href="https://aws.amazon.com/step-functions/">Step Function&lt;/a>? Whatever the use case, Maintenance Windows are for you - just don&amp;rsquo;t be fooled by the name - they don&amp;rsquo;t necessarily have to be &lt;em>just&lt;/em> for maintenance!&lt;/p>
@@ -421,7 +421,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [jsonencode({ Operation &lt;sp
 &lt;/blockquote>
 &lt;p>Yes they do - both Maintenance Windows and &lt;a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html">EventBridge&lt;/a> Rules (the bigger sibling of CloudWatch Rules) use &lt;a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">cron expressions&lt;/a> to define the schedule they should run on. The primary difference between the two is that Maintenance Windows allow you to &lt;strong>specify the timezone&lt;/strong> that the cron expression adheres to, whereas EventBridge is &lt;a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html">&lt;strong>tied to UTC&lt;/strong>&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="eventbridge-rule-create.png">
-&lt;img src="eventbridge-rule-create.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/eventbridge-rule-create.png"
 alt="The EventBridge rule creation page, there is no option to schedule the rule to a timezone"/> &lt;/a>&lt;figcaption>
 &lt;p>No timezone, no party&lt;/p>
 &lt;/figcaption>
@@ -573,7 +573,7 @@ values &lt;span style="color:#ff79c6">=&lt;/span> [&lt;span style="color:#f1fa8c
 &lt;/blockquote>
 &lt;p>A full list of available commands can be found in the AWS-RunPatchBaseline &lt;a href="https://console.aws.amazon.com/systems-manager/documents/AWS-RunPatchBaseline/content">command document&lt;/a>.&lt;/p>
 &lt;figure class="center">&lt;a href="run-patch-baseline-parameters.png">
-&lt;img src="run-patch-baseline-parameters.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/run-patch-baseline-parameters.png"
 alt="Available parameters for the Run Patch Baseline document; Operation, Snapshot ID, Install Override List, and Reboot Option"/> &lt;/a>&lt;figcaption>
 &lt;p>In the console GUI we can see the available parameters for the AWS-RunPatchBaseline document&lt;/p>
 &lt;/figcaption>
@@ -635,21 +635,21 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;p>Once we&amp;rsquo;ve ran &lt;code>terraform apply&lt;/code> on all the above, we can test the maintenance window out. Currently we have it set to run at 9am UK time, which may or may not be a long time away - so change it manually in &lt;a href="https://console.aws.amazon.com/systems-manager/maintenance-windows">the console&lt;/a> to a time not far away from your time now.&lt;/p>
 &lt;p>Once it&amp;rsquo;s done executing, you can navigate to the history tab to view the execution.&lt;/p>
 &lt;figure class="center">&lt;a href="maintenance-window-history.png">
-&lt;img src="maintenance-window-history.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/maintenance-window-history.png"
 alt="The execution history for the maintenance window, showing both successful and failed executions"/> &lt;/a>&lt;figcaption>
 &lt;p>Let&amp;rsquo;s hope you have more luck on your first attempts running this than I did!&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>You can select any execution and drill down into it with the &lt;strong>View details&lt;/strong> button.&lt;/p>
 &lt;figure class="center">&lt;a href="mw-execution-details.png">
-&lt;img src="mw-execution-details.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/mw-execution-details.png"
 alt="A detailed look into a maintenance window execution"/> &lt;/a>&lt;figcaption>
 &lt;p>You can see that the tasks got executed in the order we defined them in&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>We can go deeper in the execution details and pull out the result of individual commands by selecting &lt;strong>View details&lt;/strong> on the task invocation.&lt;/p>
 &lt;figure class="center">&lt;a href="task-invocation-command-detail.png">
-&lt;img src="task-invocation-command-detail.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/task-invocation-command-detail.png"
 alt="Detailed breakdown of the RunPatchBaseline command, showing success all round"/> &lt;/a>&lt;figcaption>
 &lt;p>The maintenance window has redirected us to the same page as when we manually invoked the command documents in the last post&lt;/p>
 &lt;/figcaption>
@@ -659,7 +659,7 @@ alt="Detailed breakdown of the RunPatchBaseline command, showing success all rou
 &lt;p>Maintenance windows by default only capture the first 2500 characters of a command output, if your command outputs more than this then it gets truncated. This can be a problem if you have a task failure and need to examine the output for the reason why it failed.&lt;/p>
 &lt;p>Take the &lt;strong>AWS-RunPatchBaseline&lt;/strong> output on a Linux instance for example. It&amp;rsquo;s pretty hefty, and so we lose a lot of context on what actually happened:&lt;/p>
 &lt;figure class="center">&lt;a href="truncated-command-output.png">
-&lt;img src="truncated-command-output.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/truncated-command-output.png"
 alt="Log output of the patch event on a Linux instance, with the words Output Truncated at the end."/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="method">Method&lt;/h3>
@@ -696,25 +696,25 @@ output_s3_key_prefix &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When you have the new config written, then you can &lt;code>terraform apply&lt;/code> and run another test on the maintenance window.&lt;/p>
 &lt;figure class="center">&lt;a href="command-s3-output-button.png">
-&lt;img src="command-s3-output-button.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/command-s3-output-button.png"
 alt="Detailed view of the run patch baseline task, showing a button called Amazon S3 which redirects us to where the logs are stored in S3"/> &lt;/a>&lt;figcaption>
 &lt;p>We now get a button that can redirect us to where the logs are stored in S3&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>If we click on this button, we can view the logs being stored in S3. Follow the path in S3 until you reach the S3 object containing the logs.&lt;/p>
 &lt;figure class="center">&lt;a href="log-object-in-s3.png">
-&lt;img src="log-object-in-s3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/log-object-in-s3.png"
 alt="The S3 object containing the logs"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now you can open this using the &lt;strong>Object actions&lt;/strong> button in the top-right hand corner to view the entire logs!&lt;/p>
 &lt;figure class="center">&lt;a href="open-logs-in-browser.png">
-&lt;img src="open-logs-in-browser.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/open-logs-in-browser.png"
 alt="Opening the logs in the browser, we see the complete text output of the run patch baseline command invoked"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="logging-problems">Logging problems&lt;/h3>
 &lt;p>It&amp;rsquo;s worth noting that SSM does not raise an error if an instance cannot push logs to S3 - the &lt;strong>Amazon S3&lt;/strong> button will redirect you to an object in S3 that does not exist. So if your logs are not appearing in S3 then ensure you&amp;rsquo;ve followed the steps above.&lt;/p>
 &lt;figure class="center">&lt;a href="failed-log-upload-to-s3.png">
-&lt;img src="failed-log-upload-to-s3.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/failed-log-upload-to-s3.png"
 alt="An empty S3 object page, caused by incorrectly setting up S3 output logging"/> &lt;/a>&lt;figcaption>
 &lt;p>An example showing if logs were not successfully uploaded to S3 - if you get this then double check you&amp;rsquo;ve set everything up right!&lt;/p>
 &lt;/figcaption>
@@ -739,7 +739,7 @@ days &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">9
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>You can add more rules if you like, such as a &lt;code>transition&lt;/code> block to move it to cold storage before deleting if you wish. Take a look at the &lt;a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#using-object-lifecycle">Terraform documentation&lt;/a> for the resource for example of this.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-lifecycle-policy.png">
-&lt;img src="s3-lifecycle-policy.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/s3-lifecycle-policy.png"
 alt="The created S3 lifecycle rule can be seen here, indicating that objects in the ssm_output directory are discarded after 90 days"/> &lt;/a>&lt;figcaption>
 &lt;p>Logs older than 90 days certainly do not spark joy&amp;hellip;!&lt;/p>
 &lt;/figcaption>
@@ -747,7 +747,7 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>With the first two posts of this series, you have enough to be able to create your own automated series of commands that can be executed on your EC2 instances.&lt;/p>
 &lt;p>You can also use SSM documents to retrieve files from instances - such as log files. Or even use them to update third-party software on the instances.&lt;/p>
-&lt;p>The next post and thereafter we&amp;rsquo;ll be exploring the Command Documents sibling; Automation Documents, and exploring how these can further enhance automation to other AWS services beyond EC2 instances.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
+&lt;p>The next post and thereafter we&amp;rsquo;ll be exploring the Command Documents sibling; Automation Documents, and exploring how these can further enhance automation to other AWS services beyond EC2 instances.&lt;/p></description></item><item><title>Automate Instance Hygiene with AWS SSM: Command Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</link><pubDate>Thu, 29 Oct 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/</guid>--><description>&lt;p>It&amp;rsquo;s been a while since my &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">last post&lt;/a>&amp;hellip; which could be down to me trying to salvage something out of summer! 😅&lt;/p>
 &lt;p>In this post I want to talk a little bit more about &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">AWS SSM&lt;/a>. This was something I touched on when discussing patch baselines in a &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#ssm--patch-manager">previous post&lt;/a>, and within there is another service known as &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html">Automation&lt;/a>. On first glance it may look pretty dull, but once you scratch the surface there are a number of capabilities it can unlock for you. I found a distinct lack of resources on how to write these documents, so this post will aim to help you get started on doing so!&lt;/p>
 &lt;p>This will be part one of a four part series about SSM Automation. The outline of the posts will be:&lt;/p>
 &lt;ol>
@@ -761,8 +761,8 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;ul>
 &lt;li>SSM can be used to automate several parts of your estate&lt;/li>
 &lt;li>Command documents are a means of executing logically indifferent commands across multiple platforms&lt;/li>
-&lt;li>How to write a &lt;a href="#terraforming-command-documents">basic command document&lt;/a> in Terraform&lt;/li>
-&lt;li>How to write a &lt;a href="#terraforming-verbose-command-documents">verbose command document&lt;/a> in Terraform&lt;/li>
+&lt;li>How to write a &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-command-documents">basic command document&lt;/a> in Terraform&lt;/li>
+&lt;li>How to write a &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-verbose-command-documents">verbose command document&lt;/a> in Terraform&lt;/li>
 &lt;/ul>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>This series assumes you have some knowledge of:&lt;/p>
@@ -831,7 +831,7 @@ alt="The created S3 lifecycle rule can be seen here, indicating that objects in 
 &lt;li>&lt;strong>Optional&lt;/strong>: &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-instance-profile.html">additional policies&lt;/a> that may be required based on your use case&lt;/li>
 &lt;/ul>
 &lt;figure class="center">&lt;a href="managed-instances.png">
-&lt;img src="managed-instances.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/managed-instances.png"
 alt="AWS SSM Managed Instances view with two instances appearing as online and managed"/> &lt;/a>&lt;figcaption>
 &lt;p>If your instances are appearing in the &lt;a href="https://console.aws.amazon.com/systems-manager/managed-instances">managed instances console&lt;/a> then everything is set up correctly; if not then follow the &lt;a href="https://aws.amazon.com/premiumsupport/knowledge-center/systems-manager-ec2-instance-not-appear/">troubleshooting guide&lt;/a>.&lt;/p>
 &lt;/figcaption>
@@ -862,16 +862,16 @@ alt="AWS SSM Managed Instances view with two instances appearing as online and m
 &lt;h3 id="testing-in-aws-ssm-console">Testing in AWS SSM Console&lt;/h3>
 &lt;p>Let&amp;rsquo;s now test them in the AWS SSM Console. For this example I&amp;rsquo;ve spun up two EC2 instances, one Linux and one Windows, &lt;a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-0/ec2.tf">using Terraform&lt;/a>. To run the commands we can navigate to &lt;a href="https://console.aws.amazon.com/systems-manager/run-command/send-command">Run Command&lt;/a> in the console, and run &lt;code>AWS-RunPowerShellScript&lt;/code> and &lt;code>AWS-RunShellScript&lt;/code> for both Windows and Linux EC2s respectively. We don&amp;rsquo;t care about logging the output of the scripts just yet. Make sure when running the script you manually select what instance to run it on.&lt;/p>
 &lt;figure class="center">&lt;a href="run-command-script-success-linux.png">
-&lt;img src="run-command-script-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-success-linux.png"
 alt="Executing the Linux script successfully on the Linux instance"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="run-command-script-success-windows.png">
-&lt;img src="run-command-script-success-windows.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-success-windows.png"
 alt="Executing the Windows script successfully on the Windows instance"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see they have executed fine. Let&amp;rsquo;s flip the condition in the healthcheck script so we can test them failing (done by changing &lt;code>&amp;gt;&lt;/code> to &lt;code>&amp;lt;&lt;/code>).&lt;/p>
 &lt;figure class="center">&lt;a href="run-command-script-failure-linux.png">
-&lt;img src="run-command-script-failure-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/run-command-script-failure-linux.png"
 alt="AWS indicating a failure in the command due to a failure occuring in the script"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is cool - in the script we can define what constitutes as a failure and have this propagate up to AWS - notice how the status was Failed. This will come in use later on in the series.&lt;/p>
@@ -929,12 +929,12 @@ content &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6
 &lt;/blockquote>
 &lt;p>Once deployed, we can navigate to System Manager in the AWS Console to invoke the document on our estate. This is done in the same manner as when we ran &lt;code>AWS-RunShellScript&lt;/code> above, except now we are targeting &lt;code>PerformHealthcheck&lt;/code>. Since our document has commands for both Linux and Windows, we can have it invoked across both platform types and only the scripts written for their platform will be invoked.&lt;/p>
 &lt;figure class="center">&lt;a href="command-document-success.png">
-&lt;img src="command-document-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/command-document-success.png"
 alt="Successfully executing the new command document across both Linux and Windows instances"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can see that both executed successfully! You can view the output of each command invocation on each instance like previously. For the screenshot below of the Linux instance, only the Linux step was executed, whereas the Windows step was skipped. You&amp;rsquo;ll notice our message from earlier &amp;ldquo;&lt;code> - Linux&lt;/code>&amp;rdquo; is there, reassuring us that only the Linux script was executed.&lt;/p>
 &lt;figure class="center">&lt;a href="command-document-success-linux.png">
-&lt;img src="command-document-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/command-document-success-linux.png"
 alt="Focusing on the Linux invocation, highlighting that only the Linux step was invoked"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s dive into some more intermediate documents.&lt;/p>
@@ -1147,7 +1147,7 @@ windows_key &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff
 }
 )
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re creating an &lt;code>aws_ssm_document&lt;/code> as we had done &lt;a href="#terraforming-command-documents">before&lt;/a>, but the document file we&amp;rsquo;re targeting this time is a template file.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we&amp;rsquo;re creating an &lt;code>aws_ssm_document&lt;/code> as we had done &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#terraforming-command-documents">before&lt;/a>, but the document file we&amp;rsquo;re targeting this time is a template file.&lt;/p>
 &lt;p>Notice how we have the presence of &lt;code>${bucket_name}&lt;/code> and others? These are template variables. With the use of the &lt;a href="https://www.terraform.io/docs/configuration/functions/templatefile.html">Terraform function&lt;/a> &lt;code>templatefile()&lt;/code>, we can insert Terraform variables into the config to have the template name replaced with the value we&amp;rsquo;re passing in. In this case, &lt;code>${bucket_name}&lt;/code> will get replaced with the output of &lt;code>aws_s3_bucket.script_bucket.id&lt;/code>, which is &lt;code>jdheyburn-scripts&lt;/code>, and the same for the remaining variables.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="color:#6272a4"># documents/perform_healthcheck_s3_template.yml&lt;/span>
 ---
@@ -1226,7 +1226,7 @@ policy_arn &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff7
 &lt;h3 id="testing-verbose-documents">Testing verbose documents&lt;/h3>
 &lt;p>Now, let&amp;rsquo;s give this command a spin in the console. We&amp;rsquo;re going to execute it the same way we did for other documents earlier, except now targeting &lt;code>PerformHealthcheckS3&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-command-document-success.png">
-&lt;img src="s3-command-document-success.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success.png"
 alt="Successful invocations for the new document pulling the script to be executed from S3"/> &lt;/a>
 &lt;/figure>
 &lt;p>If you got any failures, make sure to dive into the failed invocation and see why it failed. Did it fail because of your healthcheck command? Then it is working as intended! Although if it failed on &lt;code>aws:downloadContent&lt;/code>, check to make sure your instances are running the latest version of SSM agent. You can do this with the &lt;code>AWS-UpdateSSMAgent&lt;/code> SSM document. Don&amp;rsquo;t be like me and spend hours troubleshooting against an out-of-date SSM agent! 😂&lt;/p>
@@ -1234,7 +1234,7 @@ alt="Successful invocations for the new document pulling the script to be execut
 &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8">&lt;/script>
 &lt;p>Let&amp;rsquo;s now dive into the output of the Linux instance.&lt;/p>
 &lt;figure class="center">&lt;a href="s3-command-document-success-linux.png">
-&lt;img src="s3-command-document-success-linux.png"
+&lt;img src="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success-linux.png"
 alt="Breakdown of steps invoked on Linux for a the command document we executed earlier, Windows steps are skipped"/> &lt;/a>
 &lt;/figure>
 &lt;p>Just like with the previous document with the script embedded &lt;code>PerformHealthcheck&lt;/code>, we can see the steps conditioned for Windows have been skipped (steps 1-2). Step 3 is where the document is doing real work, downloading the Linux script from the S3 location into the temp directory for SSM, and then executing it in step 4.&lt;/p>
@@ -1247,9 +1247,9 @@ alt="Breakdown of steps invoked on Linux for a the command document we executed 
 &lt;li>Adopting best practices by storing scripts in S3 and have a command document orchestrate the download and execution of said scripts&lt;/li>
 &lt;li>&amp;hellip; all while written in Terraform!&lt;/li>
 &lt;/ul>
-&lt;p>If any mistakes were made in this post then please &lt;a href="#contact">contact&lt;/a> me - thanks for reading! 😃&lt;/p></description></item><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
+&lt;p>If any mistakes were made in this post then please &lt;a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/#contact">contact&lt;/a> me - thanks for reading! 😃&lt;/p></description></item><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid>--><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
 &lt;p>Today I&amp;rsquo;ll be talking about a small enhancement to how the tests are generated to make use of the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package within &lt;a href="https://github.com/stretchr/testify">testify&lt;/a>. Go already comes with enough for you to write tests, but &lt;code>assert&lt;/code> provides me with more options for comparison in a natural language form. I&amp;rsquo;ll also be adding support for when a test case returns an unexpected error.&lt;/p>
-&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
+&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
 &lt;h2 id="recap">Recap&lt;/h2>
 &lt;p>From the last time we visited this, our test code took the format below.&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
@@ -1375,7 +1375,7 @@ got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa
 &lt;/ol>
 &lt;p>I have the &lt;a href="https://marketplace.visualstudio.com/items?itemName=golang.go">Go plugin&lt;/a> for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p>
 &lt;figure>&lt;a href="generate-unit-tests.png">
-&lt;img src="generate-unit-tests.png"
+&lt;img src="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png"
 alt="VSCode dropdown with Go plugin"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="only-returns-an-error">Only returns an error&lt;/h3>
@@ -1490,7 +1490,7 @@ assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="thats-it">That&amp;rsquo;s It!&lt;/h2>
-&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Using Terraform to Manage AWS Patch Baselines at Enterprise Scale</title><enclosure url="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</link><pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</guid><description>&lt;p>If you’re new to AWS and patching principles then continue reading, else you can &lt;a href="#data-sources-for-patch-baselines">skip to juicy stuff below&lt;/a>.&lt;/p>
+&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Using Terraform to Manage AWS Patch Baselines at Enterprise Scale</title><enclosure url="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</link><pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</guid>--><description>&lt;p>If you’re new to AWS and patching principles then continue reading, else you can &lt;a href="https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/#data-sources-for-patch-baselines">skip to juicy stuff below&lt;/a>.&lt;/p>
 &lt;h2 id="aws-primer-">AWS Primer ☁️&lt;/h2>
 &lt;h3 id="ec2">EC2&lt;/h3>
 &lt;p>Amazon Web Services (AWS) provides Cloud resources to those that require it, &lt;a href="https://www.lastweekinaws.com/blog/4-reasons-lyft-is-smart-to-pay-aws-300m/">for a cost&lt;/a> mind you. One resource in particular is a box-standard server known on AWS as &lt;a href="https://aws.amazon.com/ec2/">EC2 Instances&lt;/a> which you can secure shell (&lt;a href="https://www.ssh.com/ssh/">SSH&lt;/a>) into and do whatever you like with it - the world is now officially your oyster! 🦪&lt;/p>
@@ -1635,8 +1635,8 @@ tags &lt;span style="color:#ff79c6">=&lt;/span> {
 }
 }
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>This is a relatively short post - but it was just a quick introduction to AWS Patch Manager. I hope you find it helpful in applying your enterprise patching strategy to your product teams!&lt;/p></description></item><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
-&lt;p>If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href="#caddy-configuration">skip there&lt;/a>.&lt;/p>
+&lt;p>This is a relatively short post - but it was just a quick introduction to AWS Patch Manager. I hope you find it helpful in applying your enterprise patching strategy to your product teams!&lt;/p></description></item><item><title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link><pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid>--><description>&lt;p>During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href="https://caddyserver.com/">Caddy 2&lt;/a> as a reverse proxy for multiple domains used internally.&lt;/p>
+&lt;p>If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration">skip there&lt;/a>.&lt;/p>
 &lt;h2 id="background">Background&lt;/h2>
 &lt;p>A few months back I kitted out my home with some &lt;a href="https://www.ui.com/products/#unifi">Ubiquiti UniFi&lt;/a> gear to fix our crappy Wifi at home, following inspiration from &lt;a href="https://www.troyhunt.com/ubiquiti-all-the-things-how-i-finally-fixed-my-dodgy-wifi/">Troy Hunt&lt;/a> and &lt;a href="https://scotthelme.co.uk/my-ubiquiti-home-network/">Scott Helme&lt;/a>.&lt;/p>
 &lt;p>In order to administrate UniFi devices, you&amp;rsquo;ll need the &lt;a href="https://www.ui.com/unifi/unifi-cloud-key/">UniFi Cloud Key&lt;/a> which runs the Controller software to do just that. Although if you have a spare Raspberry Pi lying around, you can download the &lt;a href="https://www.ui.com/download/unifi/">software&lt;/a> for free and run it on there - this is what I did.&lt;/p>
@@ -1645,7 +1645,7 @@ tags &lt;span style="color:#ff79c6">=&lt;/span> {
 &lt;h3 id="securing-with-https">Securing with HTTPS&lt;/h3>
 &lt;p>The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&lt;/p>
 &lt;figure class="center">&lt;a href="insecure-pihole.png">
-&lt;img src="insecure-pihole.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png"
 alt="Insecure PiHole connection"/> &lt;/a>&lt;figcaption>
 &lt;p>Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p>
 &lt;/figcaption>
@@ -1663,7 +1663,7 @@ alt="Insecure PiHole connection"/> &lt;/a>&lt;figcaption>
 &lt;blockquote>
 &lt;p>&lt;strong>UPDATE 2020-09-30&lt;/strong>&lt;/p>
 &lt;p>Looks like Caddy now comes with a &lt;a href="https://caddyserver.com/download">nice web interface&lt;/a> for downloading a Caddy binary with whatever plugins you desire. I just tested out the &lt;code>Linux arm 7&lt;/code> platform with just the &lt;code>github.com/caddy-dns/cloudflare&lt;/code> plugin, and it was able to run my Caddy configuration below perfectly!&lt;/p>
-&lt;p>Once you&amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &lt;a href="#caddy-configuration">Caddy Configuration&lt;/a>.&lt;/p>
+&lt;p>Once you&amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &lt;a href="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration">Caddy Configuration&lt;/a>.&lt;/p>
 &lt;/blockquote>
 &lt;p>To build using xcaddy, you need to make sure you have &lt;a href="https://golang.org/doc/install">Go installed&lt;/a> on your machine.&lt;/p>
 &lt;p>Note that I am building Caddy on my laptop, but running it on a Pi, so I will have to specify the architecture that Pi is running on so that Go can correctly build it.&lt;/p>
@@ -1707,7 +1707,7 @@ scp caddy pi:/home/pi/caddy/
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo sh -c &lt;span style="color:#f1fa8c">&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p>
 &lt;figure class="center">&lt;a href="pihole-dns-records.png">
-&lt;img src="pihole-dns-records.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png"
 alt="Adding domain records to DNS server"/> &lt;/a>&lt;figcaption>
 &lt;p>PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p>
 &lt;/figcaption>
@@ -1720,16 +1720,16 @@ alt="Adding domain records to DNS server"/> &lt;/a>&lt;figcaption>
 &lt;p>We need to execute using &lt;code>sudo&lt;/code> so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&lt;/p>
 &lt;/blockquote>
 &lt;figure class="center">&lt;a href="proxied-pihole.png">
-&lt;img src="proxied-pihole.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png"
 alt="PiHole appearing in browser through a domain name"/> &lt;/a>
 &lt;/figure>
 &lt;figure class="center">&lt;a href="proxied-unifi.png">
-&lt;img src="proxied-unifi.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png"
 alt="UniFi Controller appearing in browser through a domain name"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&lt;/p>
 &lt;figure class="center">&lt;a href="pihole-certificate.png">
-&lt;img src="pihole-certificate.png"
+&lt;img src="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png"
 alt="Certificate used by PiHole"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="enabling-caddy-service">Enabling Caddy Service&lt;/h2>
@@ -1754,12 +1754,12 @@ lrwxrwxrwx &lt;span style="color:#bd93f9">1&lt;/span> root root &lt;span style="
 sudo systemctl start caddy.service
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>For now I have all the above running bare-metal on one Pi instance, which produces a huge single point of failure in my network. In the future I&amp;rsquo;d like to see how converting these to Docker containers and having them distributed on multiple Pis would increase the resiliency of these services.&lt;/p>
-&lt;p>Until then, these basic but essential services are being hosted at easy to remember domains, transported over an encrypted connection, for me to easily administer the network for when it gets more complex over time.&lt;/p></description></item><item><title>Who Goes Blogging 6: Three Steps to Improve Hugo's RSS Feeds</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</link><pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</guid><description>&lt;p>I &amp;ldquo;fixed&amp;rdquo; the default RSS template used by Hugo to show the full article content, along with images, and also talk about how to have social media cards appear in the RSS items too.&lt;/p>
+&lt;p>Until then, these basic but essential services are being hosted at easy to remember domains, transported over an encrypted connection, for me to easily administer the network for when it gets more complex over time.&lt;/p></description></item><item><title>Who Goes Blogging 6: Three Steps to Improve Hugo's RSS Feeds</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</link><pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</guid>--><description>&lt;p>I &amp;ldquo;fixed&amp;rdquo; the default RSS template used by Hugo to show the full article content, along with images, and also talk about how to have social media cards appear in the RSS items too.&lt;/p>
 &lt;p>I uploaded my completed RSS file to &lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920">GitHub Gist&lt;/a> 🚀&lt;/p>
 &lt;h2 id="what-is-rss">What is RSS?&lt;/h2>
 &lt;p>&lt;a href="https://en.wikipedia.org/wiki/RSS">RSS&lt;/a> is a great way to &amp;ldquo;subscribe&amp;rdquo; to websites to ensure that you don&amp;rsquo;t miss content from them. The standard for how it is generated has been the same for decades now - however its still the best supported and most accepted way to receive updates. It is simply a standardised XML file that allows consumers such as RSS aggregators to parse the content of the post - for which there are many to choose from (RIP &lt;a href="https://en.wikipedia.org/wiki/Google_Reader">Google Reader&lt;/a>).&lt;/p>
 &lt;figure class="center">&lt;a href="inoreader-complete.png">
-&lt;img src="inoreader-complete.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png"
 alt="inoreader as an RSS feed aggregator"/> &lt;/a>&lt;figcaption>
 &lt;p>My RSS aggregator of choice currently is &lt;a href="https://www.inoreader.com/">inoreader&lt;/a> - I&amp;rsquo;ll be using this in my examples&lt;/p>
 &lt;/figcaption>
@@ -1770,14 +1770,14 @@ alt="inoreader as an RSS feed aggregator"/> &lt;/a>&lt;figcaption>
 &lt;p>Some (but not all) websites only include the first paragraph of their post in an RSS update (aka summary), along with a message after that paragraph requesting the reader to visit the site in a browser to view the rest of the content.&lt;/p>
 &lt;p>This is a common feature of WordPress blogs - and it is done to have you load the full website and along with it, all the code for providing the owner with user analytics, and advertising - if they have it. So really they&amp;rsquo;re getting the benefit of being able to publish updates via a standardised approach (RSS), to then lure you onto the website.&lt;/p>
 &lt;figure class="center">&lt;a href="rss-post-show-more-content.png">
-&lt;img src="rss-post-show-more-content.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png"
 alt="An RSS post loading incompletely"/> &lt;/a>
 &lt;/figure>
 &lt;p>Hugo &lt;em>kind of&lt;/em> does this through the highlighted line in the &lt;a href="https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml">templated RSS XML file&lt;/a>:&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-xml" data-lang="xml">&lt;span style="color:#ff79c6">&amp;lt;description&amp;gt;&lt;/span>{{ .Summary | html }}&lt;span style="color:#ff79c6">&amp;lt;/description&amp;gt;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>.Summary&lt;/code> will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;rsquo;ve produced a very short article!&lt;/p>
 &lt;figure class="center">&lt;a href="hugo-incomplete-post.png">
-&lt;img src="hugo-incomplete-post.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png"
 alt="Hugo producing a summarised RSS post"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m not against the practice of previewing the post, if a blog provides revenue for the author(s) then you will need to force readers to view the full website for analytics and advertising (businesses gotta make money!).&lt;/p>
@@ -1824,7 +1824,7 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
 &lt;/div>
 &lt;/div>&lt;p>Let&amp;rsquo;s now view the changes in the RSS reader.&lt;/p>
 &lt;figure class="center">&lt;a href="hugo-complete-post.png">
-&lt;img src="hugo-complete-post.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png"
 alt="Hugo RSS post displaying all content"/> &lt;/a>&lt;figcaption>
 &lt;p>We can now see much more content is being produced - and with proper HTML this time!&lt;/p>
 &lt;/figcaption>
@@ -1832,7 +1832,7 @@ alt="Hugo RSS post displaying all content"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="rendering-images-in-rss-posts">Rendering images in RSS posts&lt;/h2>
 &lt;p>Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code>alt&lt;/code>) text is being displayed instead.&lt;/p>
 &lt;figure class="center">&lt;a href="hugo-missing-images-post.png">
-&lt;img src="hugo-missing-images-post.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png"
 alt="Hugo RSS post with missing images, alt text displayed instead"/> &lt;/a>&lt;figcaption>
 &lt;p>Note the highlighted alt texts of images&lt;/p>
 &lt;/figcaption>
@@ -1889,7 +1889,7 @@ content/blog
 &lt;p>&lt;code>INPUT&lt;/code> will be the page &lt;code>.Content&lt;/code>, what we were printing out before.&lt;/p>
 &lt;p>Once we&amp;rsquo;ve made the change, images are now rendered properly!&lt;/p>
 &lt;figure class="center">&lt;a href="hugo-images-post.png">
-&lt;img src="hugo-images-post.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png"
 alt="Hugo RSS post with images being correctly rendered"/> &lt;/a>
 &lt;/figure>
 &lt;blockquote>
@@ -1906,7 +1906,7 @@ alt="Hugo RSS post with images being correctly rendered"/> &lt;/a>
 &lt;h2 id="adding-cards-for-posts">Adding cards for posts&lt;/h2>
 &lt;p>Not dissimilar to &lt;a href="https://barkersocial.com/social-cards/">social media cards&lt;/a>, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p>
 &lt;figure class="center">&lt;a href="inoreader-enclosure-card-view.png">
-&lt;img src="inoreader-enclosure-card-view.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png"
 alt="inoreader displaying images for each post when in card view"/> &lt;/a>&lt;figcaption>
 &lt;p>While in card view for inoreader, we can see featured images being displayed&lt;/p>
 &lt;/figcaption>
@@ -2011,14 +2011,14 @@ alt="inoreader displaying images for each post when in card view"/> &lt;/a>&lt;f
 &lt;li>Line 8 will revert to an image containing either &lt;code>cover&lt;/code> or &lt;code>thumbnail&lt;/code>, if an image is not found previously&lt;/li>
 &lt;li>Lines 12-13 will default to the image defined at the site level params&lt;/li>
 &lt;/ul>
-&lt;p>With lessons learnt trying to get &lt;a href="#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
+&lt;p>With lessons learnt trying to get &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/#rendering-images-in-rss-posts">images to display in RSS content&lt;/a>, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p>
 &lt;p>I&amp;rsquo;m going to follow lines 12-13 above and have a default card defined at the site level parameters. In my &lt;code>config.toml&lt;/code> I&amp;rsquo;ll need to add the following&amp;hellip;&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[params]
 images = [&lt;span style="color:#f1fa8c">&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span>]
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&amp;hellip;while also ensuring that I&amp;rsquo;ve placed the image under &lt;code>static/images/jdheyburn_co_uk_card.png&lt;/code>.&lt;/p>
 &lt;p>Once all that is done and deployed - we will have an RSS post card that looks like this 🙌&lt;/p>
 &lt;figure class="center">&lt;a href="hugo-enclosure-card-view.png">
-&lt;img src="hugo-enclosure-card-view.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png"
 alt="inoreader displaying an image for a Hugo post"/> &lt;/a>
 &lt;/figure>
 &lt;p>We can now advertise our RSS subscription URL to readers. My theme &lt;code>hugo-coder&lt;/code> supports this as a social button on the home page. We just need to add the below block to the &lt;code>config.toml&lt;/code> file.&lt;/p>
@@ -2031,14 +2031,14 @@ rel = &lt;span style="color:#f1fa8c">&amp;#34;alternate&amp;#34;&lt;/span>
 type = &lt;span style="color:#f1fa8c">&amp;#34;application/rss+xml&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Once done - our homepage will have the button displayed.&lt;/p>
 &lt;figure class="center">&lt;a href="rss-subscription-button.png">
-&lt;img src="rss-subscription-button.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png"
 alt="RSS subscription button displayed on the homepage"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="summarising-changes-to-rss-xml">Summarising changes to RSS XML&lt;/h2>
 &lt;p>You can view the gist below to see my complete RSS XML file after all the above has been added. If you wish to use it, you&amp;rsquo;ll need to place it in &lt;code>layouts/_default/rss.xml&lt;/code> in your project directory.&lt;/p>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920.js">&lt;/script>
 &lt;p>&lt;a href="https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions">Click here&lt;/a> for a &lt;code>git diff&lt;/code> view on the changes I made from the default RSS XML file.&lt;/p>
-&lt;p>Thanks for reading! 💯&lt;/p></description></item><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
+&lt;p>Thanks for reading! 💯&lt;/p></description></item><item><title>Who Goes Blogging 5: Updates Galore!</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</link><pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/</guid>--><description>&lt;p>In this article we&amp;rsquo;re going to continue making some improvements to our Hugo website. Some of the things going to be covered are:&lt;/p>
 &lt;ol>
 &lt;li>Upgrading our Hugo theme&lt;/li>
 &lt;li>Upgrading the Hugo version&lt;/li>
@@ -2071,7 +2071,7 @@ rm &lt;span style="color:#f1fa8c">&amp;#34;hugo_extended_&lt;/span>&lt;span styl
 Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing-for-any-issues">Testing For Any Issues&lt;/h3>
 &lt;p>At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code>hugo serve&lt;/code> command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p>
-&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="#validation-and-testing">later in this post&lt;/a>.&lt;/p>
+&lt;p>However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#validation-and-testing">later in this post&lt;/a>.&lt;/p>
 &lt;h3 id="updating-hugo-in-cicd">Updating Hugo in CI/CD&lt;/h3>
 &lt;p>We&amp;rsquo;ve only upgrading Hugo on our machines, but we also need to upgrade it in our CI/CD pipeline to ensure it deploys with the correct rendering too. We set this up in parts &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/">3.1&lt;/a> and &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/">3.2&lt;/a>.&lt;/p>
 &lt;p>I&amp;rsquo;m using GitHub Actions for my CI/CD pipeline, so I need to head to &lt;code>.github/workflows/deploy.yml&lt;/code> and change &lt;code>hugo-version: &amp;quot;0.58.3&amp;quot;&lt;/code> to &lt;code>hugo-version: &amp;quot;0.68.3&amp;quot;&lt;/code>.&lt;/p>
@@ -2114,7 +2114,7 @@ e66c1740611b15eee0069811d10b5a22b0dc4332
 acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p>
 &lt;figure>&lt;a href="hugo-coder-commit.png">
-&lt;img src="hugo-coder-commit.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png"
 alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcaption>
 &lt;p>Verify at the &lt;a href="https://github.com/luizdepra/hugo-coder/commit/master">GitHub repo page&lt;/a>&lt;/p>
 &lt;/figcaption>
@@ -2130,16 +2130,16 @@ alt="Screenshot showing latest hugo-coder version in GitHub"/> &lt;/a>&lt;figcap
 &lt;h3 id="lists-not-rendering-as-before">Lists not rendering as before&lt;/h3>
 &lt;p>It turns out that my markdown for articles wasn&amp;rsquo;t as watertight as I thought; Hugo is now a whole lot more strict in ensuring your syntax is correct. Check these two before and after for comparison.&lt;/p>
 &lt;figure>
-&lt;img src="old-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/old-render-list.png" class="screenshotimg"
 alt="Screenshot showing old, proper list render"/>
 &lt;/figure>
 &lt;figure>
-&lt;img src="new-render-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/new-render-list.png" class="screenshotimg"
 alt="Screenshot showing new, incorrect list render"/>
 &lt;/figure>
 &lt;p>For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p>
 &lt;figure>&lt;a href="git-diff-list.png">
-&lt;img src="git-diff-list.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png"
 alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/figure>
 &lt;p>I saw several cases of this, and including a &lt;a href="https://github.com/igorshubovych/markdownlint-cli">markdown linter&lt;/a> in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p>
@@ -2157,9 +2157,9 @@ alt="Screenshot showing git diff between old and new list"/> &lt;/a>
 &lt;/span>&lt;span style="color:#ff79c6">tags&lt;/span>:
 &lt;span style="color:#6272a4">#...&lt;/span>
 ---
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once this is done for all pages, hugo-coder will render the &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion">&lt;strong>See also in &amp;hellip;&lt;/strong>&lt;/a> section at the article footer.&lt;/p>
 &lt;figure>
-&lt;img src="series-footer-section.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png" class="screenshotimg"
 alt="Screenshot showing series rendered in the page footer"/>
 &lt;/figure>
 &lt;h2 id="adding-table-of-contents">Adding Table of Contents&lt;/h2>
@@ -2217,7 +2217,7 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This is similar to &lt;a href="https://gohugo.io/content-management/toc/#template-example-toc-partial">Hugo&amp;rsquo;s example&lt;/a> but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p>
 &lt;p>Previewing it by &lt;code>hugo serve&lt;/code> we should get something that appears as below.&lt;/p>
 &lt;figure>
-&lt;img src="completed-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/completed-toc.png" class="screenshotimg"
 alt="Screenshot showing rendered Table of Contents"/>
 &lt;/figure>
 &lt;h3 id="bugs-along-the-way">Bugs Along The Way&lt;/h3>
@@ -2226,14 +2226,14 @@ alt="Screenshot showing rendered Table of Contents"/>
 &lt;p>Per &lt;a href="https://gohugo.io/content-management/toc/#usage">Table of Contents Usage documentation&lt;/a>, Hugo will render from &lt;code>&amp;lt;h2&amp;gt;&lt;/code> headings, which are defined as &lt;code>##&lt;/code> in markdown. So &lt;code># Introduction&lt;/code> would not be included in the TOC, but &lt;code>## Introduction&lt;/code> will.&lt;/p>
 &lt;p>This is a problem for some of my articles since I&amp;rsquo;ve been writing headings liberally at the wrong level.&lt;/p>
 &lt;figure class="center">
-&lt;img src="improper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/improper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents not including all headings for a post"/> &lt;figcaption>
 &lt;p>Notice the &lt;strong>Applying Cartography&lt;/strong> heading doesn&amp;rsquo;t appear in the TOC&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>The given example above shows what happens when we use &lt;code># Heading Name&lt;/code> instead of &lt;code>## Heading Name&lt;/code>. To fix this I just need to go through each heading and make sure top-level headings begin with &lt;code>##&lt;/code> and any subheadings have an additional &lt;code>#&lt;/code>.&lt;/p>
 &lt;figure class="center">
-&lt;img src="proper-toc-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/proper-toc-headings.png" class="screenshotimg"
 alt="Screenshot showing table of contents fixed with correct heading indentation"/> &lt;figcaption>
 &lt;p>Much better!&lt;/p>
 &lt;/figcaption>
@@ -2247,24 +2247,24 @@ alt="Screenshot showing table of contents fixed with correct heading indentation
 &lt;/blockquote>
 &lt;p>Then in my markdown I would refer back to them such as &lt;code>{{&amp;lt; emoji &amp;quot;:wave:&amp;quot; &amp;gt;}}&lt;/code>. However in headings they rendered as below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="bad-emojis-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/bad-emojis-headings.png" class="screenshotimg"
 alt="Screenshot showing poorly rendered emojis in Table of Contents"/> &lt;figcaption>
 &lt;p>Hugo clearly finds this hysterical&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>It&amp;rsquo;s a weird one for sure - especially since they render fine in the headings themselves already&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-1.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-1.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 1"/>
 &lt;/figure>
 &lt;figure class="center">
-&lt;img src="good-emoji-heading-2.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/good-emoji-heading-2.png" class="screenshotimg"
 alt="Screenshot with heading example with emoji 2"/>
 &lt;/figure>
 &lt;p>There is a fix for these, and it&amp;rsquo;s called &lt;em>rendering emojis the correct way!&lt;/em> 😅&lt;/p>
 &lt;p>Firstly in the site &lt;code>config.toml&lt;/code> I added &lt;code>enableEmoji = true&lt;/code> at the root level and then proceeded to change all occurrence of &lt;code>{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code> to &lt;code>:emoji_name:&lt;/code>. With that I can then remove &lt;code>layouts/shortcodes/emoji.html&lt;/code> since it&amp;rsquo;s not being referred back to anymore.&lt;/p>
 &lt;figure class="center">
-&lt;img src="correct-emoji-headings.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png" class="screenshotimg"
 alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcaption>
 &lt;p>Nicely done&lt;/p>
 &lt;/figcaption>
@@ -2272,12 +2272,12 @@ alt="Screenshot with correct emoji rendering in table of contents"/> &lt;figcapt
 &lt;h4 id="markdown-not-rendering">Markdown Not Rendering&lt;/h4>
 &lt;p>I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code>## Spice Up Your ~~Life~~ Python 🐍&lt;/code>, which renders as a heading in the screenshot below&amp;hellip;&lt;/p>
 &lt;figure class="center">
-&lt;img src="markdown-heading-render.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png" class="screenshotimg"
 alt="Screenshot showing a heading formatted correctly with markdown"/>
 &lt;/figure>
 &lt;p>But in the table of contents it appears without the tilde strikethrough (&lt;code>~&lt;/code>) rendering.&lt;/p>
 &lt;figure class="center">
-&lt;img src="incorrect-markdown-rendering-toc.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/incorrect-markdown-rendering-toc.png" class="screenshotimg"
 alt="Screenshot showing tilde strikethrough not appearing in table of content entry"/>
 &lt;/figure>
 &lt;p>This looks to be a bug within Hugo itself, since I was able to get &lt;strong>strong&lt;/strong> and &lt;em>emphasise&lt;/em> to render fine - I &lt;a href="https://github.com/gohugoio/hugo/issues/7169">raised an issue&lt;/a> on the project - I can live with it for now.&lt;/p>
@@ -2291,22 +2291,22 @@ alt="Screenshot showing tilde strikethrough not appearing in table of content en
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>(1)&lt;/strong> Post title&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of broken emoji on post title"/>
 &lt;/figure>
 &lt;p>&lt;strong>(2)&lt;/strong> Browser title&lt;/p>
 &lt;figure class="center">&lt;a href="broken-emoji-browser-title.png">
-&lt;img src="broken-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png"
 alt="Screenshot of broken emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;p>&lt;strong>(3)&lt;/strong> Type list entry&lt;/p>
 &lt;figure class="center">
-&lt;img src="broken-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-list.png" class="screenshotimg"
 alt="Screenshot of broken emoji rendering on lists"/>
 &lt;/figure>
-&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
+&lt;p>This is all to do with how the theme is rendering these, they are not &amp;ldquo;&lt;a href="https://gohugo.io/functions/emojify/">emojifying&lt;/a>&amp;rdquo; the text it is receiving. This is easy to fix but it involves us copying over the respective files where they are being rendered from in hugo-coder and overwriting thme in our project root (back to &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#template-lookup-order-primer">template ordering&lt;/a> again!).&lt;/p>
 &lt;h3 id="fix-post--browser-title">Fix Post &amp;amp; Browser Title&lt;/h3>
-&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
+&lt;p>We can kill two birds with one stone since these are both found in the same file, the &lt;code>layouts/posts/single.html&lt;/code> file - this is the main file used to render the article page. If you followed &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#implementation">above&lt;/a>, you&amp;rsquo;ll notice we already copied across that file to our project root in order to add a TOC.&lt;/p>
 &lt;p>We need to go back to that file and &lt;em>emojify&lt;/em> both the main article heading, alongside the browser title to change any occurrence of &lt;code>{{ .Title }}&lt;/code> to &lt;code>{{ .Title | emojify }}&lt;/code>.&lt;/p>
 &lt;p>By doing this we will &lt;em>always&lt;/em> emojify the titles even if in our &lt;code>config.toml&lt;/code> we specified &lt;code>enableEmoji = false&lt;/code>, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code>false&lt;/code>. We could do some conditional logic on the &lt;code>enableEmoji&lt;/code> setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code>{{ if .Site.enableEmoji }}&lt;/code>. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code>hugo-coder&lt;/code> theme. I&amp;rsquo;ve raised a &lt;a href="https://github.com/gohugoio/hugo/issues/7171">couple&lt;/a> of &lt;a href="https://github.com/gohugoio/hugo/issues/7170">issues&lt;/a> against Hugo requesting these features.&lt;/p>
 &lt;p>Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p>
@@ -2315,12 +2315,12 @@ alt="Screenshot of broken emoji rendering on lists"/>
 &lt;p>You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p>
 &lt;p>The end result for the title will look like this:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-post-title.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-post-title.png" class="screenshotimg"
 alt="Screenshot of fixed emoji on post title"/>
 &lt;/figure>
 &lt;p>And the browser title is fixed accordingly:&lt;/p>
 &lt;figure class="center">&lt;a href="fixed-emoji-browser-title.png">
-&lt;img src="fixed-emoji-browser-title.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png"
 alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="fix-type-list-entry">Fix Type List Entry&lt;/h3>
@@ -2330,7 +2330,7 @@ alt="Screenshot of fixed emoji on browser title"/> &lt;/a>
 &lt;script type="application/javascript" src="https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js">&lt;/script>
 &lt;p>Once done, we can see it reflect nicely in the list:&lt;/p>
 &lt;figure class="center">
-&lt;img src="fixed-emoji-list.png" class="screenshotimg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-list.png" class="screenshotimg"
 alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;/figure>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
@@ -2346,7 +2346,7 @@ alt="Screenshot of fixed emoji rendering on lists"/>
 &lt;li>Added support for emojis in post titles&lt;/li>
 &lt;/ol>
 &lt;p>You can view all the changes made in this post at this &lt;a href="https://github.com/jdheyburn/jdheyburn.co.uk/pull/2">pull request&lt;/a>.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
+&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 4: Content Structure &amp; Refactoring</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</link><pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</guid>--><description>&lt;p>So far in this series we&amp;rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&amp;rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:&lt;/p>
 &lt;ol>
 &lt;li>Moving content articles from a flat structure to a leaf bundle&lt;/li>
 &lt;li>Rename content section to &lt;strong>blog&lt;/strong> from &lt;strong>posts&lt;/strong>&lt;/li>
@@ -2489,7 +2489,7 @@ git add &lt;span style="color:#8be9fd;font-style:italic">$newPostLocation&lt;/sp
 &lt;li>Blog landing page is now &lt;strong>Blogs&lt;/strong>?? (see below)&lt;/li>
 &lt;/ol>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s walk through them one by one.&lt;/p>
@@ -2519,7 +2519,7 @@ themes/hugo-coder/layouts/posts
 &lt;span style="color:#bd93f9">0&lt;/span> directories, &lt;span style="color:#bd93f9">3&lt;/span> files
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p>
 &lt;figure>&lt;a href="posts-blog-rendering-error.png">
-&lt;img src="posts-blog-rendering-error.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png"
 alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> &lt;/a>&lt;figcaption>
 &lt;p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p>
 &lt;/figcaption>
@@ -2571,7 +2571,7 @@ type: posts
 &lt;h3 id="from-blogs-to-blog">From Blogs to Blog&lt;/h3>
 &lt;p>Earlier on, we came across this weird bug&amp;hellip;&lt;/p>
 &lt;figure>&lt;a href="blogs-landing-page.png">
-&lt;img src="blogs-landing-page.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png"
 alt="Screenshot of Blog landing page with incorrect Blogs title"/> &lt;/a>
 &lt;/figure>
 &lt;p>This is occurring because of the translation feature of Hugo (sourced from &lt;a href="https://gohugo.io/functions/i18n/">i18n&lt;/a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p>
@@ -2588,7 +2588,7 @@ type: posts
 name = &lt;span style="color:#f1fa8c">&amp;#34;Blog&amp;#34;&lt;/span>
 weight = &lt;span style="color:#bd93f9">2&lt;/span>
 url = &lt;span style="color:#f1fa8c">&amp;#34;/blog/&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Thanks for reading!&lt;/p></description></item><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid><description>&lt;h2 id="from-travisci-to-github-actions">From TravisCI to GitHub Actions&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Thanks for reading!&lt;/p></description></item><item><title>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</link><pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/</guid>--><description>&lt;h2 id="from-travisci-to-github-actions">From TravisCI to GitHub Actions&lt;/h2>
 &lt;p>In the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-3-1-deployment-methods-travisci/">previous post&lt;/a> we looked at moving to a CI/CD model by moving from the &lt;code>deploy.sh&lt;/code> script to TravisCI.&lt;/p>
 &lt;p>In this post we will look at how we can migrate from TravisCI to &lt;a href="https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions">GitHub Actions&lt;/a>, GitHub&amp;rsquo;s own CI/CD tool.&lt;/p>
 &lt;p>This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! 🚀&lt;/p>
@@ -2622,12 +2622,12 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;/blockquote>
 &lt;p>In GitHub load up your GitHub Pages repo and navigate to &lt;code>Settings&lt;/code> and then &lt;code>Deploy keys&lt;/code>. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code>Allow write access&lt;/code>.&lt;/p>
 &lt;figure>&lt;a href="gha-deploy-key.png">
-&lt;img src="gha-deploy-key.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png"
 alt="GitHub Pages repo deploy keys page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Copy the contents of the &lt;em>private key&lt;/em> you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code>Settings&lt;/code> page, then &lt;code>Secrets&lt;/code>. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p>
 &lt;figure>&lt;a href="gha-secrets-key.png">
-&lt;img src="gha-secrets-key.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png"
 alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>No secrets here!&lt;/p>
 &lt;/figcaption>
@@ -2706,7 +2706,7 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;span style="color:#ff79c6">commit_message&lt;/span>: ${{ github.event.head_commit.message }}
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href="https://github.com/peaceiris/actions-gh-pages">actions-gh-pages&lt;/a>. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
+&lt;li>&lt;code>deploy_key&lt;/code> is the &lt;em>private key&lt;/em> we set up &lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup">earlier in this post&lt;/a> in &lt;code>Settings&lt;/code> -&amp;gt; &lt;code>Secrets&lt;/code>
 &lt;ul>
 &lt;li>If you didn&amp;rsquo;t name yours &lt;code>DEPLOY_KEY&lt;/code> then you&amp;rsquo;ll need to change it here too.&lt;/li>
 &lt;/ul>
@@ -2728,7 +2728,7 @@ alt="GitHub source code repo secrets page"/> &lt;/a>&lt;figcaption>
 &lt;p>If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p>
 &lt;p>For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href="https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings">https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a> for me) and disabling &lt;code>Build pushed branches&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-disable-build.png">
-&lt;img src="travis-disable-build.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png"
 alt="Build pushed branches disabled on Travis"/> &lt;/a>
 &lt;/figure>
 &lt;p>Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code>Actions&lt;/code> tab of your source code repo on GitHub.&lt;/p>
@@ -2736,7 +2736,7 @@ alt="Build pushed branches disabled on Travis"/> &lt;/a>
 git commit -m &lt;span style="color:#f1fa8c">&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span>
 git push
 &lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;a href="github-actions-build.png">
-&lt;img src="github-actions-build.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png"
 alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;p>Great success!&lt;/p>
 &lt;/figcaption>
@@ -2745,7 +2745,7 @@ alt="Successful build on GitHub Actions"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>Now that we&amp;rsquo;ve migrated across over to GitHub Actions, we can close out the permissions that TravisCI has on our projects, and demise any secret keys we gave it.&lt;/p>
 &lt;p>From the tone of my writing you can probably tell which one I favour. That&amp;rsquo;s not to say I do not like TravisCI - each service has its own pros and cons. For this particular project, I prefer the one platform approach for which I am used to in GitLab. The number of build minutes available for GA is a concern, but not one I will have to worry about for now.&lt;/p>
-&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid><description>&lt;h2 id="recap">Recap&lt;/h2>
+&lt;p>Thanks for reading! 🌝&lt;/p></description></item><item><title>Who Goes Blogging 3.1: Deployment Methods - TravisCI</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travisci-card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</link><pubDate>Tue, 25 Feb 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/</guid>--><description>&lt;h2 id="recap">Recap&lt;/h2>
 &lt;p>Since &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/">part 1&lt;/a>, we have been using a simple bash script called &lt;code>deploy.sh&lt;/code> to build our Hugo website and upload it to our GitHub Pages repo. In &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/">part 2&lt;/a> we modified it slightly to include the &lt;code>CNAME&lt;/code> file post-build to ensure GitHub Pages uses the custom domain we set up in that same part.&lt;/p>
 &lt;p>For this part, I will tell you about how I migrated from deploying via a script, to a CI/CD tool - namely &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>. Then I will document how I migrated from this, to the new &lt;a href="https://github.com/features/actions">GitHub Actions&lt;/a>; GitHub&amp;rsquo;s offering into the CI/CD space.&lt;/p>
 &lt;blockquote>
@@ -2767,7 +2767,7 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p>One of those hosted solutions is &lt;a href="https://travis-ci.com/">TravisCI&lt;/a>, where they integrate quite nicely with GitHub repositories to attach &lt;a href="https://developer.github.com/webhooks/">webhooks&lt;/a> against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p>
 &lt;p>So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p>
 &lt;figure>&lt;a href="travis-free.png">
-&lt;img src="travis-free.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png"
 alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;p>Free is definitely a thing you love to see&lt;/p>
 &lt;/figcaption>
@@ -2775,14 +2775,14 @@ alt="Screenshot of Travis free pricing plan"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="travisci-account-setup">TravisCI Account Setup&lt;/h2>
 &lt;p>The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em>another&lt;/em> account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href="https://travis-ci.com/">https://travis-ci.com/&lt;/a> and click on &lt;code>Sign in with GitHub&lt;/code>.&lt;/p>
 &lt;figure>&lt;a href="travis-landing.png">
-&lt;img src="travis-landing.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png"
 alt="Screenshot of Travis landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>GitHub will ask you if you &lt;em>really&lt;/em> want to share some of your GitHub data with Travis.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-authorise.png">
-&lt;img src="travis-github-authorise.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png"
 alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Another green button? Why not!&lt;/p>
 &lt;/figcaption>
@@ -2790,7 +2790,7 @@ alt="Screenshot of GitHub authorising Travis"/> &lt;/a>&lt;figcaption>
 &lt;p>Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p>
 &lt;p>All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href="https://travis-ci.com/account/repositories">https://travis-ci.com/account/repositories&lt;/a> page is what you need for that - then click on the &lt;code>Activate&lt;/code> button.&lt;/p>
 &lt;figure>&lt;a href="travis-github-apps-integration.png">
-&lt;img src="travis-github-apps-integration.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png"
 alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>&amp;hellip;More green buttons?!&lt;/p>
 &lt;/figcaption>
@@ -2798,7 +2798,7 @@ alt="Screenshot of GitHub Apps Integration"/> &lt;/a>&lt;figcaption>
 &lt;p>Now on the next screen you may or may not want the default selection of &lt;code>All repositories&lt;/code> which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">&lt;em>principle of least privilege&lt;/em>&lt;/a> (POLP); not just for users but for services too.&lt;/p>
 &lt;p>For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code>jdheyburn.co.uk&lt;/code> and &lt;code>jdheyburn.github.io&lt;/code> - it also gives you a cleaner Travis dashboard too.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-repos-selection.png">
-&lt;img src="travis-github-repos-selection.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png"
 alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;/figure>
 &lt;h3 id="back-to-github">Back to GitHub&lt;/h3>
@@ -2807,12 +2807,12 @@ alt="Screenshot of GitHub Travis Repository Authorisation"/> &lt;/a>
 &lt;p>You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code>repo&lt;/code> checkbox as done so below.&lt;/p>
 &lt;p>After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code>Generate token&lt;/code>.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-pat.png">
-&lt;img src="travis-github-pat.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png"
 alt="Screenshot of GitHub Personal Access Token Creation - repos is checked"/> &lt;/a>
 &lt;/figure>
 &lt;p>The token&amp;rsquo;s secret will display on the next screen. &lt;strong>Make sure you copy it&lt;/strong> and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p>
 &lt;figure class="center">&lt;a href="travis-github-pat-created.png">
-&lt;img src="travis-github-pat-created.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png"
 alt="Screenshot of GitHub Personal Access Token Creation - token complete"/> &lt;/a>
 &lt;/figure>
 &lt;h2 id="travisci-configuration">TravisCI Configuration&lt;/h2>
@@ -2954,7 +2954,7 @@ git push
 &lt;p>Once you&amp;rsquo;ve got a successful build, that means your website has been deployed to the GitHub Pages repo and will be available on the web to view. In a browser you can now view your changes on the website.&lt;/p>
 &lt;p>If they aren&amp;rsquo;t there then your browser is most likely caching an older version. By default, websites served by GitHub Pages have a browser cache TTL &lt;a href="https://webapps.stackexchange.com/questions/119286/caching-assets-in-website-served-from-github-pages">set to 10 minutes&lt;/a>. So you can either wait 10 minutes, or clear your browser cache!&lt;/p>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>You&amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;rsquo;re happy with TravisCI then there&amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines 🙌&lt;/p></description></item><item><title>On Becoming An Open Source Software Contributor</title><enclosure url="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/terraform-aws.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/</link><pubDate>Sun, 26 Jan 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/</guid><description>&lt;p>This is going to be a relatively shorter post that&amp;rsquo;ll be in two parts since it&amp;rsquo;s more of a self-promotion&amp;hellip; But as of this Friday just gone, I finally had a &lt;a href="https://github.com/terraform-providers/terraform-provider-aws/pull/11388">pull request&lt;/a> approved to be merged to &lt;a href="https://github.com/terraform-providers/terraform-provider-aws">terraform&amp;ndash;provider-aws&lt;/a>!&lt;/p>
+&lt;p>You&amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;rsquo;re happy with TravisCI then there&amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines 🙌&lt;/p></description></item><item><title>On Becoming An Open Source Software Contributor</title><enclosure url="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/terraform-aws.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/</link><pubDate>Sun, 26 Jan 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/</guid>--><description>&lt;p>This is going to be a relatively shorter post that&amp;rsquo;ll be in two parts since it&amp;rsquo;s more of a self-promotion&amp;hellip; But as of this Friday just gone, I finally had a &lt;a href="https://github.com/terraform-providers/terraform-provider-aws/pull/11388">pull request&lt;/a> approved to be merged to &lt;a href="https://github.com/terraform-providers/terraform-provider-aws">terraform&amp;ndash;provider-aws&lt;/a>!&lt;/p>
 &lt;p>Okay so it&amp;rsquo;s only a small piece of documentation, I&amp;rsquo;ve actually got another larger PR waiting to be merged in to the same project with new added functionality - and a bug fix in the pipeline too - which I hope to talk about in the future at some point. Although I can&amp;rsquo;t say I&amp;rsquo;m surprised this one got approved first - since it is by far the simplest change, and increased documentation is rarely a bad thing to add to a project.&lt;/p>
 &lt;h2 id="background">Background&lt;/h2>
 &lt;p>To talk a bit more about the context behind it, &lt;a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-patch-baselines.html">AWS SSM Patch Baselines&lt;/a> is used to define the rules of what patches should be installed on your EC2 instances.&lt;/p>
@@ -2974,7 +2974,7 @@ git push
 &lt;p>However, more importantly, and one that is most beneficial to me is that&amp;hellip;&lt;/p>
 &lt;p>&lt;strong>You will forget that shit and will need to reference it back again!&lt;/strong>&lt;/p>
 &lt;figure class="center">&lt;a href="elephant-cartoon.png">
-&lt;img src="elephant-cartoon.png"
+&lt;img src="https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/elephant-cartoon.png"
 alt="Cartoon elephant" width="400x"/> &lt;/a>&lt;figcaption>
 &lt;p>Not everyone can have the memory of an elephant&amp;hellip;&lt;/p>
 &lt;/figcaption>
@@ -2990,7 +2990,7 @@ alt="Cartoon elephant" width="400x"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>Don&amp;rsquo;t be that person to retain knowledge, it&amp;rsquo;ll end up coming round and biting you in the arse.&lt;/p>
 &lt;p>After you&amp;rsquo;re done reading this, make a mental note to write down any process or piece of information you come across. Even if you&amp;rsquo;re doing a task or exercise for the first time, document your steps to how you got there - you&amp;rsquo;ll certainly need it in order to replicate the steps in future.&lt;/p>
-&lt;p>Make a small start now that will make a big difference later on.&lt;/p></description></item><item><title>Who Goes Blogging 2: Custom Domain</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/</link><pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/</guid><description>&lt;p>In the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/">previous post&lt;/a>, we got ourselves up and running with a website generated by Hugo, deployed to GitHub, and hosted by GitHub Pages.&lt;/p>
+&lt;p>Make a small start now that will make a big difference later on.&lt;/p></description></item><item><title>Who Goes Blogging 2: Custom Domain</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/</link><pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/</guid>--><description>&lt;p>In the &lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/">previous post&lt;/a>, we got ourselves up and running with a website generated by Hugo, deployed to GitHub, and hosted by GitHub Pages.&lt;/p>
 &lt;p>Now, we&amp;rsquo;re going to add a custom domain to our website so that we hide the &lt;code>&amp;lt;username&amp;gt;.github.io&lt;/code> domain that GitHub Pages is kindly hosting for us for free.&lt;/p>
 &lt;p>At the same time, we&amp;rsquo;re going to make our website blazingly fast for users by adding a caching layer with a content distribution network (CDN).&lt;/p>
 &lt;p>Lastly, I&amp;rsquo;m going to throw in a bonus guide on how to redirect from multiple top-level domains (TLDs) to one (e.g. &lt;code>&amp;lt;your-domain&amp;gt;.com&lt;/code> redirects to &lt;code>&amp;lt;your-domain&amp;gt;.co.uk&lt;/code>).&lt;/p>
@@ -3010,18 +3010,18 @@ alt="Cartoon elephant" width="400x"/> &lt;/a>&lt;figcaption>
 &lt;h2 id="acquire-a-domain">Acquire a Domain&lt;/h2>
 &lt;p>The rest of the post will depict a lot of Namecheap semantics, since that is the registrar I have access to. You can choose to follow the guide alongside a different registrar if you wish, at a high-level they will be pretty similar. For now, let&amp;rsquo;s move on ahead with Namecheap and navigate through to the &lt;a href="https://www.namecheap.com/">domain purchase page&lt;/a>.&lt;/p>
 &lt;figure>&lt;a href="namecheap_landing.png">
-&lt;img src="namecheap_landing.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png"
 alt="Screenshot depicting the namecheap domain landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>The hardest part is deciding on the domain name&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;figure>&lt;a href="namecheap-domain-purchase.png">
-&lt;img src="namecheap-domain-purchase.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png"
 alt="Screenshot depicting the namecheap domain purchase page"/> &lt;/a>
 &lt;/figure>
 &lt;p>Once you&amp;rsquo;ve set up an account and purchased your domain, your accounts domain landing page will look something like the below.&lt;/p>
 &lt;figure>&lt;a href="namecheap-domain-acquired.png">
-&lt;img src="namecheap-domain-acquired.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png"
 alt="Screenshot depicting the namecheap domain landing page"/> &lt;/a>&lt;figcaption>
 &lt;p>Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p>
 &lt;/figcaption>
@@ -3040,7 +3040,7 @@ alt="Screenshot depicting the namecheap domain landing page"/> &lt;/a>&lt;figcap
 &lt;h3 id="cloudflare-our-domain">Cloudflare our Domain&lt;/h3>
 &lt;p>Create an account with &lt;a href="https://www.cloudflare.com/">Cloudflare&lt;/a> if you haven&amp;rsquo;t done so already. Once done you&amp;rsquo;ll need to click &lt;strong>Add Site&lt;/strong> at the top of the browser dashboard. Enter your newly purchased domain from the previous section.&lt;/p>
 &lt;figure>&lt;a href="cloudflare-add-domain.png">
-&lt;img src="cloudflare-add-domain.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png"
 alt="Screenshot depicting the Cloudflare add domain page"/> &lt;/a>&lt;figcaption>
 &lt;p>Enter your newly purchased domain from the previous section&lt;/p>
 &lt;/figcaption>
@@ -3048,7 +3048,7 @@ alt="Screenshot depicting the Cloudflare add domain page"/> &lt;/a>&lt;figcaptio
 &lt;p>Go ahead now and select the free plan, if you want to &lt;a href="https://www.cloudflare.com/en-gb/plans/">go more advanced&lt;/a> then you can do so.&lt;/p>
 &lt;p>Once that&amp;rsquo;s created you&amp;rsquo;ll see Cloudflare scan the DNS records for this domain you&amp;rsquo;ve added - for now let&amp;rsquo;s navigate back to the &lt;a href="https://dash.cloudflare.com/">Cloudflare Dashboard&lt;/a> and selecting the domain. You&amp;rsquo;ll be presented with a page similar to below, minus all the activity!&lt;/p>
 &lt;figure>&lt;a href="cloudflare-domain-landing.png">
-&lt;img src="cloudflare-domain-landing.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png"
 alt="Screenshot depicting the Cloudflare domain home page"/> &lt;/a>&lt;figcaption>
 &lt;p>Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p>
 &lt;/figcaption>
@@ -3066,20 +3066,20 @@ alt="Screenshot depicting the Cloudflare domain home page"/> &lt;/a>&lt;figcapti
 185.199.111.153
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Let&amp;rsquo;s add these to the Cloudflare DNS page below.&lt;/p>
 &lt;figure>&lt;a href="cloudflare-dns-record.png">
-&lt;img src="cloudflare-dns-record.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png"
 alt="Screenshot depicting adding DNS records to Cloudflare"/> &lt;/a>&lt;figcaption>
 &lt;p>Add in the GitHub IP addresses one by one&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Once done - your records will look something like this:&lt;/p>
 &lt;figure>&lt;a href="cloudflare-completed-records.png">
-&lt;img src="cloudflare-completed-records.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png"
 alt="Screenshot depicting completed DNS management"/> &lt;/a>
 &lt;/figure>
 &lt;p>You&amp;rsquo;ll notice an additional CNAME record at the bottom for &lt;code>www&lt;/code>. This will redirect any requests made to &lt;code>www.jdheyburn.co.uk&lt;/code> to &lt;code>jdheyburn.co.uk&lt;/code>. This could be something you&amp;rsquo;d want to replicate too if you wish.&lt;/p>
 &lt;p>One thing to note down before we move on is to capture the Cloudflare DNS Nameservers that have been assigned to our domain. You can find these on the same DNS management page we are on, but by just scrolling down we can see these nameservers.&lt;/p>
 &lt;figure>&lt;a href="cloudflare-nameservers.png">
-&lt;img src="cloudflare-nameservers.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png"
 alt="Screenshot depicting completed Cloudflare DNS nameservers"/> &lt;/a>&lt;figcaption>
 &lt;p>Make a note of these nameservers for your domain&lt;/p>
 &lt;/figcaption>
@@ -3088,7 +3088,7 @@ alt="Screenshot depicting completed Cloudflare DNS nameservers"/> &lt;/a>&lt;fig
 &lt;p>&lt;a href="https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#acquire-a-domain">Earlier in this post&lt;/a>, I mentioned that a newly created Namecheap domain will default to their own DNS nameservers. We want to change this to Cloudflares DNS nameservers from which we configured our DNS records.&lt;/p>
 &lt;p>Navigate to the &lt;a href="https://ap.www.namecheap.com/domains/list/">Namecheap management page&lt;/a> for your domain and enter the Cloudflare nameservers once you have selected &lt;strong>Custom DNS&lt;/strong>.&lt;/p>
 &lt;figure class="center">&lt;a href="namecheap-nameservers.png">
-&lt;img src="namecheap-nameservers.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png"
 alt="Screenshot depicting completed nameservers pointing to Cloudflare"/> &lt;/a>&lt;figcaption>
 &lt;p>Add in your Cloudflare domains from previously&lt;/p>
 &lt;/figcaption>
@@ -3106,14 +3106,14 @@ alt="Screenshot depicting completed nameservers pointing to Cloudflare"/> &lt;/a
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">https://github.com/&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io/settings
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now scroll down, keep going until you hit the &lt;strong>GitHub Pages&lt;/strong> heading. Here you will see a form for entering a custom domain; do the honours and enter it in like below.&lt;/p>
 &lt;figure>&lt;a href="github_pages_setup.png">
-&lt;img src="github_pages_setup.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/github_pages_setup.png"
 alt="Screenshot depicting GitHub Pages form for specifying a custom domain"/> &lt;/a>&lt;figcaption>
 &lt;p>Ignore my already published domain&amp;hellip;&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>Now again wait for DNS to propagate across the world. When GitHub is happy with the changes then you will see the green banner similar to the one in the screenshot above. This means everything is being served up! Why not give it a try ourselves? Head to your domain now and see if everything is working!&lt;/p>
 &lt;figure>&lt;a href="jdheyburn_co_uk_custom_domain.png">
-&lt;img src="jdheyburn_co_uk_custom_domain.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png"
 alt="Screenshot depicting completed custom domain"/> &lt;/a>&lt;figcaption>
 &lt;p>You should end up with something like this!&lt;/p>
 &lt;/figcaption>
@@ -3142,23 +3142,23 @@ jdheyburn.co.uk
 &lt;p>In my case, I purchased &lt;code>jdheyburn.com&lt;/code> and had it redirect to &lt;code>jdheyburn.co.uk&lt;/code> - why not give it a try: &lt;a href="https://jdheyburn.com">https://jdheyburn.com&lt;/a>&lt;/p>
 &lt;p>The steps are already defined in this post. For a breakdown of what they are:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#acquire-a-domain">Purchase a domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#cloudflare-our-domain">Create a new website in Cloudflare&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#update-cloudflare-dns-records">Create a DNS A record to redirect to your correct domain&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#direct-namecheap-to-cloudflare">Configure Namecheap to use Cloudflare&amp;rsquo;s nameservers&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;p>Steps 1 and 2 are pretty easy to perform yourselves - so for this exercise I&amp;rsquo;ll join in at step 3.&lt;/p>
 &lt;h2 id="cloudflare-domain-redirection">Cloudflare Domain Redirection&lt;/h2>
 &lt;p>Assuming that you&amp;rsquo;ve completed steps 1 and 2, we&amp;rsquo;ll need to configure the redirection - but we don&amp;rsquo;t do this via inserting a DNS record like we did previously, Cloudflare has a feature that handles that for us called &lt;strong>Page Rules&lt;/strong>.&lt;/p>
 &lt;p>On your Cloudflare website landing page, navigate to &lt;strong>Page Rules&lt;/strong> in the toolbar at the top and then &lt;strong>Create Page Rule&lt;/strong>.&lt;/p>
 &lt;figure>&lt;a href="cloudflare_page_rules.png">
-&lt;img src="cloudflare_page_rules.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png"
 alt="Screenshot depicting how to access the Create Page Rule feature"/> &lt;/a>
 &lt;/figure>
 &lt;p>In the next screen we&amp;rsquo;re going to define the rule. Cloudflare have &lt;a href="https://support.cloudflare.com/hc/en-us/categories/200276257-Page-Rules">documentation on Page Rules&lt;/a>, and even more &lt;a href="https://support.cloudflare.com/hc/en-us/articles/200172286-Configuring-URL-forwarding-or-redirects-with-Cloudflare-Page-Rules">specifically on redirection&lt;/a>.&lt;/p>
 &lt;p>From this screen you will want something that appears as below.&lt;/p>
 &lt;figure>&lt;a href="cloudflare_new_page_rule.png">
-&lt;img src="cloudflare_new_page_rule.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png"
 alt="Screenshot depicting how to populate the Create Page Rule form"/> &lt;/a>
 &lt;/figure>
 &lt;p>Let&amp;rsquo;s break down what&amp;rsquo;s happening here:&lt;/p>
@@ -3179,7 +3179,7 @@ alt="Screenshot depicting how to populate the Create Page Rule form"/> &lt;/a>
 &lt;/blockquote>
 &lt;p>Lastly, click on &lt;strong>Save and Deploy&lt;/strong> to finalise your changes; you&amp;rsquo;ll have a view such as below.&lt;/p>
 &lt;figure>&lt;a href="cloudflare_completed_page_rule.png">
-&lt;img src="cloudflare_completed_page_rule.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png"
 alt="Screenshot depicting the newly created page rule"/> &lt;/a>
 &lt;/figure>
 &lt;p>That&amp;rsquo;s all you need - once again you will have to wait for DNS replication to trickle down. You can repeat this over again for other domains you may have.&lt;/p>
@@ -3191,7 +3191,7 @@ alt="Screenshot depicting the newly created page rule"/> &lt;/a>
 &lt;li>HTTPS redirection&lt;/li>
 &lt;li>Redirect multiple domains to one location&lt;/li>
 &lt;/ul>
-&lt;p>Next up I&amp;rsquo;ll document the various deployment methods I have used for the website.&lt;/p></description></item><item><title>Who Goes Blogging 1: Getting Started</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/</link><pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/</guid><description>&lt;p>I&amp;rsquo;ve done a lot of talking about how this website is currently, but let&amp;rsquo;s talk about how you can get set up with the same as I have done here. Let&amp;rsquo;s recap exactly what that is:&lt;/p>
+&lt;p>Next up I&amp;rsquo;ll document the various deployment methods I have used for the website.&lt;/p></description></item><item><title>Who Goes Blogging 1: Getting Started</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/</link><pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/</guid>--><description>&lt;p>I&amp;rsquo;ve done a lot of talking about how this website is currently, but let&amp;rsquo;s talk about how you can get set up with the same as I have done here. Let&amp;rsquo;s recap exactly what that is:&lt;/p>
 &lt;ol>
 &lt;li>A GitHub repo with the site source code&lt;/li>
 &lt;li>Another GitHub project with the rendered site&lt;/li>
@@ -3252,7 +3252,7 @@ ln -s ~/projects/hugo-coder blog-source/themes/hugo-coder
 hugo serve
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>That last command will locally serve the example site, so that you can view it at &lt;code>http://localhost:1313/&lt;/code>.&lt;/p>
 &lt;figure>&lt;a href="local_example_site.jpg">
-&lt;img src="local_example_site.jpg"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg"
 alt="Screenshot depicting the locally run example site"/> &lt;/a>&lt;figcaption>
 &lt;p>Success!&lt;/p>
 &lt;/figcaption>
@@ -3304,14 +3304,14 @@ git push
 &lt;li>Written a script for deployment&lt;/li>
 &lt;li>Deployed to GitHub Pages&lt;/li>
 &lt;/ol>
-&lt;p>Next up, we&amp;rsquo;ll be adding a custom domain to the site, front it with a CDN, and redirect multiple domains to it.&lt;/p></description></item><item><title>Who Goes Blogging 0: Applying Cartography</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/</link><pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/</guid><description>&lt;h2 id="applying-cartography">Applying Cartography&lt;/h2>
+&lt;p>Next up, we&amp;rsquo;ll be adding a custom domain to the site, front it with a CDN, and redirect multiple domains to it.&lt;/p></description></item><item><title>Who Goes Blogging 0: Applying Cartography</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/</link><pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/</guid>--><description>&lt;h2 id="applying-cartography">Applying Cartography&lt;/h2>
 &lt;p>With my academic background focused in infrastructure, I love seeing diagrams of topologies - they&amp;rsquo;re a pretty damn useful way of understanding architecture of an application flow amongst other things. Let&amp;rsquo;s take a look at how my portfolio site is architected out.&lt;/p>
 &lt;p>As I mentioned in my &lt;a href="https://jdheyburn.co.uk/posts/blog-bootstrap/">first blog post&lt;/a> - I&amp;rsquo;ve got several ideas on how I can improve on the architecture of this site. But what good is evaluating where you&amp;rsquo;ve come from if you don&amp;rsquo;t document what you currently have?&lt;/p>
 &lt;p>That&amp;rsquo;s when you can make true comparisons in any system. As such the aim of this series of posts will be to explain how this website is architected, so that we may reference it in future posts. Later on, I&amp;rsquo;ll also talk about how you&amp;rsquo;re able to get yourself set up as well.&lt;/p>
 &lt;h3 id="the-setup">The Setup&lt;/h3>
 &lt;p>Because we all love an architecture diagram, let&amp;rsquo;s slap one in now.&lt;/p>
 &lt;figure>&lt;a href="blog-arch-cover.png">
-&lt;img src="blog-arch-cover.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png"
 alt="An architecture diagram of my portfolio site"/> &lt;/a>
 &lt;/figure>
 &lt;p>Wow. That is&amp;hellip; really not much at all. Apologies if you were expecting a lot more arrows and boxes!&lt;/p>
@@ -3339,7 +3339,7 @@ alt="An architecture diagram of my portfolio site"/> &lt;/a>
 &lt;p>Because everyone loves graphs and numbers&amp;hellip; right??&amp;hellip; Alright just me then&amp;hellip;&lt;/p>
 &lt;p>You&amp;rsquo;ll be able to see how many requests are being served up, where requests originate from, amongst others. Take a look at an example below.&lt;/p>
 &lt;figure>&lt;a href="analytics_example.png">
-&lt;img src="analytics_example.png"
+&lt;img src="https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/analytics_example.png"
 alt="A graph displaying total requests, and how many of them were cached"/> &lt;/a>
 &lt;/figure>
 &lt;h4 id="custom-domain">Custom domain&lt;/h4>
@@ -3353,7 +3353,7 @@ alt="A graph displaying total requests, and how many of them were cached"/> &lt;
 &lt;p>I&amp;rsquo;m from the UK - and I wanted my site to reflect that, so I purchased a domain with the top-level domain (TLD) &lt;code>.co.uk&lt;/code>. However when users come to visit me on my site they may not always remember whether it was &lt;code>.com&lt;/code>, &lt;code>.dev&lt;/code>, &lt;code>.tk&lt;/code> (remember those?). Therefore I also have &lt;code>jdheyburn.com&lt;/code> set up in the same way as its &lt;code>.co.uk&lt;/code> sibling to maximise that user experience.&lt;/p>
 &lt;p>Okay well that means there is a slight cost to maintain the site through purchasing and renewing the custom domains (notice how jdheyburn.com redirects to jdheyburn.co.uk?) but we&amp;rsquo;re talking in the £10s per year for these two.&lt;/p>
 &lt;p>So if you&amp;rsquo;re interested in having a setup like this, then over the next few posts I&amp;rsquo;ll be detailing how you can do the same.&lt;/p>
-&lt;p>- jdheyburn&lt;/p></description></item><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
+&lt;p>- jdheyburn&lt;/p></description></item><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>--><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
 &lt;p>I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p>
 &lt;p>My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p>
 &lt;blockquote>
@@ -3374,9 +3374,9 @@ alt="A graph displaying total requests, and how many of them were cached"/> &lt;
 &lt;/ol>
 &lt;p>From this list, we can include the following to solve the above:&lt;/p>
 &lt;ol>
-&lt;li>&lt;a href="#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="#class-objects">Classes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="tests">Tests&lt;/h2>
 &lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>
@@ -3477,13 +3477,13 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
 &lt;figure class="center">&lt;a href="type_hinting.png">
-&lt;img src="type_hinting.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
 alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
 &lt;/figure>
 &lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
 &lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking.png">
-&lt;img src="type_checking.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
 alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
 &lt;/figure>
 &lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
@@ -3494,12 +3494,12 @@ incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span s
 &lt;span style="color:#ff79c6">return&lt;/span> incremented_int
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_return.png">
-&lt;img src="type_checking_bad_return.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
 alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
 &lt;/figure>
 &lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
 &lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
-&lt;img src="type_checking_bad_assign.png"
+&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
 alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
 &lt;/figure>
 &lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>
@@ -3616,7 +3616,7 @@ OK
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Normal service is resumed!!&lt;/p>
 &lt;h2 id="closing">Closing&lt;/h2>
 &lt;p>I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p>
-&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid><description>&lt;blockquote>
+&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid>--><description>&lt;blockquote>
 &lt;p>&lt;strong>UPDATE 2020-07-17&lt;/strong>&lt;/p>
 &lt;p>I wrote a follow up post to this one using the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package instead.&lt;/p>
 &lt;p>Awesome - &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">take me there&lt;/a>!&lt;/p>
@@ -3765,7 +3765,7 @@ want: &lt;span style="color:#ff79c6">true&lt;/span>,
 &lt;p>Once you have done that, future tests will now generate with stricter error testing! 🎉&lt;/p>
 &lt;h2 id="closing">Closing&lt;/h2>
 &lt;p>I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.&lt;/p>
-&lt;p>I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p></description></item><item><title>Blog Bootstrap</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/blog-bootstrap/</link><pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/blog-bootstrap/</guid><description>&lt;p>Howdy! 👋&lt;/p>
+&lt;p>I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p></description></item><item><title>Blog Bootstrap</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/blog-bootstrap/</link><pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/blog-bootstrap/</guid>--><description>&lt;p>Howdy! 👋&lt;/p>
 &lt;p>This site will be an area for me to braindump everything and anything that comes across my mind - although I&amp;rsquo;ll try my best to keep it tech-focused!&lt;/p>
 &lt;p>The blog platform itself is pretty basic. It is built using &lt;a href="https://gohugo.io/">Hugo&lt;/a>, hosted using &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a>, while served over a custom domain via CloudFlare. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!&lt;/p>
 &lt;p>It also gives me an opportunity to migrate the platform from GitHub Pages onto another hosted platform. Maybe that is AWS, which is a perfect learning opportunity, or even customise the theme of this blog (which is very cool already - thanks &lt;a href="https://themes.gohugo.io/hugo-coder/">hugo-coder!&lt;/a>) that I have left as its default. All of which provides me with more content to blog about!&lt;/p>
