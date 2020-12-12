@@ -1,656 +1,740 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>testing on JDHeyburn</title><link>https://jdheyburn.co.uk/tags/testing/</link><description>Recent content in testing on JDHeyburn</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link><pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid>--><description>&lt;p>I&amp;rsquo;ve been doing some programming in &lt;a href="https://golang.org/">Go&lt;/a> for a side project again, and I&amp;rsquo;m back using &lt;a href="https://github.com/cweill/gotests">gotests&lt;/a> to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously written&lt;/a> in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p>
-&lt;p>Today I&amp;rsquo;ll be talking about a small enhancement to how the tests are generated to make use of the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package within &lt;a href="https://github.com/stretchr/testify">testify&lt;/a>. Go already comes with enough for you to write tests, but &lt;code>assert&lt;/code> provides me with more options for comparison in a natural language form. I&amp;rsquo;ll also be adding support for when a test case returns an unexpected error.&lt;/p>
-&lt;p>Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/#customising-gotests-generated-test-v2">it here&lt;/a>.&lt;/p>
-&lt;h2 id="recap">Recap&lt;/h2>
-&lt;p>From the last time we visited this, our test code took the format below.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>testing on JDHeyburn</title>
+    <link>https://jdheyburn.co.uk/tags/testing/</link>
+    <description>Recent content in testing on JDHeyburn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jdheyburn.co.uk/tags/testing/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Assertions in gotests Test Generation</title><enclosure url="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/</guid>-->
+      <description>&lt;p&gt;I&amp;rsquo;ve been doing some programming in &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; for a side project again, and I&amp;rsquo;m back using &lt;a href=&#34;https://github.com/cweill/gotests&#34;&gt;gotests&lt;/a&gt; to generate unit tests for functions. For this I&amp;rsquo;ve been referencing a post I&amp;rsquo;ve &lt;a href=&#34;https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/&#34;&gt;previously written&lt;/a&gt; in order to help me get them set up. If you&amp;rsquo;d like more context on the background I&amp;rsquo;d recommend reading there first.&lt;/p&gt;
+&lt;p&gt;Today I&amp;rsquo;ll be talking about a small enhancement to how the tests are generated to make use of the &lt;a href=&#34;https://godoc.org/github.com/stretchr/testify/assert&#34;&gt;assert&lt;/a&gt; package within &lt;a href=&#34;https://github.com/stretchr/testify&#34;&gt;testify&lt;/a&gt;. Go already comes with enough for you to write tests, but &lt;code&gt;assert&lt;/code&gt; provides me with more options for comparison in a natural language form. I&amp;rsquo;ll also be adding support for when a test case returns an unexpected error.&lt;/p&gt;
+&lt;p&gt;Don&amp;rsquo;t care about the waffle? Jump straight to &lt;a href=&#34;https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/#customising-gotests-generated-test-v2&#34;&gt;it here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;recap&#34;&gt;Recap&lt;/h2&gt;
+&lt;p&gt;From the last time we visited this, our test code took the format below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+    }{
+        name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span&gt;,
+        args: args{
+            name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;,
+        },
+        want: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;,
+        wantErr: errors.&lt;span style=&#34;color:#50fa7b&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span&gt;),
+    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; !reflect.&lt;span style=&#34;color:#50fa7b&#34;&gt;DeepEqual&lt;/span&gt;(err, tt.wantErr) {
+                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span&gt;, err, tt.wantErr)
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; got &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; tt.want {
+                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span&gt;, got, tt.want)
+            }
+        })
+    }
 }
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-}{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
-args: args{
-name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
-},
-want: &lt;span style="color:#ff79c6">false&lt;/span>,
-wantErr: errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Although this works nicely, there is one issue - we&amp;rsquo;re not capturing unexpected errors. Or rather, if an error is returned to &lt;code&gt;err&lt;/code&gt;, and &lt;code&gt;tt.wantErr&lt;/code&gt; is set to &lt;code&gt;nil&lt;/code&gt;, then the test will not fail.&lt;/p&gt;
+&lt;p&gt;Okay, so we still have the &lt;code&gt;if got != tt.want&lt;/code&gt; condition to fail the test if needed. Although we still could have this condition pass, we want to make sure we capture the error. The test suite is doing currently is &lt;em&gt;assuming&lt;/em&gt; we don&amp;rsquo;t care about the outcome of &lt;code&gt;err&lt;/code&gt;, just because we didn&amp;rsquo;t want one as described by &lt;code&gt;tt.wantErr&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I seem to remember assumptions being the &lt;del&gt;brother&lt;/del&gt; mother of something&amp;hellip;&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/G-2NimrRPAQ&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;enhancing-for-unexpected-errors&#34;&gt;Enhancing for Unexpected Errors&lt;/h2&gt;
+&lt;p&gt;In order to enhance what we have already from the original modified &lt;a href=&#34;https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5&#34;&gt;function.tmpl&lt;/a&gt;, we could have it output something like this to capture unexpected errors.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;// ... removed for brevity
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+    t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+        got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() unexpected error = %v&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;        }
+&lt;/span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; !reflect.&lt;span style=&#34;color:#50fa7b&#34;&gt;DeepEqual&lt;/span&gt;(err, tt.wantErr) {
+            t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span&gt;, err, tt.wantErr)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+        }
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; got &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; tt.want {
+            t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span&gt;, got, tt.want)
+        }
+    })
 }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> !reflect.&lt;span style="color:#50fa7b">DeepEqual&lt;/span>(err, tt.wantErr) {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
-&lt;span style="color:#ff79c6">return&lt;/span>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The highlighted lines show the new addition. This is something we could implement fairly easily. On the other hand, the &lt;code&gt;assert&lt;/code&gt; library gives us a lot more to play with. It essentially is doing the same as the above under the hood, albeit in a cleaner fashion&amp;hellip; and I&amp;rsquo;m all for better code readability!&lt;/p&gt;
+&lt;h3 id=&#34;rewriting-for-assert&#34;&gt;Rewriting for Assert&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+    }{
+        name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span&gt;,
+        args: args{
+            name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;,
+        },
+        want: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;,
+        wantErr: errors.&lt;span style=&#34;color:#50fa7b&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span&gt;),
+    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Fail&lt;/span&gt;(t, fmt.&lt;span style=&#34;color:#50fa7b&#34;&gt;Sprintf&lt;/span&gt;(
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;error: %q&amp;#34;&lt;/span&gt;, err),
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                )
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            }
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;EqualError&lt;/span&gt;(t, err, tt.wantErr.&lt;span style=&#34;color:#50fa7b&#34;&gt;Error&lt;/span&gt;())
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            }
+&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Equal&lt;/span&gt;(t, tt.want, got)
+&lt;/span&gt;        })
+    }
 }
-&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above code block is what we get when we take the test code above that is using the &lt;code&gt;t.Errorf&lt;/code&gt; function call to record a test failure, and rewrite it to use &lt;code&gt;assert&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;What we now need to do is have &lt;code&gt;gotests&lt;/code&gt; generate it for us.&lt;/p&gt;
+&lt;h2 id=&#34;customising-gotests-generated-test-v2&#34;&gt;Customising Gotests Generated Test v2&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;ll be following a process similar to when I &lt;a href=&#34;https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/#customising-gotests-generated-test&#34;&gt;last did this&lt;/a&gt;. I&amp;rsquo;m still using VSCode, so you&amp;rsquo;ll need to find the &lt;a href=&#34;https://github.com/cweill/gotests/#demo&#34;&gt;correct plugin&lt;/a&gt; for your editor.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Check out gotests and copy the templates directory to a place of your choosing
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git clone https://github.com/cweill/gotests.git&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cp -R gotests/internal/render/templates ~/.vscode/gotests/templates&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;In order for us to achieve the generated test using &lt;code&gt;assert&lt;/code&gt;, this time we&amp;rsquo;re going to need to edit two files; &lt;code&gt;function.tmpl&lt;/code&gt; and &lt;code&gt;results.tmpl&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Overwrite the contents of &lt;code&gt;function.tmpl&lt;/code&gt; with the &lt;a href=&#34;https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-function-tmpl&#34;&gt;contents of this Gist&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Overwrite the contents of &lt;code&gt;results.tmpl&lt;/code&gt; with the &lt;a href=&#34;https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-results-tmpl&#34;&gt;contents of this Gist&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Add the following setting to VSCode’s settings.json
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/.vscode/gotests/templates&amp;quot;]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now we can generate tests of functions that return the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;only returns an error&lt;/li&gt;
+&lt;li&gt;a value, and an error&lt;/li&gt;
+&lt;li&gt;multiple values, and an error&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I have the &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=golang.go&#34;&gt;Go plugin&lt;/a&gt; for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p&gt;
+&lt;figure&gt;&lt;a href=&#34;generate-unit-tests.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png&#34;
+         alt=&#34;VSCode dropdown with Go plugin&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;only-returns-an-error&#34;&gt;Only returns an error&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+    }{
+        &lt;span style=&#34;color:#6272a4&#34;&gt;// TODO: Add test cases.
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Fail&lt;/span&gt;(t, fmt.&lt;span style=&#34;color:#50fa7b&#34;&gt;Sprintf&lt;/span&gt;(
+                    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt;
+                        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;error: %q&amp;#34;&lt;/span&gt;, err),
+                )
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;EqualError&lt;/span&gt;(t, err, tt.wantErr.&lt;span style=&#34;color:#50fa7b&#34;&gt;Error&lt;/span&gt;())
+            }
+        })
+    }
 }
-})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;returns-a-value-and-an-error&#34;&gt;Returns a value, and an error&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+    }{
+        &lt;span style=&#34;color:#6272a4&#34;&gt;// TODO: Add test cases.
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Fail&lt;/span&gt;(t, fmt.&lt;span style=&#34;color:#50fa7b&#34;&gt;Sprintf&lt;/span&gt;(
+                    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt;
+                        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;error: %q&amp;#34;&lt;/span&gt;, err),
+                )
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;EqualError&lt;/span&gt;(t, err, tt.wantErr.&lt;span style=&#34;color:#50fa7b&#34;&gt;Error&lt;/span&gt;())
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Equal&lt;/span&gt;(t, tt.want, got)
+        })
+    }
 }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;returns-multiple-values-and-an-error&#34;&gt;Returns multiple values, and an error&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        want1   &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+    }{
+        &lt;span style=&#34;color:#6272a4&#34;&gt;// TODO: Add test cases.
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, got1, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Fail&lt;/span&gt;(t, fmt.&lt;span style=&#34;color:#50fa7b&#34;&gt;Sprintf&lt;/span&gt;(
+                    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt;
+                        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;error: %q&amp;#34;&lt;/span&gt;, err),
+                )
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; {
+                assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;EqualError&lt;/span&gt;(t, err, tt.wantErr.&lt;span style=&#34;color:#50fa7b&#34;&gt;Error&lt;/span&gt;())
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Equal&lt;/span&gt;(t, tt.want, got)
+            assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Equal&lt;/span&gt;(t, tt.want1, got1)
+        })
+    }
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although this works nicely, there is one issue - we&amp;rsquo;re not capturing unexpected errors. Or rather, if an error is returned to &lt;code>err&lt;/code>, and &lt;code>tt.wantErr&lt;/code> is set to &lt;code>nil&lt;/code>, then the test will not fail.&lt;/p>
-&lt;p>Okay, so we still have the &lt;code>if got != tt.want&lt;/code> condition to fail the test if needed. Although we still could have this condition pass, we want to make sure we capture the error. The test suite is doing currently is &lt;em>assuming&lt;/em> we don&amp;rsquo;t care about the outcome of &lt;code>err&lt;/code>, just because we didn&amp;rsquo;t want one as described by &lt;code>tt.wantErr&lt;/code>.&lt;/p>
-&lt;p>I seem to remember assumptions being the &lt;del>brother&lt;/del> mother of something&amp;hellip;&lt;/p>
-&lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-&lt;iframe src="https://www.youtube.com/embed/G-2NimrRPAQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
-&lt;/div>
-&lt;h2 id="enhancing-for-unexpected-errors">Enhancing for Unexpected Errors&lt;/h2>
-&lt;p>In order to enhance what we have already from the original modified &lt;a href="https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5">function.tmpl&lt;/a>, we could have it output something like this to capture unexpected errors.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#6272a4">// ... removed for brevity
-&lt;/span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() unexpected error = %v&amp;#34;&lt;/span>, err)
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
-&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> !reflect.&lt;span style="color:#50fa7b">DeepEqual&lt;/span>(err, tt.wantErr) {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
-&lt;span style="color:#ff79c6">return&lt;/span>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;bonus-only-returns-values&#34;&gt;Bonus: Only returns values&lt;/h3&gt;
+&lt;p&gt;The below example is for a function that doesn&amp;rsquo;t produce any errors, but I&amp;rsquo;m including it for the sake of completeness.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args args
+        want &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+    }{
+        &lt;span style=&#34;color:#6272a4&#34;&gt;// TODO: Add test cases.
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            assert.&lt;span style=&#34;color:#50fa7b&#34;&gt;Equal&lt;/span&gt;(t, tt.want, got)
+        })
+    }
 }
-&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
-}
-})
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>The highlighted lines show the new addition. This is something we could implement fairly easily. On the other hand, the &lt;code>assert&lt;/code> library gives us a lot more to play with. It essentially is doing the same as the above under the hood, albeit in a cleaner fashion&amp;hellip; and I&amp;rsquo;m all for better code readability!&lt;/p>
-&lt;h3 id="rewriting-for-assert">Rewriting for Assert&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-}{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
-args: args{
-name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
-},
-want: &lt;span style="color:#ff79c6">false&lt;/span>,
-wantErr: errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
-}
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> )
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">return&lt;/span>
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> }
-&lt;/span>&lt;span style="display:block;width:100%;background-color:#3d3f4a"> assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
-&lt;/span> })
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code block is what we get when we take the test code above that is using the &lt;code>t.Errorf&lt;/code> function call to record a test failure, and rewrite it to use &lt;code>assert&lt;/code>.&lt;/p>
-&lt;p>What we now need to do is have &lt;code>gotests&lt;/code> generate it for us.&lt;/p>
-&lt;h2 id="customising-gotests-generated-test-v2">Customising Gotests Generated Test v2&lt;/h2>
-&lt;p>We&amp;rsquo;ll be following a process similar to when I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/#customising-gotests-generated-test">last did this&lt;/a>. I&amp;rsquo;m still using VSCode, so you&amp;rsquo;ll need to find the &lt;a href="https://github.com/cweill/gotests/#demo">correct plugin&lt;/a> for your editor.&lt;/p>
-&lt;ol>
-&lt;li>Check out gotests and copy the templates directory to a place of your choosing
-&lt;ul>
-&lt;li>&lt;code>git clone https://github.com/cweill/gotests.git&lt;/code>&lt;/li>
-&lt;li>&lt;code>cp -R gotests/internal/render/templates ~/.vscode/gotests/templates&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>In order for us to achieve the generated test using &lt;code>assert&lt;/code>, this time we&amp;rsquo;re going to need to edit two files; &lt;code>function.tmpl&lt;/code> and &lt;code>results.tmpl&lt;/code>
-&lt;ul>
-&lt;li>Overwrite the contents of &lt;code>function.tmpl&lt;/code> with the &lt;a href="https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-function-tmpl">contents of this Gist&lt;/a>&lt;/li>
-&lt;li>Overwrite the contents of &lt;code>results.tmpl&lt;/code> with the &lt;a href="https://gist.github.com/jdheyburn/94eb1513395ae46eac6aa9721d089d3c#file-results-tmpl">contents of this Gist&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Add the following setting to VSCode’s settings.json
-&lt;ul>
-&lt;li>&lt;code>&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/.vscode/gotests/templates&amp;quot;]&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;p>Now we can generate tests of functions that return the following:&lt;/p>
-&lt;ol>
-&lt;li>only returns an error&lt;/li>
-&lt;li>a value, and an error&lt;/li>
-&lt;li>multiple values, and an error&lt;/li>
-&lt;/ol>
-&lt;p>I have the &lt;a href="https://marketplace.visualstudio.com/items?itemName=golang.go">Go plugin&lt;/a> for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p>
-&lt;figure>&lt;a href="generate-unit-tests.png">
-&lt;img src="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png"
-alt="VSCode dropdown with Go plugin"/> &lt;/a>
-&lt;/figure>
-&lt;h3 id="only-returns-an-error">Only returns an error&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-}{
-&lt;span style="color:#6272a4">// TODO: Add test cases.
-&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
-&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
-&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
-)
-}
-&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
-}
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="returns-a-value-and-an-error">Returns a value, and an error&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-}{
-&lt;span style="color:#6272a4">// TODO: Add test cases.
-&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
-&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
-&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
-)
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="returns-multiple-values-and-an-error">Returns multiple values, and an error&lt;/h3>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-want1 &lt;span style="color:#8be9fd">bool&lt;/span>
-wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-}{
-&lt;span style="color:#6272a4">// TODO: Add test cases.
-&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, got1, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="color:#ff79c6">if&lt;/span> err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">Fail&lt;/span>(t, fmt.&lt;span style="color:#50fa7b">Sprintf&lt;/span>(
-&lt;span style="color:#f1fa8c">&amp;#34;Error not expected but got one:\n&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">+&lt;/span>
-&lt;span style="color:#f1fa8c">&amp;#34;error: %q&amp;#34;&lt;/span>, err),
-)
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-&lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> {
-assert.&lt;span style="color:#50fa7b">EqualError&lt;/span>(t, err, tt.wantErr.&lt;span style="color:#50fa7b">Error&lt;/span>())
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
-assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want1, got1)
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="bonus-only-returns-values">Bonus: Only returns values&lt;/h3>
-&lt;p>The below example is for a function that doesn&amp;rsquo;t produce any errors, but I&amp;rsquo;m including it for the sake of completeness.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-}{
-&lt;span style="color:#6272a4">// TODO: Add test cases.
-&lt;/span>&lt;span style="color:#6272a4">&lt;/span> }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-assert.&lt;span style="color:#50fa7b">Equal&lt;/span>(t, tt.want, got)
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="thats-it">That&amp;rsquo;s It!&lt;/h2>
-&lt;p>This is just a short update to an enhancement I &lt;a href="https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/">previously made&lt;/a> to gotests. The &lt;code>assert&lt;/code> library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p></description></item><item><title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link><pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>--><description>&lt;h2 id="spice-up-your-life-python-">Spice Up Your &lt;del>Life&lt;/del> Python 🐍&lt;/h2>
-&lt;p>I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p>
-&lt;p>My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p>
-&lt;blockquote>
-&lt;p>Stages of learning programming:&lt;/p>
-&lt;ol>
-&lt;li>Learn a typed language, such as Java - complain at its complexity&lt;/li>
-&lt;li>Learn an untyped language, such as JavaScript or Python - marvel at its simplicity&lt;/li>
-&lt;li>Get frustrated at implied types in step 2&lt;/li>
-&lt;li>Revert to step 1&lt;/li>
-&lt;/ol>
-&lt;/blockquote>
-&lt;p>During said experiences I came across some poorly written scripts whiched &lt;strong>triggered&lt;/strong> some pet peeves: what object a function is expecting, or what it returns? Did I break some downstream function? This made it terribly difficult to add new functionality to scripts.&lt;/p>
-&lt;p>With this side project I wanted to make it right from the start. So I said to myself these are the key areas I want to target:&lt;/p>
-&lt;ol>
-&lt;li>The application must be extensively tested (did I mention I &lt;a href="https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/">love tests?&lt;/a>)&lt;/li>
-&lt;li>Functions must clearly define what the type of the objects the parameters are, and what the types of the objects they return are.&lt;/li>
-&lt;li>&lt;del>Best&lt;/del> Practices are upheld throughout the way&lt;/li>
-&lt;/ol>
-&lt;p>From this list, we can include the following to solve the above:&lt;/p>
-&lt;ol>
-&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests">Tests!!&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking">Static type checking&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects">Classes&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;h2 id="tests">Tests&lt;/h2>
-&lt;p>Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#6272a4"># scratch.py&lt;/span>
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">increment_int_by_one&lt;/span>(int_to_inc):
-incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;span style="color:#ff79c6">return&lt;/span> incremented_int
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>While this is something easy enough to test by doing so manually, at some point its functionality may increase, and at that point we would require automated tests to ensure its original feature-set was unchanged.&lt;/p>
-&lt;h3 id="implementation">Implementation&lt;/h3>
-&lt;p>There are &lt;a href="https://wiki.python.org/moin/PythonTestingToolsTaxonomy">several testing frameworks&lt;/a> out there, but for my use case I am using the built-in &lt;code>unittest&lt;/code> which is easy enough to use. A basic structure of a test file is seen below:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#6272a4"># test_scratch.py&lt;/span>
-&lt;span style="color:#ff79c6">import&lt;/span> unittest
-&lt;span style="color:#ff79c6">import&lt;/span> scratch
-&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">TestIncrement&lt;/span>(unittest&lt;span style="color:#ff79c6">.&lt;/span>TestCase):
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">test_increment&lt;/span>(self):
-&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&amp;#34;
-&lt;/span>&lt;span style="color:#f1fa8c"> Should successfully return int value 2
-&lt;/span>&lt;span style="color:#f1fa8c"> Given a parameter of int value 1
-&lt;/span>&lt;span style="color:#f1fa8c"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>
-expected &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>
-int_to_inc &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-actual &lt;span style="color:#ff79c6">=&lt;/span> scratch&lt;span style="color:#ff79c6">.&lt;/span>increment_int_by_one(int_to_inc)
-self&lt;span style="color:#ff79c6">.&lt;/span>assertEqual(actual, expected)
-&lt;span style="color:#ff79c6">if&lt;/span> __name__ &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;__main__&amp;#39;&lt;/span>:
-unittest&lt;span style="color:#ff79c6">.&lt;/span>main()
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>There&amp;rsquo;s a lot going on here, let&amp;rsquo;s break it down by section.&lt;/p>
-&lt;h4 id="imports">Imports&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">import&lt;/span> unittest
-&lt;span style="color:#ff79c6">import&lt;/span> scratch
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here we are specifying the modules that the test file is going to interact with. &lt;code>unittest&lt;/code> is the testing framework and &lt;code>scratch&lt;/code> is the Python file containing our business logic, as written earlier.&lt;/p>
-&lt;h4 id="class-declaration">Class Declaration&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">TestIncrement&lt;/span>(unittest&lt;span style="color:#ff79c6">.&lt;/span>TestCase):
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Simply enough, this is a class that extends the &lt;code>unittest.TestCase&lt;/code> class, for which then unittest can then execute all the test methods defined within it, and you can name them like &lt;code>class TestXXXX&lt;/code>. There is no limit to how many classes you can have, but I like to group my TestClasses together in terms of what logic they are testing.&lt;/p>
-&lt;h4 id="test-methods">Test Methods&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">test_increment&lt;/span>(self):
-&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&amp;#34;
-&lt;/span>&lt;span style="color:#f1fa8c"> Should successfully return int value 2
-&lt;/span>&lt;span style="color:#f1fa8c"> Given a parameter of int value 1
-&lt;/span>&lt;span style="color:#f1fa8c"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>
-expected &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>
-int_to_inc &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-actual &lt;span style="color:#ff79c6">=&lt;/span> scratch&lt;span style="color:#ff79c6">.&lt;/span>increment_int_by_one(int_to_inc)
-self&lt;span style="color:#ff79c6">.&lt;/span>assertEqual(actual, expected)
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>These methods are the real juicy bits of your tests. Here you are defining the parameters that are going to be used by your functions, and hitting the logic you are testing. For each test that you write you will alter the test name, description, expected values, and input parameters accordingly to what you are testing.&lt;/p>
-&lt;h4 id="main-method-invocation">Main Method Invocation&lt;/h4>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">if&lt;/span> __name__ &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;__main__&amp;#39;&lt;/span>:
-unittest&lt;span style="color:#ff79c6">.&lt;/span>main()
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>To close off nice and easily, this will tell Python to invoke all test classes that are described within &lt;code>unittest.TestCase&lt;/code>.&lt;/p>
-&lt;h3 id="execution">Execution&lt;/h3>
-&lt;p>Now just execute the test file and it will now run as expected:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> python &lt;span style="color:#ff79c6">-&lt;/span>m unittest test_scratch
-&lt;span style="color:#ff79c6">.&lt;/span>
-&lt;span style="color:#ff79c6">----------------------------------------------------------------------&lt;/span>
-Ran &lt;span style="color:#bd93f9">1&lt;/span> test &lt;span style="color:#ff79c6">in&lt;/span> &lt;span style="color:#bd93f9">0.001&lt;/span>s
-OK
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>A nice little touch is that we don&amp;rsquo;t even need to provide &lt;code>-m unittest&lt;/code> to the Python intepreter since we have defined the main method invocation:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> python test_scratch&lt;span style="color:#ff79c6">.&lt;/span>py
-&lt;span style="color:#ff79c6">.&lt;/span>
-&lt;span style="color:#ff79c6">----------------------------------------------------------------------&lt;/span>
-Ran &lt;span style="color:#bd93f9">1&lt;/span> test &lt;span style="color:#ff79c6">in&lt;/span> &lt;span style="color:#bd93f9">0.002&lt;/span>s
-OK
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="static-type-checking">Static Type Checking&lt;/h2>
-&lt;p>As I mentioned before, Python is great for throwing together a script to automate some task. It&amp;rsquo;s quick and easy to do mainly because the type of a variable is implied from whatever you set to it.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;gt;&lt;/span> my_int_var &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>(my_int_var)
-&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>&lt;span style="color:#ff79c6">class&lt;/span> &amp;#39;&lt;span style="color:#50fa7b">int&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;&amp;gt;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>This also applies to functions that take in a parameter, the type for it is implied from what it receives! Let&amp;rsquo;s revisit our incrementing function from earlier:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">increment_int_by_one&lt;/span>(int_to_inc):
-incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;span style="color:#ff79c6">return&lt;/span> incremented_int
-&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ff79c6">print&lt;/span>(increment_int_by_one(&lt;span style="color:#bd93f9">1&lt;/span>))
-&lt;span style="color:#bd93f9">2&lt;/span>
-&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ff79c6">print&lt;/span>(increment_int_by_one(&lt;span style="color:#bd93f9">100&lt;/span>))
-&lt;span style="color:#bd93f9">101&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>All good so far. But what happens when we pass in something that is not an int, such as a string?&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ff79c6">print&lt;/span>(increment_int_by_one(&lt;span style="color:#f1fa8c">&amp;#34;1&amp;#34;&lt;/span>))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;thats-it&#34;&gt;That&amp;rsquo;s It!&lt;/h2&gt;
+&lt;p&gt;This is just a short update to an enhancement I &lt;a href=&#34;https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/&#34;&gt;previously made&lt;/a&gt; to gotests. The &lt;code&gt;assert&lt;/code&gt; library is awesome for test cases and it&amp;rsquo;s great to have it autogenerated in my tests too.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Three Ways To Spice Up Your Python Code</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</link>
+      <pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>-->
+      <description>&lt;h2 id=&#34;spice-up-your-life-python-&#34;&gt;Spice Up Your &lt;del&gt;Life&lt;/del&gt; Python 🐍&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p&gt;
+&lt;p&gt;My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Stages of learning programming:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Learn a typed language, such as Java - complain at its complexity&lt;/li&gt;
+&lt;li&gt;Learn an untyped language, such as JavaScript or Python - marvel at its simplicity&lt;/li&gt;
+&lt;li&gt;Get frustrated at implied types in step 2&lt;/li&gt;
+&lt;li&gt;Revert to step 1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;During said experiences I came across some poorly written scripts whiched &lt;strong&gt;triggered&lt;/strong&gt; some pet peeves:  what object a function is expecting, or what it returns? Did I break some downstream function? This made it terribly difficult to add new functionality to scripts.&lt;/p&gt;
+&lt;p&gt;With this side project I wanted to make it right from the start. So I said to myself these are the key areas I want to target:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The application must be extensively tested (did I mention I &lt;a href=&#34;https://jdheyburn.co.uk/posts/extending-gotests-for-strict-error-tests/&#34;&gt;love tests?&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Functions must clearly define what the type of the objects the parameters are, and what the types of the objects they return are.&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;Best&lt;/del&gt; Practices are upheld throughout the way&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;From this list, we can include the following to solve the above:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#tests&#34;&gt;Tests!!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#static-type-checking&#34;&gt;Static type checking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/#class-objects&#34;&gt;Classes&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;tests&#34;&gt;Tests&lt;/h2&gt;
+&lt;p&gt;Alright so I know this one is a given. But in all honesty I&amp;rsquo;ve never really tested Python code before. Why so? I found it difficult to mock API calls and the effort required for the initial learning curve didn&amp;rsquo;t seem to pay off for the tiny script I was automating. Given the scope of my side project is rather large, this is a great opportunity to learn. Let&amp;rsquo;s start with a basic function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# scratch.py&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;increment_int_by_one&lt;/span&gt;(int_to_inc):
+    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_increment &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this is something easy enough to test by doing so manually, at some point its functionality may increase, and at that point we would require automated tests to ensure its original feature-set was unchanged.&lt;/p&gt;
+&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
+&lt;p&gt;There are &lt;a href=&#34;https://wiki.python.org/moin/PythonTestingToolsTaxonomy&#34;&gt;several testing frameworks&lt;/a&gt; out there, but for my use case I am using the built-in &lt;code&gt;unittest&lt;/code&gt; which is easy enough to use. A basic structure of a test file is seen below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# test_scratch.py&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; unittest
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; scratch
+
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;TestIncrement&lt;/span&gt;(unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;TestCase):
+    
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;test_increment&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Should successfully return int value 2
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Given a parameter of int value 1
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        expected &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+        int_to_inc &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+        actual &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;increment_int_by_one(int_to_inc)
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assertEqual(actual, expected)
+
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; __name__ &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;:
+    unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;main()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s a lot going on here, let&amp;rsquo;s break it down by section.&lt;/p&gt;
+&lt;h4 id=&#34;imports&#34;&gt;Imports&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; unittest
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; scratch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we are specifying the modules that the test file is going to interact with. &lt;code&gt;unittest&lt;/code&gt; is the testing framework and &lt;code&gt;scratch&lt;/code&gt; is the Python file containing our business logic, as written earlier.&lt;/p&gt;
+&lt;h4 id=&#34;class-declaration&#34;&gt;Class Declaration&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;TestIncrement&lt;/span&gt;(unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;TestCase):
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Simply enough, this is a class that extends the &lt;code&gt;unittest.TestCase&lt;/code&gt; class, for which then unittest can then execute all the test methods defined within it, and you can name them like &lt;code&gt;class TestXXXX&lt;/code&gt;. There is no limit to how many classes you can have, but I like to group my TestClasses together in terms of what logic they are testing.&lt;/p&gt;
+&lt;h4 id=&#34;test-methods&#34;&gt;Test Methods&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;test_increment&lt;/span&gt;(self):
+    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    Should successfully return int value 2
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    Given a parameter of int value 1
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+    expected &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+    int_to_inc &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+    actual &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;increment_int_by_one(int_to_inc)
+    self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assertEqual(actual, expected)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These methods are the real juicy bits of your tests. Here you are defining the parameters that are going to be used by your functions, and hitting the logic you are testing. For each test that you write you will alter the test name, description, expected values, and input parameters accordingly to what you are testing.&lt;/p&gt;
+&lt;h4 id=&#34;main-method-invocation&#34;&gt;Main Method Invocation&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; __name__ &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;:
+    unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;main()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To close off nice and easily, this will tell Python to invoke all test classes that are described within &lt;code&gt;unittest.TestCase&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;execution&#34;&gt;Execution&lt;/h3&gt;
+&lt;p&gt;Now just execute the test file and it will now run as expected:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; python &lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt;m unittest test_scratch                                     
+&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;                                                                     
+&lt;span style=&#34;color:#ff79c6&#34;&gt;----------------------------------------------------------------------&lt;/span&gt;
+Ran &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; test &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0.001&lt;/span&gt;s                                                  
+                                                                      
+OK                                                                    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A nice little touch is that we don&amp;rsquo;t even need to provide &lt;code&gt;-m unittest&lt;/code&gt; to the Python intepreter since we have defined the main method invocation:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; python test_scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;py                                              
+&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;                                                                     
+&lt;span style=&#34;color:#ff79c6&#34;&gt;----------------------------------------------------------------------&lt;/span&gt;
+Ran &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; test &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0.002&lt;/span&gt;s                                                  
+                                                                      
+OK                                                                    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;static-type-checking&#34;&gt;Static Type Checking&lt;/h2&gt;
+&lt;p&gt;As I mentioned before, Python is great for throwing together a script to automate some task. It&amp;rsquo;s quick and easy to do mainly because the type of a variable is implied from whatever you set to it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; my_int_var &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;(my_int_var)
+&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &amp;#39;&lt;span style=&#34;color:#50fa7b&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This also applies to functions that take in a parameter, the type for it is implied from what it receives! Let&amp;rsquo;s revisit our incrementing function from earlier:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;increment_int_by_one&lt;/span&gt;(int_to_inc):
+    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_increment &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;print&lt;/span&gt;(increment_int_by_one(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;))
+&lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;                            
+&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;print&lt;/span&gt;(increment_int_by_one(&lt;span style=&#34;color:#bd93f9&#34;&gt;100&lt;/span&gt;))
+&lt;span style=&#34;color:#bd93f9&#34;&gt;101&lt;/span&gt;                          
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;All good so far. But what happens when we pass in something that is not an int, such as a string?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;print&lt;/span&gt;(increment_int_by_one(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;))
 Traceback (most recent call last):
-File &lt;span style="color:#f1fa8c">&amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;&lt;/span>, line &lt;span style="color:#bd93f9">1&lt;/span>, &lt;span style="color:#ff79c6">in&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&lt;/span>module&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>
-File &lt;span style="color:#f1fa8c">&amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;&lt;/span>, line &lt;span style="color:#bd93f9">2&lt;/span>, &lt;span style="color:#ff79c6">in&lt;/span> increment_int_by_one
-TypeError: must be &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>, &lt;span style="color:#ff79c6">not&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Yikes, that&amp;rsquo;s a misleading error! Having a look at the error straight away, you&amp;rsquo;d be confused at &amp;lsquo;what&amp;rsquo; must be a string, not an int - didn&amp;rsquo;t you accidentally provide a str? So why is it telling us it must be a str and not an int?&lt;/p>
-&lt;p>What this is actually error-ing on is how an int is being concatenated to a str on the left-hand side of the + operator.&lt;/p>
-&lt;blockquote>
-&lt;p>Under the hood, Python believe you are trying to do a &lt;strong>string concatenation&lt;/strong> because the parameter is of type string, and is on the left-hand side of the + operator. The below shows a valid way to perform a string concatenation:&lt;/p>
-&lt;p>&lt;code>&amp;quot;1&amp;quot; + &amp;quot;1&amp;quot; # -&amp;gt; &amp;quot;11&amp;quot;&lt;/code>&lt;/p>
-&lt;p>If the int value was on the left-hand side of the operator and you passed a string, you&amp;rsquo;d get something like this:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-fallback" data-lang="fallback">&amp;gt;&amp;gt; 1 + &amp;#34;1&amp;#34;
+  File &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;&lt;/span&gt;module&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt;
+  File &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; increment_int_by_one
+TypeError: must be &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Yikes, that&amp;rsquo;s a misleading error! Having a look at the error straight away, you&amp;rsquo;d be confused at &amp;lsquo;what&amp;rsquo; must be a string, not an int - didn&amp;rsquo;t you accidentally provide a str? So why is it telling us it must be a str and not an int?&lt;/p&gt;
+&lt;p&gt;What this is actually error-ing on is how an int is being concatenated to a str on the left-hand side of the + operator.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Under the hood, Python believe you are trying to do a &lt;strong&gt;string concatenation&lt;/strong&gt; because the parameter is of type string, and is on the left-hand side of the + operator. The below shows a valid way to perform a string concatenation:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;quot;1&amp;quot; + &amp;quot;1&amp;quot; # -&amp;gt; &amp;quot;11&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the int value was on the left-hand side of the operator and you passed a string, you&amp;rsquo;d get something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt; 1 + &amp;#34;1&amp;#34;
 Traceback (most recent call last):
-File &amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+ File &amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
 TypeError: unsupported operand type(s) for +: &amp;#39;int&amp;#39; and &amp;#39;str&amp;#39;
-&lt;/code>&lt;/pre>&lt;/div>&lt;/blockquote>
-&lt;p>But changing the right-side of the operator won&amp;rsquo;t fix this for us. What we need is to implement typing.&lt;/p>
-&lt;h3 id="implementation-1">Implementation&lt;/h3>
-&lt;p>Python 3.6 onwards introduced static type checking, so make sure you upgrade to it if you haven&amp;rsquo;t already - which you might want to do very soon as Python 2 is &lt;a href="https://pythonclock.org/">EOL in 2020&lt;/a>!&lt;/p>
-&lt;p>Taking our above &lt;code>increment_int_by_one&lt;/code> function, we can add &lt;code>: int&lt;/code> to the parameter which will tell the function what type it expects the parameter to be.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">increment_int_by_one&lt;/span>(int_to_inc: &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>):
-incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_increment &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;span style="color:#ff79c6">return&lt;/span> incremented_int
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now when we pass in a &lt;code>str&lt;/code> as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong>type hints&lt;/strong>!&lt;/p>
-&lt;figure class="center">&lt;a href="type_hinting.png">
-&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png"
-alt="Screenshot displaying type hinting provided by Visual Studio Code"/> &lt;/a>
-&lt;/figure>
-&lt;p>I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p>
-&lt;p>VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p>
-&lt;figure class="center">&lt;a href="type_checking.png">
-&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png"
-alt="Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright"/> &lt;/a>
-&lt;/figure>
-&lt;p>Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code>pyright&lt;/code> extension which can be found in the VSCode Extensions section.&lt;/p>
-&lt;h3 id="return-types">Return Types&lt;/h3>
-&lt;p>So all of that just describes how typing works for parameters, but how can we specify the return type of a function? That is done easily enough too. Let&amp;rsquo;s extend on our increment function from earlier.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">increment_int_by_one&lt;/span>(int_to_inc: &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>:
-incremented_int &lt;span style="color:#ff79c6">=&lt;/span> int_to_inc &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>
-&lt;span style="color:#ff79c6">return&lt;/span> incremented_int
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note the only change here is the &lt;code>-&amp;gt; int&lt;/code> which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p>
-&lt;figure class="center">&lt;a href="type_checking_bad_return.png">
-&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png"
-alt="Screenshot displaying type checking, highlighting the bad return value"/> &lt;/a>
-&lt;/figure>
-&lt;p>The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p>
-&lt;figure class="center">&lt;a href="type_checking_bad_assign.png">
-&lt;img src="https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png"
-alt="Screenshot displaying type checking, highlighting the bad assigned variable"/> &lt;/a>
-&lt;/figure>
-&lt;p>And in this snapshot, we are trying to assign a variable of type &lt;code>str&lt;/code> to the output of the function which returns an &lt;code>int&lt;/code>!&lt;/p>
-&lt;p>Another pattern you might see is if a method does not return anything (in Java-speak, it is &lt;code>void&lt;/code>), an example of this is if the method is a constructor for a class.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> __init__(self) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> None:
-self&lt;span style="color:#ff79c6">.&lt;/span>attribute &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;DEFAULT_VALUE&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="class-objects">Class Objects&lt;/h2>
-&lt;p>So you might &lt;strong>class&lt;/strong> this (pardon the pun!) as a type of its own, but this is something I&amp;rsquo;ve learnt all the same recently, so I hope it benefits you too! Python has the ability to construct more complex objects in the form of classes. While I won&amp;rsquo;t go into the details of that (I&amp;rsquo;ll leave it up to &lt;a href="https://www.w3schools.com/python/python_classes.asp">better resources&lt;/a>), I wanted to show how I&amp;rsquo;ve been able to utilise them.&lt;/p>
-&lt;h3 id="test-mocks">Test Mocks&lt;/h3>
-&lt;p>One of the main reasons for implementing classes has been to resolve one of my requirements I described earlier on in this post, the ability to test my code easily. For my side project I interface with some third-party APIs to retrieve data, in order for me to test these I need to mock them appropriately. See below for a snippet of the code:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#6272a4"># spotify.py&lt;/span>
-&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">SpApi&lt;/span>():
-client: spotipy&lt;span style="color:#ff79c6">.&lt;/span>Spotify
-&lt;span style="color:#ff79c6">def&lt;/span> __init__(self, &lt;span style="color:#8be9fd;font-style:italic">id&lt;/span>: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>, secret: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> None:
-ccm &lt;span style="color:#ff79c6">=&lt;/span> SpotifyClientCredentials(
-client_id&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#8be9fd;font-style:italic">id&lt;/span>,
-client_secret&lt;span style="color:#ff79c6">=&lt;/span>secret
-)
-self&lt;span style="color:#ff79c6">.&lt;/span>client &lt;span style="color:#ff79c6">=&lt;/span> spotipy&lt;span style="color:#ff79c6">.&lt;/span>Spotify(client_credentials_manager&lt;span style="color:#ff79c6">=&lt;/span>ccm)
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">get_album_by_id&lt;/span>(self, &lt;span style="color:#8be9fd;font-style:italic">id&lt;/span>: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> SpAlbum:
-&lt;span style="color:#ff79c6">return&lt;/span> SpAlbum(self&lt;span style="color:#ff79c6">.&lt;/span>client&lt;span style="color:#ff79c6">.&lt;/span>album(&lt;span style="color:#8be9fd;font-style:italic">id&lt;/span>))
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">query_album_by_title&lt;/span>(self, title: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> SpQueryRespWrapper:
-q &lt;span style="color:#ff79c6">=&lt;/span> SpQueryBuilder(album&lt;span style="color:#ff79c6">=&lt;/span>title)&lt;span style="color:#ff79c6">.&lt;/span>build()
-&lt;span style="color:#ff79c6">return&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>execute_query(q)
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">query_album_by_title_and_artist&lt;/span>(self,
-title: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>,
-artist: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> SpQueryRespWrapper:
-q &lt;span style="color:#ff79c6">=&lt;/span> SpQueryBuilder(album&lt;span style="color:#ff79c6">=&lt;/span>title, album_artist&lt;span style="color:#ff79c6">=&lt;/span>artist)&lt;span style="color:#ff79c6">.&lt;/span>build()
-&lt;span style="color:#ff79c6">return&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>execute_query(q)
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">execute_query&lt;/span>(self, q: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> SpQueryRespWrapper:
-&lt;span style="color:#ff79c6">return&lt;/span> SpQueryRespWrapper(self&lt;span style="color:#ff79c6">.&lt;/span>client&lt;span style="color:#ff79c6">.&lt;/span>search(q&lt;span style="color:#ff79c6">=&lt;/span>q, &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;album&amp;#39;&lt;/span>))
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>You might have guessed it, the API is Spotify&amp;rsquo;s, and I am using the &lt;a href="https://github.com/plamere/spotipy">spotipy&lt;/a> library to do the interfacing. The &lt;code>SpApi&lt;/code> class is essentially a wrapper around the client to allow me to easily re-use methods across the app. It&amp;rsquo;s usage would be &lt;code>sp_api = SpApi()&lt;/code>, which would return us a client available at &lt;code>sp_api.client&lt;/code>. It is this attribute of the class which we want the ability to mock for when we test it. See how I implemented the mock:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#6272a4"># test_spotify.py&lt;/span>
-&lt;span style="color:#ff79c6">import&lt;/span> unittest
-&lt;span style="color:#ff79c6">from&lt;/span> unittest.mock &lt;span style="color:#ff79c6">import&lt;/span> MagicMock
-&lt;span style="color:#ff79c6">import&lt;/span> munch
-&lt;span style="color:#ff79c6">import&lt;/span> spotify
-get_album_by_id_response_fname &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#39;sp_get_album_by_id.json&amp;#39;&lt;/span>
-&lt;span style="color:#ff79c6">with&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">open&lt;/span>(get_album_by_id_response_fname, &lt;span style="color:#f1fa8c">&amp;#39;r&amp;#39;&lt;/span>, encoding&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;utf-8&amp;#39;&lt;/span>) &lt;span style="color:#ff79c6">as&lt;/span> f:
-get_album_by_id_response &lt;span style="color:#ff79c6">=&lt;/span> json&lt;span style="color:#ff79c6">.&lt;/span>load(f)
-&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">TestSpApiClass&lt;/span>(unittest&lt;span style="color:#ff79c6">.&lt;/span>TestCase):
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">get_mock_sp_api&lt;/span>(self) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> spotify&lt;span style="color:#ff79c6">.&lt;/span>SpApi:
-mock_sp_api &lt;span style="color:#ff79c6">=&lt;/span> spotify&lt;span style="color:#ff79c6">.&lt;/span>SpApi(&lt;span style="color:#f1fa8c">&amp;#39;id&amp;#39;&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#39;secret&amp;#39;&lt;/span>)
-mocked_album &lt;span style="color:#ff79c6">=&lt;/span> MagicMock(return_value&lt;span style="color:#ff79c6">=&lt;/span>get_album_by_id_response)
-mock_sp_api&lt;span style="color:#ff79c6">.&lt;/span>client &lt;span style="color:#ff79c6">=&lt;/span> MagicMock(album&lt;span style="color:#ff79c6">=&lt;/span>mocked_album)
-&lt;span style="color:#ff79c6">return&lt;/span> mock_sp_api
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">test_get_album_by_id&lt;/span>(self):
-&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&amp;#34;
-&lt;/span>&lt;span style="color:#f1fa8c"> Given a request is made to Spotify API for Album ID
-&lt;/span>&lt;span style="color:#f1fa8c"> Should verify that the API is hit
-&lt;/span>&lt;span style="color:#f1fa8c"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>
-mock_sp_api &lt;span style="color:#ff79c6">=&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>get_mock_sp_api()
-expected &lt;span style="color:#ff79c6">=&lt;/span> spotify&lt;span style="color:#ff79c6">.&lt;/span>SpAlbum(munch&lt;span style="color:#ff79c6">.&lt;/span>munchify(get_album_by_id_response))
-actual &lt;span style="color:#ff79c6">=&lt;/span> mock_sp_api&lt;span style="color:#ff79c6">.&lt;/span>get_album_by_id(&lt;span style="color:#f1fa8c">&amp;#39;album_id&amp;#39;&lt;/span>)
-mock_sp_api&lt;span style="color:#ff79c6">.&lt;/span>client&lt;span style="color:#ff79c6">.&lt;/span>album&lt;span style="color:#ff79c6">.&lt;/span>assert_called_once_with(&lt;span style="color:#f1fa8c">&amp;#39;album_id&amp;#39;&lt;/span>)
-self&lt;span style="color:#ff79c6">.&lt;/span>assertEqual(actual, expected)
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Talking about &lt;code>get_mock_sp_api&lt;/code> first, this constructs a new &lt;code>SpApi&lt;/code> wrapper class, but then it overwrites the client attribute with MagicMocks from the unittest framework. MagicMock essentially creates a mocked object or function for you. When I create a MagicMock with a &lt;code>return_value&lt;/code> parameter, it will return that passed parameter when the MagicMock object is invoked.&lt;/p>
-&lt;blockquote>
-&lt;p>Did you notice how it specifies the return type too?! &lt;code>-&amp;gt; spotify.SpApi&lt;/code>&lt;/p>
-&lt;/blockquote>
-&lt;p>The test &lt;code>test_get_album_by_id&lt;/code> creates an instance of this mocked Spotify API, so when we call the wrapper method &lt;code>get_album_by_id&lt;/code> it makes a downstream call to &lt;code>client.album&lt;/code>, which is what we mocked already with the chained MagicMock object! So now we can tell it what to return back when hit with certain parameters - and validating back with &lt;code>assert_called_once_with&lt;/code>.&lt;/p>
-&lt;p>Trying to learn how to implement the above has probably been the biggest blocker for me to test Python code in this way - now that I&amp;rsquo;ve discovered it I can&amp;rsquo;t stop using it everywhere!&lt;/p>
-&lt;h3 id="complex-object-comparison">Complex Object Comparison&lt;/h3>
-&lt;p>Much like the previous section, this relates to the static typing we implemented earlier. I was writing methods that returned complex objects encapsulated in classes, and I wanted to be able to test for equality using unittest&amp;rsquo;s &lt;code>self.assertEqual(actual, expected)&lt;/code>.&lt;/p>
-&lt;p>Let&amp;rsquo;s take this simple class:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">SomeObject&lt;/span>():
-some_str: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>
-some_int: &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>
-&lt;span style="color:#ff79c6">def&lt;/span> __init__(self, some_str: &lt;span style="color:#8be9fd;font-style:italic">str&lt;/span>, some_int: &lt;span style="color:#8be9fd;font-style:italic">int&lt;/span>) &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> None:
-self&lt;span style="color:#ff79c6">.&lt;/span>some_str &lt;span style="color:#ff79c6">=&lt;/span> some_str
-self&lt;span style="color:#ff79c6">.&lt;/span>some_int &lt;span style="color:#ff79c6">=&lt;/span> some_int
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>What we want to achieve is for us to be able to use the below test like so:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">class&lt;/span> &lt;span style="color:#50fa7b">TestObject&lt;/span>(unittest&lt;span style="color:#ff79c6">.&lt;/span>TestCase):
-&lt;span style="color:#ff79c6">def&lt;/span> &lt;span style="color:#50fa7b">test_equality&lt;/span>(self):
-&lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&amp;#34;
-&lt;/span>&lt;span style="color:#f1fa8c"> Should successfully test for object equality
-&lt;/span>&lt;span style="color:#f1fa8c"> Given both objects are equal
-&lt;/span>&lt;span style="color:#f1fa8c"> When using self.assertEqual
-&lt;/span>&lt;span style="color:#f1fa8c"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>
-object1 &lt;span style="color:#ff79c6">=&lt;/span> scratch&lt;span style="color:#ff79c6">.&lt;/span>SomeObject(some_str&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;str&amp;#39;&lt;/span>, some_int&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>)
-object2 &lt;span style="color:#ff79c6">=&lt;/span> scratch&lt;span style="color:#ff79c6">.&lt;/span>SomeObject(some_str&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#f1fa8c">&amp;#39;str&amp;#39;&lt;/span>, some_int&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>)
-self&lt;span style="color:#ff79c6">.&lt;/span>assertEqual(object1, object2)
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>However executing the test gives us an error:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> python test_scratch&lt;span style="color:#ff79c6">.&lt;/span>py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;But changing the right-side of the operator won&amp;rsquo;t fix this for us. What we need is to implement typing.&lt;/p&gt;
+&lt;h3 id=&#34;implementation-1&#34;&gt;Implementation&lt;/h3&gt;
+&lt;p&gt;Python 3.6 onwards introduced static type checking, so make sure you upgrade to it if you haven&amp;rsquo;t already - which you might want to do very soon as Python 2 is &lt;a href=&#34;https://pythonclock.org/&#34;&gt;EOL in 2020&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;Taking our above &lt;code&gt;increment_int_by_one&lt;/code&gt; function, we can add &lt;code&gt;: int&lt;/code&gt; to the parameter which will tell the function what type it expects the parameter to be.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;increment_int_by_one&lt;/span&gt;(int_to_inc: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;):
+    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_increment &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now when we pass in a &lt;code&gt;str&lt;/code&gt; as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong&gt;type hints&lt;/strong&gt;!&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_hinting.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png&#34;
+         alt=&#34;Screenshot displaying type hinting provided by Visual Studio Code&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p&gt;
+&lt;p&gt;VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png&#34;
+         alt=&#34;Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code&gt;pyright&lt;/code&gt; extension which can be found in the VSCode Extensions section.&lt;/p&gt;
+&lt;h3 id=&#34;return-types&#34;&gt;Return Types&lt;/h3&gt;
+&lt;p&gt;So all of that just describes how typing works for parameters, but how can we specify the return type of a function? That is done easily enough too. Let&amp;rsquo;s extend on our increment function from earlier.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;increment_int_by_one&lt;/span&gt;(int_to_inc: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;:
+    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_inc &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note the only change here is the &lt;code&gt;-&amp;gt; int&lt;/code&gt; which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_return.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png&#34;
+         alt=&#34;Screenshot displaying type checking, highlighting the bad return value&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_assign.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png&#34;
+         alt=&#34;Screenshot displaying type checking, highlighting the bad assigned variable&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;And in this snapshot, we are trying to assign a variable of type &lt;code&gt;str&lt;/code&gt; to the output of the function which returns an &lt;code&gt;int&lt;/code&gt;!&lt;/p&gt;
+&lt;p&gt;Another pattern you might see is if a method does not return anything (in Java-speak, it is &lt;code&gt;void&lt;/code&gt;), an example of this is if the method is a constructor for a class.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; __init__(self) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; None:
+    self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attribute &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;DEFAULT_VALUE&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;class-objects&#34;&gt;Class Objects&lt;/h2&gt;
+&lt;p&gt;So you might &lt;strong&gt;class&lt;/strong&gt; this (pardon the pun!) as a type of its own, but this is something I&amp;rsquo;ve learnt all the same recently, so I hope it benefits you too! Python has the ability to construct more complex objects in the form of classes. While I won&amp;rsquo;t go into the details of that (I&amp;rsquo;ll leave it up to &lt;a href=&#34;https://www.w3schools.com/python/python_classes.asp&#34;&gt;better resources&lt;/a&gt;), I wanted to show how I&amp;rsquo;ve been able to utilise them.&lt;/p&gt;
+&lt;h3 id=&#34;test-mocks&#34;&gt;Test Mocks&lt;/h3&gt;
+&lt;p&gt;One of the main reasons for implementing classes has been to resolve one of my requirements I described earlier on in this post, the ability to test my code easily. For my side project I interface with some third-party APIs to retrieve data, in order for me to test these I need to mock them appropriately. See below for a snippet of the code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# spotify.py&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;SpApi&lt;/span&gt;():
+    client: spotipy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;Spotify
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; __init__(self, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;id&lt;/span&gt;: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;, secret: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; None:
+        ccm &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; SpotifyClientCredentials(
+            client_id&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;id&lt;/span&gt;,
+            client_secret&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;secret
+        )
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;client &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; spotipy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;Spotify(client_credentials_manager&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;ccm)
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;get_album_by_id&lt;/span&gt;(self, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;id&lt;/span&gt;: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; SpAlbum:
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; SpAlbum(self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;client&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;album(&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;id&lt;/span&gt;))
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;query_album_by_title&lt;/span&gt;(self, title: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; SpQueryRespWrapper:
+        q &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; SpQueryBuilder(album&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;title)&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;build()
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;execute_query(q)
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;query_album_by_title_and_artist&lt;/span&gt;(self,
+                                        title: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;,
+                                        artist: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; SpQueryRespWrapper:
+        q &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; SpQueryBuilder(album&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;title, album_artist&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;artist)&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;build()
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;execute_query(q)
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;execute_query&lt;/span&gt;(self, q: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; SpQueryRespWrapper:
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; SpQueryRespWrapper(self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;client&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;search(q&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;q, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;album&amp;#39;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You might have guessed it, the API is Spotify&amp;rsquo;s, and I am using the &lt;a href=&#34;https://github.com/plamere/spotipy&#34;&gt;spotipy&lt;/a&gt; library to do the interfacing. The &lt;code&gt;SpApi&lt;/code&gt; class is essentially a wrapper around the client to allow me to easily re-use methods across the app. It&amp;rsquo;s usage would be &lt;code&gt;sp_api = SpApi()&lt;/code&gt;, which would return us a client available at &lt;code&gt;sp_api.client&lt;/code&gt;. It is this attribute of the class which we want the ability to mock for when we test it. See how I implemented the mock:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# test_spotify.py&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; unittest
+&lt;span style=&#34;color:#ff79c6&#34;&gt;from&lt;/span&gt; unittest.mock &lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; MagicMock
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; munch
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;import&lt;/span&gt; spotify
+
+get_album_by_id_response_fname &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;sp_get_album_by_id.json&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;open&lt;/span&gt;(get_album_by_id_response_fname, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;, encoding&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;as&lt;/span&gt; f:
+    get_album_by_id_response &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; json&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;load(f)
+
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;TestSpApiClass&lt;/span&gt;(unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;TestCase):
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;get_mock_sp_api&lt;/span&gt;(self) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; spotify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SpApi:
+        mock_sp_api &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; spotify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SpApi(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;secret&amp;#39;&lt;/span&gt;)
+        mocked_album &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; MagicMock(return_value&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;get_album_by_id_response)
+        mock_sp_api&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;client &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; MagicMock(album&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;mocked_album)
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; mock_sp_api
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;test_get_album_by_id&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Given a request is made to Spotify API for Album ID
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Should verify that the API is hit
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        mock_sp_api &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;get_mock_sp_api()
+        expected &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; spotify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SpAlbum(munch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;munchify(get_album_by_id_response))
+        actual &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; mock_sp_api&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;get_album_by_id(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;album_id&amp;#39;&lt;/span&gt;)
+        mock_sp_api&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;client&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;album&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assert_called_once_with(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;album_id&amp;#39;&lt;/span&gt;)
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assertEqual(actual, expected)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Talking about &lt;code&gt;get_mock_sp_api&lt;/code&gt; first, this constructs a new &lt;code&gt;SpApi&lt;/code&gt; wrapper class, but then it overwrites the client attribute with MagicMocks from the unittest framework. MagicMock essentially creates a mocked object or function for you. When I create a MagicMock with a &lt;code&gt;return_value&lt;/code&gt; parameter, it will return that passed parameter when the MagicMock object is invoked.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Did you notice how it specifies the return type too?! &lt;code&gt;-&amp;gt; spotify.SpApi&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The test &lt;code&gt;test_get_album_by_id&lt;/code&gt; creates an instance of this mocked Spotify API, so when we call the wrapper method &lt;code&gt;get_album_by_id&lt;/code&gt; it makes a downstream call to &lt;code&gt;client.album&lt;/code&gt;, which is what we mocked already with the chained MagicMock object! So now we can tell it what to return back when hit with certain parameters - and validating back with &lt;code&gt;assert_called_once_with&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Trying to learn how to implement the above has probably been the biggest blocker for me to test Python code in this way - now that I&amp;rsquo;ve discovered it I can&amp;rsquo;t stop using it everywhere!&lt;/p&gt;
+&lt;h3 id=&#34;complex-object-comparison&#34;&gt;Complex Object Comparison&lt;/h3&gt;
+&lt;p&gt;Much like the previous section, this relates to the static typing we implemented earlier. I was writing methods that returned complex objects encapsulated in classes, and I wanted to be able to test for equality using unittest&amp;rsquo;s &lt;code&gt;self.assertEqual(actual, expected)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s take this simple class:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;SomeObject&lt;/span&gt;():
+    some_str: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;
+    some_int: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; __init__(self, some_str: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;str&lt;/span&gt;, some_int: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;-&amp;gt;&lt;/span&gt; None:
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_str &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; some_str
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; some_int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What we want to achieve is for us to be able to use the below test like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;TestObject&lt;/span&gt;(unittest&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;TestCase):
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;test_equality&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Should successfully test for object equality
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        Given both objects are equal
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        When using self.assertEqual
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        object1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SomeObject(some_str&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;str&amp;#39;&lt;/span&gt;, some_int&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;)
+        object2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SomeObject(some_str&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;str&amp;#39;&lt;/span&gt;, some_int&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;)
+        self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assertEqual(object1, object2)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However executing the test gives us an error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; python test_scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;py
 F
-&lt;span style="color:#ff79c6">======================================================================&lt;/span>
-FAIL: test_equality (__main__&lt;span style="color:#ff79c6">.&lt;/span>TestObject)
-&lt;span style="color:#ff79c6">----------------------------------------------------------------------&lt;/span>
+&lt;span style=&#34;color:#ff79c6&#34;&gt;======================================================================&lt;/span&gt;
+FAIL: test_equality (__main__&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;TestObject)
+&lt;span style=&#34;color:#ff79c6&#34;&gt;----------------------------------------------------------------------&lt;/span&gt;
 Traceback (most recent call last):
-File &lt;span style="color:#f1fa8c">&amp;#34;test_scratch.py&amp;#34;&lt;/span>, line &lt;span style="color:#bd93f9">16&lt;/span>, &lt;span style="color:#ff79c6">in&lt;/span> test_equality
-self&lt;span style="color:#ff79c6">.&lt;/span>assertEqual(object1, object2)
-AssertionError: &lt;span style="color:#ff79c6">&amp;lt;&lt;/span>scratch&lt;span style="color:#ff79c6">.&lt;/span>SomeObject &lt;span style="color:#8be9fd;font-style:italic">object&lt;/span> at &lt;span style="color:#bd93f9">0x000002A0A0199EB8&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">&amp;lt;&lt;/span>scratch&lt;span style="color:#ff79c6">.&lt;/span>SomeObject &lt;span style="color:#8be9fd;font-style:italic">object&lt;/span> at &lt;span style="color:#bd93f9">0x000002A0A0199EF0&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>
-&lt;span style="color:#ff79c6">----------------------------------------------------------------------&lt;/span>
-Ran &lt;span style="color:#bd93f9">1&lt;/span> test &lt;span style="color:#ff79c6">in&lt;/span> &lt;span style="color:#bd93f9">0.003&lt;/span>s
-FAILED (failures&lt;span style="color:#ff79c6">=&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>)
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>This fails because we have not overwritten the default &lt;code>__eq__&lt;/code> method on the class. Python then defaults to comparing the memory references for both objects. Since these are two entirely different objects they will be pointing to different memory references. What we need to do is tell Python what defines equality, so let&amp;rsquo;s add the method onto &lt;code>SomeObject&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> __eq__(self, other):
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>(other) &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>(self):
-&lt;span style="color:#ff79c6">return&lt;/span> NotImplemented
-&lt;span style="color:#ff79c6">return&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>some_str &lt;span style="color:#ff79c6">==&lt;/span> other&lt;span style="color:#ff79c6">.&lt;/span>some_str \
-&lt;span style="color:#ff79c6">and&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>some_int &lt;span style="color:#ff79c6">==&lt;/span> other&lt;span style="color:#ff79c6">.&lt;/span>some_int
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>And here we are! First we are quickly checking to see the two objects are of the same type before we proceed with the underlying values (fail first, and early!). From there we are checking the attributes within the objects. Hurrah!&lt;/p>
-&lt;p>One neat little trick I like to do for complex objects that have multiple attributes, is that instead of writing out a new &lt;code>and&lt;/code> comparator for every attribute, is to replace it all with this:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">def&lt;/span> __eq__(self, other):
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>(other) &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>(self):
-&lt;span style="color:#ff79c6">return&lt;/span> NotImplemented
-&lt;span style="color:#ff79c6">return&lt;/span> self&lt;span style="color:#ff79c6">.&lt;/span>__dict__ &lt;span style="color:#ff79c6">==&lt;/span> other&lt;span style="color:#ff79c6">.&lt;/span>__dict__
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>__dict__&lt;/code> attribute returns the objects in a Python dictionary format, which will contain all the attributes and their values. If the objects are entirely identical then they will return true! Now let&amp;rsquo;s run the test again.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> python test_scratch&lt;span style="color:#ff79c6">.&lt;/span>py
-&lt;span style="color:#ff79c6">.&lt;/span>
-&lt;span style="color:#ff79c6">----------------------------------------------------------------------&lt;/span>
-Ran &lt;span style="color:#bd93f9">1&lt;/span> test &lt;span style="color:#ff79c6">in&lt;/span> &lt;span style="color:#bd93f9">0.001&lt;/span>s
-OK
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Normal service is resumed!!&lt;/p>
-&lt;h2 id="closing">Closing&lt;/h2>
-&lt;p>I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p>
-&lt;p>Thanks for reading 😃&lt;/p></description></item><item><title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"/><link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link><pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate><guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid>--><description>&lt;blockquote>
-&lt;p>&lt;strong>UPDATE 2020-07-17&lt;/strong>&lt;/p>
-&lt;p>I wrote a follow up post to this one using the &lt;a href="https://godoc.org/github.com/stretchr/testify/assert">assert&lt;/a> package instead.&lt;/p>
-&lt;p>Awesome - &lt;a href="https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/">take me there&lt;/a>!&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="strict-error-tests-in-java">Strict Error Tests in Java&lt;/h2>
-&lt;p>I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD). For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter &lt;code>expected&lt;/code> for the annotation &lt;code>@Test&lt;/code>, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.&lt;/p>
-&lt;p>This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">boolean&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>&lt;span style="color:#ff79c6">(&lt;/span>String dogName&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> DogValidationException &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">(&lt;/span>containsSymbols&lt;span style="color:#ff79c6">(&lt;/span>dogName&lt;span style="color:#ff79c6">))&lt;/span> &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;span style="color:#ff79c6">throw&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> DogValidationException&lt;span style="color:#ff79c6">(&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">);&lt;/span>
-&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#ff79c6">(&lt;/span>dogName&lt;span style="color:#ff79c6">.&lt;/span>&lt;span style="color:#50fa7b">length&lt;/span> &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> 100&lt;span style="color:#ff79c6">)&lt;/span> &lt;span style="color:#ff79c6">{&lt;/span>
-&lt;span style="color:#ff79c6">throw&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> DogValidationException&lt;span style="color:#ff79c6">(&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;Who has a name for a dog that long?!&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">);&lt;/span>
-&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">true&lt;/span>&lt;span style="color:#ff79c6">;&lt;/span>
-&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>For this method, just using &lt;code>@Test(expected = DogValidationException.class)&lt;/code> on our test method is not sufficient; how can we determine that the exception was raised for a dogName.length breach and not for containing symbols?&lt;/p>
-&lt;p>In order for me to resolve this, I came across the &lt;code>ExpectedException&lt;/code> class for JUnit on &lt;a href="https://www.baeldung.com/junit-assert-exception">Baeldung&lt;/a> which enables us to specify the error message expected. Here it is applied to the test case for this method:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-java" data-lang="java">@Rule
-&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> ExpectedException exceptionRule &lt;span style="color:#ff79c6">=&lt;/span> ExpectedException&lt;span style="color:#ff79c6">.&lt;/span>&lt;span style="color:#50fa7b">none&lt;/span>&lt;span style="color:#ff79c6">();&lt;/span>
+  File &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;test_scratch.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#bd93f9&#34;&gt;16&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; test_equality
+    self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;assertEqual(object1, object2)
+AssertionError: &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;&lt;/span&gt;scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SomeObject &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;object&lt;/span&gt; at &lt;span style=&#34;color:#bd93f9&#34;&gt;0x000002A0A0199EB8&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;&lt;/span&gt;scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;SomeObject &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;object&lt;/span&gt; at &lt;span style=&#34;color:#bd93f9&#34;&gt;0x000002A0A0199EF0&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;----------------------------------------------------------------------&lt;/span&gt;
+Ran &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; test &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0.003&lt;/span&gt;s
+
+FAILED (failures&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This fails because we have not overwritten the default &lt;code&gt;__eq__&lt;/code&gt; method on the class. Python then defaults to comparing the memory references for both objects. Since these are two entirely different objects they will be pointing to different memory references. What we need to do is tell Python what defines equality, so let&amp;rsquo;s add the method onto &lt;code&gt;SomeObject&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; __eq__(self, other):
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;(other) &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; NotImplemented
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_str &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; other&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_str \
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;and&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_int &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; other&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;some_int
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And here we are! First we are quickly checking to see the two objects are of the same type before we proceed with the underlying values (fail first, and early!). From there we are checking the attributes within the objects. Hurrah!&lt;/p&gt;
+&lt;p&gt;One neat little trick I like to do for complex objects that have multiple attributes, is that instead of writing out a new &lt;code&gt;and&lt;/code&gt; comparator for every attribute, is to replace it all with this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; __eq__(self, other):
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;(other) &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt;(self):
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; NotImplemented
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;__dict__ &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; other&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;__dict__
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;__dict__&lt;/code&gt; attribute returns the objects in a Python dictionary format, which will contain all the attributes and their values. If the objects are entirely identical then they will return true! Now let&amp;rsquo;s run the test again.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; python test_scratch&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;py                                              
+&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;                                                                     
+&lt;span style=&#34;color:#ff79c6&#34;&gt;----------------------------------------------------------------------&lt;/span&gt;
+Ran &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; test &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0.001&lt;/span&gt;s                                                  
+                                                                      
+OK                                                                    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Normal service is resumed!!&lt;/p&gt;
+&lt;h2 id=&#34;closing&#34;&gt;Closing&lt;/h2&gt;
+&lt;p&gt;I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p&gt;
+&lt;p&gt;Thanks for reading 😃&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Extending Gotests for Strict Error Tests</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</link>
+      <pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/extending-gotests-for-strict-error-tests/</guid>-->
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2020-07-17&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I wrote a follow up post to this one using the &lt;a href=&#34;https://godoc.org/github.com/stretchr/testify/assert&#34;&gt;assert&lt;/a&gt; package instead.&lt;/p&gt;
+&lt;p&gt;Awesome - &lt;a href=&#34;https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/&#34;&gt;take me there&lt;/a&gt;!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;strict-error-tests-in-java&#34;&gt;Strict Error Tests in Java&lt;/h2&gt;
+&lt;p&gt;I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD).  For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter &lt;code&gt;expected&lt;/code&gt; for the annotation &lt;code&gt;@Test&lt;/code&gt;, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.&lt;/p&gt;
+&lt;p&gt;This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;boolean&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;String dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;throws&lt;/span&gt; DogValidationException &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;containsSymbols&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+    
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; 100&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who has a name for a dog that long?!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For this method, just using &lt;code&gt;@Test(expected = DogValidationException.class)&lt;/code&gt; on our test method is not sufficient; how can we determine that the exception was raised for a dogName.length breach and not for containing symbols?&lt;/p&gt;
+&lt;p&gt;In order for me to resolve this, I came across the &lt;code&gt;ExpectedException&lt;/code&gt; class for JUnit on &lt;a href=&#34;https://www.baeldung.com/junit-assert-exception&#34;&gt;Baeldung&lt;/a&gt; which enables us to specify the error message expected. Here it is applied to the test case for this method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;@Rule
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; ExpectedException exceptionRule &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; ExpectedException&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;none&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;();&lt;/span&gt;
+
 @Test
-&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">shouldHandleDogNameWithSymbols&lt;/span>&lt;span style="color:#ff79c6">()&lt;/span> &lt;span style="color:#ff79c6">{&lt;/span>
-exceptionRule&lt;span style="color:#ff79c6">.&lt;/span>&lt;span style="color:#50fa7b">expect&lt;/span>&lt;span style="color:#ff79c6">(&lt;/span>DogValidationException&lt;span style="color:#ff79c6">.&lt;/span>&lt;span style="color:#50fa7b">class&lt;/span>&lt;span style="color:#ff79c6">);&lt;/span>
-exceptionRule&lt;span style="color:#ff79c6">.&lt;/span>&lt;span style="color:#50fa7b">expectMessage&lt;/span>&lt;span style="color:#ff79c6">(&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">);&lt;/span>
-validateDogName&lt;span style="color:#ff79c6">(&lt;/span>&lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>&lt;span style="color:#ff79c6">);&lt;/span>
-&lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="applying-to-golang">Applying to Golang&lt;/h2>
-&lt;p>Back to Golang, there is a built-in library aptly named &lt;code>testing&lt;/code> which enables us to assert on test conditions. When combined with &lt;a href="https://github.com/cweill/gotests">Gotests&lt;/a> - a tool for generating Go tests from your code - writing tests could not be easier! I love how this is bundled in with the Go extension for VSCode, my text editor of choice (for now&amp;hellip;).&lt;/p>
-&lt;p>Converting the above Java &lt;code>validateDogName&lt;/code> method to Golang will produce something like:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(name &lt;span style="color:#8be9fd">string&lt;/span>) (&lt;span style="color:#8be9fd">bool&lt;/span>, &lt;span style="color:#8be9fd">error&lt;/span>) {
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#50fa7b">containsSymbols&lt;/span>(name) {
-&lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>, errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>)
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;shouldHandleDogNameWithSymbols&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+    exceptionRule&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;expect&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
+    exceptionRule&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;expectMessage&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
+    validateDogName&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;applying-to-golang&#34;&gt;Applying to Golang&lt;/h2&gt;
+&lt;p&gt;Back to Golang, there is a built-in library aptly named &lt;code&gt;testing&lt;/code&gt; which enables us to assert on test conditions. When combined with &lt;a href=&#34;https://github.com/cweill/gotests&#34;&gt;Gotests&lt;/a&gt; - a tool for generating Go tests from your code - writing tests could not be easier! I love how this is bundled in with the Go extension for VSCode, my text editor of choice (for now&amp;hellip;).&lt;/p&gt;
+&lt;p&gt;Converting the above Java &lt;code&gt;validateDogName&lt;/code&gt; method to Golang will produce something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;) (&lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;, &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;) {
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;containsSymbols&lt;/span&gt;(name) {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;, errors.&lt;span style=&#34;color:#50fa7b&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span&gt;)
+    }
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;len&lt;/span&gt;(name) &amp;gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;100&lt;/span&gt; {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;, errors.&lt;span style=&#34;color:#50fa7b&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;who has a name for a dog that long&amp;#34;&lt;/span&gt;)
+    }
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt;
 }
-&lt;span style="color:#ff79c6">if&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">len&lt;/span>(name) &amp;gt; &lt;span style="color:#bd93f9">100&lt;/span> {
-&lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>, errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;who has a name for a dog that long&amp;#34;&lt;/span>)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have a Go method that returns the &lt;code&gt;error&lt;/code&gt; interface, then gotests will generate a test that look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+    }{
+        name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span&gt;,
+        args: args{
+            name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;,
+        },
+        want: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;,
+        wantErr: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;,
+    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; (err &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt;) &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; tt.wantErr {
+                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span&gt;, err, tt.wantErr)
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; got &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; tt.want {
+                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span&gt;, got, tt.want)
+            }
+        })
+    }
 }
-&lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">true&lt;/span>, &lt;span style="color:#ff79c6">nil&lt;/span>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From the above we are limited to what error we can assert for, here &lt;em&gt;any&lt;/em&gt; error returned will pass the test. This is equivalent to using &lt;code&gt;@Test(expected=Exception.class)&lt;/code&gt; in JUnit! But there is another way&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;modifying-the-generated-test&#34;&gt;Modifying the Generated Test&lt;/h3&gt;
+&lt;p&gt;We only need to make a few simple changes to the generated test to give us the ability to assert on test error message&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;Test_validateDogName&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; args &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+    }
+    tests &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; []&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;struct&lt;/span&gt; {
+        name    &lt;span style=&#34;color:#8be9fd&#34;&gt;string&lt;/span&gt;
+        args    args
+        want    &lt;span style=&#34;color:#8be9fd&#34;&gt;bool&lt;/span&gt;
+&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;        wantErr &lt;span style=&#34;color:#8be9fd&#34;&gt;error&lt;/span&gt;
+&lt;/span&gt;    }{
+        name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span&gt;,
+        args: args{
+            name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;,
+        },
+        want: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;,
+&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;        wantErr: errors.&lt;span style=&#34;color:#50fa7b&#34;&gt;New&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span&gt;),
+&lt;/span&gt;    }
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; _, tt &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;range&lt;/span&gt; tests {
+        t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Run&lt;/span&gt;(tt.name, &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;func&lt;/span&gt;(t &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt;testing.T) {
+            got, err &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(tt.args.name)
+&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; tt.wantErr &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;nil&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; !reflect.&lt;span style=&#34;color:#50fa7b&#34;&gt;DeepEqual&lt;/span&gt;(err, tt.wantErr) {
+&lt;/span&gt;                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span&gt;, err, tt.wantErr)
+                &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt;
+            }
+            &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; got &lt;span style=&#34;color:#ff79c6&#34;&gt;!=&lt;/span&gt; tt.want {
+                t.&lt;span style=&#34;color:#50fa7b&#34;&gt;Errorf&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span&gt;, got, tt.want)
+            }
+        })
+    }
 }
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you have a Go method that returns the &lt;code>error&lt;/code> interface, then gotests will generate a test that look like this:&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;From the above there are three highlighted changes, let&amp;rsquo;s go over them individually:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;wantErr error&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;we are changing this from &lt;code&gt;bool&lt;/code&gt; so that we can make a comparison against the error returned from the function&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wantErr: errors.New(&amp;quot;dog cannot have symbols in their name&amp;quot;),&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;this is the error struct that we are expecting&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;if tt.wantErr != nil &amp;amp;&amp;amp; !reflect.DeepEqual(err, tt.wantErr) {&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;check to make sure the test is expected an error, if so then compare it against the returned error&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Point 3 provides additional support if there was a test case that did not expect an error. Note how &lt;code&gt;wantErr&lt;/code&gt; is omitted entirely from the test case below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;{
+    name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Should return true for valid dog name&amp;#34;&lt;/span&gt;,
+    args: args{
+        name: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Benedict Cumberland the Sausage Dog&amp;#34;&lt;/span&gt;,
+    },
+    want: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;,
 }
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-wantErr &lt;span style="color:#8be9fd">bool&lt;/span>
-}{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
-args: args{
-name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
-},
-want: &lt;span style="color:#ff79c6">false&lt;/span>,
-wantErr: &lt;span style="color:#ff79c6">true&lt;/span>,
-}
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="color:#ff79c6">if&lt;/span> (err &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span>) &lt;span style="color:#ff79c6">!=&lt;/span> tt.wantErr {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
-}
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>From the above we are limited to what error we can assert for, here &lt;em>any&lt;/em> error returned will pass the test. This is equivalent to using &lt;code>@Test(expected=Exception.class)&lt;/code> in JUnit! But there is another way&amp;hellip;&lt;/p>
-&lt;h3 id="modifying-the-generated-test">Modifying the Generated Test&lt;/h3>
-&lt;p>We only need to make a few simple changes to the generated test to give us the ability to assert on test error message&amp;hellip;&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#8be9fd;font-style:italic">func&lt;/span> &lt;span style="color:#50fa7b">Test_validateDogName&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-&lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> args &lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-}
-tests &lt;span style="color:#ff79c6">:=&lt;/span> []&lt;span style="color:#8be9fd;font-style:italic">struct&lt;/span> {
-name &lt;span style="color:#8be9fd">string&lt;/span>
-args args
-want &lt;span style="color:#8be9fd">bool&lt;/span>
-&lt;span style="display:block;width:100%;background-color:#3d3f4a"> wantErr &lt;span style="color:#8be9fd">error&lt;/span>
-&lt;/span> }{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Test error was thrown for dog name with symbols&amp;#34;&lt;/span>,
-args: args{
-name: &lt;span style="color:#f1fa8c">&amp;#34;GoodestBoy#1&amp;#34;&lt;/span>,
-},
-want: &lt;span style="color:#ff79c6">false&lt;/span>,
-&lt;span style="display:block;width:100%;background-color:#3d3f4a"> wantErr: errors.&lt;span style="color:#50fa7b">New&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;dog cannot have symbols in their name&amp;#34;&lt;/span>),
-&lt;/span> }
-&lt;span style="color:#ff79c6">for&lt;/span> _, tt &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#ff79c6">range&lt;/span> tests {
-t.&lt;span style="color:#50fa7b">Run&lt;/span>(tt.name, &lt;span style="color:#8be9fd;font-style:italic">func&lt;/span>(t &lt;span style="color:#ff79c6">*&lt;/span>testing.T) {
-got, err &lt;span style="color:#ff79c6">:=&lt;/span> &lt;span style="color:#50fa7b">validateDogName&lt;/span>(tt.args.name)
-&lt;span style="display:block;width:100%;background-color:#3d3f4a"> &lt;span style="color:#ff79c6">if&lt;/span> tt.wantErr &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">nil&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> !reflect.&lt;span style="color:#50fa7b">DeepEqual&lt;/span>(err, tt.wantErr) {
-&lt;/span> t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() error = %v, wantErr %v&amp;#34;&lt;/span>, err, tt.wantErr)
-&lt;span style="color:#ff79c6">return&lt;/span>
-}
-&lt;span style="color:#ff79c6">if&lt;/span> got &lt;span style="color:#ff79c6">!=&lt;/span> tt.want {
-t.&lt;span style="color:#50fa7b">Errorf&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;validateDogName() = %v, want %v&amp;#34;&lt;/span>, got, tt.want)
-}
-})
-}
-}
-&lt;/code>&lt;/pre>&lt;/div>
-&lt;p>From the above there are three highlighted changes, let&amp;rsquo;s go over them individually:&lt;/p>
-&lt;ol>
-&lt;li>&lt;code>wantErr error&lt;/code>
-&lt;ul>
-&lt;li>we are changing this from &lt;code>bool&lt;/code> so that we can make a comparison against the error returned from the function&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>wantErr: errors.New(&amp;quot;dog cannot have symbols in their name&amp;quot;),&lt;/code>
-&lt;ul>
-&lt;li>this is the error struct that we are expecting&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>if tt.wantErr != nil &amp;amp;&amp;amp; !reflect.DeepEqual(err, tt.wantErr) {&lt;/code>
-&lt;ul>
-&lt;li>check to make sure the test is expected an error, if so then compare it against the returned error&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;p>Point 3 provides additional support if there was a test case that did not expect an error. Note how &lt;code>wantErr&lt;/code> is omitted entirely from the test case below.&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-golang" data-lang="golang">{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Should return true for valid dog name&amp;#34;&lt;/span>,
-args: args{
-name: &lt;span style="color:#f1fa8c">&amp;#34;Benedict Cumberland the Sausage Dog&amp;#34;&lt;/span>,
-},
-want: &lt;span style="color:#ff79c6">true&lt;/span>,
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="customising-gotests-generated-test">Customising Gotests Generated Test&lt;/h3>
-&lt;p>Gotests gives us the ability to provide our own templates for generating tests, and can easily be integrated into your text editor of choice. I&amp;rsquo;ll show you how this can be done in VSCode.&lt;/p>
-&lt;ol>
-&lt;li>Check out gotests and copy the templates directory to a place of your choosing
-&lt;ul>
-&lt;li>&lt;code>git clone https://github.com/cweill/gotests.git&lt;/code>&lt;/li>
-&lt;li>&lt;code>cp -R gotests/internal/render/templates ~/scratch/gotests&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Overwrite the contents of function.tmpl with &lt;a href="https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5">the contents of this Gist&lt;/a>&lt;/li>
-&lt;li>Add the following setting to VSCode&amp;rsquo;s settings.json
-&lt;ul>
-&lt;li>&lt;code>&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/scratch/templates&amp;quot;]&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;p>Once you have done that, future tests will now generate with stricter error testing! 🎉&lt;/p>
-&lt;h2 id="closing">Closing&lt;/h2>
-&lt;p>I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.&lt;/p>
-&lt;p>I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;customising-gotests-generated-test&#34;&gt;Customising Gotests Generated Test&lt;/h3&gt;
+&lt;p&gt;Gotests gives us the ability to provide our own templates for generating tests, and can easily be integrated into your text editor of choice. I&amp;rsquo;ll show you how this can be done in VSCode.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Check out gotests and copy the templates directory to a place of your choosing
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git clone https://github.com/cweill/gotests.git&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cp -R gotests/internal/render/templates ~/scratch/gotests&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Overwrite the contents of function.tmpl with &lt;a href=&#34;https://gist.github.com/jdheyburn/978e7b84dc9c197bcdd41afece2edab5&#34;&gt;the contents of this Gist&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Add the following setting to VSCode&amp;rsquo;s settings.json
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;go.generateTestsFlags&amp;quot;: [&amp;quot;--template_dir=~/scratch/templates&amp;quot;]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Once you have done that, future tests will now generate with stricter error testing! 🎉&lt;/p&gt;
+&lt;h2 id=&#34;closing&#34;&gt;Closing&lt;/h2&gt;
+&lt;p&gt;I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.&lt;/p&gt;
+&lt;p&gt;I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

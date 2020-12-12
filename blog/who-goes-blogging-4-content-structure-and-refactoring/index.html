@@ -1,11 +1,197 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><script async defer data-domain=jdheyburn.co.uk src=https://stats.jdheyburn.co.uk/js/index.js></script><meta name=author content="Joseph D. Heyburn"><meta name=description content="Ramblings of a tech guy"><meta name=keywords content="blog,developer,devops,cloud"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png"><meta name=twitter:title content="Who Goes Blogging 4: Content Structure & Refactoring"><meta name=twitter:description content="Performing refactoring and reorganising how my Hugo website is structured"><meta property="og:title" content="Who Goes Blogging 4: Content Structure & Refactoring"><meta property="og:description" content="Performing refactoring and reorganising how my Hugo website is structured"><meta property="og:type" content="article"><meta property="og:url" content="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/"><meta property="og:image" content="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png"><meta property="article:published_time" content="2020-03-31T00:00:00+00:00"><meta property="article:modified_time" content="2020-03-31T00:00:00+00:00"><base href=https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/><title>Who Goes Blogging 4: Content Structure & Refactoring · JDHeyburn</title><link rel=canonical href=https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/><link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel=stylesheet><link rel=stylesheet href=https://use.fontawesome.com/releases/v5.13.0/css/all.css integrity=sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/custom.css><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-16x16.png sizes=16x16><meta name=generator content="Hugo 0.79.0"></head><body class=colorscheme-dark><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://jdheyburn.co.uk/>JDHeyburn</a>
-<input type=checkbox id=menu-toggle>
-<label class="menu-button float-right" for=menu-toggle><i class="fas fa-bars"></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/about/>About</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/blog/>Blog</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/contact/>Contact</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title>Who Goes Blogging 4: Content Structure & Refactoring</h1></div><div class=post-description><p>Performing refactoring and reorganising how my Hugo website is structured</p></div><div class=post-meta><div class=date><span class=posted-on><i class="fas fa-calendar"></i><time datetime=2020-03-31T00:00:00Z>31 March 2020</time></span>
-<span class=reading-time><i class="fas fa-clock"></i>8-minute read</span></div><div class=tags><i class="fas fa-tag"></i><a href=https://jdheyburn.co.uk/tags/bash/>bash</a>
-<span class=separator>•</span>
-<a href=https://jdheyburn.co.uk/tags/hugo/>hugo</a>
-<span class=separator>•</span>
-<a href=https://jdheyburn.co.uk/tags/content-organisation/>content-organisation</a></div></div></header><div><aside><nav id=TableOfContents><ul><li><a href=#content-article-reorganising>Content Article Reorganising</a><ul><li><a href=#transformation-script>Transformation Script</a></li></ul></li><li><a href=#renaming-content-section>Renaming Content Section</a><ul><li><a href=#fixing-article-rendering>Fixing Article Rendering</a></li><li><a href=#fixing-existing-urls>Fixing Existing URLs</a></li><li><a href=#from-blogs-to-blog>From Blogs to Blog</a></li><li><a href=#heading-to-blog>Heading to Blog</a></li></ul></li></ul></nav></aside><p>So far in this series we&rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:</p><ol><li>Moving content articles from a flat structure to a leaf bundle</li><li>Rename content section to <strong>blog</strong> from <strong>posts</strong></li><li>Upgrading <code>hugo-coder</code> theme and <code>hugo</code> version</li><li>Adding a table of contents to the pages</li><li>&mldr; and further improvements as I find them</li></ol><p>This post will cover items 1-2, the others will be in a follow up post.</p><h2 id=content-article-reorganising>Content Article Reorganising</h2><p>Hugo has a few different ways you can organise your content, known as <a href=https://gohugo.io/content-management/page-bundles/>Page Bundles</a>. Up to now I&rsquo;ve adopted <a href=https://gohugo.io/content-management/page-bundles/#branch-bundles>Branch Bundles</a> where I have all my articles in named markdown files under the <code>content/posts</code> directory - acting as the branch bundle, and storing all images under <code>static/images</code> - so the article at <code>content/posts/blog-bootstrap.md</code> will be available at <code>/posts/blog-bootstrap/</code>. As time has gone on, the images directory has gotten rather large and difficult to understand what images apply to what posts.</p><p>The alternative way to organise content is the <a href=https://gohugo.io/content-management/page-bundles/#leaf-bundles>Leaf Bundle</a>. This is where at a branch level you have a directory with the name of the article you wish to publish, followed by an <code>index.md</code> file with the article content - such as <code>content/posts/blog-bootstrap/index.md</code>.</p><p>Any page resources defined in this directory can be referenced relatively in the markdown files within it, such that any images can be stored within <code>content/posts/blog-bootstrap/</code> and referred to in the markdown as <code>figure src="my-relative-img.png" ...</code> as opposed to <code>src="/images/my-not-relative-img.png" ...</code>.</p><p>This allows me to organise content much more effectively such that we will be going from this structure:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tree content/posts 
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script async defer data-domain="jdheyburn.co.uk" src="https://stats.jdheyburn.co.uk/js/index.js"></script>
+    
+    <meta name="author" content="Joseph D. Heyburn">
+    <meta name="description" content="Ramblings of a tech guy">
+    <meta name="keywords" content="blog,developer,devops,cloud">
+
+    <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png"/>
+
+<meta name="twitter:title" content="Who Goes Blogging 4: Content Structure & Refactoring"/>
+<meta name="twitter:description" content="Performing refactoring and reorganising how my Hugo website is structured"/>
+
+    <meta property="og:title" content="Who Goes Blogging 4: Content Structure &amp; Refactoring" />
+<meta property="og:description" content="Performing refactoring and reorganising how my Hugo website is structured" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/" />
+<meta property="og:image" content="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png"/>
+<meta property="article:published_time" content="2020-03-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-03-31T00:00:00+00:00" />
+
+
+
+    
+      <base href="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/">
+    
+    <title>
+  Who Goes Blogging 4: Content Structure & Refactoring · JDHeyburn
+</title>
+
+    
+      <link rel="canonical" href="https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css" integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css" integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+      <link rel="stylesheet" href="https://jdheyburn.co.uk/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.79.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-dark">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://jdheyburn.co.uk/">
+      JDHeyburn
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/about/">About</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/blog/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/projects/">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://jdheyburn.co.uk/contact/">Contact</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      
+      
+      
+      <header>
+        
+
+        <div class="post-title">
+          <h1 class="title">Who Goes Blogging 4: Content Structure & Refactoring</h1>
+        </div>
+        <div class="post-description">
+          <p>Performing refactoring and reorganising how my Hugo website is structured</p>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-03-31T00:00:00Z'>
+                31 March 2020
+              </time>
+            </span>
+            
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              8-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://jdheyburn.co.uk/tags/bash/">bash</a>
+      <span class="separator">•</span>
+    <a href="https://jdheyburn.co.uk/tags/hugo/">hugo</a>
+      <span class="separator">•</span>
+    <a href="https://jdheyburn.co.uk/tags/content-organisation/">content-organisation</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+<aside>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#content-article-reorganising">Content Article Reorganising</a>
+      <ul>
+        <li><a href="#transformation-script">Transformation Script</a></li>
+      </ul>
+    </li>
+    <li><a href="#renaming-content-section">Renaming Content Section</a>
+      <ul>
+        <li><a href="#fixing-article-rendering">Fixing Article Rendering</a></li>
+        <li><a href="#fixing-existing-urls">Fixing Existing URLs</a></li>
+        <li><a href="#from-blogs-to-blog">From Blogs to Blog</a></li>
+        <li><a href="#heading-to-blog">Heading to Blog</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+
+        <p>So far in this series we&rsquo;ve been looking at the infrastructure behind the Hugo website, but I haven&rsquo;t looked into improving the content layout of the site. Some of the improvements I want to make are:</p>
+<ol>
+<li>Moving content articles from a flat structure to a leaf bundle</li>
+<li>Rename content section to <strong>blog</strong> from <strong>posts</strong></li>
+<li>Upgrading <code>hugo-coder</code> theme and <code>hugo</code> version</li>
+<li>Adding a table of contents to the pages</li>
+<li>&hellip; and further improvements as I find them</li>
+</ol>
+<p>This post will cover items 1-2, the others will be in a follow up post.</p>
+<h2 id="content-article-reorganising">Content Article Reorganising</h2>
+<p>Hugo has a few different ways you can organise your content, known as <a href="https://gohugo.io/content-management/page-bundles/">Page Bundles</a>. Up to now  I&rsquo;ve adopted <a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">Branch Bundles</a> where I have all my articles in named markdown files under the <code>content/posts</code> directory - acting as the branch bundle, and storing all images under <code>static/images</code> - so the article at <code>content/posts/blog-bootstrap.md</code> will be available at <code>/posts/blog-bootstrap/</code>. As time has gone on, the images directory has gotten rather large and difficult to understand what images apply to what posts.</p>
+<p>The alternative way to organise content is the <a href="https://gohugo.io/content-management/page-bundles/#leaf-bundles">Leaf Bundle</a>. This is where at a branch level you have a directory with the name of the article you wish to publish, followed by an <code>index.md</code> file with the article content - such as <code>content/posts/blog-bootstrap/index.md</code>.</p>
+<p>Any page resources defined in this directory can be referenced relatively in the markdown files within it, such that any images can be stored within <code>content/posts/blog-bootstrap/</code> and referred to in the markdown as <code>figure src=&quot;my-relative-img.png&quot; ...</code> as opposed to <code>src=&quot;/images/my-not-relative-img.png&quot; ...</code>.</p>
+<p>This allows me to organise content much more effectively such that we will be going from this structure:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ tree content/posts 
 content/posts
 ├── blog-bootstrap.md
 ├── extending-gotests-for-strict-error-tests.md
@@ -17,15 +203,16 @@ content/posts
 ├── who-goes-blogging-3-1-deployment-methods-travisci.md
 └── who-goes-blogging-3-2-deployment-methods-github-actions.md
 
-<span style=color:#bd93f9>0</span> directories, <span style=color:#bd93f9>9</span> files
-</code></pre></div><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tree static/images 
+<span style="color:#bd93f9">0</span> directories, <span style="color:#bd93f9">9</span> files
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ tree static/images 
 static/images
 ├── analytics_example.png
-├── ...                     <span style=color:#6272a4># Everything stored in a flat hierarchy</span>
+├── ...                     <span style="color:#6272a4"># Everything stored in a flat hierarchy</span>
 └── type_hinting.png
 
-<span style=color:#bd93f9>0</span> directories, <span style=color:#bd93f9>57</span> files
-</code></pre></div><p>To this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tree content/posts
+<span style="color:#bd93f9">0</span> directories, <span style="color:#bd93f9">57</span> files
+</code></pre></div><p>To this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ tree content/posts
 content/posts
 ├── blog-bootstrap
 │   └── index.md
@@ -43,67 +230,109 @@ content/posts
     ├── index.md
     └── travis-disable-build.png
 
-<span style=color:#bd93f9>9</span> directories, <span style=color:#bd93f9>45</span> files
-</code></pre></div><p>One other benefit of grouping all content together in a bundle is it allows you to use just one command to add your article content to the repository - no more will images in another directory be forgotten about!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>git add content/blog/<span style=color:#8be9fd;font-style:italic>$articleName</span>
-</code></pre></div><h3 id=transformation-script>Transformation Script</h3><p>As opposed to doing the transformation manually, I&rsquo;ve written a script which will move and alter the files for us.</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#6272a4># in project root dir</span>
-<span style=color:#8be9fd;font-style:italic>posts</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span>find content/posts -type f -name <span style=color:#f1fa8c>&#39;*.md&#39;</span> -not -path <span style=color:#f1fa8c>&#39;**/index.md&#39;</span> -not -path <span style=color:#f1fa8c>&#39;**/_index.md&#39;</span><span style=color:#ff79c6>)</span>
-<span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$posts</span><span style=color:#f1fa8c>&#34;</span> | <span style=color:#ff79c6>while</span> <span style=color:#8be9fd;font-style:italic>read</span> p; <span style=color:#ff79c6>do</span>
-    <span style=color:#6272a4># Move to leaf bundle</span>
-    <span style=color:#8be9fd;font-style:italic>postFname</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span>basename -- <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$p</span><span style=color:#f1fa8c>&#34;</span><span style=color:#ff79c6>)</span>
-    <span style=color:#8be9fd;font-style:italic>title</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;</span><span style=color:#f1fa8c>${</span><span style=color:#8be9fd;font-style:italic>postFname</span>%.*<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&#34;</span>
-    <span style=color:#8be9fd;font-style:italic>leafBundleDir</span><span style=color:#ff79c6>=</span>content/posts/<span style=color:#8be9fd;font-style:italic>$title</span>
-    mkdir <span style=color:#8be9fd;font-style:italic>$leafBundleDir</span>
-    <span style=color:#8be9fd;font-style:italic>newPostLocation</span><span style=color:#ff79c6>=</span><span style=color:#8be9fd;font-style:italic>$leafBundleDir</span>/index.md
-    git mv -v <span style=color:#8be9fd;font-style:italic>$p</span> <span style=color:#8be9fd;font-style:italic>$newPostLocation</span>
+<span style="color:#bd93f9">9</span> directories, <span style="color:#bd93f9">45</span> files
+</code></pre></div><p>One other benefit of grouping all content together in a bundle is it allows you to use just one command to add your article content to the repository - no more will images in another directory be forgotten about!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git add content/blog/<span style="color:#8be9fd;font-style:italic">$articleName</span>
+</code></pre></div><h3 id="transformation-script">Transformation Script</h3>
+<p>As opposed to doing the transformation manually, I&rsquo;ve written a script which will move and alter the files for us.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#6272a4"># in project root dir</span>
+<span style="color:#8be9fd;font-style:italic">posts</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>find content/posts -type f -name <span style="color:#f1fa8c">&#39;*.md&#39;</span> -not -path <span style="color:#f1fa8c">&#39;**/index.md&#39;</span> -not -path <span style="color:#f1fa8c">&#39;**/_index.md&#39;</span><span style="color:#ff79c6">)</span>
+<span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$posts</span><span style="color:#f1fa8c">&#34;</span> | <span style="color:#ff79c6">while</span> <span style="color:#8be9fd;font-style:italic">read</span> p; <span style="color:#ff79c6">do</span>
+    <span style="color:#6272a4"># Move to leaf bundle</span>
+    <span style="color:#8be9fd;font-style:italic">postFname</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>basename -- <span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$p</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">)</span>
+    <span style="color:#8be9fd;font-style:italic">title</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">postFname</span>%.*<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>
+    <span style="color:#8be9fd;font-style:italic">leafBundleDir</span><span style="color:#ff79c6">=</span>content/posts/<span style="color:#8be9fd;font-style:italic">$title</span>
+    mkdir <span style="color:#8be9fd;font-style:italic">$leafBundleDir</span>
+    <span style="color:#8be9fd;font-style:italic">newPostLocation</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">$leafBundleDir</span>/index.md
+    git mv -v <span style="color:#8be9fd;font-style:italic">$p</span> <span style="color:#8be9fd;font-style:italic">$newPostLocation</span>
 
-    <span style=color:#6272a4># Move images referenced in the articles to new leaf bundle dir</span>
-    <span style=color:#8be9fd;font-style:italic>images</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span>grep -oP <span style=color:#f1fa8c>&#39;images\/.*.(png|jpg|jpeg)&#39;</span> <span style=color:#8be9fd;font-style:italic>$newPostLocation</span> | xargs -n1 | sort -u<span style=color:#ff79c6>)</span>
-    <span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$images</span><span style=color:#f1fa8c>&#34;</span> | <span style=color:#ff79c6>while</span> <span style=color:#8be9fd;font-style:italic>read</span> i; <span style=color:#ff79c6>do</span>
-        <span style=color:#ff79c6>[</span> -z <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$i</span><span style=color:#f1fa8c>&#34;</span> <span style=color:#ff79c6>]</span> <span style=color:#ff79c6>&amp;&amp;</span> <span style=color:#ff79c6>continue</span>
-        <span style=color:#8be9fd;font-style:italic>imgFname</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span>basename -- <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$i</span><span style=color:#f1fa8c>&#34;</span><span style=color:#ff79c6>)</span>
-        git mv -v static/<span style=color:#8be9fd;font-style:italic>$i</span> <span style=color:#8be9fd;font-style:italic>$leafBundleDir</span>/<span style=color:#8be9fd;font-style:italic>$imgFname</span>
-    <span style=color:#ff79c6>done</span>
+    <span style="color:#6272a4"># Move images referenced in the articles to new leaf bundle dir</span>
+    <span style="color:#8be9fd;font-style:italic">images</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>grep -oP <span style="color:#f1fa8c">&#39;images\/.*.(png|jpg|jpeg)&#39;</span> <span style="color:#8be9fd;font-style:italic">$newPostLocation</span> | xargs -n1 | sort -u<span style="color:#ff79c6">)</span>
+    <span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$images</span><span style="color:#f1fa8c">&#34;</span> | <span style="color:#ff79c6">while</span> <span style="color:#8be9fd;font-style:italic">read</span> i; <span style="color:#ff79c6">do</span>
+        <span style="color:#ff79c6">[</span> -z <span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$i</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&amp;&amp;</span> <span style="color:#ff79c6">continue</span>
+        <span style="color:#8be9fd;font-style:italic">imgFname</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>basename -- <span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$i</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">)</span>
+        git mv -v static/<span style="color:#8be9fd;font-style:italic">$i</span> <span style="color:#8be9fd;font-style:italic">$leafBundleDir</span>/<span style="color:#8be9fd;font-style:italic">$imgFname</span>
+    <span style="color:#ff79c6">done</span>
 
-    <span style=color:#6272a4># Change references to images in the article</span>
-    <span style=color:#6272a4>## figure src=&#34;/images/namecheap-domain-purchase.png&#34;</span>
-    sed -i <span style=color:#f1fa8c>&#39;s/src=&#34;\/images\//src=&#34;/g&#39;</span> <span style=color:#8be9fd;font-style:italic>$newPostLocation</span>
-    <span style=color:#6272a4>## images:</span>
-    <span style=color:#6272a4>##   - images/namecheap_landing.png</span>
-    sed -i <span style=color:#f1fa8c>&#39;s/- images\//- /g&#39;</span> <span style=color:#8be9fd;font-style:italic>$newPostLocation</span>
-    <span style=color:#6272a4>## [blog_arch]: /images/blog-arch-cover.png</span>
-    sed -i <span style=color:#f1fa8c>&#39;s/: \/images\//: /g&#39;</span> <span style=color:#8be9fd;font-style:italic>$newPostLocation</span>
-    git add <span style=color:#8be9fd;font-style:italic>$newPostLocation</span>
-<span style=color:#ff79c6>done</span></code></pre></td></tr></table></div></div><p>Breaking down the script, firstly we are retrieving all posts that aren&rsquo;t already converted to a leaf bundle and looping over them, where lines 4-9 performs the conversion itself.</p><p>Once that is done then we need to get all images that are referenced in that post and move them to the new leaf bundle for the post. This is done in lines 12-17.</p><p>Lastly, we then need to change the post content itself so that it references images in the location relative to the leaf bundle instead of under <code>static/images</code> - lines 21-26 accomplish this.</p><p>Hugo allows you to define <code>img</code> blocks in several ways, where I&rsquo;m currently using 3 of these methods. I <del>probably</del> should replace these with one approach - for the time being 3 <code>sed</code> commands will do the trick for me.</p><blockquote><p>I&rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&rsquo;m not an expert at them so I&rsquo;d rather crack on with what I know 😃</p></blockquote><h2 id=renaming-content-section>Renaming Content Section</h2><p>A gripe I&rsquo;ve had with my site is when you click on <strong>Blog</strong> in the site header it takes you to <strong>Posts</strong>. Similar to the previous section this is because of <a href=https://gohugo.io/content-management/page-bundles/#branch-bundles>Branch Bundles</a> which are any directory that sits underneath the <code>content</code> directory. The bundle name here is what forms the URL and the parent page for those articles <a href=https://gohugo.io/content-management/sections/>as defined</a>.</p><p>Based on this information, migrating should be as easy as&mldr;</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ git mv content/posts/ content/blog/
-</code></pre></div><p>Despite doing this, we come across some problems&mldr;</p><ol><li>We lose the correct rendering for the article<ul><li>Hugo doesn&rsquo;t know how to render content with type <code>blog</code></li></ul></li><li>Existing URL links are broken<ul><li>All hyperlinks both internal and external are referring to articles at <code>/posts/</code></li></ul></li><li>Blog landing page is now <strong>Blogs</strong>?? (see below)</li></ol><figure><a href=blogs-landing-page.png><img src=blogs-landing-page.png alt="Screenshot of Blog landing page with incorrect Blogs title"></a></figure><p>Let&rsquo;s walk through them one by one.</p><h3 id=fixing-article-rendering>Fixing Article Rendering</h3><p>We just made our existing articles leaf bundles that sat under <code>content/posts</code>, but now this is renamed to <code>content/blog</code>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tree contents/blog -L <span style=color:#bd93f9>1</span>
+    <span style="color:#6272a4"># Change references to images in the article</span>
+    <span style="color:#6272a4">## figure src=&#34;/images/namecheap-domain-purchase.png&#34;</span>
+    sed -i <span style="color:#f1fa8c">&#39;s/src=&#34;\/images\//src=&#34;/g&#39;</span> <span style="color:#8be9fd;font-style:italic">$newPostLocation</span>
+    <span style="color:#6272a4">## images:</span>
+    <span style="color:#6272a4">##   - images/namecheap_landing.png</span>
+    sed -i <span style="color:#f1fa8c">&#39;s/- images\//- /g&#39;</span> <span style="color:#8be9fd;font-style:italic">$newPostLocation</span>
+    <span style="color:#6272a4">## [blog_arch]: /images/blog-arch-cover.png</span>
+    sed -i <span style="color:#f1fa8c">&#39;s/: \/images\//: /g&#39;</span> <span style="color:#8be9fd;font-style:italic">$newPostLocation</span>
+    git add <span style="color:#8be9fd;font-style:italic">$newPostLocation</span>
+<span style="color:#ff79c6">done</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Breaking down the script, firstly we are retrieving all posts that aren&rsquo;t already converted to a leaf bundle and looping over them, where lines 4-9 performs the conversion itself.</p>
+<p>Once that is done then we need to get all images that are referenced in that post and move them to the new leaf bundle for the post. This is done in lines 12-17.</p>
+<p>Lastly, we then need to change the post content itself so that it references images in the location relative to the leaf bundle instead of under <code>static/images</code> - lines 21-26 accomplish this.</p>
+<p>Hugo allows you to define <code>img</code> blocks in several ways, where I&rsquo;m currently using 3 of these methods. I <del>probably</del> should replace these with one approach - for the time being 3 <code>sed</code> commands will do the trick for me.</p>
+<blockquote>
+<p>I&rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&rsquo;m not an expert at them so I&rsquo;d rather crack on with what I know 😃</p>
+</blockquote>
+<h2 id="renaming-content-section">Renaming Content Section</h2>
+<p>A gripe I&rsquo;ve had with my site is when you click on <strong>Blog</strong> in the site header it takes you to <strong>Posts</strong>. Similar to the previous section this is because of <a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">Branch Bundles</a> which are any directory that sits underneath the <code>content</code> directory. The bundle name here is what forms the URL and the parent page for those articles <a href="https://gohugo.io/content-management/sections/">as defined</a>.</p>
+<p>Based on this information, migrating should be as easy as&hellip;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git mv content/posts/ content/blog/
+</code></pre></div><p>Despite doing this, we come across some problems&hellip;</p>
+<ol>
+<li>We lose the correct rendering for the article
+<ul>
+<li>Hugo doesn&rsquo;t know how to render content with type <code>blog</code></li>
+</ul>
+</li>
+<li>Existing URL links are broken
+<ul>
+<li>All hyperlinks both internal and external are referring to articles at <code>/posts/</code></li>
+</ul>
+</li>
+<li>Blog landing page is now <strong>Blogs</strong>?? (see below)</li>
+</ol>
+<figure><a href="blogs-landing-page.png">
+    <img src="blogs-landing-page.png"
+         alt="Screenshot of Blog landing page with incorrect Blogs title"/> </a>
+</figure>
+
+<p>Let&rsquo;s walk through them one by one.</p>
+<h3 id="fixing-article-rendering">Fixing Article Rendering</h3>
+<p>We just made our existing articles leaf bundles that sat under <code>content/posts</code>, but now this is renamed to <code>content/blog</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ tree contents/blog -L <span style="color:#bd93f9">1</span>
 content/blog
 ├── blog-bootstrap
 ├── extending-gotests-for-strict-error-tests
@@ -115,59 +344,186 @@ content/blog
 ├── who-goes-blogging-3-1-deployment-methods-travisci
 └── who-goes-blogging-3-2-deployment-methods-github-actions
 
-<span style=color:#bd93f9>9</span> directories, <span style=color:#bd93f9>0</span> files
-</code></pre></div><p>The section of which your article sits underneath also tells Hugo how it should render the page - known as <a href=https://gohugo.io/content-management/types/#defining-a-content-type>Content Types</a>. Take the article blog-bootstrap which is under <code>posts</code>; Hugo will look in the theme for <code>layouts/posts</code> for <code>html</code> files to render it against* - this is how the articles go from a markdown file to rendered HTML.</p><blockquote><p>* Hugo will <a href=https://gohugo.io/templates/lookup-order/>first look</a> in your local project for any overriding files.</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tree themes/hugo-coder/layouts/posts 
+<span style="color:#bd93f9">9</span> directories, <span style="color:#bd93f9">0</span> files
+</code></pre></div><p>The section of which your article sits underneath also tells Hugo how it should render the page - known as <a href="https://gohugo.io/content-management/types/#defining-a-content-type">Content Types</a>. Take the article blog-bootstrap which is under <code>posts</code>; Hugo will look in the theme for <code>layouts/posts</code> for <code>html</code> files to render it against* - this is how the articles go from a markdown file to rendered HTML.</p>
+<blockquote>
+<p>* Hugo will <a href="https://gohugo.io/templates/lookup-order/">first look</a> in your local project for any overriding files.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ tree themes/hugo-coder/layouts/posts 
 themes/hugo-coder/layouts/posts
 ├── li.html
 ├── list.html
 └── single.html
 
-<span style=color:#bd93f9>0</span> directories, <span style=color:#bd93f9>3</span> files
-</code></pre></div><p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.</p><figure><a href=posts-blog-rendering-error.png><img src=posts-blog-rendering-error.png alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"></a><figcaption><p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing</p></figcaption></figure><p>One way of fixing this would be to also change the <code>hugo-coder</code> theme from <code>layouts/posts</code> to <code>layouts/blog</code> - however a much simpler solution exists. We can use the <code>type</code> front matter setting to tell Hugo what layout to use to render it.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>---
-<span style=color:#ff79c6>date</span>: 2020-03-10
-<span style=color:#ff79c6>title</span>: <span style=color:#f1fa8c>&#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&#34;</span>
-<span style=color:#ff79c6>description</span>: Migrating to GitHub Actions as our CI tool
-<span style=display:block;width:100%;background-color:#3d3f4a><span style=color:#ff79c6>type</span>: posts
-</span><span style=color:#6272a4># ...</span>
----</code></pre></div><blockquote><p>Hugo <a href=https://gohugo.io/content-management/front-matter>front matter</a> are content parameter settings you place into the heading of the content - an example of this is right above!</p></blockquote><p>Having to define this in every new article can become repetitive. We can make this easier for ourselves by using <a href=https://gohugo.io/content-management/archetypes/>archetypes</a>; which are essentially templates that new content is templated from.</p><p>In your project root directory, create the <code>archetypes/blog</code> directory and in there a file called <code>index.md</code>, and populate it with the below:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>---
-<span style=color:#ff79c6>draft</span>: <span style=color:#ff79c6>true</span>
-<span style=color:#ff79c6>type</span>: posts
-<span style=color:#6272a4># ...       Add in other defaults as you see fit</span>
+<span style="color:#bd93f9">0</span> directories, <span style="color:#bd93f9">3</span> files
+</code></pre></div><p>When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.</p>
+<figure><a href="posts-blog-rendering-error.png">
+    <img src="posts-blog-rendering-error.png"
+         alt="Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing"/> </a><figcaption>
+            <p>Correct rendering on the left - notice publish date, minutes to read, and tags are missing</p>
+        </figcaption>
+</figure>
+
+<p>One way of fixing this would be to also change the <code>hugo-coder</code> theme from <code>layouts/posts</code> to <code>layouts/blog</code> - however a much simpler solution exists. We can use the <code>type</code> front matter setting to tell Hugo what layout to use to render it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
+<span style="color:#ff79c6">date</span>: 2020-03-10
+<span style="color:#ff79c6">title</span>: <span style="color:#f1fa8c">&#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&#34;</span>
+<span style="color:#ff79c6">description</span>: Migrating to GitHub Actions as our CI tool
+<span style="display:block;width:100%;background-color:#3d3f4a"><span style="color:#ff79c6">type</span>: posts
+</span><span style="color:#6272a4"># ...</span>
+---</code></pre></div>
+<blockquote>
+<p>Hugo <a href="https://gohugo.io/content-management/front-matter">front matter</a> are content parameter settings you place into the heading of the content - an example of this is right above!</p>
+</blockquote>
+<p>Having to define this in every new article can become repetitive. We can make this easier for ourselves by using <a href="https://gohugo.io/content-management/archetypes/">archetypes</a>; which are essentially templates that new content is templated from.</p>
+<p>In your project root directory, create the <code>archetypes/blog</code> directory and in there a file called <code>index.md</code>, and populate it with the below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
+<span style="color:#ff79c6">draft</span>: <span style="color:#ff79c6">true</span>
+<span style="color:#ff79c6">type</span>: posts
+<span style="color:#6272a4"># ...       Add in other defaults as you see fit</span>
 ---
-</code></pre></div><p>You can then create new content from this template like so:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ hugo new --kind blog blog/blog-post 
+</code></pre></div><p>You can then create new content from this template like so:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ hugo new --kind blog blog/blog-post 
 /home/jdheyburn/projects/jdheyburn.co.uk/content/blog/blog-post created
  
 $ tree content/blog/blog-post         
 content/blog/blog-post
 └── index.md
 
-<span style=color:#bd93f9>0</span> directories, <span style=color:#bd93f9>1</span> file
+<span style="color:#bd93f9">0</span> directories, <span style="color:#bd93f9">1</span> file
 
 $ cat content/blog/blog-post/index.md 
 ---
-draft: <span style=color:#8be9fd;font-style:italic>true</span>
+draft: <span style="color:#8be9fd;font-style:italic">true</span>
 type: posts
-<span style=color:#6272a4># ...</span>
+<span style="color:#6272a4"># ...</span>
 ---
-</code></pre></div><h3 id=fixing-existing-urls>Fixing Existing URLs</h3><p>Changing the section the article is in affects the URL too; meaning articles will appear at <code>https://jdheyburn.co.uk/blog/blog-bootstrap/</code> instead of <code>https://jdheyburn.co.uk/posts/blog-bootstrap/</code>. Therefore existing hyperlinks pointing to these articles will break.</p><p>Tnere is another quick fix available for us through the front matter setting <code>aliases</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>---
-<span style=color:#ff79c6>date</span>: 2020-03-10
-<span style=color:#ff79c6>title</span>: <span style=color:#f1fa8c>&#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&#34;</span>
-<span style=color:#ff79c6>description</span>: Migrating to GitHub Actions as our CI tool
-<span style=color:#ff79c6>type</span>: posts
-<span style=display:block;width:100%;background-color:#3d3f4a><span style=color:#ff79c6>aliases</span>:
-</span><span style=display:block;width:100%;background-color:#3d3f4a>    - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
-</span><span style=color:#6272a4># ...</span>
----</code></pre></div><p>You can read more about how <code>aliases</code> does its operations <a href=https://gohugo.io/content-management/urls/#aliases>here</a>.</p><h3 id=from-blogs-to-blog>From Blogs to Blog</h3><p>Earlier on, we came across this weird bug&mldr;</p><figure><a href=blogs-landing-page.png><img src=blogs-landing-page.png alt="Screenshot of Blog landing page with incorrect Blogs title"></a></figure><p>This is occurring because of the translation feature of Hugo (sourced from <a href=https://gohugo.io/functions/i18n/>i18n</a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&rsquo;d rather it have say blog.</p><p>Remembering that <code>content/blog</code> is a <a href=https://gohugo.io/content-management/page-bundles/#branch-bundles>branch bundle</a>, we can override the inferred title with a <code>_index.md</code> file at that directory.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#6272a4># content/blog/_index.md</span>
+</code></pre></div><h3 id="fixing-existing-urls">Fixing Existing URLs</h3>
+<p>Changing the section the article is in affects the URL too; meaning articles will appear at <code>https://jdheyburn.co.uk/blog/blog-bootstrap/</code> instead of <code>https://jdheyburn.co.uk/posts/blog-bootstrap/</code>. Therefore existing hyperlinks pointing to these articles will break.</p>
+<p>Tnere is another quick fix available for us through the front matter setting <code>aliases</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
+<span style="color:#ff79c6">date</span>: 2020-03-10
+<span style="color:#ff79c6">title</span>: <span style="color:#f1fa8c">&#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&#34;</span>
+<span style="color:#ff79c6">description</span>: Migrating to GitHub Actions as our CI tool
+<span style="color:#ff79c6">type</span>: posts
+<span style="display:block;width:100%;background-color:#3d3f4a"><span style="color:#ff79c6">aliases</span>:
+</span><span style="display:block;width:100%;background-color:#3d3f4a">    - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
+</span><span style="color:#6272a4"># ...</span>
+---</code></pre></div>
+<p>You can read more about how <code>aliases</code> does its operations <a href="https://gohugo.io/content-management/urls/#aliases">here</a>.</p>
+<h3 id="from-blogs-to-blog">From Blogs to Blog</h3>
+<p>Earlier on, we came across this weird bug&hellip;</p>
+<figure><a href="blogs-landing-page.png">
+    <img src="blogs-landing-page.png"
+         alt="Screenshot of Blog landing page with incorrect Blogs title"/> </a>
+</figure>
+
+<p>This is occurring because of the translation feature of Hugo (sourced from <a href="https://gohugo.io/functions/i18n/">i18n</a>) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&rsquo;d rather it have say blog.</p>
+<p>Remembering that <code>content/blog</code> is a <a href="https://gohugo.io/content-management/page-bundles/#branch-bundles">branch bundle</a>, we can override the inferred title with a <code>_index.md</code> file at that directory.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#6272a4"># content/blog/_index.md</span>
 ---
 title: Blog
 type: posts
 ---
-</code></pre></div><p>We have another <code>type: posts</code> setting here because similar to above, we want Hugo to render the landing page the same as we did for posts.</p><h3 id=heading-to-blog>Heading to Blog</h3><p>Lastly and most easily, the <strong>Blog</strong> shortcut at the top-right corner of the page still directs us to <code>/posts</code> - we need to change that in the top-level <code>config.toml</code> to point to <code>/blog</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml>[[languages.en.menu.main]]
-name = <span style=color:#f1fa8c>&#34;Blog&#34;</span>
-weight = <span style=color:#bd93f9>2</span>
-url = <span style=color:#f1fa8c>&#34;/blog/&#34;</span>
-</code></pre></div><p>Thanks for reading!</p></div><footer><section class=see-also><h3>See also in Who Goes Blogging</h3><nav><ul><li><a href=https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/>Who Goes Blogging 6: Three Steps to Improve Hugo's RSS Feeds</a></li><li><a href=https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/>Who Goes Blogging 5: Updates Galore!</a></li><li><a href=https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/>Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</a></li><li><a href=https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/>Who Goes Blogging 3.1: Deployment Methods - TravisCI</a></li><li><a href=https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/>Who Goes Blogging 2: Custom Domain</a></li></ul></nav></section></footer></article></section></div><footer class=footer><section class=container>©
-2020
-Joseph D. Heyburn
-·
-Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main></body></html>
+</code></pre></div><p>We have another <code>type: posts</code> setting here because similar to above, we want Hugo to render the landing page the same as we did for posts.</p>
+<h3 id="heading-to-blog">Heading to Blog</h3>
+<p>Lastly and most easily, the <strong>Blog</strong> shortcut at the top-right corner of the page still directs us to <code>/posts</code> - we need to change that in the top-level <code>config.toml</code> to point to <code>/blog</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml">[[languages.en.menu.main]]
+name = <span style="color:#f1fa8c">&#34;Blog&#34;</span>
+weight = <span style="color:#bd93f9">2</span>
+url = <span style="color:#f1fa8c">&#34;/blog/&#34;</span>
+</code></pre></div><p>Thanks for reading!</p>
+
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+      <h3>See also in Who Goes Blogging</h3>
+      <nav>
+        <ul>
+        
+        
+          
+            <li>
+              <a href="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/">Who Goes Blogging 6: Three Steps to Improve Hugo&#39;s RSS Feeds</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/">Who Goes Blogging 5: Updates Galore!</a>
+            </li>
+          
+        
+          
+        
+          
+            <li>
+              <a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/">Who Goes Blogging 3.2: Deployment Methods - GitHub Actions</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/">Who Goes Blogging 3.1: Deployment Methods - TravisCI</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/">Who Goes Blogging 2: Custom Domain</a>
+            </li>
+          
+        
+        </ul>
+      </nav>
+    
+  
+</section>
+
+
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+      
+        ©
+        
+        2020
+         Joseph D. Heyburn 
+      
+      
+         · 
+        Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+    </section>
+  </footer>
+
+    </main>
+
+    
+
+    
+
+  </body>
+
+</html>
