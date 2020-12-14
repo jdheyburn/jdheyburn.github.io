@@ -6,10 +6,85 @@
     <description>Recent content in Who Goes Blogging on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/series/who-goes-blogging/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Who Goes Blogging 7: Hugo Minify RSS Code Indentation Fix</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/</link>
+      <pubDate>Mon, 14 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/</guid>-->
+      <description>&lt;p&gt;It&amp;rsquo;s certainly been a while since the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/&#34;&gt;previous post&lt;/a&gt; in this series, which has become the home of any updates I make to my &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; website.&lt;/p&gt;
+&lt;p&gt;This post is a quick one but it&amp;rsquo;s something I&amp;rsquo;ve been meaning to fix for a while. The RSS feeds that are generated will also include code blocks as defined through code fences (```) or through &lt;code&gt;{{&amp;lt; highlight &amp;gt;}}&lt;/code&gt; shortcodes in your post content.&lt;/p&gt;
+&lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+{
+healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+output_s3_bucket_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+}
+)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whereas it should be rendering as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+
+  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+    {
+      healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+    }
+  )
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is happening during the &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/blob/master/.github/workflows/deploy.yml#L31&#34;&gt;GitHub Action&lt;/a&gt; that builds the website - I am using the &lt;code&gt;--minify&lt;/code&gt; parameter which follows &lt;a href=&#34;https://gohugo.io/getting-started/configuration/#configure-minify&#34;&gt;this configuration&lt;/a&gt; by default, and the highlighted line.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[minify]
+  disableCSS = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  disableHTML = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  disableJS = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  disableJSON = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  disableSVG = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  disableXML = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  minifyOutput = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+  [minify.tdewolff]
+    [minify.tdewolff.css]
+      decimals = &lt;span style=&#34;color:#bd93f9&#34;&gt;-1&lt;/span&gt;
+      keepCSS2 = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+    [minify.tdewolff.html]
+      keepConditionalComments = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+      keepDefaultAttrVals = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+      keepDocumentTags = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+      keepEndTags = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+      keepQuotes = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+      keepWhitespace = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+    [minify.tdewolff.js]
+    [minify.tdewolff.json]
+    [minify.tdewolff.svg]
+      decimals = &lt;span style=&#34;color:#bd93f9&#34;&gt;-1&lt;/span&gt;
+    [minify.tdewolff.xml]
+      keepWhitespace = &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So what&amp;rsquo;s happening is the RSS XML that Hugo generates for us is then being &lt;a href=&#34;https://en.wikipedia.org/wiki/Minification_(programming)&#34;&gt;minified&lt;/a&gt; to remove the whitespace generated in that file. This includes the whitespace that&amp;rsquo;s used to indent the code in the RSS feeds. Not. Good.&lt;/p&gt;
+&lt;h2 id=&#34;the-fix&#34;&gt;The Fix&lt;/h2&gt;
+&lt;p&gt;In order to fix this we just need to copy the default minify config as mentioned above and change the last line to &lt;code&gt;keepWhitespace = true&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You can view my &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/commit/e56aaf581283eb7a7a4d97ca7a30553beda09271&#34;&gt;git commit&lt;/a&gt; that fixes this - should you want to include the fix too.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m using &lt;code&gt;toml&lt;/code&gt; for my config, so make sure you change it to what your config is defined in (&lt;code&gt;yaml&lt;/code&gt; / &lt;code&gt;json&lt;/code&gt;)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I tried to experiment to see if the whole config was required or not, but it appears so - if you found a way to omit some lines then let me know.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s it - hope this help you with fixing your RSS feeds too!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Who Goes Blogging 6: Three Steps to Improve Hugo&#39;s RSS Feeds</title><enclosure url="https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/cover.png" type="image/jpg"></enclosure>
@@ -96,6 +171,10 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2020-12-14&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I came across an issue whereby code indentation wasn&amp;rsquo;t rendering properly in RSS feeds if you used the &lt;code&gt;--minify&lt;/code&gt; parameter - &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/&#34;&gt;this post&lt;/a&gt; resolves it.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id=&#34;rendering-images-in-rss-posts&#34;&gt;Rendering images in RSS posts&lt;/h2&gt;
 &lt;p&gt;Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code&gt;alt&lt;/code&gt;) text is being displayed instead.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;

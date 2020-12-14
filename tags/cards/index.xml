@@ -96,6 +96,10 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2020-12-14&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I came across an issue whereby code indentation wasn&amp;rsquo;t rendering properly in RSS feeds if you used the &lt;code&gt;--minify&lt;/code&gt; parameter - &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/&#34;&gt;this post&lt;/a&gt; resolves it.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id=&#34;rendering-images-in-rss-posts&#34;&gt;Rendering images in RSS posts&lt;/h2&gt;
 &lt;p&gt;Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code&gt;alt&lt;/code&gt;) text is being displayed instead.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;

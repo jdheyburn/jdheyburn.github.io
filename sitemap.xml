@@ -3,6 +3,46 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jdheyburn.co.uk/blog/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/tags/hugo/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/tags/rss/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/series/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/series/who-goes-blogging/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jdheyburn.co.uk/blog/who-goes-blogging-7-hugo-minify-rss-code-indentation-fix/</loc>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/</loc>
     <lastmod>2020-12-04T00:00:00+00:00</lastmod>
   </url>
@@ -23,32 +63,12 @@
   </url>
   
   <url>
-    <loc>https://jdheyburn.co.uk/blog/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.co.uk/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jdheyburn.co.uk/tags/patching/</loc>
     <lastmod>2020-12-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://jdheyburn.co.uk/series/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jdheyburn.co.uk/tags/ssm/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.co.uk/tags/</loc>
     <lastmod>2020-12-04T00:00:00+00:00</lastmod>
   </url>
   
@@ -124,31 +144,16 @@
   
   <url>
     <loc>https://jdheyburn.co.uk/tags/cards/</loc>
-    <lastmod>2020-05-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.co.uk/tags/rss/</loc>
-    <lastmod>2020-05-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.co.uk/series/who-goes-blogging/</loc>
-    <lastmod>2020-05-16T00:00:00+00:00</lastmod>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</loc>
-    <lastmod>2020-05-16T00:00:00+00:00</lastmod>
+    <lastmod>2020-12-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://jdheyburn.co.uk/tags/emojis/</loc>
-    <lastmod>2020-04-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jdheyburn.co.uk/tags/hugo/</loc>
     <lastmod>2020-04-19T00:00:00+00:00</lastmod>
   </url>
   
