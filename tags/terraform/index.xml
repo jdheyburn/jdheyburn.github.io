@@ -6,10 +6,666 @@
     <description>Recent content in terraform on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to automate zero downtime maintenance with AWS SSM &amp; ALBs</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/</guid>-->
+      <description>&lt;p&gt;Welcome to the last post in this &lt;a href=&#34;https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/&#34;&gt;series&lt;/a&gt; where we&amp;rsquo;ve been exploring SSM Documents, so far we&amp;rsquo;ve covered:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/&#34;&gt;Command Documents&lt;/a&gt; can help to execute commands on EC2 Instances&lt;/li&gt;
+&lt;li&gt;Automating these Command Documents through &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/&#34;&gt;Maintenance Windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Safely chaining Command Documents through &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/&#34;&gt;Automation Documents&lt;/a&gt;, and aborting for any failures&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This post will now look into how we can use Automation Documents to perform maintenance on EC2 instances without impacting user experience.&lt;/p&gt;
+&lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;With the introduction of load balancers to front your services, you can control which instances should be receiving traffic&lt;/li&gt;
+&lt;li&gt;This enables you to proactively remove instances from rotation so that you can perform maintenance on the backends to minimalise user disruption&lt;/li&gt;
+&lt;li&gt;SSM automation documents can enable us to execute pre-maintenance steps such as removing an instance from a load balancer, as well as adding them back after
+&lt;ul&gt;
+&lt;li&gt;See the &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml&#34;&gt;document&lt;/a&gt; produced in this post highlighting this, and where I &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#graceful-load-balancer-document&#34;&gt;explain&lt;/a&gt; how it works, and &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#terraform-additions-and-updates&#34;&gt;how to deploy&lt;/a&gt; it using Terraform&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;re just joining in from this post then I recommend reading through the previous posts to gain of understanding of how we got here; or if you know what you&amp;rsquo;re looking for the tl;dr provides a summary.&lt;/p&gt;
+&lt;p&gt;As always, the code for this post can be found on &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-3&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A basic understanding and knowledge of &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html&#34;&gt;Application Load Balancers&lt;/a&gt; (ALB), and its components (e.g. &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html&#34;&gt;target groups&lt;/a&gt;) is required.&lt;/p&gt;
+&lt;h2 id=&#34;introducing-load-balancers&#34;&gt;Introducing load balancers&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Load_balancing_(computing)&#34;&gt;Load balancers&lt;/a&gt; are a key component in software architecture that distribute traffic and requests across backend services in a variety of algorithms, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Round-robin
+&lt;ul&gt;
+&lt;li&gt;every backend serves the same number of requests&lt;/li&gt;
+&lt;li&gt;the most commonly used algorithm&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Weighted round-robin
+&lt;ul&gt;
+&lt;li&gt;backends receive a fixed percentage of incoming requests&lt;/li&gt;
+&lt;li&gt;useful if some backends are more beefy than others&lt;/li&gt;
+&lt;li&gt;also used in &lt;a href=&#34;https://martinfowler.com/bliki/CanaryRelease.html&#34;&gt;canary deployments&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Least outstanding requests
+&lt;ul&gt;
+&lt;li&gt;the backend which is currently processing the least number of requests is forwarded the request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There are multiple benefits to having a load balancer sit in front of your services:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Protecting your infrastructure; user requests are proxied via the load balancer&lt;/li&gt;
+&lt;li&gt;Distribute traffic and requests however you like&lt;/li&gt;
+&lt;li&gt;Perform healthchecks on backends and don&amp;rsquo;t forward traffic to unhealthy nodes&lt;/li&gt;
+&lt;li&gt;Drain and remove backends to permit for rolling upgrades&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While there are several different software-based load balancers out there such as &lt;a href=&#34;https://www.nginx.com/&#34;&gt;nginx&lt;/a&gt; and &lt;a href=&#34;https://www.haproxy.org/&#34;&gt;HAProxy&lt;/a&gt;, AWS has its own managed load balancer service known as an &lt;a href=&#34;https://aws.amazon.com/elasticloadbalancing/&#34;&gt;Elastic Load Balancer&lt;/a&gt; (ELB).&lt;/p&gt;
+&lt;h3 id=&#34;adding-web-services-to-our-demo-environment&#34;&gt;Adding web services to our demo environment&lt;/h3&gt;
+&lt;p&gt;In order for us to get the benefit of load balancers to front the EC2 instances in the architecture this series left off from &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#prerequisites&#34;&gt;last time&lt;/a&gt;, we will need to have a service running on our instances.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s simulate a real web service by running a simple Hello World application across each of the instances. We can utilise EC2s &lt;a href=&#34;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html&#34;&gt;user data&lt;/a&gt; to start a basic service up for us by giving it a script to run on instance provision.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;alb-arch.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/alb-arch.png&#34;
+         alt=&#34;An architecture diagram showing a user with an arrow pointing to an application load balancer on port 80. The load balancer then points to 3 EC2 instances on port 8080.&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;This is the architecture we&amp;rsquo;ll be building out in this section, with an ALB fronting our EC2 instances&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Let&amp;rsquo;s use Go to create a web service for us since it is easy to get set up quickly - we&amp;rsquo;ll have the server return a simple &lt;code&gt;Hello, World!&lt;/code&gt; message when a request hits it. Let&amp;rsquo;s also have it return the name of the instance that was hit - this will be used &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#hitting-the-load-balancer&#34;&gt;later&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&lt;/span&gt;cat &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;lt;&amp;lt;&amp;#39;EOF&amp;#39; &amp;gt; /home/ec2-user/main.go
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;package main
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;import (
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;fmt&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;net/http&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        &amp;#34;os&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;)
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;func main() {
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        http.HandleFunc(&amp;#34;/&amp;#34;, HelloServer)
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        http.ListenAndServe(&amp;#34;:8080&amp;#34;, nil)
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;func HelloServer(w http.ResponseWriter, r *http.Request) {
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        hostname, _ := os.Hostname()
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        fmt.Fprintf(w, &amp;#34;Hello, World! From %v\n&amp;#34;, hostname)
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;EOF&lt;/span&gt;
+yum install golang -y
+&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;crontab -l 2&amp;gt;/dev/null; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;@reboot nohup go run /home/ec2-user/main.go&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt; | crontab -
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOCACHE&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;/tmp/go-cache
+nohup go run /home/ec2-user/main.go
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So on instance creation this will:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a new file called &lt;code&gt;main.go&lt;/code&gt; and populate it with the lines between the &lt;code&gt;EOF&lt;/code&gt; delimiters&lt;/li&gt;
+&lt;li&gt;Install Go&lt;/li&gt;
+&lt;li&gt;Create a &lt;a href=&#34;https://en.wikipedia.org/wiki/Cron&#34;&gt;crontab&lt;/a&gt; entry to run the service on subsequent boots&lt;/li&gt;
+&lt;li&gt;Run the Go application in the background immediately&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;While user data is for useful provisioning services, I don&amp;rsquo;t advise storing the source code of your application in there like I&amp;rsquo;ve done - this is just a hacky way to get something up and running.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We&amp;rsquo;ve been using Terraform to provision our nodes. So we need to save this script in a &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/scripts/hello_world_user_data.sh&#34;&gt;file&lt;/a&gt; (&lt;code&gt;scripts/hello_world_user_data.sh&lt;/code&gt;), and then pass it into the &lt;code&gt;user_data&lt;/code&gt; attribute of our &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ec2.tf#L27&#34;&gt;EC2 module&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hello_world_ec2&amp;#34;&lt;/span&gt; {
+  source         &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;terraform-aws-modules/ec2-instance/aws&amp;#34;&lt;/span&gt;
+  version        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;~&amp;gt; 2.0&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;  # ... removed for brevity
+&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;
+  user_data &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;file&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;scripts/hello_world_user_data.sh&amp;#34;&lt;/span&gt;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Terraform will recreate any EC2 nodes with a change in &lt;code&gt;user_data&lt;/code&gt; contents, so when you invoke &lt;code&gt;terraform apply&lt;/code&gt; all instances will be recreated.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;N.B. the AMI I picked up for my EC2 instances has an issue with SSM Agent. Ensure you execute the &lt;code&gt;AWS-UpdateSSMAgent&lt;/code&gt; across your instances after they have provisioned, or you can use an &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-state-about.html&#34;&gt;SSM Association&lt;/a&gt; document to do that for you as &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/update_ssm_agent_association.tf&#34;&gt;shown here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;After they have all successfully deployed, you should be able to &lt;code&gt;curl&lt;/code&gt; the public IP address of each instance from your machine to verify your setup is correct. If you are getting timeouts then make sure your instances have a security group rule permitting traffic from your IP address through port 8080.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ curl http://54.229.209.60:8080
+Hello, World! From ip-172-31-39-169.eu-west-1.compute.internal
+
+$ curl http://3.250.160.209:8080
+Hello, World! From ip-172-31-21-197.eu-west-1.compute.internal
+
+$ curl http://34.254.238.146:8080
+Hello, World! From ip-172-31-8-52.eu-west-1.compute.internal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fronting-instances-with-a-load-balancer&#34;&gt;Fronting instances with a load balancer&lt;/h3&gt;
+&lt;p&gt;Now that we have a web service hosted on our instances, let&amp;rsquo;s now add a load balancer in front of it. This load balancer will now become the point of entry for our application instead of hitting the EC2 instances directly.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For this I am using a Terraform &lt;a href=&#34;https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest&#34;&gt;ALB module&lt;/a&gt; for provisioning all the components in the load balancer, and expanding on them is beyond the scope of this post.&lt;/p&gt;
+&lt;p&gt;You can navigate to the AWS ALB &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html&#34;&gt;documentation&lt;/a&gt; to find out about the underlying components the module creates for us.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;security-groups&#34;&gt;Security groups&lt;/h4&gt;
+&lt;p&gt;Before we can provision the load balancer, we need to specify the security group (SG) and the rules that should be applied to it. You can view this on &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L45&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Since our application is written to serve request on port 8080, we need to permit both the new &lt;code&gt;aws_security_group.hello_world_alb&lt;/code&gt; SG and the existing &lt;code&gt;aws_security_group.vm_base&lt;/code&gt; SG to communicate between each other.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_security_group&amp;#34; &amp;#34;hello_world_alb&amp;#34;&lt;/span&gt; {
+  name   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;HelloWorldALB&amp;#34;&lt;/span&gt;
+  vpc_id &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;aws_vpc&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;default&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_security_group_rule&amp;#34; &amp;#34;alb_egress_ec2&amp;#34;&lt;/span&gt; {
+  security_group_id        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+  type                     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;egress&amp;#34;&lt;/span&gt;
+  from_port                &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+  to_port                  &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+  protocol                 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+  source_security_group_id &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;vm_base&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_security_group_rule&amp;#34; &amp;#34;ec2_ingress_alb&amp;#34;&lt;/span&gt; {
+  security_group_id        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;vm_base&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+  type                     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ingress&amp;#34;&lt;/span&gt;
+  from_port                &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+  to_port                  &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+  protocol                 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+  source_security_group_id &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we need to open up the ALB to allow traffic to hit it. In our case it will just be us hitting it, but this will change depending on who the consumer of the service is. If it is to serve traffic from the Internet then &lt;code&gt;cidr_blocks&lt;/code&gt; would be &lt;code&gt;[&amp;quot;0.0.0.0/0&amp;quot;]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The ALB will be hosting the traffic on insecure HTTP (port 80).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_security_group_rule&amp;#34; &amp;#34;alb_ingress_user&amp;#34;&lt;/span&gt; {
+  security_group_id &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+  type              &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ingress&amp;#34;&lt;/span&gt;
+  from_port         &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;80&lt;/span&gt;
+  to_port           &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;80&lt;/span&gt;
+  protocol          &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+  cidr_blocks       &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ff79c6&#34;&gt;local&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;ip_address&lt;/span&gt;]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;alb-module&#34;&gt;ALB module&lt;/h4&gt;
+&lt;p&gt;The &lt;a href=&#34;https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest&#34;&gt;module documentation&lt;/a&gt; will tell us how we need to structure it. Our requirements dictate we need the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Receive traffic on port 80&lt;/li&gt;
+&lt;li&gt;Forward traffic to backend targets on port 8080&lt;/li&gt;
+&lt;li&gt;Include health checks to ensure we do not forward requests to unhealthy instances&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Translate these requirements into the context of the module and we have &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L1&#34;&gt;something like this&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hello_world_alb&amp;#34;&lt;/span&gt; {
+  source  &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;terraform-aws-modules/alb/aws&amp;#34;&lt;/span&gt;
+  version &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;~&amp;gt; 5.0&amp;#34;&lt;/span&gt;
+
+  name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;HelloWorldALB&amp;#34;&lt;/span&gt;
+
+  load_balancer_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;application&amp;#34;&lt;/span&gt;
+
+  vpc_id          &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;aws_vpc&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;default&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+  subnets         &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;tolist&lt;/span&gt;(&lt;span style=&#34;color:#ff79c6&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;aws_subnet_ids&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;all&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;ids&lt;/span&gt;)
+  security_groups &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ff79c6&#34;&gt;aws_security_group&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;]
+
+  target_groups &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+    {
+      name_prefix      &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;pref-&amp;#34;&lt;/span&gt;
+      backend_protocol &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;HTTP&amp;#34;&lt;/span&gt;
+      backend_port     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+      target_type      &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;instance&amp;#34;&lt;/span&gt;
+      health_check &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+        enabled             &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;true&lt;/span&gt;
+        healthy_threshold   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+        unhealthy_threshold &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+        interval            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;6&lt;/span&gt;
+      }
+    }
+  ]
+
+  http_tcp_listeners &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+    {
+      port               &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;80&lt;/span&gt;
+      protocol           &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;HTTP&amp;#34;&lt;/span&gt;
+      target_group_index &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;In order to keep this post simple I am not fronting services over HTTPS (secure HTTP) - I would strongly advise against doing this for non-test scenarios.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Another step we will need is to hook up our EC2 instances with the target group created.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_lb_target_group_attachment&amp;#34; &amp;#34;hello_world_tg_att&amp;#34;&lt;/span&gt; {
+  count            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;length&lt;/span&gt;(&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_ec2&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;)
+  target_group_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;target_group_arns&lt;/span&gt;[&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;]
+  target_id        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;element&lt;/span&gt;(&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_ec2&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;, &lt;span style=&#34;color:#ff79c6&#34;&gt;count&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;index&lt;/span&gt;)
+  port             &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s some clever Terraform going on here. All we&amp;rsquo;re doing is looping over each of the created EC2 instances in the module and adding it to the target group, to receive traffic on port 8080.&lt;/p&gt;
+&lt;h3 id=&#34;hitting-the-load-balancer&#34;&gt;Hitting the load balancer&lt;/h3&gt;
+&lt;p&gt;Whereas &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#adding-web-services-to-our-demo-environment&#34;&gt;earlier&lt;/a&gt; when we were testing the services by hitting the EC2 instances directly, we&amp;rsquo;ll now be hitting the ALB instead. You can grab the ALB DNS name from the &lt;a href=&#34;https://console.aws.amazon.com/ec2/v2/home#LoadBalancers:sort=loadBalancerName&#34;&gt;console&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
+Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - and we can see from here what instance we&amp;rsquo;ve hit in the backend, since we included the hostname in the response.&lt;/p&gt;
+&lt;p&gt;If we now hit the ALB one more time, we will get a different instance respond.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
+Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is the load balancer rotating between the backends available to it. We can see the rotation by repeatedly hitting the endpoint.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; true; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt; curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 ; sleep 0.5; &lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;
+Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
+Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
+Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
+Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
+Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
+Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
+Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;so-what-does-all-this-have-to-do-with-our-maintenance-document&#34;&gt;So what does all this have to do with our maintenance document?&lt;/h2&gt;
+&lt;p&gt;Now that we have a load balancer fronting our services, let&amp;rsquo;s review executing our automation document from the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#combining-command-docs-into-automation&#34;&gt;last post&lt;/a&gt; and the problem it brings.&lt;/p&gt;
+&lt;p&gt;If an instance were to be rebooted during the &lt;strong&gt;AWS-RunPatchBaseline&lt;/strong&gt; stage of the automation document, then there is a chance that a request would have been forwarded to that instance before the health checks against it have failed.&lt;/p&gt;
+&lt;p&gt;To simulate this, let&amp;rsquo;s create a new automation document which simulates a reboot. We&amp;rsquo;ll just take our existing &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/patch_with_healthcheck_template.yml&#34;&gt;patching document&lt;/a&gt; and replace the patch step with a reboot command, following the &lt;a href=&#34;https://docs.amazonaws.cn/en_us/systems-manager/latest/userguide/send-commands-reboot.html&#34;&gt;AWS guidelines&lt;/a&gt; to do this. I&amp;rsquo;ve also modified the health check to check to see if the new service came up okay - this may differ for your environment.&lt;/p&gt;
+&lt;p&gt;You can view the document on &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/reboot_with_healthcheck_template.yml&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;---
+&lt;span style=&#34;color:#ff79c6&#34;&gt;schemaVersion&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.3&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Executes a reboot on the instance followed by a healthcheck
+&lt;span style=&#34;color:#ff79c6&#34;&gt;parameters&lt;/span&gt;:
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;InstanceIds&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: StringList
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The instance to target
+&lt;span style=&#34;color:#ff79c6&#34;&gt;mainSteps&lt;/span&gt;:
+  - &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: InvokeReboot
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:runCommand
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;DocumentName&lt;/span&gt;: AWS-RunShellScript
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;InstanceIds&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span&gt;
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;OutputS3BucketName&lt;/span&gt;: ${output_s3_bucket_name}
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;OutputS3KeyPrefix&lt;/span&gt;: ${output_s3_key_prefix}
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;Parameters&lt;/span&gt;:
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;commands&lt;/span&gt;: |&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          flag_location=/home/ec2-user/REBOOT_STARTED
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          if [ ! -f $flag_location ]; then
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;            echo &amp;#34;Creating flag file at $flag_location&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;            touch $flag_location
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;            echo &amp;#34;Reboot initiated&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;            exit 194
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          fi
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          echo &amp;#34;Reboot finished, removing flag file at $flag_location&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          rm $flag_location&lt;/span&gt;          
+  - &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: ExecuteHealthcheck
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:runCommand
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;DocumentName&lt;/span&gt;: AWS-RunShellScript
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;InstanceIds&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceIds }}&amp;#34;&lt;/span&gt;
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;OutputS3BucketName&lt;/span&gt;: ${output_s3_bucket_name}
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;OutputS3KeyPrefix&lt;/span&gt;: ${output_s3_key_prefix}
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;Parameters&lt;/span&gt;:
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;commands&lt;/span&gt;: |&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          sleep 60
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          if ! curl http://localhost:8080/; then
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;            exit 1
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;          fi&lt;/span&gt;          
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then the &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_reboot_with_healthcheck.tf&#34;&gt;Terraform code&lt;/a&gt; to create this document will look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;reboot_with_healthcheck&amp;#34;&lt;/span&gt; {
+  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;RebootWithHealthcheck&amp;#34;&lt;/span&gt;
+  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+
+  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/reboot_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+    {
+      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+    }
+  )
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-for-failure&#34;&gt;Testing for failure&lt;/h3&gt;
+&lt;p&gt;After this has been applied in our environment let&amp;rsquo;s get our test set up. In a terminal window from your machine have this script running in the background to simulate load.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; true;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
+  &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;resp&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 2&amp;gt;/dev/null&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$resp&lt;/span&gt; | grep -q html; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$resp&lt;/span&gt; | grep -oPm1 &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;(?&amp;lt;=&amp;lt;title&amp;gt;)[^&amp;lt;]+&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Error - &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$error&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;else&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$resp&lt;/span&gt;;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;fi&lt;/span&gt;
+  sleep 0.5
+&lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then we need to invoke the new reboot document against an instance (see &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents&#34;&gt;here&lt;/a&gt; for how we achieved this last time). Once it is running let&amp;rsquo;s monitor the output of the command in your terminal.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Error - &lt;span style=&#34;color:#bd93f9&#34;&gt;502&lt;/span&gt; Bad Gateway
+Error - &lt;span style=&#34;color:#bd93f9&#34;&gt;502&lt;/span&gt; Bad Gateway
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Error - &lt;span style=&#34;color:#bd93f9&#34;&gt;502&lt;/span&gt; Bad Gateway
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Error - &lt;span style=&#34;color:#bd93f9&#34;&gt;502&lt;/span&gt; Bad Gateway
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Error - &lt;span style=&#34;color:#bd93f9&#34;&gt;502&lt;/span&gt; Bad Gateway
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not good! 😧&lt;/p&gt;
+&lt;p&gt;These error messages are coming from the load balancer, &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html#http-502-issues&#34;&gt;indicating&lt;/a&gt; that the underlying backend wasn&amp;rsquo;t able to complete the request. This is happening when the instance gets rebooted as specified in our document.&lt;/p&gt;
+&lt;p&gt;The load balancer hasn&amp;rsquo;t had enough time to determine whether the instance is unhealthy or not - as dictated from our &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L19&#34;&gt;health check policy&lt;/a&gt; (2 failed checks with 6 seconds between them) - and so still forwards traffic to it even though it cannot respond.&lt;/p&gt;
+&lt;p&gt;We can actually view this disruption in &lt;a href=&#34;https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html&#34;&gt;CloudWatch Metrics&lt;/a&gt; too. ALBs expose &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html#load-balancer-metrics-alb&#34;&gt;metrics&lt;/a&gt; for us which we can monitor against, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RequestCount
+&lt;ul&gt;
+&lt;li&gt;Informs us how many incoming requests the ALB is receiving&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;HTTPCode_ELB_5XX_Count
+&lt;ul&gt;
+&lt;li&gt;How many HTTP 5XX error codes are being returned by the ALB&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can chart them together for visualisation.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;non-graceful-results.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/non-graceful-results.png&#34;
+         alt=&#34;A graph in CloudWatch showing the number of requests being served by the ALB, along with occasional HTTP 5XX counts - corresponding at the same time the instances were being rebooted&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;HTTPCode_ELB_5XX_Count only reports on failures - if the metric is missing data points then no errors occurred at that time&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;While we are the only users hitting this, had this been a production box hit by 1,000s of users, each one of them would experience an issue with your application, and equals lost customers! 😡&lt;/p&gt;
+&lt;p&gt;What we need is a means of removing the node from the load balancer rotation so that we can safely perform maintenance on it.&lt;/p&gt;
+&lt;h2 id=&#34;removing-instances-from-load-balancer-rotation&#34;&gt;Removing instances from load balancer rotation&lt;/h2&gt;
+&lt;p&gt;Load balancer target groups have an API endpoint that allow you to drain connections from backends - where the load balancer stops any &lt;em&gt;new&lt;/em&gt; requests being forwarded to that backend, and allows existing requests to complete. This can be done via - you guessed it - Automation Documents!&lt;/p&gt;
+&lt;h3 id=&#34;graceful-load-balancer-document&#34;&gt;Graceful load balancer document&lt;/h3&gt;
+&lt;p&gt;You can see the document in its entirety &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml&#34;&gt;here&lt;/a&gt;. The steps that it performs are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Check that the target group is healthy
+&lt;ul&gt;
+&lt;li&gt;We want to ensure we&amp;rsquo;re not fuelling a dumpster fire&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Check that the instance we&amp;rsquo;re targeting is in the target group we&amp;rsquo;re modifying
+&lt;ul&gt;
+&lt;li&gt;Otherwise what&amp;rsquo;s the point? 🙃&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Remove the instance from the target group and wait for it to be removed&lt;/li&gt;
+&lt;li&gt;Execute our maintenance document&lt;/li&gt;
+&lt;li&gt;Register the instance back and wait for it to be added back&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;document-metadata&#34;&gt;Document metadata&lt;/h4&gt;
+&lt;p&gt;As this is an automation document, the &lt;code&gt;schemaVersion&lt;/code&gt; should be &lt;code&gt;0.3&lt;/code&gt;. We&amp;rsquo;re using two parameters here to run the document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;TargetGroupArn&lt;/code&gt; - the ARN of the target group we are making modifications too&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;InstanceId&lt;/code&gt; - the instance that is undergoing maintenance&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;schemaVersion&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.3&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Gracefully reboot instance with healthchecks
+&lt;span style=&#34;color:#ff79c6&#34;&gt;parameters&lt;/span&gt;:
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;InstanceId&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: String
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The instance to target
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: String
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The target group ARN for Appian
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;sanity-checks&#34;&gt;Sanity checks&lt;/h4&gt;
+&lt;p&gt;The first two steps of the document are sanity checking the target group to ensure preconditions are met before we introduce change. We&amp;rsquo;re using the &lt;code&gt;aws:assertAwsResourceProperty&lt;/code&gt; &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-assertAwsResourceProperty.html&#34;&gt;action&lt;/a&gt; to allow us to query against the &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html&#34;&gt;AWS ELBv2 API&lt;/a&gt; (Elastic Load Balancer v2) and verify a response is what we expect it to be.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You can see all the API endpoints available for ELBv2 at this &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_Operations.html&#34;&gt;location&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The response of the &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeTargetHealth.html&#34;&gt;DescribeTargetHealth&lt;/a&gt; endpoint returns an object that is structured like this.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;TargetHealthDescriptions&amp;#34;&lt;/span&gt;: [
+    {
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Target&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;i-083c8ca9c9b74e1cd&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Port&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+      },
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;HealthCheckPort&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;8080&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;TargetHealth&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;State&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;healthy&amp;#34;&lt;/span&gt;
+      }
+    },
+    {
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Target&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;i-08a63b118a0b2a6b7&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Port&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+      },
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;HealthCheckPort&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;8080&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;TargetHealth&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;State&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;healthy&amp;#34;&lt;/span&gt;
+      }
+    },
+    {
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Target&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;i-08c656b7160dd6729&amp;#34;&lt;/span&gt;,
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;Port&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;8080&lt;/span&gt;
+      },
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;HealthCheckPort&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;8080&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;TargetHealth&amp;#34;&lt;/span&gt;: {
+        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;State&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;healthy&amp;#34;&lt;/span&gt;
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This represents all the backends that are configured against the target group. The property selector &lt;code&gt;$.TargetHealthDescriptions..TargetHealth.State&lt;/code&gt; specified in the document will check against &lt;em&gt;all&lt;/em&gt; state fields to see if they are healthy. If any of them aren&amp;rsquo;t then the document will be aborted. As mentioned before, this check is performed to ensure we&amp;rsquo;re not causing more problems for ourselves if any of the nodes are unhealthy.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: AssertTargetGroupHealthBefore
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Assert the target group is healthy before we bounce Tomcat
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:assertAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions..TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - healthy
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;timeoutSeconds&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;60&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the next sanity check we&amp;rsquo;re ensuring that the instance is definitely in the target group we want to remove it from. This is a slightly different query to the last step where we&amp;rsquo;re specifically requesting for state health on that one instance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: AssertInstanceIsInTargetGroup
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Assert the instance is a healthy target of the target group
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:assertAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions[0].TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - healthy
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Targets&lt;/span&gt;:
+      - &lt;span style=&#34;color:#ff79c6&#34;&gt;Id&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;timeoutSeconds&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;60&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;remove-the-instance-from-rotation&#34;&gt;Remove the instance from rotation&lt;/h4&gt;
+&lt;p&gt;Now our preconditions have been met we can remove the instance using the &lt;code&gt;aws:executeAwsApi&lt;/code&gt; &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAwsApi.html&#34;&gt;action&lt;/a&gt;. This action is similar to &lt;code&gt;aws:assertAwsResourceProperty&lt;/code&gt; in that it calls an AWS API endpoint, but we&amp;rsquo;re not checking the response of it - in fact the &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DeregisterTargets.html&#34;&gt;DeregisterTargets&lt;/a&gt; endpoint doesn&amp;rsquo;t return anything for us to check against.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: DeregisterInstanceFromTargetGroup
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Proactively remove the instance from the target group
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:executeAwsApi
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DeregisterTargets
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;Targets&lt;/span&gt;:
+        - &lt;span style=&#34;color:#ff79c6&#34;&gt;Id&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we&amp;rsquo;ve done that we need to verify the instance has definitely been removed. Remember that the target group allows for existing connections to complete their requests when it is draining, so deregistering the instance doesn&amp;rsquo;t happen instantaneously - this is where the &lt;code&gt;aws:waitForAwsResourceProperty&lt;/code&gt; helps us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: WaitForDeregisteredTarget
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Wait for the instance to drain connections
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:waitForAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions[0].TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - unused
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Targets&lt;/span&gt;:
+      - &lt;span style=&#34;color:#ff79c6&#34;&gt;Id&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;timeoutSeconds&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;600&lt;/span&gt;
+- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: AssertTargetIsDeregistered
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Assert the instance is no longer a target
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:assertAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions[0].TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - unused
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Targets&lt;/span&gt;:
+      - &lt;span style=&#34;color:#ff79c6&#34;&gt;Id&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;execute-maintenance&#34;&gt;Execute maintenance&lt;/h4&gt;
+&lt;p&gt;At this point we&amp;rsquo;re 100% sure that the instance is now removed from the target group and is no longer receiving requests, so let&amp;rsquo;s go ahead and use &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAutomation.html&#34;&gt;&lt;code&gt;aws:executeAutomation&lt;/code&gt;&lt;/a&gt; to invoke the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#so-what-does-all-this-have-to-do-with-our-maintenance-document&#34;&gt;maintenance document&lt;/a&gt; from earlier. Remember it takes in the &lt;code&gt;InstanceIds&lt;/code&gt; as a parameter to execute on, so we&amp;rsquo;ll need to pass it there too.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re specifying an &lt;code&gt;onFailure&lt;/code&gt; too, this tells the document should the step fail then move onto this step instead of the default action which is to abort the rest of the document.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;step:RegisterTarget&lt;/code&gt; is actually the next step after this one, which adds the instance back to the target group. Since it performs health checks for us and won&amp;rsquo;t actually forward to an unhealthy instance, we&amp;rsquo;ll let the target group make the call if this instance can receive traffic or not.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: RebootWithHealthcheck
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Reboot the instance with a healthcheck afterward
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:executeAutomation
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DocumentName&lt;/span&gt;: RebootWithHealthcheck
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;RuntimeParameters&lt;/span&gt;:
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;InstanceIds&lt;/span&gt;:
+        - &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;onFailure&lt;/span&gt;: step:RegisterTarget
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;add-instance-back-to-target-group&#34;&gt;Add instance back to target group&lt;/h4&gt;
+&lt;p&gt;In a similar vein to DeregisterTargets, this &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_RegisterTargets.html&#34;&gt;action&lt;/a&gt; will register the instance back to the target group.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: RegisterTarget
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Add the instance back as a target
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:executeAwsApi
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: RegisterTargets
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Targets&lt;/span&gt;:
+      - &lt;span style=&#34;color:#ff79c6&#34;&gt;Id&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ InstanceId }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Registering the instance happens instantaneously, but we will have to wait for the target group to perform initial health checks against the instance. Once we&amp;rsquo;ve asserted that it&amp;rsquo;s healthy, then the document is complete!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: WaitForHealthyTargetGroup
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Wait for the target group to become healthy again
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:waitForAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions..TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - healthy
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: AssertTargetGroupHealthAfter
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Assert the target group is healthy after activity
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;action&lt;/span&gt;: aws:assertAwsResourceProperty
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;inputs&lt;/span&gt;:
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Service&lt;/span&gt;: elbv2
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;Api&lt;/span&gt;: DescribeTargetHealth
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;PropertySelector&lt;/span&gt;: $.TargetHealthDescriptions..TargetHealth.State
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;DesiredValues&lt;/span&gt;:
+      - healthy
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TargetGroupArn }}&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;maxAttempts&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;timeoutSeconds&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;60&lt;/span&gt;
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;isEnd&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember that this document only handles one instance at a time, it will typically be up to the caller (i.e. a maintenance window) to rate limit the execution of multiple instances one at a time. We explored this in the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;terraform-additions-and-updates&#34;&gt;Terraform additions and updates&lt;/h3&gt;
+&lt;p&gt;The above document can be represented in &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_document_graceful_reboot.tf&#34;&gt;Terraform&lt;/a&gt; to provision it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;graceful_reboot_instance&amp;#34;&lt;/span&gt; {
+  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;RebootInstanceGraceful&amp;#34;&lt;/span&gt;
+  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+
+  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/graceful_patch_instance.yml&amp;#34;&lt;/span&gt;,
+    {
+      reboot_with_healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;reboot_with_healthcheck&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+    }
+  )
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We&amp;rsquo;ll also need to update our &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window.tf#L22&#34;&gt;maintenance window task&lt;/a&gt; to correctly reflect this new document, along with the new parameters it takes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_maintenance_window_task&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+  window_id        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_maintenance_window&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;patch_with_healthcheck&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;
+  task_type        &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;AUTOMATION&amp;#34;&lt;/span&gt;
+  task_arn         &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;graceful_reboot_instance&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;
+  priority         &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;10&lt;/span&gt;
+  service_role_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_iam_role&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;patch_mw_role&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;
+
+  max_concurrency &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+  max_errors      &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;targets&lt;/span&gt; {
+    key    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;WindowTargetIds&amp;#34;&lt;/span&gt;
+    values &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_maintenance_window_target&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;patch_with_healthcheck_target&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;]
+  }
+
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;task_invocation_parameters&lt;/span&gt; {
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;automation_parameters&lt;/span&gt; {
+      document_version &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$LATEST&amp;#34;&lt;/span&gt;
+
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;parameter&lt;/span&gt; {
+        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;InstanceId&amp;#34;&lt;/span&gt;
+        values &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ TARGET_ID }}&amp;#34;&lt;/span&gt;]
+      }
+
+      &lt;span style=&#34;color:#ff79c6&#34;&gt;parameter&lt;/span&gt; {
+        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;TargetGroupArn&amp;#34;&lt;/span&gt;
+        values &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;target_group_arns&lt;/span&gt;[&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;]]
+      }
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And lastly, we&amp;rsquo;ll need to update the &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window_iam.tf#L30&#34;&gt;IAM role permissions&lt;/a&gt; for &lt;code&gt;aws_iam_role.patch_mw_role.arn&lt;/code&gt; as it will be invoking more actions.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_iam_policy_document&amp;#34; &amp;#34;mw_role_additional&amp;#34;&lt;/span&gt; {
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;statement&lt;/span&gt; {
+    sid    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;AllowSSM&amp;#34;&lt;/span&gt;
+    effect &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;
+
+    actions &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm:DescribeInstanceInformation&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm:ListCommandInvocations&amp;#34;&lt;/span&gt;,
+    ]
+
+    resources &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;]
+  }
+
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;statement&lt;/span&gt; {
+    sid    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;AllowElBRead&amp;#34;&lt;/span&gt;
+    effect &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;
+
+    actions &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;elasticloadbalancing:DescribeTargetHealth&amp;#34;&lt;/span&gt;,
+    ]
+
+    resources &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;]
+
+  }
+
+  &lt;span style=&#34;color:#ff79c6&#34;&gt;statement&lt;/span&gt; {
+    sid &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;AllowELBWrite&amp;#34;&lt;/span&gt;
+    effect &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Allow&amp;#34;&lt;/span&gt;
+
+    actions &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;elasticloadbalancing:DeregisterTargets&amp;#34;&lt;/span&gt;,
+      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;elasticloadbalancing:RegisterTargets&amp;#34;&lt;/span&gt;,
+    ]
+
+    resources &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ff79c6&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;hello_world_alb&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;target_group_arns&lt;/span&gt;[&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;]]
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-the-new-document&#34;&gt;Testing the new document&lt;/h3&gt;
+&lt;p&gt;You can test the automation document by following the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents&#34;&gt;same process as before&lt;/a&gt;, else you can test the whole stack via changing the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents-in-maintenance-windows&#34;&gt;execution time of the maintenance window&lt;/a&gt;. I&amp;rsquo;ll be following along with the latter.&lt;/p&gt;
+&lt;p&gt;While the document is running you can re-use the same command to hit the ALB endpoint &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/#testing-for-failure&#34;&gt;from earlier&lt;/a&gt; to see how traffic is distributed amongst the instances. You&amp;rsquo;ll first see that it will only execute on one instance at a time, which was the enhancement we introduced in the &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/&#34;&gt;last post&lt;/a&gt;.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;graceful-document-overview.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/graceful-document-overview.png&#34;
+         alt=&#34;AWS console showing the automation document execution view. There are 3 task invocations, one for each instance in scope - they have all executed successfully and only one invocation was executed at a time.&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;When we drill down into each invocation we can see the automation steps doing their magic.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;graceful-document-invocation-detail.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/graceful-document-invocation-detail.png&#34;
+         alt=&#34;AWS console showing the individual steps of the automation document removing the targeted instance from rotation before executing the maintenance automation document&#34;/&gt; &lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;We can have a look back at the ALB metrics again to see if we received any errors.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;graceful-results.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/graceful-results.png&#34;
+         alt=&#34;CloudWatch metrics view for the ALB RequestCount and HTTP_ELB_5XX_Count. The former hovers at approximately 100 requests per minute, whereas there are no error counts being reported.&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;No error - no problem!&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Each post prior to this one in the series has been leading up to where we are now - a means of achieving automated zero downtime maintenance for anything that sits behind an AWS ALB.&lt;/p&gt;
+&lt;p&gt;SSM is very much a bit of a beast and I hope that this series has helped clear the fog and given yourselves an idea of what you can do with SSM to automate a variety of tasks in your AWS estate.&lt;/p&gt;
+&lt;p&gt;Happy automating! 💪 🙌&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Automate Instance Hygiene with AWS SSM: Automation Documents</title><enclosure url="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/cover.png" type="image/jpg"></enclosure>

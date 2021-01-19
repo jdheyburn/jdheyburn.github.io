@@ -6,10 +6,55 @@
     <description>Recent content in Tags on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>automation</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/tags/automation/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/tags/automation/</guid>-->
+      <description></description>
+    </item>
+    
+    <item>
+      <title>aws</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/tags/aws/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/tags/aws/</guid>-->
+      <description></description>
+    </item>
+    
+    <item>
+      <title>patching</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/tags/patching/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/tags/patching/</guid>-->
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ssm</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/tags/ssm/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/tags/ssm/</guid>-->
+      <description></description>
+    </item>
+    
+    <item>
+      <title>terraform</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/tags/terraform/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/tags/terraform/</guid>-->
+      <description></description>
+    </item>
     
     <item>
       <title>hugo</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
@@ -26,51 +71,6 @@
       <pubDate>Mon, 14 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://jdheyburn.co.uk/tags/rss/</guid>-->
-      <description></description>
-    </item>
-    
-    <item>
-      <title>automation</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/tags/automation/</link>
-      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/tags/automation/</guid>-->
-      <description></description>
-    </item>
-    
-    <item>
-      <title>aws</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/tags/aws/</link>
-      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/tags/aws/</guid>-->
-      <description></description>
-    </item>
-    
-    <item>
-      <title>patching</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/tags/patching/</link>
-      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/tags/patching/</guid>-->
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ssm</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/tags/ssm/</link>
-      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/tags/ssm/</guid>-->
-      <description></description>
-    </item>
-    
-    <item>
-      <title>terraform</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/tags/terraform/</link>
-      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/tags/terraform/</guid>-->
       <description></description>
     </item>
     
