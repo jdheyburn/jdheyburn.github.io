@@ -396,7 +396,7 @@ Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
     &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The instance to target
   &lt;span style=&#34;color:#ff79c6&#34;&gt;TargetGroupArn&lt;/span&gt;:
     &lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: String
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The target group ARN for Appian
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: The target group ARN for the instance
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;sanity-checks&#34;&gt;Sanity checks&lt;/h4&gt;
 &lt;p&gt;The first two steps of the document are sanity checking the target group to ensure preconditions are met before we introduce change. We&amp;rsquo;re using the &lt;code&gt;aws:assertAwsResourceProperty&lt;/code&gt; &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-assertAwsResourceProperty.html&#34;&gt;action&lt;/a&gt; to allow us to query against the &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html&#34;&gt;AWS ELBv2 API&lt;/a&gt; (Elastic Load Balancer v2) and verify a response is what we expect it to be.&lt;/p&gt;
 &lt;blockquote&gt;

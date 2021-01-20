@@ -572,7 +572,7 @@ Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
     <span style="color:#ff79c6">description</span>: The instance to target
   <span style="color:#ff79c6">TargetGroupArn</span>:
     <span style="color:#ff79c6">type</span>: String
-    <span style="color:#ff79c6">description</span>: The target group ARN for Appian
+    <span style="color:#ff79c6">description</span>: The target group ARN for the instance
 </code></pre></div><h4 id="sanity-checks">Sanity checks</h4>
 <p>The first two steps of the document are sanity checking the target group to ensure preconditions are met before we introduce change. We&rsquo;re using the <code>aws:assertAwsResourceProperty</code> <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-assertAwsResourceProperty.html">action</a> to allow us to query against the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html">AWS ELBv2 API</a> (Elastic Load Balancer v2) and verify a response is what we expect it to be.</p>
 <blockquote>
