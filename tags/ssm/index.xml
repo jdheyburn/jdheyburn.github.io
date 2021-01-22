@@ -35,7 +35,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
-&lt;p&gt;If you&amp;rsquo;re just joining in from this post then I recommend reading through the previous posts to gain of understanding of how we got here; or if you know what you&amp;rsquo;re looking for the tl;dr provides a summary.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re just joining in from this post then I recommend reading through the previous posts to gain an understanding of how we got here; or if you know what you&amp;rsquo;re looking for the tl;dr provides a summary.&lt;/p&gt;
 &lt;p&gt;As always, the code for this post can be found on &lt;a href=&#34;https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-3&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;A basic understanding and knowledge of &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html&#34;&gt;Application Load Balancers&lt;/a&gt; (ALB), and its components (e.g. &lt;a href=&#34;https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html&#34;&gt;target groups&lt;/a&gt;) is required.&lt;/p&gt;
 &lt;h2 id=&#34;introducing-load-balancers&#34;&gt;Introducing load balancers&lt;/h2&gt;
