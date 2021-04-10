@@ -4977,7 +4977,7 @@ OK
 &lt;ul&gt;
 &lt;li&gt;The &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-how-it-works-alt-source-repository.html&#34;&gt;patch source&lt;/a&gt; API enables AWS SSM Patch Baselines to specify alternate patch repositories at runtime of the SSM Document AWS-RunPatchBaseline.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Status&lt;/strong&gt;: Awaiting Review ⏳&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Status&lt;/strong&gt;: Merged ✅&lt;/p&gt;
 </description>
     </item>
     
