@@ -2,6 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://jdheyburn.co.uk/tags/backblaze/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/backup/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/beets/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/blog/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/lms/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/rclone/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/restic/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/systemd/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
+    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
@@ -11,13 +44,7 @@
     <loc>https://jdheyburn.co.uk/tags/aws/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://jdheyburn.co.uk/blog/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/patching/</loc>
@@ -27,9 +54,6 @@
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/ssm/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/terraform/</loc>

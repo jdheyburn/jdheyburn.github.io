@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>beets on JDHeyburn</title>
+    <link>https://jdheyburn.co.uk/tags/beets/</link>
+    <description>Recent content in beets on JDHeyburn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 04 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jdheyburn.co.uk/tags/beets/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Backup to Backblaze B2 using restic and rclone</title><enclosure url="https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/</link>
+      <pubDate>Tue, 04 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/</guid>-->
+      <description>&lt;p&gt;Over the last UK lockdown I spent some time making sure I had backups of my music collection after I had organised them using &lt;a href=&#34;https://beets.readthedocs.io/en/stable/&#34;&gt;beets&lt;/a&gt;. I used this as a good opportunity to ensure I had other backups in place for some other critical files at home too.&lt;/p&gt;
+&lt;h2 id=&#34;backup-tools&#34;&gt;Backup tools&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://restic.net/&#34;&gt;Restic&lt;/a&gt; is a backup snapshot tool that given a set of directories, it will split the data into chunks and de-duplicate these chunks to a specified backup repository. You can specify your backup policy to a repository, where it will manage what daily, weekly, or monthly snapshots to keep.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rclone.org/&#34;&gt;Rclone&lt;/a&gt; is a cloud file transfer tool that allows you to synchronise, copy, etc., any data across a huge library of cloud backends.&lt;/p&gt;
+&lt;p&gt;Both of these are open source tools that are free to use. Getting set up on them is beyond the scope of this post.&lt;/p&gt;
+&lt;p&gt;Backups should be automated without us having to think of them (at least until you need to restore!), so for this I&amp;rsquo;ll be using systemd unit services with timers.&lt;/p&gt;
+&lt;p&gt;Restic is storing the snapshots in repositories on my local NFS server. I&amp;rsquo;m then using &lt;a href=&#34;https://www.backblaze.com/b2/cloud-storage.html&#34;&gt;Backblaze B2&lt;/a&gt; to store these in the cloud. At the time of writing they charge $0.005 GB/month for storage, and $0.01 per GB downloaded. So it costs more to download from B2, but since this is a disaster recovery backup I don&amp;rsquo;t anticipate downloading all that much. Being able to store it cheap over a long term is most important.&lt;/p&gt;
+&lt;p&gt;There are a load of other storage services too; here&amp;rsquo;s a list below taken from &lt;a href=&#34;https://www.backblaze.com/b2/cloud-storage.html&#34;&gt;Backblaze&amp;rsquo;s website&lt;/a&gt;. The other one I was contending with was &lt;a href=&#34;https://wasabi.com/cloud-storage-pricing/#three-info&#34;&gt;Wasabi&lt;/a&gt;; they&amp;rsquo;re only marginally more expensive than B2 for storage ($0.0059 GB/month), but they don&amp;rsquo;t charge for downloads.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;cloud-storage-price-comparison.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/cloud-storage-price-comparison.png&#34;
+         alt=&#34;A table showing the cost comparison of B2 versus S3, Azure, and Google Cloud Platform - B2 is the cheapest.&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;Cloud storage cost comparisons&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;backup-contents-and-policy&#34;&gt;Backup contents and policy&lt;/h2&gt;
+&lt;p&gt;I have restic set up to backup to two respositories:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;small-files
+&lt;ul&gt;
+&lt;li&gt;PiHole configuration&lt;/li&gt;
+&lt;li&gt;UniFi backups&lt;/li&gt;
+&lt;li&gt;Logitech Media Server (LMS) backups&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;media
+&lt;ul&gt;
+&lt;li&gt;all music files&lt;/li&gt;
+&lt;li&gt;beets databases&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Reason being why these are split into two repositories is so that I can define a separate backup policy for each of them.&lt;/p&gt;
+&lt;p&gt;For example, small-files contains&amp;hellip; small files. You can see from the list above that these are just configuration files or even backups of files themselves. Since config files are important, I&amp;rsquo;d like the option to go back to a particular setting from weeks or maybe months ago. So the snapshots I want to keep for this repository is 30 daily snapshots, 5 weekly snapshots, 12 monthly snapshots, and 3 yearly snapshots. It might be a bit overkill, but I can always reduce that number and restic will remove them.&lt;/p&gt;
+&lt;p&gt;Whereas for media, these files tend to be much larger which will be reflected in the repository size. Especially since music files don&amp;rsquo;t tend to change over time - all I&amp;rsquo;m looking for is a way of reverting back to a state I had recently in case I did some reorganising with beets. Based on this I only need to keep 30 daily snapshots.&lt;/p&gt;
+&lt;p&gt;Also in the media repository are the beets databases. I&amp;rsquo;ll expand on how I have this set up in a future post, but for now think of it as a database containing the metadata for your music collection. It&amp;rsquo;s useful to include this with my music files so that I can reflect on the state of my collection at a particular point in time.&lt;/p&gt;
+&lt;h2 id=&#34;backup-procedure&#34;&gt;Backup procedure&lt;/h2&gt;
+&lt;p&gt;I have a 2TB USB hard drive connected to a Pi (dee) which is configured to be the NFS server for my network, along with PiHole for DNS, and a UniFi controller too. The drive holds my music collection and the restic local repositories.&lt;/p&gt;
+&lt;p&gt;LMS sits on a different machine to dee so we&amp;rsquo;ll need to retrieve the files first before we perform a snapshot.&lt;/p&gt;
+&lt;p&gt;Once restic has taken snapshots and stored them on the USB drive, we&amp;rsquo;ll need to upload the backups to B2 with rclone.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;N.B. the configuration to automate restic with systemd was largely inspired from a post on &lt;a href=&#34;https://fedoramagazine.org/automate-backups-with-restic-and-systemd/&#34;&gt;Fedora Magazine&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You can view the code for all these scripts and systemd unit files at my &lt;a href=&#34;https://github.com/jdheyburn/dotfiles/tree/master/restic&#34;&gt;GitHub repository&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;retrieving-backups-from-remote-servers&#34;&gt;Retrieving backups from remote servers&lt;/h3&gt;
+&lt;p&gt;I&amp;rsquo;ll have the restic backup script call another script, &lt;code&gt;pull-backups.sh&lt;/code&gt; to retrieve remote files that I want to back up.&lt;/p&gt;
+&lt;p&gt;For now I only need to retrieve LMS backups from &lt;a href=&#34;https://www.picoreplayer.org/&#34;&gt;PiCorePlayer&lt;/a&gt; - for which there is a handy command to help with that: &lt;code&gt;pcp bu&lt;/code&gt;. Don&amp;rsquo;t get too invested in the file path locations, these are specific to PiCorePlayer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# pull-backups.sh&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;# Invoke and pull backups from remote servers and place them on USB&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; pcp&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;fpath&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/mmcblk0p2/tce&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;fname&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;mydata&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ext&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;tgz&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;now&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;date -u +&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;%Y-%m-%dT%H%M%S&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;dstPath&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/usb/Backup/lms/*.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ext&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;removing previous backups...&amp;#34;&lt;/span&gt;
+    rm -rf &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$dstPath&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;sourceFile&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;fpath&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;fname&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ext&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;dstFile&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/usb/Backup/lms/&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;fname&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;now&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ext&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;starting pcp backup&amp;#34;&lt;/span&gt;
+    ssh -i /home/jdheyburn/.ssh/pcp tc@pcp.joannet.casa -C &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;pcp bu&amp;#39;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;copying &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$sourceFile&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt; on remote to &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$dstFile&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+    scp -i /home/jdheyburn/.ssh/pcp &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;tc@pcp.joannet.casa:&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;sourceFile&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$dstFile&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; main&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;entered &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$0&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+    pcp
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+main &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$@&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This takes the backup created on the remote at &lt;code&gt;/mnt/mmcblk0p2/tce/mydata.tgz&lt;/code&gt; and places it locally at &lt;code&gt;/mnt/usb/Backup/lms/mydata_DATETIME.tgz&lt;/code&gt;. This &lt;code&gt;lms&lt;/code&gt; directory can then be used as a backup path for restic.&lt;/p&gt;
+&lt;p&gt;Should I need to retrieve backups from any other servers, I&amp;rsquo;ll write a new function here and append it to &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;restic-backup&#34;&gt;Restic backup&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# restic-all.sh&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;# Master script for backing up anything to do with restic&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; do_restic&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;mode&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$1&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;target&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$2&lt;/span&gt;
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;backup&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+        &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Backing up &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$target&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+        restic backup --verbose --tag systemd.timer &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$BACKUP_EXCLUDES&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$BACKUP_PATHS&lt;/span&gt;
+        &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Forgetting old &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$target&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+        restic forget --verbose --tag systemd.timer --group-by &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;paths,tags&amp;#34;&lt;/span&gt; --keep-daily &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$RETENTION_DAYS&lt;/span&gt; --keep-weekly &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$RETENTION_WEEKS&lt;/span&gt; --keep-monthly &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$RETENTION_MONTHS&lt;/span&gt; --keep-yearly &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$RETENTION_YEARS&lt;/span&gt;
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;elif&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;prune&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+        &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;pruning &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$target&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+        restic --verbose prune
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;fi&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; small_files&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;BACKUP_PATHS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/var/lib/unifi/backup/autobackup /etc/pihole /mnt/usb/Backup/lms&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;BACKUP_EXCLUDES&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_DAYS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;7&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_WEEKS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;5&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_MONTHS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;12&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_YEARS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;3&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RESTIC_REPOSITORY&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/usb/Backup/restic/small-files&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RESTIC_PASSWORD_FILE&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/home/restic/.resticpw&amp;#34;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;mode&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$1&lt;/span&gt;
+
+    do_restic &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;small files&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; media&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;BACKUP_PATHS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/usb/Backup/media/beets-db /mnt/usb/Backup/media/lossless /mnt/usb/Backup/media/music /mnt/usb/Backup/media/vinyl&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;BACKUP_EXCLUDES&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_DAYS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;30&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_WEEKS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_MONTHS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RETENTION_YEARS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RESTIC_REPOSITORY&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/mnt/usb/Backup/restic/media&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RESTIC_PASSWORD_FILE&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/home/restic/.resticmediapw&amp;#34;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;local&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;mode&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$1&lt;/span&gt;
+
+    do_restic &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;media&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; main&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;mode&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;backup&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+        /home/jdheyburn/dotfiles/restic/pull-backups.sh
+    &lt;span style=&#34;color:#ff79c6&#34;&gt;fi&lt;/span&gt;
+
+    small_files &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt;
+    media &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$mode&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+main &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$@&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This script is a bit messy, but it gets the job done. It takes in an argument which can be either &lt;code&gt;backup&lt;/code&gt; or &lt;code&gt;prune&lt;/code&gt;, depending on what task needs to run. If the mode is &lt;code&gt;backup&lt;/code&gt; then it will invoke the &lt;code&gt;pull-backups.sh&lt;/code&gt; prior to snapshotting so that it has the latest files to backup. I cover the &lt;code&gt;prune&lt;/code&gt; function &lt;a href=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/#restic-prune&#34;&gt;later&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Both restic repositories will be kept under &lt;code&gt;/mnt/usb/Backup/restic&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Once the script is defined we can have systemd invoke it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# /etc/systemd/system/restic-all.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Restic backup everything service&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;OnFailure&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;unit-status-mail@%n.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Service]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;oneshot&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/home/jdheyburn/dotfiles/restic/restic-all.sh backup&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Install]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;multi-user.target&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see that we&amp;rsquo;re passing in the mode as an argument at &lt;code&gt;ExecStart&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We can perform a test to make sure everything is defined correctly by running &lt;code&gt;systemctl start restic-all.service&lt;/code&gt;, and viewing the logs back at &lt;code&gt;journalctl -u restic-all.service -f&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In order to then have this systemd unit invoked on a regular occurrence, we need to define a &lt;code&gt;timer&lt;/code&gt; for this unit.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# /etc/systemd/system/restic-all.timer&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Backup with restic daily&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Timer]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;OnCalendar&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;*-*-* 2:00:00&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Persistent&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;true&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Install]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;timers.target&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will invoke the service at 2am every day once we enable it with &lt;code&gt;systemctl enable restic-all.timer&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We can have a look at the resulting snapshots with the below command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ restic -r /mnt/usb/Backup/restic/small-files/ snapshots
+repository 79dbc9b6 opened successfully, password is correct
+found &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; old cache directories in /root/.cache/restic, run &lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;restic cache --cleanup&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt; to remove them
+ID        Time                 Host        Tags           Paths
+------------------------------------------------------------------------------------------
+d93573f4  2020-06-30 02:00:01  dee         systemd.timer  /etc/pihole
+                                                          /var/lib/unifi/backup/autobackup
+
+96ecf97e  2020-07-31 02:00:35  dee         systemd.timer  /etc/pihole
+                                                          /var/lib/unifi/backup/autobackup
+
+d2b0a78e  2020-08-31 02:00:21  dee         systemd.timer  /etc/pihole
+                                                          /var/lib/unifi/backup/autobackup
+
+... &lt;span style=&#34;color:#6272a4&#34;&gt;# removed for brevity&lt;/span&gt;
+
+ec6fd77e  2021-05-03 02:00:34  dee         systemd.timer  /etc/pihole
+                                                          /mnt/usb/Backup/lms
+                                                          /var/lib/unifi/backup/autobackup
+
+722fcbbf  2021-05-04 02:00:34  dee         systemd.timer  /etc/pihole
+                                                          /mnt/usb/Backup/lms
+                                                          /var/lib/unifi/backup/autobackup
+------------------------------------------------------------------------------------------
+&lt;span style=&#34;color:#bd93f9&#34;&gt;39&lt;/span&gt; snapshots
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;syncing-to-b2-with-rclone&#34;&gt;Syncing to B2 with rclone&lt;/h2&gt;
+&lt;p&gt;Restic has now created snapshots and stored them in their respective repositories on the USB drive - but this isn&amp;rsquo;t really a safe place to keep backups since the USB drive could crap out at any moment. We can use rclone to offload the repositories to B2.&lt;/p&gt;
+&lt;p&gt;For this I&amp;rsquo;m going to use the same pattern as before for restic; a shell script invoked by systemd.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# rclone-all.sh&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;# Master script for backing up all rclone stuff to various clouds&lt;/span&gt;
+
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;/home/jdheyburn/.config/rclone/rclone.conf
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;function&lt;/span&gt; main&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;rcloning beets-db -&amp;gt; gdrive:media/beets-db&amp;#34;&lt;/span&gt;
+    rclone -v sync /mnt/usb/Backup/media/beets-db gdrive:media/beets-db --config&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;rcloning music -&amp;gt; gdrive:media/music&amp;#34;&lt;/span&gt;
+    rclone -v sync /mnt/usb/Backup/media/music gdrive:media/music --config&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;rcloning lossless -&amp;gt; gdrive:media/lossless&amp;#34;&lt;/span&gt;
+    rclone -v sync /mnt/usb/Backup/media/lossless gdrive:media/lossless --config&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;rcloning vinyl -&amp;gt; gdrive:media/vinyl&amp;#34;&lt;/span&gt;
+    rclone -v sync /mnt/usb/Backup/media/vinyl gdrive:media/vinyl --config&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;rcloning restic -&amp;gt; b2:restic&amp;#34;&lt;/span&gt;
+    rclone -v sync /mnt/usb/Backup/restic b2:iifu8Noi-backups/restic/ --config&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RCLONE_CONFIG&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Done rcloning&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+
+main &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$@&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In addition to the restic repository directory, I&amp;rsquo;m also backing up the beets databases and music files. These are going to my Google Drive storage in case I want to hook it up to some other apps that can pull from there.&lt;/p&gt;
+&lt;p&gt;Like &lt;code&gt;restic-all.sh&lt;/code&gt; above, this script is also invoked by systemd.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# /etc/systemd/system/rclone-all.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;# This should be invoked after restic has done doing the daily backup&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Rclone backup everything service&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;restic-all.service&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;OnFailure&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;unit-status-mail@%n.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Service]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;oneshot&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/home/jdheyburn/dotfiles/restic/rclone-all.sh&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Install]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;restic-all.service&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can test it with &lt;code&gt;systemctl start rclone-all.service&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Since we want to have rclone invoked after restic has done its thing, we need to specify &lt;code&gt;After=restic-all.service&lt;/code&gt; and &lt;code&gt;WantedBy=restic-all.service&lt;/code&gt;. Note that this&amp;rsquo;ll run even if &lt;code&gt;restic-all.service&lt;/code&gt; failed - but that&amp;rsquo;s not really an issue for me since rclone is uploading more than just restic respositories.&lt;/p&gt;
+&lt;p&gt;We don&amp;rsquo;t need to specify a systemd &lt;code&gt;.timer&lt;/code&gt; file for this unit file since we&amp;rsquo;re using the completion of &lt;code&gt;restic-all.service&lt;/code&gt; as our invocation point, so we can start that service in order to test it&amp;rsquo;ll run afterward.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;systemctl start restic-all.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;handling-service-failures&#34;&gt;Handling service failures&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;N.B. big thanks to &lt;a href=&#34;https://northernlightlabs.se/&#34;&gt;Laeffe&lt;/a&gt; for their &lt;a href=&#34;https://northernlightlabs.se/2014-07-05/systemd-status-mail-on-unit-failure.html&#34;&gt;excellent guide&lt;/a&gt; on this.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Automated backups are very useful for setting and forgetting, but when something goes wrong and backups haven&amp;rsquo;t occurred, we need to be made aware of it.&lt;/p&gt;
+&lt;p&gt;We can configure each of the systemd files to invoke a script on failure which can then send us an email when this happens.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll notice that each of the systemd unit files have &lt;code&gt;OnFailure=unit-status-mail@%n.service&lt;/code&gt; defined in them. This is an additional unit file where if the scripts fail, this service will be invoked.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# /etc/systemd/system/unit-status-mail@.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Unit Status Mailer Service&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;network.target&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Service]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;simple&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/home/jdheyburn/dotfiles/restic/systemd/unit-status-mail.sh %I &amp;#34;Hostname: %H&amp;#34; &amp;#34;Machine ID: %m&amp;#34; &amp;#34;Boot ID: %b&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;@&lt;/code&gt; symbol in the filename is a special case within systemd that &lt;a href=&#34;https://superuser.com/a/393429&#34;&gt;enables special functionality&lt;/a&gt;. In our case when we invoked it at &lt;code&gt;OnFailure=unit-status-mail@%n.service&lt;/code&gt; the calling unit file will pass its name via &lt;code&gt;%n&lt;/code&gt; to allow the receiving unit file to access it at &lt;code&gt;%I&lt;/code&gt;. So when the &lt;code&gt;restic-all&lt;/code&gt; service fails, this value ends up in &lt;code&gt;unit-status-mail@.service&lt;/code&gt; at &lt;code&gt;%I&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This &lt;code&gt;%I&lt;/code&gt; variable is then being passed as an argument to the script &lt;code&gt;unit-status-mail.sh&lt;/code&gt;. The contents of the script are below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# unit-status-mail.sh&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span style=&#34;color:#6272a4&#34;&gt;# From https://northernlightlabs.se/2014-07-05/systemd-status-mail-on-unit-failure.html&lt;/span&gt;
+
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;MAILTO&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ADD_EMAIL_HERE&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;MAILFROM&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;unit-status-mailer&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;UNIT&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$1&lt;/span&gt;
+
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;EXTRA&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; e in &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;@:&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
+  &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;EXTRA&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;+=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$e&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;$&amp;#39;\n&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;
+
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;UNITSTATUS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;systemctl status &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$UNIT&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+
+sendmail &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$MAILTO&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;From:$MAILFROM
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;To:$MAILTO
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Subject:Status mail for unit: $UNIT
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Status report for unit: $UNIT
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;$EXTRA
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;$UNITSTATUS
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; -e &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Status mail sent to: &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$MAILTO&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt; for unit: &lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$UNIT&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The name of the calling unit file is passed to &lt;code&gt;UNIT&lt;/code&gt; where the status of it is received, and the output is sent in an email to &lt;code&gt;MAILTO&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll need to make sure you have &lt;code&gt;sendmail&lt;/code&gt; installed on the machine to do this.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt install sendmail -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For me, the emails landed in the spam folder - but once you configure a rule on your email client to always forward them to your inbox, you&amp;rsquo;ll always be notified if there&amp;rsquo;s an error.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;status-email.png&#34;&gt;
+    &lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/status-email.png&#34;
+         alt=&#34;A screenshot showing an example email highlighting there has been a failure in the restic-all service.&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;The resulting email&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;removing-aged-restic-snapshots&#34;&gt;Removing aged restic snapshots&lt;/h2&gt;
+&lt;p&gt;One last area to look at with restic is &lt;a href=&#34;https://restic.readthedocs.io/en/latest/060_forget.html&#34;&gt;pruning&lt;/a&gt;, this is where restic will remove old data that has been &amp;ldquo;forgotten&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;Back in &lt;code&gt;restic-all.sh&lt;/code&gt; we are calling &lt;code&gt;restic forget&lt;/code&gt; after each backup - this tells restic to clean up any old snapshots not required by our defined backup policy. The script has been written to accommodate for both &lt;code&gt;backup&lt;/code&gt; and &lt;code&gt;prune&lt;/code&gt; functionality, so in order to execute that portion of the script we need to set up another systemd unit file to invoke it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# /etc/systemd/system/restic-prune.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Restic backup service (data pruning)&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;OnFailure&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;unit-status-mail@%n.service&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Service]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;oneshot&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/home/jdheyburn/dotfiles/restic/restic-all.sh prune&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since it is resource intensive to perform &lt;code&gt;prune&lt;/code&gt; against your repository, its best to run this at a different interval to your backups. From the below unit file &lt;code&gt;OnCalendar=*-*-1 10:00:00&lt;/code&gt; corresponds to the first day of the month at 10am.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-systemd&#34; data-lang=&#34;systemd&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[Unit]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;Prune data from the restic repository monthly&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Timer]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;OnCalendar&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;*-*-1 10:00:00&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;Persistent&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;true&lt;/span&gt;
+
+&lt;span style=&#34;color:#ff79c6&#34;&gt;[Install]&lt;/span&gt;
+&lt;span style=&#34;color:#50fa7b&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;timers.target&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;restoring-a-backup&#34;&gt;Restoring a backup&lt;/h2&gt;
+&lt;p&gt;Now the most important part - how to restore a restic snapshot. Let&amp;rsquo;s start with how to restore from a local repository.&lt;/p&gt;
+&lt;h3 id=&#34;restore-from-local-restic-repository&#34;&gt;Restore from local restic repository&lt;/h3&gt;
+&lt;p&gt;Firstly we need to find the snapshot ID that we want to restore to - in this example I want the latest snapshot.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ restic -r /mnt/usb/Backup/restic/small-files/ snapshots --last
+repository 79dbc9b6 opened successfully, password is correct
+found &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; old cache directories in /root/.cache/restic, run &lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;restic cache --cleanup&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt; to remove them
+ID        Time                 Host        Tags           Paths
+------------------------------------------------------------------------------------------
+f7ef9c33  2021-04-17 02:00:51  dee         systemd.timer  /etc/pihole
+                                                          /mnt/usb/Backup/media/beets-db
+                                                          /var/lib/unifi/backup/autobackup
+
+e2a73c00  2021-04-21 02:00:21  dee         systemd.timer  /etc/pihole
+                                                          /var/lib/unifi/backup/autobackup
+
+722fcbbf  2021-05-04 02:00:34  dee         systemd.timer  /etc/pihole
+                                                          /mnt/usb/Backup/lms
+                                                          /var/lib/unifi/backup/autobackup
+------------------------------------------------------------------------------------------
+&lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt; snapshots
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So the ID is &lt;code&gt;722fcbbf&lt;/code&gt;, let&amp;rsquo;s browse the contents to see if the file we want is in there.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ restic -r /mnt/usb/Backup/restic/small-files/ ls 722fcbbf
+repository 79dbc9b6 opened successfully, password is correct
+found &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; old cache directories in /root/.cache/restic, run &lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;restic cache --cleanup&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt; to remove them
+snapshot 722fcbbf of &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;/var/lib/unifi/backup/autobackup /etc/pihole /mnt/usb/Backup/lms&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt; filtered by &lt;span style=&#34;color:#ff79c6&#34;&gt;[]&lt;/span&gt; at 2021-05-04 02:00:34.383403601 +0100 BST&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;:
+/etc
+/etc/pihole
+/etc/pihole/GitHubVersions
+/etc/pihole/adlists.list
+&lt;span style=&#34;color:#6272a4&#34;&gt;# ... removed for brevity&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s say we want to restore &lt;code&gt;/etc/pihole/adlists.list&lt;/code&gt;, we can use the &lt;code&gt;--include&lt;/code&gt; argument to specify just that. If we didn&amp;rsquo;t use a filter argument then restic would default to restoring the entire contents of the snapshot.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ restic -r /mnt/usb/Backup/restic/small-files/ restore 722fcbbf --target /tmp/restic-restore --include /etc/pihole/adlists.list
+repository 79dbc9b6 opened successfully, password is correct
+found &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; old cache directories in /root/.cache/restic, run &lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;restic cache --cleanup&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt; to remove them
+restoring &amp;lt;Snapshot 722fcbbf of &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;/var/lib/unifi/backup/autobackup /etc/pihole /mnt/usb/Backup/lms&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt; at 2021-05-04 02:00:34.383403601 +0100 BST by root@dee&amp;gt; to /tmp/restic-restore
+
+$ tree /tmp/restic-restore/
+/tmp/restic-restore/
+└── etc
+    └── pihole
+        └── adlists.list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;restore-from-b2-restic-repository&#34;&gt;Restore from B2 restic repository&lt;/h3&gt;
+&lt;p&gt;We&amp;rsquo;re storing the repositories on B2 too, and restic has B2 integration built into it. So in the scenario where the NFS server had died and we needed to restore a snapshot stored on B2, we can hit it directly without having to use rclone to pull down the entire repository for us to restore from. This&amp;rsquo;ll be a cheaper approach as restic is only pulling down the files it needs to restore from, lowering B2 download costs.&lt;/p&gt;
+&lt;p&gt;We just need to configure some variables to permit restic to hit B2. If you&amp;rsquo;re using rclone you can use the same ID and key here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;B2_ACCOUNT_ID&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ACCCOUNT_ID&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;B2_ACCOUNT_KEY&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ACCCOUNT_KEY&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;RESTIC_PASSWORD_FILE&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/path/to/passwordfile
+&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;restic -r b2:BUCKET_NAME:restic/small-files snapshots --last
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From here you can then use the same commands as in the local repository to traverse the snapshots and restore.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The process above is probably more complex than what it needs to be; having a separate process for backing up and restoring. Since I want to back up to the NFS locally first followed by B2, this approach made the most sense as it allows me to minimise download costs from B2 through targeting the local repository first.&lt;/p&gt;
+&lt;p&gt;What&amp;rsquo;s most important is that backups are being made, and that I &lt;em&gt;can&lt;/em&gt; restore from them.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
