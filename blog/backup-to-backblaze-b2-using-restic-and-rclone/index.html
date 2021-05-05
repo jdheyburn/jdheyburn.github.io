@@ -339,7 +339,7 @@ main <span style="color:#8be9fd;font-style:italic">$@</span>
 <span style="color:#ff79c6">}</span>
 
 main <span style="color:#8be9fd;font-style:italic">$@</span>
-</code></pre></div><p>This script is a bit messy, but it gets the job done. It takes in an argument which can be either <code>backup</code> or <code>prune</code>, depending on what task needs to run. If the mode is <code>backup</code> then it will invoke the <code>pull-backups.sh</code> prior to snapshotting so that it has the latest files to backup. I cover the <code>prune</code> function <a href="#restic-prune">later</a>.</p>
+</code></pre></div><p>This script is a bit messy, but it gets the job done. It takes in an argument which can be either <code>backup</code> or <code>prune</code>, depending on what task needs to run. If the mode is <code>backup</code> then it will invoke the <code>pull-backups.sh</code> prior to snapshotting so that it has the latest files to backup. I cover the <code>prune</code> function <a href="#removing-aged-restic-snapshots">later</a>.</p>
 <p>Both restic repositories will be kept under <code>/mnt/usb/Backup/restic</code>.</p>
 <p>Once the script is defined we can have systemd invoke it.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-systemd" data-lang="systemd"><span style="color:#6272a4"># /etc/systemd/system/restic-all.service</span>
