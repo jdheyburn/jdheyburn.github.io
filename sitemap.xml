@@ -2,6 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/automation/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/blog/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/coronavirus/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/huginn/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/marcrebillet/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/portainer/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/smtp/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
+    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://jdheyburn.co.uk/tags/backblaze/</loc>
     <lastmod>2021-05-04T00:00:00+00:00</lastmod>
   </url><url>
@@ -12,12 +42,6 @@
     <lastmod>2021-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/beets/</loc>
-    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/blog/</loc>
-    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/</loc>
     <lastmod>2021-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/lms/</loc>
@@ -32,13 +56,7 @@
     <loc>https://jdheyburn.co.uk/tags/systemd/</loc>
     <lastmod>2021-05-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://jdheyburn.co.uk/tags/</loc>
-    <lastmod>2021-05-04T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/</loc>
-    <lastmod>2021-01-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/automation/</loc>
     <lastmod>2021-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/aws/</loc>
