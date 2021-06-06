@@ -22,7 +22,7 @@
 <meta property="og:url" content="https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/" />
 <meta property="og:image" content="https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/cover.png"/>
 <meta property="article:published_time" content="2021-06-03T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-06-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-06T00:00:00+00:00" />
 
 
     
@@ -140,9 +140,16 @@
               </time>
             </span>
             
+            <span class="posted-on">
+              <i class="fas fa-calendar-plus"></i>
+              <time datetime='2021-06-06T00:00:00Z'>
+                6 June 2021
+              </time>
+            </span>
+            
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              9-minute read
+              11-minute read
             </span>
           </div>
           
@@ -178,11 +185,16 @@
     </li>
     <li><a href="#configure-huginn-for-sending-email-over-gmail-smtp">Configure Huginn for sending email over Gmail SMTP</a></li>
     <li><a href="#testing-the-flow">Testing the flow</a></li>
+    <li><a href="#fixing-agent-jobs-stuck-in-pending-state">Fixing agent jobs stuck in pending state</a></li>
   </ul>
 </nav>
 </aside>
 
-        <p>The UK&rsquo;s coronavirus vaccine strategy has been to target those most vulnerable first, and then trickle down towards the healthier population. Since that age is creeping down toward my age group, I wanted to see if I could alert myself when I would be eligible for the vax.</p>
+        <blockquote>
+<p><strong>UPDATE 2021-06-06</strong></p>
+<p>A few days after publishing this I came across a bug where agent jobs would be stuck in pending state. I&rsquo;ve since fixed this and documented some additional changes I&rsquo;ve made at the <a href="#fixing-agent-jobs-stuck-in-pending-state">end of the post</a>.</p>
+</blockquote>
+<p>The UK&rsquo;s coronavirus vaccine strategy has been to target those most vulnerable first, and then trickle down towards the healthier population. Since that age is creeping down toward my age group, I wanted to see if I could alert myself when I would be eligible for the vax.</p>
 <p>My local GP would send out an SMS text message informing me when I&rsquo;m eligible, however I&rsquo;ve heard that this text can come days after you&rsquo;re eligible. Knowing that the latest guidance is maintained on the <a href="https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/coronavirus-vaccine/">NHS Coronavirus Vaccine site</a>, I can use <a href="https://github.com/huginn/huginn#what-is-huginn">Huginn</a> to alert me when the page updates with the latest eligibility.</p>
 <figure class="center"><a href="vaccine-eligibility.png">
     <img src="vaccine-eligibility.png"
@@ -239,9 +251,7 @@
     <span style="color:#ff79c6">&#34;http&#34;</span>: {
       <span style="color:#ff79c6">&#34;servers&#34;</span>: {
         <span style="color:#ff79c6">&#34;srv0&#34;</span>: {
-          <span style="color:#ff79c6">&#34;listen&#34;</span>: [
-            <span style="color:#f1fa8c">&#34;:443&#34;</span>
-          ],
+          <span style="color:#ff79c6">&#34;listen&#34;</span>: [<span style="color:#f1fa8c">&#34;:443&#34;</span>],
           <span style="color:#ff79c6">&#34;routes&#34;</span>: [
             {
               <span style="color:#ff79c6">&#34;handle&#34;</span>: [
@@ -265,20 +275,18 @@
               ],
               <span style="color:#ff79c6">&#34;match&#34;</span>: [
                 {
-                  <span style="color:#ff79c6">&#34;host&#34;</span>: [
-                    <span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>
-                  ]
+                  <span style="color:#ff79c6">&#34;host&#34;</span>: [<span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>]
                 }
               ],
               <span style="color:#ff79c6">&#34;terminal&#34;</span>: <span style="color:#ff79c6">true</span>
-            },
+            }
             // ... others removed for brevity
           ],
           <span style="color:#ff79c6">&#34;tls_connection_policies&#34;</span>: [
             {
               <span style="color:#ff79c6">&#34;match&#34;</span>: {
                 <span style="color:#ff79c6">&#34;sni&#34;</span>: [
-                  <span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>,
+                  <span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>
                   // ... others removed for brevity
                 ]
               }
@@ -304,7 +312,7 @@
               <span style="color:#ff79c6">&#34;module&#34;</span>: <span style="color:#f1fa8c">&#34;acme&#34;</span>
             },
             <span style="color:#ff79c6">&#34;subjects&#34;</span>: [
-              <span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>,
+              <span style="color:#f1fa8c">&#34;huginn.joannet.casa&#34;</span>
               // ... others removed for brevity
             ]
           }
@@ -507,6 +515,77 @@
   <iframe src="https://www.youtube.com/embed/qeCwwYjf8gw" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
 
+<h2 id="fixing-agent-jobs-stuck-in-pending-state">Fixing agent jobs stuck in pending state</h2>
+<p>Using the docker compose file above caused an issue for me where Huginn would get jobs stuck in a pending state - where rebooting the container was the only way to unblock them&hellip; no good for an alerting app!</p>
+<p>Huginn by default includes a mysql daemon as the datastore if none is provided in the environment variables. I decided to have mysql running in a separate container to see if that fixed it&hellip; and it did!</p>
+<p>My new docker compose file looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ff79c6">services</span>:
+  <span style="color:#ff79c6">huginn</span>:
+    <span style="color:#ff79c6">command</span>:
+      - /scripts/init
+    <span style="color:#ff79c6">container_name</span>: huginn_huginn
+    <span style="color:#ff79c6">environment</span>:
+      - SMTP_PORT=587
+      - SMTP_SERVER=&lt;SMTP_SERVER&gt;
+      - SMTP_PASSWORD=&lt;SMTP_PASSWORD&gt;
+      - SMTP_USER_NAME=&lt;SMTP_USER_NAME&gt;
+      - SMTP_ENABLE_STARTTLS_AUTO=true
+      - SMTP_AUTHENTICATION=plain
+      - SMTP_DOMAIN=&lt;SMTP_DOMAIN&gt;
+      - TIMEZONE=London
+      - DATABASE_POOL=30
+      - DATABASE_NAME=huginn
+      - DATABASE_USERNAME=huginn
+      - DATABASE_PASSWORD=&lt;MYSQL_PASSWORD&gt;
+      - DATABASE_HOST=huginn_mysql
+      - DATABASE_PORT=3306
+      - START_MYSQL=false
+      - DATABASE_ENCODING=utf8mb4
+      - IMPORT_DEFAULT_SCENARIO_FOR_ALL_USERS=false
+      - DOMAIN=huginn.joannet.casa
+      - INVITATION_CODE=&lt;INVITATION_CODE&gt;
+    <span style="color:#ff79c6">image</span>: huginn/huginn:latest
+    <span style="color:#ff79c6">ports</span>:
+      - <span style="color:#bd93f9">3000</span>:<span style="color:#bd93f9">3000</span>/tcp
+    <span style="color:#ff79c6">restart</span>: unless-stopped
+    <span style="color:#ff79c6">user</span>: <span style="color:#f1fa8c">&#34;1000&#34;</span>
+    <span style="color:#ff79c6">working_dir</span>: /app
+    <span style="color:#ff79c6">depends_on</span>:
+      - mysql
+  <span style="color:#ff79c6">mysql</span>:
+    <span style="color:#ff79c6">image</span>: mysql
+    <span style="color:#ff79c6">container_name</span>: huginn_mysql
+    <span style="color:#ff79c6">restart</span>: always
+    <span style="color:#ff79c6">ports</span>:
+      - <span style="color:#f1fa8c">&#34;3306:3306&#34;</span>
+    <span style="color:#ff79c6">environment</span>:
+      - MYSQL_ROOT_PASSWORD=&lt;MYSQL_ROOT_PASSWORD&gt;
+      - MYSQL_DATABASE=huginn
+      - MYSQL_USER=huginn
+      - MYSQL_PASSWORD=&lt;MYSQL_PASSWORD&gt;
+    <span style="color:#ff79c6">volumes</span>:
+      - mysql:/var/lib/mysql
+
+<span style="color:#ff79c6">volumes</span>:
+  <span style="color:#ff79c6">mysql</span>:
+    <span style="color:#ff79c6">driver</span>: local
+</code></pre></div><p>The <code>mysql</code> container is pretty standard so I won&rsquo;t cover that here. There are some env vars I had to add to the <code>huginn</code> container:</p>
+<ul>
+<li><code>DATABASE_HOST</code> - the database hostname to connect to, we can use the container name here</li>
+<li><code>DATABASE_PORT</code> - the port to which to connect to the database</li>
+<li><code>DATABASE_NAME</code> - the name of the database to use</li>
+<li><code>DATABASE_USERNAME</code> - who we should connect to the database as</li>
+<li><code>DATABASE_PASSWORD</code> - authentication for the user</li>
+<li><code>DATABASE_ENCODING</code> - a requirement when using a newer version of MySQL as defined in the <a href="https://github.com/huginn/huginn/blob/master/.env.example#L33">documentation</a></li>
+<li><code>START_MYSQL</code> - whether to use a local mysql daemon or not</li>
+</ul>
+<p>Some additional env vars I added unrelated to the new database:</p>
+<ul>
+<li><code>IMPORT_DEFAULT_SCENARIO_FOR_ALL_USERS</code> - I don&rsquo;t care able the agents that are added by default</li>
+<li><code>INVITATION_CODE</code> - Lock down Huginn by requiring this code for new user sign ups</li>
+<li><code>DOMAIN</code> - the endpoint that Huginn is available at</li>
+</ul>
+<p>I&rsquo;ve also added in a <code>depends_on</code> on the database container to assist with orchestration. On first boot however it takes some time for mysql to initialise the database, so Huginn may fail as the database is not yet ready to be connected to. Once the initialisation is done then reboot the Huginn container and it should be able to bootstrap the database fine.</p>
 
       </div>
 
