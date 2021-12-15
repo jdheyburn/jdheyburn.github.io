@@ -1,309 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <script async defer data-domain="jdheyburn.co.uk" src="https://stats.jdheyburn.co.uk/js/index.js"></script>
-    
-    <meta name="author" content="Joseph D. Heyburn">
-    <meta name="description" content="Ramblings of a tech guy">
-    <meta name="keywords" content="blog,developer,devops,cloud">
-
-    <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/card.png"/>
-<meta name="twitter:title" content="How to automate zero downtime maintenance with AWS SSM & ALBs"/>
-<meta name="twitter:description" content="Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets"/>
-
-    <meta property="og:title" content="How to automate zero downtime maintenance with AWS SSM &amp; ALBs" />
-<meta property="og:description" content="Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/" />
-<meta property="og:image" content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/card.png"/>
-<meta property="article:published_time" content="2021-01-19T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-01-19T00:00:00+00:00" />
-
-
-
-    
-      <base href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/">
-    
-    <title>
-  How to automate zero downtime maintenance with AWS SSM & ALBs · JDHeyburn
-</title>
-
-    
-      <link rel="canonical" href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/">
-    
-
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
-
-    
-      
-      
-      <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css" integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin="anonymous" media="screen" />
-    
-
-    
-
-    
-      
-        
-        
-        <link rel="stylesheet" href="https://jdheyburn.co.uk/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css" integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin="anonymous" media="screen" />
-      
-    
-
-    
-      <link rel="stylesheet" href="https://jdheyburn.co.uk/css/custom.css" />
-    
-
-    
-
-    
-
-    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://jdheyburn.co.uk/images/favicon-16x16.png" sizes="16x16">
-
-    <meta name="generator" content="Hugo 0.82.0" />
-  </head>
-
-  
-  
-    
-  
-  <body class="colorscheme-dark">
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="https://jdheyburn.co.uk/">
-      JDHeyburn
-    </a>
-    
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://jdheyburn.co.uk/about/">About</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://jdheyburn.co.uk/blog/">Blog</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://jdheyburn.co.uk/projects/">Projects</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://jdheyburn.co.uk/contact/">Contact</a>
-          </li>
-        
-      
-      
-    </ul>
-    
-  </section>
-</nav>
-
-
-      <div class="content">
-        
-  <section class="container post">
-    <article>
-      
-      
-      
-      <div>
-        <img class="featimage" src='https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/cover.png' alt="Featured image"/>
-      </div>
-      
-      <header>
-        
-
-        <div class="post-title">
-          <h1 class="title">How to automate zero downtime maintenance with AWS SSM & ALBs</h1>
-        </div>
-        <div class="post-description">
-          <p>Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets</p>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2021-01-19T00:00:00Z'>
-                19 January 2021
-              </time>
-            </span>
-            
-            <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              18-minute read
-            </span>
-          </div>
-          
-          <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://jdheyburn.co.uk/tags/aws/">aws</a>
-      <span class="separator">•</span>
-    <a href="https://jdheyburn.co.uk/tags/ssm/">ssm</a>
-      <span class="separator">•</span>
-    <a href="https://jdheyburn.co.uk/tags/automation/">automation</a>
-      <span class="separator">•</span>
-    <a href="https://jdheyburn.co.uk/tags/terraform/">terraform</a>
-      <span class="separator">•</span>
-    <a href="https://jdheyburn.co.uk/tags/patching/">patching</a></div>
-
-        </div>
-      </header>
-
-      <div>
-        
-<aside>
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#tldr">tl;dr</a></li>
-    <li><a href="#prerequisites">Prerequisites</a></li>
-    <li><a href="#introducing-load-balancers">Introducing load balancers</a>
-      <ul>
-        <li><a href="#adding-web-services-to-our-demo-environment">Adding web services to our demo environment</a></li>
-        <li><a href="#fronting-instances-with-a-load-balancer">Fronting instances with a load balancer</a></li>
-        <li><a href="#hitting-the-load-balancer">Hitting the load balancer</a></li>
-      </ul>
-    </li>
-    <li><a href="#so-what-does-all-this-have-to-do-with-our-maintenance-document">So what does all this have to do with our maintenance document?</a>
-      <ul>
-        <li><a href="#testing-for-failure">Testing for failure</a></li>
-      </ul>
-    </li>
-    <li><a href="#removing-instances-from-load-balancer-rotation">Removing instances from load balancer rotation</a>
-      <ul>
-        <li><a href="#graceful-load-balancer-document">Graceful load balancer document</a></li>
-        <li><a href="#terraform-additions-and-updates">Terraform additions and updates</a></li>
-        <li><a href="#testing-the-new-document">Testing the new document</a></li>
-      </ul>
-    </li>
-    <li><a href="#conclusion">Conclusion</a></li>
-  </ul>
-</nav>
-</aside>
-
-        <p>Welcome to the last post in this <a href="https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/">series</a> where we&rsquo;ve been exploring SSM Documents, so far we&rsquo;ve covered:</p>
-<ul>
-<li>How <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Command Documents</a> can help to execute commands on EC2 Instances</li>
-<li>Automating these Command Documents through <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">Maintenance Windows</a></li>
-<li>Safely chaining Command Documents through <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/">Automation Documents</a>, and aborting for any failures</li>
-</ul>
-<p>This post will now look into how we can use Automation Documents to perform maintenance on EC2 instances without impacting user experience.</p>
-<h2 id="tldr">tl;dr</h2>
-<ul>
-<li>With the introduction of load balancers to front your services, you can control which instances should be receiving traffic</li>
-<li>This enables you to proactively remove instances from rotation so that you can perform maintenance on the backends to minimalise user disruption</li>
-<li>SSM automation documents can enable us to execute pre-maintenance steps such as removing an instance from a load balancer, as well as adding them back after
-<ul>
-<li>See the <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml">document</a> produced in this post highlighting this, and where I <a href="#graceful-load-balancer-document">explain</a> how it works, and <a href="#terraform-additions-and-updates">how to deploy</a> it using Terraform</li>
-</ul>
-</li>
-</ul>
-<h2 id="prerequisites">Prerequisites</h2>
-<p>If you&rsquo;re just joining in from this post then I recommend reading through the previous posts to gain an understanding of how we got here; or if you know what you&rsquo;re looking for the tl;dr provides a summary.</p>
-<p>As always, the code for this post can be found on <a href="https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-3">GitHub</a>.</p>
-<p>A basic understanding and knowledge of <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">Application Load Balancers</a> (ALB), and its components (e.g. <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html">target groups</a>) is required.</p>
-<h2 id="introducing-load-balancers">Introducing load balancers</h2>
-<p><a href="https://en.wikipedia.org/wiki/Load_balancing_(computing)">Load balancers</a> are a key component in software architecture that distribute traffic and requests across backend services in a variety of algorithms, such as:</p>
-<ul>
-<li>Round-robin
-<ul>
-<li>every backend serves the same number of requests</li>
-<li>the most commonly used algorithm</li>
-</ul>
-</li>
-<li>Weighted round-robin
-<ul>
-<li>backends receive a fixed percentage of incoming requests</li>
-<li>useful if some backends are more beefy than others</li>
-<li>also used in <a href="https://martinfowler.com/bliki/CanaryRelease.html">canary deployments</a></li>
-</ul>
-</li>
-<li>Least outstanding requests
-<ul>
-<li>the backend which is currently processing the least number of requests is forwarded the request</li>
-</ul>
-</li>
-</ul>
-<p>There are multiple benefits to having a load balancer sit in front of your services:</p>
-<ul>
-<li>Protecting your infrastructure; user requests are proxied via the load balancer</li>
-<li>Distribute traffic and requests however you like</li>
-<li>Perform healthchecks on backends and don&rsquo;t forward traffic to unhealthy nodes</li>
-<li>Drain and remove backends to permit for rolling upgrades</li>
-</ul>
-<p>While there are several different software-based load balancers out there such as <a href="https://www.nginx.com/">nginx</a> and <a href="https://www.haproxy.org/">HAProxy</a>, AWS has its own managed load balancer service known as an <a href="https://aws.amazon.com/elasticloadbalancing/">Elastic Load Balancer</a> (ELB).</p>
-<h3 id="adding-web-services-to-our-demo-environment">Adding web services to our demo environment</h3>
-<p>In order for us to get the benefit of load balancers to front the EC2 instances in the architecture this series left off from <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#prerequisites">last time</a>, we will need to have a service running on our instances.</p>
-<p>Let&rsquo;s simulate a real web service by running a simple Hello World application across each of the instances. We can utilise EC2s <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html">user data</a> to start a basic service up for us by giving it a script to run on instance provision.</p>
-<figure class="center"><a href="alb-arch.png">
-    <img src="alb-arch.png"
-         alt="An architecture diagram showing a user with an arrow pointing to an application load balancer on port 80. The load balancer then points to 3 EC2 instances on port 8080."/> </a><figcaption>
-            <p>This is the architecture we&rsquo;ll be building out in this section, with an ALB fronting our EC2 instances</p>
-        </figcaption>
-</figure>
-
-<p>Let&rsquo;s use Go to create a web service for us since it is easy to get set up quickly - we&rsquo;ll have the server return a simple <code>Hello, World!</code> message when a request hits it. Let&rsquo;s also have it return the name of the instance that was hit - this will be used <a href="#hitting-the-load-balancer">later</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ff79c6">#!/bin/bash
-</span><span style="color:#ff79c6"></span>cat <span style="color:#f1fa8c">&lt;&lt;&#39;EOF&#39; &gt; /home/ec2-user/main.go
-</span><span style="color:#f1fa8c">package main
-</span><span style="color:#f1fa8c">
-</span><span style="color:#f1fa8c">import (
-</span><span style="color:#f1fa8c">        &#34;fmt&#34;
-</span><span style="color:#f1fa8c">        &#34;net/http&#34;
-</span><span style="color:#f1fa8c">        &#34;os&#34;
-</span><span style="color:#f1fa8c">)
-</span><span style="color:#f1fa8c">
-</span><span style="color:#f1fa8c">func main() {
-</span><span style="color:#f1fa8c">        http.HandleFunc(&#34;/&#34;, HelloServer)
-</span><span style="color:#f1fa8c">        http.ListenAndServe(&#34;:8080&#34;, nil)
-</span><span style="color:#f1fa8c">}
-</span><span style="color:#f1fa8c">
-</span><span style="color:#f1fa8c">func HelloServer(w http.ResponseWriter, r *http.Request) {
-</span><span style="color:#f1fa8c">        hostname, _ := os.Hostname()
-</span><span style="color:#f1fa8c">        fmt.Fprintf(w, &#34;Hello, World! From %v\n&#34;, hostname)
-</span><span style="color:#f1fa8c">}
-</span><span style="color:#f1fa8c">EOF</span>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><script async defer data-domain=jdheyburn.co.uk src=https://stats.jdheyburn.co.uk/js/index.js></script><meta name=author content="Joseph D. Heyburn"><meta name=description content="Ramblings of a tech guy"><meta name=keywords content="blog,developer,devops,cloud"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/card.png"><meta name=twitter:title content="How to automate zero downtime maintenance with AWS SSM & ALBs"><meta name=twitter:description content="Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets"><meta property="og:title" content="How to automate zero downtime maintenance with AWS SSM & ALBs"><meta property="og:description" content="Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets"><meta property="og:type" content="article"><meta property="og:url" content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/"><meta property="og:image" content="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/card.png"><meta property="article:published_time" content="2021-01-19T00:00:00+00:00"><meta property="article:modified_time" content="2021-01-19T00:00:00+00:00"><base href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/><title>How to automate zero downtime maintenance with AWS SSM & ALBs · JDHeyburn</title><link rel=canonical href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/><link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel=stylesheet><link rel=stylesheet href=https://use.fontawesome.com/releases/v5.13.0/css/all.css integrity=sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin=anonymous media=screen><link rel=stylesheet href=https://jdheyburn.co.uk/css/custom.css><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=https://jdheyburn.co.uk/images/favicon-16x16.png sizes=16x16><meta name=generator content="Hugo 0.82.1"></head><body class=colorscheme-dark><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=https://jdheyburn.co.uk/>JDHeyburn</a>
+<input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fas fa-bars"></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/about/>About</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/blog/>Blog</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/projects/>Projects</a></li><li class=navigation-item><a class=navigation-link href=https://jdheyburn.co.uk/contact/>Contact</a></li></ul></section></nav><div class=content><section class="container post"><article><div><img class=featimage src=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-3/cover.png alt="Featured image"></div><header><div class=post-title><h1 class=title>How to automate zero downtime maintenance with AWS SSM & ALBs</h1></div><div class=post-description><p>Load balancers can help us to ensure we proactively remove instances from rotation when we automate maintenance against their targets</p></div><div class=post-meta><div class=date><span class=posted-on><i class="fas fa-calendar"></i>
+<time datetime=2021-01-19T00:00:00Z>19 January 2021</time></span>
+<span class=reading-time><i class="fas fa-clock"></i>
+18-minute read</span></div><div class=tags><i class="fas fa-tag"></i>
+<a href=https://jdheyburn.co.uk/tags/aws/>aws</a>
+<span class=separator>•</span>
+<a href=https://jdheyburn.co.uk/tags/ssm/>ssm</a>
+<span class=separator>•</span>
+<a href=https://jdheyburn.co.uk/tags/automation/>automation</a>
+<span class=separator>•</span>
+<a href=https://jdheyburn.co.uk/tags/terraform/>terraform</a>
+<span class=separator>•</span>
+<a href=https://jdheyburn.co.uk/tags/patching/>patching</a></div></div></header><div><aside><nav id=TableOfContents><ul><li><a href=#tldr>tl;dr</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#introducing-load-balancers>Introducing load balancers</a><ul><li><a href=#adding-web-services-to-our-demo-environment>Adding web services to our demo environment</a></li><li><a href=#fronting-instances-with-a-load-balancer>Fronting instances with a load balancer</a></li><li><a href=#hitting-the-load-balancer>Hitting the load balancer</a></li></ul></li><li><a href=#so-what-does-all-this-have-to-do-with-our-maintenance-document>So what does all this have to do with our maintenance document?</a><ul><li><a href=#testing-for-failure>Testing for failure</a></li></ul></li><li><a href=#removing-instances-from-load-balancer-rotation>Removing instances from load balancer rotation</a><ul><li><a href=#graceful-load-balancer-document>Graceful load balancer document</a></li><li><a href=#terraform-additions-and-updates>Terraform additions and updates</a></li><li><a href=#testing-the-new-document>Testing the new document</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></aside><p>Welcome to the last post in this <a href=https://jdheyburn.co.uk/series/automate-instance-hygiene-with-aws-ssm/>series</a> where we&rsquo;ve been exploring SSM Documents, so far we&rsquo;ve covered:</p><ul><li>How <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/>Command Documents</a> can help to execute commands on EC2 Instances</li><li>Automating these Command Documents through <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/>Maintenance Windows</a></li><li>Safely chaining Command Documents through <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/>Automation Documents</a>, and aborting for any failures</li></ul><p>This post will now look into how we can use Automation Documents to perform maintenance on EC2 instances without impacting user experience.</p><h2 id=tldr>tl;dr</h2><ul><li>With the introduction of load balancers to front your services, you can control which instances should be receiving traffic</li><li>This enables you to proactively remove instances from rotation so that you can perform maintenance on the backends to minimalise user disruption</li><li>SSM automation documents can enable us to execute pre-maintenance steps such as removing an instance from a load balancer, as well as adding them back after<ul><li>See the <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml>document</a> produced in this post highlighting this, and where I <a href=#graceful-load-balancer-document>explain</a> how it works, and <a href=#terraform-additions-and-updates>how to deploy</a> it using Terraform</li></ul></li></ul><h2 id=prerequisites>Prerequisites</h2><p>If you&rsquo;re just joining in from this post then I recommend reading through the previous posts to gain an understanding of how we got here; or if you know what you&rsquo;re looking for the tl;dr provides a summary.</p><p>As always, the code for this post can be found on <a href=https://github.com/jdheyburn/terraform-examples/tree/main/aws-ssm-automation-3>GitHub</a>.</p><p>A basic understanding and knowledge of <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html>Application Load Balancers</a> (ALB), and its components (e.g. <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html>target groups</a>) is required.</p><h2 id=introducing-load-balancers>Introducing load balancers</h2><p><a href=https://en.wikipedia.org/wiki/Load_balancing_(computing)>Load balancers</a> are a key component in software architecture that distribute traffic and requests across backend services in a variety of algorithms, such as:</p><ul><li>Round-robin<ul><li>every backend serves the same number of requests</li><li>the most commonly used algorithm</li></ul></li><li>Weighted round-robin<ul><li>backends receive a fixed percentage of incoming requests</li><li>useful if some backends are more beefy than others</li><li>also used in <a href=https://martinfowler.com/bliki/CanaryRelease.html>canary deployments</a></li></ul></li><li>Least outstanding requests<ul><li>the backend which is currently processing the least number of requests is forwarded the request</li></ul></li></ul><p>There are multiple benefits to having a load balancer sit in front of your services:</p><ul><li>Protecting your infrastructure; user requests are proxied via the load balancer</li><li>Distribute traffic and requests however you like</li><li>Perform healthchecks on backends and don&rsquo;t forward traffic to unhealthy nodes</li><li>Drain and remove backends to permit for rolling upgrades</li></ul><p>While there are several different software-based load balancers out there such as <a href=https://www.nginx.com/>nginx</a> and <a href=https://www.haproxy.org/>HAProxy</a>, AWS has its own managed load balancer service known as an <a href=https://aws.amazon.com/elasticloadbalancing/>Elastic Load Balancer</a> (ELB).</p><h3 id=adding-web-services-to-our-demo-environment>Adding web services to our demo environment</h3><p>In order for us to get the benefit of load balancers to front the EC2 instances in the architecture this series left off from <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#prerequisites>last time</a>, we will need to have a service running on our instances.</p><p>Let&rsquo;s simulate a real web service by running a simple Hello World application across each of the instances. We can utilise EC2s <a href=https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html>user data</a> to start a basic service up for us by giving it a script to run on instance provision.</p><figure class=center><a href=alb-arch.png><img src=alb-arch.png alt="An architecture diagram showing a user with an arrow pointing to an application load balancer on port 80. The load balancer then points to 3 EC2 instances on port 8080."></a><figcaption><p>This is the architecture we&rsquo;ll be building out in this section, with an ALB fronting our EC2 instances</p></figcaption></figure><p>Let&rsquo;s use Go to create a web service for us since it is easy to get set up quickly - we&rsquo;ll have the server return a simple <code>Hello, World!</code> message when a request hits it. Let&rsquo;s also have it return the name of the instance that was hit - this will be used <a href=#hitting-the-load-balancer>later</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#ff79c6>#!/bin/bash
+</span><span style=color:#ff79c6></span>cat <span style=color:#f1fa8c>&lt;&lt;&#39;EOF&#39; &gt; /home/ec2-user/main.go
+</span><span style=color:#f1fa8c>package main
+</span><span style=color:#f1fa8c>
+</span><span style=color:#f1fa8c>import (
+</span><span style=color:#f1fa8c>        &#34;fmt&#34;
+</span><span style=color:#f1fa8c>        &#34;net/http&#34;
+</span><span style=color:#f1fa8c>        &#34;os&#34;
+</span><span style=color:#f1fa8c>)
+</span><span style=color:#f1fa8c>
+</span><span style=color:#f1fa8c>func main() {
+</span><span style=color:#f1fa8c>        http.HandleFunc(&#34;/&#34;, HelloServer)
+</span><span style=color:#f1fa8c>        http.ListenAndServe(&#34;:8080&#34;, nil)
+</span><span style=color:#f1fa8c>}
+</span><span style=color:#f1fa8c>
+</span><span style=color:#f1fa8c>func HelloServer(w http.ResponseWriter, r *http.Request) {
+</span><span style=color:#f1fa8c>        hostname, _ := os.Hostname()
+</span><span style=color:#f1fa8c>        fmt.Fprintf(w, &#34;Hello, World! From %v\n&#34;, hostname)
+</span><span style=color:#f1fa8c>}
+</span><span style=color:#f1fa8c>EOF</span>
 yum install golang -y
-<span style="color:#ff79c6">(</span>crontab -l 2&gt;/dev/null; <span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;@reboot nohup go run /home/ec2-user/main.go&#34;</span><span style="color:#ff79c6">)</span> | crontab -
-<span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">GOCACHE</span><span style="color:#ff79c6">=</span>/tmp/go-cache
+<span style=color:#ff79c6>(</span>crontab -l 2&gt;/dev/null; <span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#f1fa8c>&#34;@reboot nohup go run /home/ec2-user/main.go&#34;</span><span style=color:#ff79c6>)</span> | crontab -
+<span style=color:#8be9fd;font-style:italic>export</span> <span style=color:#8be9fd;font-style:italic>GOCACHE</span><span style=color:#ff79c6>=</span>/tmp/go-cache
 nohup go run /home/ec2-user/main.go
-</code></pre></div><p>So on instance creation this will:</p>
-<ol>
-<li>Create a new file called <code>main.go</code> and populate it with the lines between the <code>EOF</code> delimiters</li>
-<li>Install Go</li>
-<li>Create a <a href="https://en.wikipedia.org/wiki/Cron">crontab</a> entry to run the service on subsequent boots</li>
-<li>Run the Go application in the background immediately</li>
-</ol>
-<blockquote>
-<p>While user data is for useful provisioning services, I don&rsquo;t advise storing the source code of your application in there like I&rsquo;ve done - this is just a hacky way to get something up and running.</p>
-</blockquote>
-<p>We&rsquo;ve been using Terraform to provision our nodes. So we need to save this script in a <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/scripts/hello_world_user_data.sh">file</a> (<code>scripts/hello_world_user_data.sh</code>), and then pass it into the <code>user_data</code> attribute of our <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ec2.tf#L27">EC2 module</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">module</span> <span style="color:#f1fa8c">&#34;hello_world_ec2&#34;</span> {
-  source         <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;terraform-aws-modules/ec2-instance/aws&#34;</span>
-  version        <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;~&gt; 2.0&#34;</span><span style="color:#6272a4">
-</span><span style="color:#6272a4">
-</span><span style="color:#6272a4">  # ... removed for brevity
-</span><span style="color:#6272a4"></span>
-  user_data <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">file</span>(<span style="color:#f1fa8c">&#34;scripts/hello_world_user_data.sh&#34;</span>)
+</code></pre></div><p>So on instance creation this will:</p><ol><li>Create a new file called <code>main.go</code> and populate it with the lines between the <code>EOF</code> delimiters</li><li>Install Go</li><li>Create a <a href=https://en.wikipedia.org/wiki/Cron>crontab</a> entry to run the service on subsequent boots</li><li>Run the Go application in the background immediately</li></ol><blockquote><p>While user data is for useful provisioning services, I don&rsquo;t advise storing the source code of your application in there like I&rsquo;ve done - this is just a hacky way to get something up and running.</p></blockquote><p>We&rsquo;ve been using Terraform to provision our nodes. So we need to save this script in a <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/scripts/hello_world_user_data.sh>file</a> (<code>scripts/hello_world_user_data.sh</code>), and then pass it into the <code>user_data</code> attribute of our <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ec2.tf#L27>EC2 module</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>module</span> <span style=color:#f1fa8c>&#34;hello_world_ec2&#34;</span> {
+  source         <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;terraform-aws-modules/ec2-instance/aws&#34;</span>
+  version        <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;~&gt; 2.0&#34;</span><span style=color:#6272a4>
+</span><span style=color:#6272a4>
+</span><span style=color:#6272a4>  # ... removed for brevity
+</span><span style=color:#6272a4></span>
+  user_data <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>file</span>(<span style=color:#f1fa8c>&#34;scripts/hello_world_user_data.sh&#34;</span>)
 }
-</code></pre></div><p>Terraform will recreate any EC2 nodes with a change in <code>user_data</code> contents, so when you invoke <code>terraform apply</code> all instances will be recreated.</p>
-<blockquote>
-<p>N.B. the AMI I picked up for my EC2 instances has an issue with SSM Agent. Ensure you execute the <code>AWS-UpdateSSMAgent</code> across your instances after they have provisioned, or you can use an <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-state-about.html">SSM Association</a> document to do that for you as <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/update_ssm_agent_association.tf">shown here</a>.</p>
-</blockquote>
-<p>After they have all successfully deployed, you should be able to <code>curl</code> the public IP address of each instance from your machine to verify your setup is correct. If you are getting timeouts then make sure your instances have a security group rule permitting traffic from your IP address through port 8080.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl http://54.229.209.60:8080
+</code></pre></div><p>Terraform will recreate any EC2 nodes with a change in <code>user_data</code> contents, so when you invoke <code>terraform apply</code> all instances will be recreated.</p><blockquote><p>N.B. the AMI I picked up for my EC2 instances has an issue with SSM Agent. Ensure you execute the <code>AWS-UpdateSSMAgent</code> across your instances after they have provisioned, or you can use an <a href=https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-state-about.html>SSM Association</a> document to do that for you as <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/update_ssm_agent_association.tf>shown here</a>.</p></blockquote><p>After they have all successfully deployed, you should be able to <code>curl</code> the public IP address of each instance from your machine to verify your setup is correct. If you are getting timeouts then make sure your instances have a security group rule permitting traffic from your IP address through port 8080.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ curl http://54.229.209.60:8080
 Hello, World! From ip-172-31-39-169.eu-west-1.compute.internal
 
 $ curl http://3.250.160.209:8080
@@ -311,111 +52,82 @@ Hello, World! From ip-172-31-21-197.eu-west-1.compute.internal
 
 $ curl http://34.254.238.146:8080
 Hello, World! From ip-172-31-8-52.eu-west-1.compute.internal
-</code></pre></div><h3 id="fronting-instances-with-a-load-balancer">Fronting instances with a load balancer</h3>
-<p>Now that we have a web service hosted on our instances, let&rsquo;s now add a load balancer in front of it. This load balancer will now become the point of entry for our application instead of hitting the EC2 instances directly.</p>
-<blockquote>
-<p>For this I am using a Terraform <a href="https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest">ALB module</a> for provisioning all the components in the load balancer, and expanding on them is beyond the scope of this post.</p>
-<p>You can navigate to the AWS ALB <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">documentation</a> to find out about the underlying components the module creates for us.</p>
-</blockquote>
-<h4 id="security-groups">Security groups</h4>
-<p>Before we can provision the load balancer, we need to specify the security group (SG) and the rules that should be applied to it. You can view this on <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L45">GitHub</a>.</p>
-<p>Since our application is written to serve request on port 8080, we need to permit both the new <code>aws_security_group.hello_world_alb</code> SG and the existing <code>aws_security_group.vm_base</code> SG to communicate between each other.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_security_group&#34; &#34;hello_world_alb&#34;</span> {
-  name   <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;HelloWorldALB&#34;</span>
-  vpc_id <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">data</span>.<span style="color:#ff79c6">aws_vpc</span>.<span style="color:#ff79c6">default</span>.<span style="color:#ff79c6">id</span>
+</code></pre></div><h3 id=fronting-instances-with-a-load-balancer>Fronting instances with a load balancer</h3><p>Now that we have a web service hosted on our instances, let&rsquo;s now add a load balancer in front of it. This load balancer will now become the point of entry for our application instead of hitting the EC2 instances directly.</p><blockquote><p>For this I am using a Terraform <a href=https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest>ALB module</a> for provisioning all the components in the load balancer, and expanding on them is beyond the scope of this post.</p><p>You can navigate to the AWS ALB <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html>documentation</a> to find out about the underlying components the module creates for us.</p></blockquote><h4 id=security-groups>Security groups</h4><p>Before we can provision the load balancer, we need to specify the security group (SG) and the rules that should be applied to it. You can view this on <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L45>GitHub</a>.</p><p>Since our application is written to serve request on port 8080, we need to permit both the new <code>aws_security_group.hello_world_alb</code> SG and the existing <code>aws_security_group.vm_base</code> SG to communicate between each other.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_security_group&#34; &#34;hello_world_alb&#34;</span> {
+  name   <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;HelloWorldALB&#34;</span>
+  vpc_id <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>data</span>.<span style=color:#ff79c6>aws_vpc</span>.<span style=color:#ff79c6>default</span>.<span style=color:#ff79c6>id</span>
 }
 
-<span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_security_group_rule&#34; &#34;alb_egress_ec2&#34;</span> {
-  security_group_id        <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">id</span>
-  type                     <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;egress&#34;</span>
-  from_port                <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
-  to_port                  <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
-  protocol                 <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;tcp&#34;</span>
-  source_security_group_id <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">vm_base</span>.<span style="color:#ff79c6">id</span>
+<span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_security_group_rule&#34; &#34;alb_egress_ec2&#34;</span> {
+  security_group_id        <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>id</span>
+  type                     <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;egress&#34;</span>
+  from_port                <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
+  to_port                  <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
+  protocol                 <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;tcp&#34;</span>
+  source_security_group_id <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>vm_base</span>.<span style=color:#ff79c6>id</span>
 }
 
-<span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_security_group_rule&#34; &#34;ec2_ingress_alb&#34;</span> {
-  security_group_id        <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">vm_base</span>.<span style="color:#ff79c6">id</span>
-  type                     <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;ingress&#34;</span>
-  from_port                <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
-  to_port                  <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
-  protocol                 <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;tcp&#34;</span>
-  source_security_group_id <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">id</span>
+<span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_security_group_rule&#34; &#34;ec2_ingress_alb&#34;</span> {
+  security_group_id        <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>vm_base</span>.<span style=color:#ff79c6>id</span>
+  type                     <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;ingress&#34;</span>
+  from_port                <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
+  to_port                  <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
+  protocol                 <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;tcp&#34;</span>
+  source_security_group_id <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>id</span>
 }
-</code></pre></div><p>Now we need to open up the ALB to allow traffic to hit it. In our case it will just be us hitting it, but this will change depending on who the consumer of the service is. If it is to serve traffic from the Internet then <code>cidr_blocks</code> would be <code>[&quot;0.0.0.0/0&quot;]</code>.</p>
-<p>The ALB will be hosting the traffic on insecure HTTP (port 80).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_security_group_rule&#34; &#34;alb_ingress_user&#34;</span> {
-  security_group_id <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">id</span>
-  type              <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;ingress&#34;</span>
-  from_port         <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">80</span>
-  to_port           <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">80</span>
-  protocol          <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;tcp&#34;</span>
-  cidr_blocks       <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">local</span>.<span style="color:#ff79c6">ip_address</span>]
+</code></pre></div><p>Now we need to open up the ALB to allow traffic to hit it. In our case it will just be us hitting it, but this will change depending on who the consumer of the service is. If it is to serve traffic from the Internet then <code>cidr_blocks</code> would be <code>["0.0.0.0/0"]</code>.</p><p>The ALB will be hosting the traffic on insecure HTTP (port 80).</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_security_group_rule&#34; &#34;alb_ingress_user&#34;</span> {
+  security_group_id <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>id</span>
+  type              <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;ingress&#34;</span>
+  from_port         <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>80</span>
+  to_port           <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>80</span>
+  protocol          <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;tcp&#34;</span>
+  cidr_blocks       <span style=color:#ff79c6>=</span> [<span style=color:#ff79c6>local</span>.<span style=color:#ff79c6>ip_address</span>]
 }
-</code></pre></div><h4 id="alb-module">ALB module</h4>
-<p>The <a href="https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest">module documentation</a> will tell us how we need to structure it. Our requirements dictate we need the following:</p>
-<ul>
-<li>Receive traffic on port 80</li>
-<li>Forward traffic to backend targets on port 8080</li>
-<li>Include health checks to ensure we do not forward requests to unhealthy instances</li>
-</ul>
-<p>Translate these requirements into the context of the module and we have <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L1">something like this</a>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">module</span> <span style="color:#f1fa8c">&#34;hello_world_alb&#34;</span> {
-  source  <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;terraform-aws-modules/alb/aws&#34;</span>
-  version <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;~&gt; 5.0&#34;</span>
+</code></pre></div><h4 id=alb-module>ALB module</h4><p>The <a href=https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest>module documentation</a> will tell us how we need to structure it. Our requirements dictate we need the following:</p><ul><li>Receive traffic on port 80</li><li>Forward traffic to backend targets on port 8080</li><li>Include health checks to ensure we do not forward requests to unhealthy instances</li></ul><p>Translate these requirements into the context of the module and we have <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L1>something like this</a>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>module</span> <span style=color:#f1fa8c>&#34;hello_world_alb&#34;</span> {
+  source  <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;terraform-aws-modules/alb/aws&#34;</span>
+  version <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;~&gt; 5.0&#34;</span>
 
-  name <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;HelloWorldALB&#34;</span>
+  name <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;HelloWorldALB&#34;</span>
 
-  load_balancer_type <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;application&#34;</span>
+  load_balancer_type <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;application&#34;</span>
 
-  vpc_id          <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">data</span>.<span style="color:#ff79c6">aws_vpc</span>.<span style="color:#ff79c6">default</span>.<span style="color:#ff79c6">id</span>
-  subnets         <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">tolist</span>(<span style="color:#ff79c6">data</span>.<span style="color:#ff79c6">aws_subnet_ids</span>.<span style="color:#ff79c6">all</span>.<span style="color:#ff79c6">ids</span>)
-  security_groups <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">aws_security_group</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">id</span>]
+  vpc_id          <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>data</span>.<span style=color:#ff79c6>aws_vpc</span>.<span style=color:#ff79c6>default</span>.<span style=color:#ff79c6>id</span>
+  subnets         <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>tolist</span>(<span style=color:#ff79c6>data</span>.<span style=color:#ff79c6>aws_subnet_ids</span>.<span style=color:#ff79c6>all</span>.<span style=color:#ff79c6>ids</span>)
+  security_groups <span style=color:#ff79c6>=</span> [<span style=color:#ff79c6>aws_security_group</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>id</span>]
 
-  target_groups <span style="color:#ff79c6">=</span> [
+  target_groups <span style=color:#ff79c6>=</span> [
     {
-      name_prefix      <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;pref-&#34;</span>
-      backend_protocol <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;HTTP&#34;</span>
-      backend_port     <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
-      target_type      <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;instance&#34;</span>
-      health_check <span style="color:#ff79c6">=</span> {
-        enabled             <span style="color:#ff79c6">=</span> <span style="color:#8be9fd">true</span>
-        healthy_threshold   <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
-        unhealthy_threshold <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
-        interval            <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">6</span>
+      name_prefix      <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;pref-&#34;</span>
+      backend_protocol <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;HTTP&#34;</span>
+      backend_port     <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
+      target_type      <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;instance&#34;</span>
+      health_check <span style=color:#ff79c6>=</span> {
+        enabled             <span style=color:#ff79c6>=</span> <span style=color:#8be9fd>true</span>
+        healthy_threshold   <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2</span>
+        unhealthy_threshold <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>2</span>
+        interval            <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>6</span>
       }
     }
   ]
 
-  http_tcp_listeners <span style="color:#ff79c6">=</span> [
+  http_tcp_listeners <span style=color:#ff79c6>=</span> [
     {
-      port               <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">80</span>
-      protocol           <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;HTTP&#34;</span>
-      target_group_index <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+      port               <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>80</span>
+      protocol           <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;HTTP&#34;</span>
+      target_group_index <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
     }
   ]
 }
-</code></pre></div><blockquote>
-<p>In order to keep this post simple I am not fronting services over HTTPS (secure HTTP) - I would strongly advise against doing this for non-test scenarios.</p>
-</blockquote>
-<p>Another step we will need is to hook up our EC2 instances with the target group created.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_lb_target_group_attachment&#34; &#34;hello_world_tg_att&#34;</span> {
-  count            <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">length</span>(<span style="color:#ff79c6">module</span>.<span style="color:#ff79c6">hello_world_ec2</span>.<span style="color:#ff79c6">id</span>)
-  target_group_arn <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">module</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">target_group_arns</span>[<span style="color:#bd93f9">0</span>]
-  target_id        <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">element</span>(<span style="color:#ff79c6">module</span>.<span style="color:#ff79c6">hello_world_ec2</span>.<span style="color:#ff79c6">id</span>, <span style="color:#ff79c6">count</span>.<span style="color:#ff79c6">index</span>)
-  port             <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8080</span>
+</code></pre></div><blockquote><p>In order to keep this post simple I am not fronting services over HTTPS (secure HTTP) - I would strongly advise against doing this for non-test scenarios.</p></blockquote><p>Another step we will need is to hook up our EC2 instances with the target group created.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_lb_target_group_attachment&#34; &#34;hello_world_tg_att&#34;</span> {
+  count            <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>length</span>(<span style=color:#ff79c6>module</span>.<span style=color:#ff79c6>hello_world_ec2</span>.<span style=color:#ff79c6>id</span>)
+  target_group_arn <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>module</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>target_group_arns</span>[<span style=color:#bd93f9>0</span>]
+  target_id        <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>element</span>(<span style=color:#ff79c6>module</span>.<span style=color:#ff79c6>hello_world_ec2</span>.<span style=color:#ff79c6>id</span>, <span style=color:#ff79c6>count</span>.<span style=color:#ff79c6>index</span>)
+  port             <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>8080</span>
 }
-</code></pre></div><p>There&rsquo;s some clever Terraform going on here. All we&rsquo;re doing is looping over each of the created EC2 instances in the module and adding it to the target group, to receive traffic on port 8080.</p>
-<h3 id="hitting-the-load-balancer">Hitting the load balancer</h3>
-<p>Whereas <a href="#adding-web-services-to-our-demo-environment">earlier</a> when we were testing the services by hitting the EC2 instances directly, we&rsquo;ll now be hitting the ALB instead. You can grab the ALB DNS name from the <a href="https://console.aws.amazon.com/ec2/v2/home#LoadBalancers:sort=loadBalancerName">console</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
+</code></pre></div><p>There&rsquo;s some clever Terraform going on here. All we&rsquo;re doing is looping over each of the created EC2 instances in the module and adding it to the target group, to receive traffic on port 8080.</p><h3 id=hitting-the-load-balancer>Hitting the load balancer</h3><p>Whereas <a href=#adding-web-services-to-our-demo-environment>earlier</a> when we were testing the services by hitting the EC2 instances directly, we&rsquo;ll now be hitting the ALB instead. You can grab the ALB DNS name from the <a href="https://console.aws.amazon.com/ec2/v2/home#LoadBalancers:sort=loadBalancerName">console</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
 Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
-</code></pre></div><p>Nice - and we can see from here what instance we&rsquo;ve hit in the backend, since we included the hostname in the response.</p>
-<p>If we now hit the ALB one more time, we will get a different instance respond.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
+</code></pre></div><p>Nice - and we can see from here what instance we&rsquo;ve hit in the backend, since we included the hostname in the response.</p><p>If we now hit the ALB one more time, we will get a different instance respond.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80
 Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
-</code></pre></div><p>This is the load balancer rotating between the backends available to it. We can see the rotation by repeatedly hitting the endpoint.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#ff79c6">while</span> true; <span style="color:#ff79c6">do</span> curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 ; sleep 0.5; <span style="color:#ff79c6">done</span>
+</code></pre></div><p>This is the load balancer rotating between the backends available to it. We can see the rotation by repeatedly hitting the endpoint.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ <span style=color:#ff79c6>while</span> true; <span style=color:#ff79c6>do</span> curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 ; sleep 0.5; <span style=color:#ff79c6>done</span>
 Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
 Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
 Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
@@ -423,502 +135,316 @@ Hello, World! From ip-172-31-31-223.eu-west-1.compute.internal
 Hello, World! From ip-172-31-0-10.eu-west-1.compute.internal
 Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
 Hello, World! From ip-172-31-43-11.eu-west-1.compute.internal
-</code></pre></div><h2 id="so-what-does-all-this-have-to-do-with-our-maintenance-document">So what does all this have to do with our maintenance document?</h2>
-<p>Now that we have a load balancer fronting our services, let&rsquo;s review executing our automation document from the <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#combining-command-docs-into-automation">last post</a> and the problem it brings.</p>
-<p>If an instance were to be rebooted during the <strong>AWS-RunPatchBaseline</strong> stage of the automation document, then there is a chance that a request would have been forwarded to that instance before the health checks against it have failed.</p>
-<p>To simulate this, let&rsquo;s create a new automation document which simulates a reboot. We&rsquo;ll just take our existing <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/patch_with_healthcheck_template.yml">patching document</a> and replace the patch step with a reboot command, following the <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-reboot.html">AWS guidelines</a> to do this. I&rsquo;ve also modified the health check to check to see if the new service came up okay - this may differ for your environment.</p>
-<p>You can view the document on <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/reboot_with_healthcheck_template.yml">GitHub</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#ff79c6">schemaVersion</span>: <span style="color:#f1fa8c">&#34;0.3&#34;</span>
-<span style="color:#ff79c6">description</span>: Executes a reboot on the instance followed by a healthcheck
-<span style="color:#ff79c6">parameters</span>:
-  <span style="color:#ff79c6">InstanceIds</span>:
-    <span style="color:#ff79c6">type</span>: StringList
-    <span style="color:#ff79c6">description</span>: The instance to target
-<span style="color:#ff79c6">mainSteps</span>:
-  - <span style="color:#ff79c6">name</span>: InvokeReboot
-    <span style="color:#ff79c6">action</span>: aws:runCommand
-    <span style="color:#ff79c6">inputs</span>:
-      <span style="color:#ff79c6">DocumentName</span>: AWS-RunShellScript
-      <span style="color:#ff79c6">InstanceIds</span>: <span style="color:#f1fa8c">&#34;{{ InstanceIds }}&#34;</span>
-      <span style="color:#ff79c6">OutputS3BucketName</span>: ${output_s3_bucket_name}
-      <span style="color:#ff79c6">OutputS3KeyPrefix</span>: ${output_s3_key_prefix}
-      <span style="color:#ff79c6">Parameters</span>:
-        <span style="color:#ff79c6">commands</span>: |<span style="color:#f1fa8c">
-</span><span style="color:#f1fa8c">          flag_location=/home/ec2-user/REBOOT_STARTED
-</span><span style="color:#f1fa8c">          if [ ! -f $flag_location ]; then
-</span><span style="color:#f1fa8c">            echo &#34;Creating flag file at $flag_location&#34;
-</span><span style="color:#f1fa8c">            touch $flag_location
-</span><span style="color:#f1fa8c">            echo &#34;Reboot initiated&#34;
-</span><span style="color:#f1fa8c">            exit 194
-</span><span style="color:#f1fa8c">          fi
-</span><span style="color:#f1fa8c">          echo &#34;Reboot finished, removing flag file at $flag_location&#34;
-</span><span style="color:#f1fa8c">          rm $flag_location</span>          
-  - <span style="color:#ff79c6">name</span>: ExecuteHealthcheck
-    <span style="color:#ff79c6">action</span>: aws:runCommand
-    <span style="color:#ff79c6">inputs</span>:
-      <span style="color:#ff79c6">DocumentName</span>: AWS-RunShellScript
-      <span style="color:#ff79c6">InstanceIds</span>: <span style="color:#f1fa8c">&#34;{{ InstanceIds }}&#34;</span>
-      <span style="color:#ff79c6">OutputS3BucketName</span>: ${output_s3_bucket_name}
-      <span style="color:#ff79c6">OutputS3KeyPrefix</span>: ${output_s3_key_prefix}
-      <span style="color:#ff79c6">Parameters</span>:
-        <span style="color:#ff79c6">commands</span>: |<span style="color:#f1fa8c">
-</span><span style="color:#f1fa8c">          sleep 60
-</span><span style="color:#f1fa8c">          if ! curl http://localhost:8080/; then
-</span><span style="color:#f1fa8c">            exit 1
-</span><span style="color:#f1fa8c">          fi</span>          
-</code></pre></div><p>Then the <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_reboot_with_healthcheck.tf">Terraform code</a> to create this document will look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_ssm_document&#34; &#34;reboot_with_healthcheck&#34;</span> {
-  name            <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;RebootWithHealthcheck&#34;</span>
-  document_type   <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Automation&#34;</span>
-  document_format <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;YAML&#34;</span>
+</code></pre></div><h2 id=so-what-does-all-this-have-to-do-with-our-maintenance-document>So what does all this have to do with our maintenance document?</h2><p>Now that we have a load balancer fronting our services, let&rsquo;s review executing our automation document from the <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#combining-command-docs-into-automation>last post</a> and the problem it brings.</p><p>If an instance were to be rebooted during the <strong>AWS-RunPatchBaseline</strong> stage of the automation document, then there is a chance that a request would have been forwarded to that instance before the health checks against it have failed.</p><p>To simulate this, let&rsquo;s create a new automation document which simulates a reboot. We&rsquo;ll just take our existing <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/patch_with_healthcheck_template.yml>patching document</a> and replace the patch step with a reboot command, following the <a href=https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-reboot.html>AWS guidelines</a> to do this. I&rsquo;ve also modified the health check to check to see if the new service came up okay - this may differ for your environment.</p><p>You can view the document on <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/reboot_with_healthcheck_template.yml>GitHub</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>---
+<span style=color:#ff79c6>schemaVersion</span>: <span style=color:#f1fa8c>&#34;0.3&#34;</span>
+<span style=color:#ff79c6>description</span>: Executes a reboot on the instance followed by a healthcheck
+<span style=color:#ff79c6>parameters</span>:
+  <span style=color:#ff79c6>InstanceIds</span>:
+    <span style=color:#ff79c6>type</span>: StringList
+    <span style=color:#ff79c6>description</span>: The instance to target
+<span style=color:#ff79c6>mainSteps</span>:
+  - <span style=color:#ff79c6>name</span>: InvokeReboot
+    <span style=color:#ff79c6>action</span>: aws:runCommand
+    <span style=color:#ff79c6>inputs</span>:
+      <span style=color:#ff79c6>DocumentName</span>: AWS-RunShellScript
+      <span style=color:#ff79c6>InstanceIds</span>: <span style=color:#f1fa8c>&#34;{{ InstanceIds }}&#34;</span>
+      <span style=color:#ff79c6>OutputS3BucketName</span>: ${output_s3_bucket_name}
+      <span style=color:#ff79c6>OutputS3KeyPrefix</span>: ${output_s3_key_prefix}
+      <span style=color:#ff79c6>Parameters</span>:
+        <span style=color:#ff79c6>commands</span>: |<span style=color:#f1fa8c>
+</span><span style=color:#f1fa8c>          flag_location=/home/ec2-user/REBOOT_STARTED
+</span><span style=color:#f1fa8c>          if [ ! -f $flag_location ]; then
+</span><span style=color:#f1fa8c>            echo &#34;Creating flag file at $flag_location&#34;
+</span><span style=color:#f1fa8c>            touch $flag_location
+</span><span style=color:#f1fa8c>            echo &#34;Reboot initiated&#34;
+</span><span style=color:#f1fa8c>            exit 194
+</span><span style=color:#f1fa8c>          fi
+</span><span style=color:#f1fa8c>          echo &#34;Reboot finished, removing flag file at $flag_location&#34;
+</span><span style=color:#f1fa8c>          rm $flag_location</span>          
+  - <span style=color:#ff79c6>name</span>: ExecuteHealthcheck
+    <span style=color:#ff79c6>action</span>: aws:runCommand
+    <span style=color:#ff79c6>inputs</span>:
+      <span style=color:#ff79c6>DocumentName</span>: AWS-RunShellScript
+      <span style=color:#ff79c6>InstanceIds</span>: <span style=color:#f1fa8c>&#34;{{ InstanceIds }}&#34;</span>
+      <span style=color:#ff79c6>OutputS3BucketName</span>: ${output_s3_bucket_name}
+      <span style=color:#ff79c6>OutputS3KeyPrefix</span>: ${output_s3_key_prefix}
+      <span style=color:#ff79c6>Parameters</span>:
+        <span style=color:#ff79c6>commands</span>: |<span style=color:#f1fa8c>
+</span><span style=color:#f1fa8c>          sleep 60
+</span><span style=color:#f1fa8c>          if ! curl http://localhost:8080/; then
+</span><span style=color:#f1fa8c>            exit 1
+</span><span style=color:#f1fa8c>          fi</span>          
+</code></pre></div><p>Then the <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_reboot_with_healthcheck.tf>Terraform code</a> to create this document will look like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_ssm_document&#34; &#34;reboot_with_healthcheck&#34;</span> {
+  name            <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;RebootWithHealthcheck&#34;</span>
+  document_type   <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Automation&#34;</span>
+  document_format <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;YAML&#34;</span>
 
-  content <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">templatefile</span>(
-    <span style="color:#f1fa8c">&#34;documents/reboot_with_healthcheck_template.yml&#34;</span>,
+  content <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>templatefile</span>(
+    <span style=color:#f1fa8c>&#34;documents/reboot_with_healthcheck_template.yml&#34;</span>,
     {
-      output_s3_bucket_name    <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_s3_bucket</span>.<span style="color:#ff79c6">script_bucket</span>.<span style="color:#ff79c6">id</span>,
-      output_s3_key_prefix     <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;ssm_output/&#34;</span>,
+      output_s3_bucket_name    <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_s3_bucket</span>.<span style=color:#ff79c6>script_bucket</span>.<span style=color:#ff79c6>id</span>,
+      output_s3_key_prefix     <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;ssm_output/&#34;</span>,
     }
   )
 }
-</code></pre></div><h3 id="testing-for-failure">Testing for failure</h3>
-<p>After this has been applied in our environment let&rsquo;s get our test set up. In a terminal window from your machine have this script running in the background to simulate load.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#ff79c6">while</span> true;
-<span style="color:#ff79c6">do</span>
-  <span style="color:#8be9fd;font-style:italic">resp</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 2&gt;/dev/null<span style="color:#ff79c6">)</span>
-  <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#8be9fd;font-style:italic">$resp</span> | grep -q html; <span style="color:#ff79c6">then</span>
-    <span style="color:#8be9fd;font-style:italic">error</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#8be9fd;font-style:italic">$resp</span> | grep -oPm1 <span style="color:#f1fa8c">&#34;(?&lt;=&lt;title&gt;)[^&lt;]+&#34;</span><span style="color:#ff79c6">)</span>
-    <span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;Error - </span><span style="color:#8be9fd;font-style:italic">$error</span><span style="color:#f1fa8c">&#34;</span>
-  <span style="color:#ff79c6">else</span>
-    <span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#8be9fd;font-style:italic">$resp</span>;
-  <span style="color:#ff79c6">fi</span>
+</code></pre></div><h3 id=testing-for-failure>Testing for failure</h3><p>After this has been applied in our environment let&rsquo;s get our test set up. In a terminal window from your machine have this script running in the background to simulate load.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ <span style=color:#ff79c6>while</span> true;
+<span style=color:#ff79c6>do</span>
+  <span style=color:#8be9fd;font-style:italic>resp</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span>curl http://HelloWorldALB-128172928.eu-west-1.elb.amazonaws.com:80 2&gt;/dev/null<span style=color:#ff79c6>)</span>
+  <span style=color:#ff79c6>if</span> <span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#8be9fd;font-style:italic>$resp</span> | grep -q html; <span style=color:#ff79c6>then</span>
+    <span style=color:#8be9fd;font-style:italic>error</span><span style=color:#ff79c6>=</span><span style=color:#ff79c6>$(</span><span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#8be9fd;font-style:italic>$resp</span> | grep -oPm1 <span style=color:#f1fa8c>&#34;(?&lt;=&lt;title&gt;)[^&lt;]+&#34;</span><span style=color:#ff79c6>)</span>
+    <span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#f1fa8c>&#34;Error - </span><span style=color:#8be9fd;font-style:italic>$error</span><span style=color:#f1fa8c>&#34;</span>
+  <span style=color:#ff79c6>else</span>
+    <span style=color:#8be9fd;font-style:italic>echo</span> <span style=color:#8be9fd;font-style:italic>$resp</span>;
+  <span style=color:#ff79c6>fi</span>
   sleep 0.5
-<span style="color:#ff79c6">done</span>
-</code></pre></div><p>Then we need to invoke the new reboot document against an instance (see <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents">here</a> for how we achieved this last time). Once it is running let&rsquo;s monitor the output of the command in your terminal.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
+<span style=color:#ff79c6>done</span>
+</code></pre></div><p>Then we need to invoke the new reboot document against an instance (see <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents>here</a> for how we achieved this last time). Once it is running let&rsquo;s monitor the output of the command in your terminal.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
-Error - <span style="color:#bd93f9">502</span> Bad Gateway
-Error - <span style="color:#bd93f9">502</span> Bad Gateway
+Error - <span style=color:#bd93f9>502</span> Bad Gateway
+Error - <span style=color:#bd93f9>502</span> Bad Gateway
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
-Error - <span style="color:#bd93f9">502</span> Bad Gateway
+Error - <span style=color:#bd93f9>502</span> Bad Gateway
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
-Error - <span style="color:#bd93f9">502</span> Bad Gateway
+Error - <span style=color:#bd93f9>502</span> Bad Gateway
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
-Error - <span style="color:#bd93f9">502</span> Bad Gateway
+Error - <span style=color:#bd93f9>502</span> Bad Gateway
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
 Hello, World! From ip-172-31-14-19.eu-west-1.compute.internal
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
 Hello, World! From ip-172-31-18-158.eu-west-1.compute.internal
-</code></pre></div><p>Not good! 😧</p>
-<p>These error messages are coming from the load balancer, <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html#http-502-issues">indicating</a> that the underlying backend wasn&rsquo;t able to complete the request. This is happening when the instance gets rebooted as specified in our document.</p>
-<p>The load balancer hasn&rsquo;t had enough time to determine whether the instance is unhealthy or not - as dictated from our <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L19">health check policy</a> (2 failed checks with 6 seconds between them) - and so still forwards traffic to it even though it cannot respond.</p>
-<p>We can actually view this disruption in <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html">CloudWatch Metrics</a> too. ALBs expose <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html#load-balancer-metrics-alb">metrics</a> for us which we can monitor against, including:</p>
-<ul>
-<li>RequestCount
-<ul>
-<li>Informs us how many incoming requests the ALB is receiving</li>
-</ul>
-</li>
-<li>HTTPCode_ELB_5XX_Count
-<ul>
-<li>How many HTTP 5XX error codes are being returned by the ALB</li>
-</ul>
-</li>
-</ul>
-<p>We can chart them together for visualisation.</p>
-<figure class="center"><a href="non-graceful-results.png">
-    <img src="non-graceful-results.png"
-         alt="A graph in CloudWatch showing the number of requests being served by the ALB, along with occasional HTTP 5XX counts - corresponding at the same time the instances were being rebooted"/> </a><figcaption>
-            <p>HTTPCode_ELB_5XX_Count only reports on failures - if the metric is missing data points then no errors occurred at that time</p>
-        </figcaption>
-</figure>
-
-<p>While we are the only users hitting this, had this been a production box hit by 1,000s of users, each one of them would experience an issue with your application, and equals lost customers! 😡</p>
-<p>What we need is a means of removing the node from the load balancer rotation so that we can safely perform maintenance on it.</p>
-<h2 id="removing-instances-from-load-balancer-rotation">Removing instances from load balancer rotation</h2>
-<p>Load balancer target groups have an API endpoint that allow you to drain connections from backends - where the load balancer stops any <em>new</em> requests being forwarded to that backend, and allows existing requests to complete. This can be done via - you guessed it - Automation Documents!</p>
-<h3 id="graceful-load-balancer-document">Graceful load balancer document</h3>
-<p>You can see the document in its entirety <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml">here</a>. The steps that it performs are:</p>
-<ol>
-<li>Check that the target group is healthy
-<ul>
-<li>We want to ensure we&rsquo;re not fuelling a dumpster fire</li>
-</ul>
-</li>
-<li>Check that the instance we&rsquo;re targeting is in the target group we&rsquo;re modifying
-<ul>
-<li>Otherwise what&rsquo;s the point? 🙃</li>
-</ul>
-</li>
-<li>Remove the instance from the target group and wait for it to be removed</li>
-<li>Execute our maintenance document</li>
-<li>Register the instance back and wait for it to be added back</li>
-</ol>
-<h4 id="document-metadata">Document metadata</h4>
-<p>As this is an automation document, the <code>schemaVersion</code> should be <code>0.3</code>. We&rsquo;re using two parameters here to run the document:</p>
-<ul>
-<li><code>TargetGroupArn</code> - the ARN of the target group we are making modifications too</li>
-<li><code>InstanceId</code> - the instance that is undergoing maintenance</li>
-</ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ff79c6">schemaVersion</span>: <span style="color:#f1fa8c">&#34;0.3&#34;</span>
-<span style="color:#ff79c6">description</span>: Gracefully reboot instance with healthchecks
-<span style="color:#ff79c6">parameters</span>:
-  <span style="color:#ff79c6">InstanceId</span>:
-    <span style="color:#ff79c6">type</span>: String
-    <span style="color:#ff79c6">description</span>: The instance to target
-  <span style="color:#ff79c6">TargetGroupArn</span>:
-    <span style="color:#ff79c6">type</span>: String
-    <span style="color:#ff79c6">description</span>: The target group ARN for the instance
-</code></pre></div><h4 id="sanity-checks">Sanity checks</h4>
-<p>The first two steps of the document are sanity checking the target group to ensure preconditions are met before we introduce change. We&rsquo;re using the <code>aws:assertAwsResourceProperty</code> <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-assertAwsResourceProperty.html">action</a> to allow us to query against the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html">AWS ELBv2 API</a> (Elastic Load Balancer v2) and verify a response is what we expect it to be.</p>
-<blockquote>
-<p>You can see all the API endpoints available for ELBv2 at this <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_Operations.html">location</a>.</p>
-</blockquote>
-<p>The response of the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeTargetHealth.html">DescribeTargetHealth</a> endpoint returns an object that is structured like this.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#ff79c6">&#34;TargetHealthDescriptions&#34;</span>: [
+</code></pre></div><p>Not good! 😧</p><p>These error messages are coming from the load balancer, <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html#http-502-issues>indicating</a> that the underlying backend wasn&rsquo;t able to complete the request. This is happening when the instance gets rebooted as specified in our document.</p><p>The load balancer hasn&rsquo;t had enough time to determine whether the instance is unhealthy or not - as dictated from our <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/alb.tf#L19>health check policy</a> (2 failed checks with 6 seconds between them) - and so still forwards traffic to it even though it cannot respond.</p><p>We can actually view this disruption in <a href=https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html>CloudWatch Metrics</a> too. ALBs expose <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html#load-balancer-metrics-alb>metrics</a> for us which we can monitor against, including:</p><ul><li>RequestCount<ul><li>Informs us how many incoming requests the ALB is receiving</li></ul></li><li>HTTPCode_ELB_5XX_Count<ul><li>How many HTTP 5XX error codes are being returned by the ALB</li></ul></li></ul><p>We can chart them together for visualisation.</p><figure class=center><a href=non-graceful-results.png><img src=non-graceful-results.png alt="A graph in CloudWatch showing the number of requests being served by the ALB, along with occasional HTTP 5XX counts - corresponding at the same time the instances were being rebooted"></a><figcaption><p>HTTPCode_ELB_5XX_Count only reports on failures - if the metric is missing data points then no errors occurred at that time</p></figcaption></figure><p>While we are the only users hitting this, had this been a production box hit by 1,000s of users, each one of them would experience an issue with your application, and equals lost customers! 😡</p><p>What we need is a means of removing the node from the load balancer rotation so that we can safely perform maintenance on it.</p><h2 id=removing-instances-from-load-balancer-rotation>Removing instances from load balancer rotation</h2><p>Load balancer target groups have an API endpoint that allow you to drain connections from backends - where the load balancer stops any <em>new</em> requests being forwarded to that backend, and allows existing requests to complete. This can be done via - you guessed it - Automation Documents!</p><h3 id=graceful-load-balancer-document>Graceful load balancer document</h3><p>You can see the document in its entirety <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/documents/graceful_patch_instance.yml>here</a>. The steps that it performs are:</p><ol><li>Check that the target group is healthy<ul><li>We want to ensure we&rsquo;re not fuelling a dumpster fire</li></ul></li><li>Check that the instance we&rsquo;re targeting is in the target group we&rsquo;re modifying<ul><li>Otherwise what&rsquo;s the point? 🙃</li></ul></li><li>Remove the instance from the target group and wait for it to be removed</li><li>Execute our maintenance document</li><li>Register the instance back and wait for it to be added back</li></ol><h4 id=document-metadata>Document metadata</h4><p>As this is an automation document, the <code>schemaVersion</code> should be <code>0.3</code>. We&rsquo;re using two parameters here to run the document:</p><ul><li><code>TargetGroupArn</code> - the ARN of the target group we are making modifications too</li><li><code>InstanceId</code> - the instance that is undergoing maintenance</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#ff79c6>schemaVersion</span>: <span style=color:#f1fa8c>&#34;0.3&#34;</span>
+<span style=color:#ff79c6>description</span>: Gracefully reboot instance with healthchecks
+<span style=color:#ff79c6>parameters</span>:
+  <span style=color:#ff79c6>InstanceId</span>:
+    <span style=color:#ff79c6>type</span>: String
+    <span style=color:#ff79c6>description</span>: The instance to target
+  <span style=color:#ff79c6>TargetGroupArn</span>:
+    <span style=color:#ff79c6>type</span>: String
+    <span style=color:#ff79c6>description</span>: The target group ARN for the instance
+</code></pre></div><h4 id=sanity-checks>Sanity checks</h4><p>The first two steps of the document are sanity checking the target group to ensure preconditions are met before we introduce change. We&rsquo;re using the <code>aws:assertAwsResourceProperty</code> <a href=https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-assertAwsResourceProperty.html>action</a> to allow us to query against the <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html>AWS ELBv2 API</a> (Elastic Load Balancer v2) and verify a response is what we expect it to be.</p><blockquote><p>You can see all the API endpoints available for ELBv2 at this <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_Operations.html>location</a>.</p></blockquote><p>The response of the <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeTargetHealth.html>DescribeTargetHealth</a> endpoint returns an object that is structured like this.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#ff79c6>&#34;TargetHealthDescriptions&#34;</span>: [
     {
-      <span style="color:#ff79c6">&#34;Target&#34;</span>: {
-        <span style="color:#ff79c6">&#34;Id&#34;</span>: <span style="color:#f1fa8c">&#34;i-083c8ca9c9b74e1cd&#34;</span>,
-        <span style="color:#ff79c6">&#34;Port&#34;</span>: <span style="color:#bd93f9">8080</span>
+      <span style=color:#ff79c6>&#34;Target&#34;</span>: {
+        <span style=color:#ff79c6>&#34;Id&#34;</span>: <span style=color:#f1fa8c>&#34;i-083c8ca9c9b74e1cd&#34;</span>,
+        <span style=color:#ff79c6>&#34;Port&#34;</span>: <span style=color:#bd93f9>8080</span>
       },
-      <span style="color:#ff79c6">&#34;HealthCheckPort&#34;</span>: <span style="color:#f1fa8c">&#34;8080&#34;</span>,
-      <span style="color:#ff79c6">&#34;TargetHealth&#34;</span>: {
-        <span style="color:#ff79c6">&#34;State&#34;</span>: <span style="color:#f1fa8c">&#34;healthy&#34;</span>
+      <span style=color:#ff79c6>&#34;HealthCheckPort&#34;</span>: <span style=color:#f1fa8c>&#34;8080&#34;</span>,
+      <span style=color:#ff79c6>&#34;TargetHealth&#34;</span>: {
+        <span style=color:#ff79c6>&#34;State&#34;</span>: <span style=color:#f1fa8c>&#34;healthy&#34;</span>
       }
     },
     {
-      <span style="color:#ff79c6">&#34;Target&#34;</span>: {
-        <span style="color:#ff79c6">&#34;Id&#34;</span>: <span style="color:#f1fa8c">&#34;i-08a63b118a0b2a6b7&#34;</span>,
-        <span style="color:#ff79c6">&#34;Port&#34;</span>: <span style="color:#bd93f9">8080</span>
+      <span style=color:#ff79c6>&#34;Target&#34;</span>: {
+        <span style=color:#ff79c6>&#34;Id&#34;</span>: <span style=color:#f1fa8c>&#34;i-08a63b118a0b2a6b7&#34;</span>,
+        <span style=color:#ff79c6>&#34;Port&#34;</span>: <span style=color:#bd93f9>8080</span>
       },
-      <span style="color:#ff79c6">&#34;HealthCheckPort&#34;</span>: <span style="color:#f1fa8c">&#34;8080&#34;</span>,
-      <span style="color:#ff79c6">&#34;TargetHealth&#34;</span>: {
-        <span style="color:#ff79c6">&#34;State&#34;</span>: <span style="color:#f1fa8c">&#34;healthy&#34;</span>
+      <span style=color:#ff79c6>&#34;HealthCheckPort&#34;</span>: <span style=color:#f1fa8c>&#34;8080&#34;</span>,
+      <span style=color:#ff79c6>&#34;TargetHealth&#34;</span>: {
+        <span style=color:#ff79c6>&#34;State&#34;</span>: <span style=color:#f1fa8c>&#34;healthy&#34;</span>
       }
     },
     {
-      <span style="color:#ff79c6">&#34;Target&#34;</span>: {
-        <span style="color:#ff79c6">&#34;Id&#34;</span>: <span style="color:#f1fa8c">&#34;i-08c656b7160dd6729&#34;</span>,
-        <span style="color:#ff79c6">&#34;Port&#34;</span>: <span style="color:#bd93f9">8080</span>
+      <span style=color:#ff79c6>&#34;Target&#34;</span>: {
+        <span style=color:#ff79c6>&#34;Id&#34;</span>: <span style=color:#f1fa8c>&#34;i-08c656b7160dd6729&#34;</span>,
+        <span style=color:#ff79c6>&#34;Port&#34;</span>: <span style=color:#bd93f9>8080</span>
       },
-      <span style="color:#ff79c6">&#34;HealthCheckPort&#34;</span>: <span style="color:#f1fa8c">&#34;8080&#34;</span>,
-      <span style="color:#ff79c6">&#34;TargetHealth&#34;</span>: {
-        <span style="color:#ff79c6">&#34;State&#34;</span>: <span style="color:#f1fa8c">&#34;healthy&#34;</span>
+      <span style=color:#ff79c6>&#34;HealthCheckPort&#34;</span>: <span style=color:#f1fa8c>&#34;8080&#34;</span>,
+      <span style=color:#ff79c6>&#34;TargetHealth&#34;</span>: {
+        <span style=color:#ff79c6>&#34;State&#34;</span>: <span style=color:#f1fa8c>&#34;healthy&#34;</span>
       }
     }
   ]
 }
-</code></pre></div><p>This represents all the backends that are configured against the target group. The property selector <code>$.TargetHealthDescriptions..TargetHealth.State</code> specified in the document will check against <em>all</em> state fields to see if they are healthy. If any of them aren&rsquo;t then the document will be aborted. As mentioned before, this check is performed to ensure we&rsquo;re not causing more problems for ourselves if any of the nodes are unhealthy.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: AssertTargetGroupHealthBefore
-  <span style="color:#ff79c6">description</span>: Assert the target group is healthy before we bounce Tomcat
-  <span style="color:#ff79c6">action</span>: aws:assertAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+</code></pre></div><p>This represents all the backends that are configured against the target group. The property selector <code>$.TargetHealthDescriptions..TargetHealth.State</code> specified in the document will check against <em>all</em> state fields to see if they are healthy. If any of them aren&rsquo;t then the document will be aborted. As mentioned before, this check is performed to ensure we&rsquo;re not causing more problems for ourselves if any of the nodes are unhealthy.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: AssertTargetGroupHealthBefore
+  <span style=color:#ff79c6>description</span>: Assert the target group is healthy before we bounce Tomcat
+  <span style=color:#ff79c6>action</span>: aws:assertAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - healthy
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">3</span>
-  <span style="color:#ff79c6">timeoutSeconds</span>: <span style="color:#bd93f9">60</span>
-</code></pre></div><p>In the next sanity check we&rsquo;re ensuring that the instance is definitely in the target group we want to remove it from. This is a slightly different query to the last step where we&rsquo;re specifically requesting for state health on that one instance.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: AssertInstanceIsInTargetGroup
-  <span style="color:#ff79c6">description</span>: Assert the instance is a healthy target of the target group
-  <span style="color:#ff79c6">action</span>: aws:assertAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>3</span>
+  <span style=color:#ff79c6>timeoutSeconds</span>: <span style=color:#bd93f9>60</span>
+</code></pre></div><p>In the next sanity check we&rsquo;re ensuring that the instance is definitely in the target group we want to remove it from. This is a slightly different query to the last step where we&rsquo;re specifically requesting for state health on that one instance.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: AssertInstanceIsInTargetGroup
+  <span style=color:#ff79c6>description</span>: Assert the instance is a healthy target of the target group
+  <span style=color:#ff79c6>action</span>: aws:assertAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - healthy
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-    <span style="color:#ff79c6">Targets</span>:
-      - <span style="color:#ff79c6">Id</span>: <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">3</span>
-  <span style="color:#ff79c6">timeoutSeconds</span>: <span style="color:#bd93f9">60</span>
-</code></pre></div><h4 id="remove-the-instance-from-rotation">Remove the instance from rotation</h4>
-<p>Now our preconditions have been met we can remove the instance using the <code>aws:executeAwsApi</code> <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAwsApi.html">action</a>. This action is similar to <code>aws:assertAwsResourceProperty</code> in that it calls an AWS API endpoint, but we&rsquo;re not checking the response of it - in fact the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DeregisterTargets.html">DeregisterTargets</a> endpoint doesn&rsquo;t return anything for us to check against.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: DeregisterInstanceFromTargetGroup
-    <span style="color:#ff79c6">description</span>: Proactively remove the instance from the target group
-    <span style="color:#ff79c6">action</span>: aws:executeAwsApi
-    <span style="color:#ff79c6">inputs</span>:
-      <span style="color:#ff79c6">Service</span>: elbv2
-      <span style="color:#ff79c6">Api</span>: DeregisterTargets
-      <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-      <span style="color:#ff79c6">Targets</span>:
-        - <span style="color:#ff79c6">Id</span>: <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-</code></pre></div><p>Once we&rsquo;ve done that we need to verify the instance has definitely been removed. Remember that the target group allows for existing connections to complete their requests when it is draining, so deregistering the instance doesn&rsquo;t happen instantaneously - this is where the <code>aws:waitForAwsResourceProperty</code> helps us.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: WaitForDeregisteredTarget
-  <span style="color:#ff79c6">description</span>: Wait for the instance to drain connections
-  <span style="color:#ff79c6">action</span>: aws:waitForAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+    <span style=color:#ff79c6>Targets</span>:
+      - <span style=color:#ff79c6>Id</span>: <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>3</span>
+  <span style=color:#ff79c6>timeoutSeconds</span>: <span style=color:#bd93f9>60</span>
+</code></pre></div><h4 id=remove-the-instance-from-rotation>Remove the instance from rotation</h4><p>Now our preconditions have been met we can remove the instance using the <code>aws:executeAwsApi</code> <a href=https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAwsApi.html>action</a>. This action is similar to <code>aws:assertAwsResourceProperty</code> in that it calls an AWS API endpoint, but we&rsquo;re not checking the response of it - in fact the <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DeregisterTargets.html>DeregisterTargets</a> endpoint doesn&rsquo;t return anything for us to check against.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: DeregisterInstanceFromTargetGroup
+    <span style=color:#ff79c6>description</span>: Proactively remove the instance from the target group
+    <span style=color:#ff79c6>action</span>: aws:executeAwsApi
+    <span style=color:#ff79c6>inputs</span>:
+      <span style=color:#ff79c6>Service</span>: elbv2
+      <span style=color:#ff79c6>Api</span>: DeregisterTargets
+      <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+      <span style=color:#ff79c6>Targets</span>:
+        - <span style=color:#ff79c6>Id</span>: <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+</code></pre></div><p>Once we&rsquo;ve done that we need to verify the instance has definitely been removed. Remember that the target group allows for existing connections to complete their requests when it is draining, so deregistering the instance doesn&rsquo;t happen instantaneously - this is where the <code>aws:waitForAwsResourceProperty</code> helps us.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: WaitForDeregisteredTarget
+  <span style=color:#ff79c6>description</span>: Wait for the instance to drain connections
+  <span style=color:#ff79c6>action</span>: aws:waitForAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - unused
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-    <span style="color:#ff79c6">Targets</span>:
-      - <span style="color:#ff79c6">Id</span>: <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">1</span>
-  <span style="color:#ff79c6">timeoutSeconds</span>: <span style="color:#bd93f9">600</span>
-- <span style="color:#ff79c6">name</span>: AssertTargetIsDeregistered
-  <span style="color:#ff79c6">description</span>: Assert the instance is no longer a target
-  <span style="color:#ff79c6">action</span>: aws:assertAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+    <span style=color:#ff79c6>Targets</span>:
+      - <span style=color:#ff79c6>Id</span>: <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>1</span>
+  <span style=color:#ff79c6>timeoutSeconds</span>: <span style=color:#bd93f9>600</span>
+- <span style=color:#ff79c6>name</span>: AssertTargetIsDeregistered
+  <span style=color:#ff79c6>description</span>: Assert the instance is no longer a target
+  <span style=color:#ff79c6>action</span>: aws:assertAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions[0].TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - unused
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-    <span style="color:#ff79c6">Targets</span>:
-      - <span style="color:#ff79c6">Id</span>: <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-</code></pre></div><h4 id="execute-maintenance">Execute maintenance</h4>
-<p>At this point we&rsquo;re 100% sure that the instance is now removed from the target group and is no longer receiving requests, so let&rsquo;s go ahead and use <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAutomation.html"><code>aws:executeAutomation</code></a> to invoke the <a href="#so-what-does-all-this-have-to-do-with-our-maintenance-document">maintenance document</a> from earlier. Remember it takes in the <code>InstanceIds</code> as a parameter to execute on, so we&rsquo;ll need to pass it there too.</p>
-<p>We&rsquo;re specifying an <code>onFailure</code> too, this tells the document should the step fail then move onto this step instead of the default action which is to abort the rest of the document.</p>
-<p><code>step:RegisterTarget</code> is actually the next step after this one, which adds the instance back to the target group. Since it performs health checks for us and won&rsquo;t actually forward to an unhealthy instance, we&rsquo;ll let the target group make the call if this instance can receive traffic or not.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: RebootWithHealthcheck
-  <span style="color:#ff79c6">description</span>: Reboot the instance with a healthcheck afterward
-  <span style="color:#ff79c6">action</span>: aws:executeAutomation
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">DocumentName</span>: RebootWithHealthcheck
-    <span style="color:#ff79c6">RuntimeParameters</span>:
-      <span style="color:#ff79c6">InstanceIds</span>:
-        - <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">1</span>
-  <span style="color:#ff79c6">onFailure</span>: step:RegisterTarget
-</code></pre></div><h4 id="add-instance-back-to-target-group">Add instance back to target group</h4>
-<p>In a similar vein to DeregisterTargets, this <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_RegisterTargets.html">action</a> will register the instance back to the target group.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: RegisterTarget
-  <span style="color:#ff79c6">description</span>: Add the instance back as a target
-  <span style="color:#ff79c6">action</span>: aws:executeAwsApi
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: RegisterTargets
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-    <span style="color:#ff79c6">Targets</span>:
-      - <span style="color:#ff79c6">Id</span>: <span style="color:#f1fa8c">&#34;{{ InstanceId }}&#34;</span>
-</code></pre></div><p>Registering the instance happens instantaneously, but we will have to wait for the target group to perform initial health checks against the instance. Once we&rsquo;ve asserted that it&rsquo;s healthy, then the document is complete!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#ff79c6">name</span>: WaitForHealthyTargetGroup
-  <span style="color:#ff79c6">description</span>: Wait for the target group to become healthy again
-  <span style="color:#ff79c6">action</span>: aws:waitForAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+    <span style=color:#ff79c6>Targets</span>:
+      - <span style=color:#ff79c6>Id</span>: <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+</code></pre></div><h4 id=execute-maintenance>Execute maintenance</h4><p>At this point we&rsquo;re 100% sure that the instance is now removed from the target group and is no longer receiving requests, so let&rsquo;s go ahead and use <a href=https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAutomation.html><code>aws:executeAutomation</code></a> to invoke the <a href=#so-what-does-all-this-have-to-do-with-our-maintenance-document>maintenance document</a> from earlier. Remember it takes in the <code>InstanceIds</code> as a parameter to execute on, so we&rsquo;ll need to pass it there too.</p><p>We&rsquo;re specifying an <code>onFailure</code> too, this tells the document should the step fail then move onto this step instead of the default action which is to abort the rest of the document.</p><p><code>step:RegisterTarget</code> is actually the next step after this one, which adds the instance back to the target group. Since it performs health checks for us and won&rsquo;t actually forward to an unhealthy instance, we&rsquo;ll let the target group make the call if this instance can receive traffic or not.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: RebootWithHealthcheck
+  <span style=color:#ff79c6>description</span>: Reboot the instance with a healthcheck afterward
+  <span style=color:#ff79c6>action</span>: aws:executeAutomation
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>DocumentName</span>: RebootWithHealthcheck
+    <span style=color:#ff79c6>RuntimeParameters</span>:
+      <span style=color:#ff79c6>InstanceIds</span>:
+        - <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>1</span>
+  <span style=color:#ff79c6>onFailure</span>: step:RegisterTarget
+</code></pre></div><h4 id=add-instance-back-to-target-group>Add instance back to target group</h4><p>In a similar vein to DeregisterTargets, this <a href=https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_RegisterTargets.html>action</a> will register the instance back to the target group.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: RegisterTarget
+  <span style=color:#ff79c6>description</span>: Add the instance back as a target
+  <span style=color:#ff79c6>action</span>: aws:executeAwsApi
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: RegisterTargets
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+    <span style=color:#ff79c6>Targets</span>:
+      - <span style=color:#ff79c6>Id</span>: <span style=color:#f1fa8c>&#34;{{ InstanceId }}&#34;</span>
+</code></pre></div><p>Registering the instance happens instantaneously, but we will have to wait for the target group to perform initial health checks against the instance. Once we&rsquo;ve asserted that it&rsquo;s healthy, then the document is complete!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#ff79c6>name</span>: WaitForHealthyTargetGroup
+  <span style=color:#ff79c6>description</span>: Wait for the target group to become healthy again
+  <span style=color:#ff79c6>action</span>: aws:waitForAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - healthy
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">1</span>
-- <span style="color:#ff79c6">name</span>: AssertTargetGroupHealthAfter
-  <span style="color:#ff79c6">description</span>: Assert the target group is healthy after activity
-  <span style="color:#ff79c6">action</span>: aws:assertAwsResourceProperty
-  <span style="color:#ff79c6">inputs</span>:
-    <span style="color:#ff79c6">Service</span>: elbv2
-    <span style="color:#ff79c6">Api</span>: DescribeTargetHealth
-    <span style="color:#ff79c6">PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
-    <span style="color:#ff79c6">DesiredValues</span>:
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>1</span>
+- <span style=color:#ff79c6>name</span>: AssertTargetGroupHealthAfter
+  <span style=color:#ff79c6>description</span>: Assert the target group is healthy after activity
+  <span style=color:#ff79c6>action</span>: aws:assertAwsResourceProperty
+  <span style=color:#ff79c6>inputs</span>:
+    <span style=color:#ff79c6>Service</span>: elbv2
+    <span style=color:#ff79c6>Api</span>: DescribeTargetHealth
+    <span style=color:#ff79c6>PropertySelector</span>: $.TargetHealthDescriptions..TargetHealth.State
+    <span style=color:#ff79c6>DesiredValues</span>:
       - healthy
-    <span style="color:#ff79c6">TargetGroupArn</span>: <span style="color:#f1fa8c">&#34;{{ TargetGroupArn }}&#34;</span>
-  <span style="color:#ff79c6">maxAttempts</span>: <span style="color:#bd93f9">3</span>
-  <span style="color:#ff79c6">timeoutSeconds</span>: <span style="color:#bd93f9">60</span>
-  <span style="color:#ff79c6">isEnd</span>: <span style="color:#ff79c6">true</span>
-</code></pre></div><p>Remember that this document only handles one instance at a time, it will typically be up to the caller (i.e. a maintenance window) to rate limit the execution of multiple instances one at a time. We explored this in the <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/">previous post</a>.</p>
-<h3 id="terraform-additions-and-updates">Terraform additions and updates</h3>
-<p>The above document can be represented in <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_document_graceful_reboot.tf">Terraform</a> to provision it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_ssm_document&#34; &#34;graceful_reboot_instance&#34;</span> {
-  name            <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;RebootInstanceGraceful&#34;</span>
-  document_type   <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Automation&#34;</span>
-  document_format <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;YAML&#34;</span>
+    <span style=color:#ff79c6>TargetGroupArn</span>: <span style=color:#f1fa8c>&#34;{{ TargetGroupArn }}&#34;</span>
+  <span style=color:#ff79c6>maxAttempts</span>: <span style=color:#bd93f9>3</span>
+  <span style=color:#ff79c6>timeoutSeconds</span>: <span style=color:#bd93f9>60</span>
+  <span style=color:#ff79c6>isEnd</span>: <span style=color:#ff79c6>true</span>
+</code></pre></div><p>Remember that this document only handles one instance at a time, it will typically be up to the caller (i.e. a maintenance window) to rate limit the execution of multiple instances one at a time. We explored this in the <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/>previous post</a>.</p><h3 id=terraform-additions-and-updates>Terraform additions and updates</h3><p>The above document can be represented in <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/ssm_document_graceful_reboot.tf>Terraform</a> to provision it.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_ssm_document&#34; &#34;graceful_reboot_instance&#34;</span> {
+  name            <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;RebootInstanceGraceful&#34;</span>
+  document_type   <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Automation&#34;</span>
+  document_format <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;YAML&#34;</span>
 
-  content <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">templatefile</span>(
-    <span style="color:#f1fa8c">&#34;documents/graceful_patch_instance.yml&#34;</span>,
+  content <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>templatefile</span>(
+    <span style=color:#f1fa8c>&#34;documents/graceful_patch_instance.yml&#34;</span>,
     {
-      reboot_with_healthcheck_document_arn <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_ssm_document</span>.<span style="color:#ff79c6">reboot_with_healthcheck</span>.<span style="color:#ff79c6">arn</span>,
+      reboot_with_healthcheck_document_arn <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_ssm_document</span>.<span style=color:#ff79c6>reboot_with_healthcheck</span>.<span style=color:#ff79c6>arn</span>,
     }
   )
 }
-</code></pre></div><p>We&rsquo;ll also need to update our <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window.tf#L22">maintenance window task</a> to correctly reflect this new document, along with the new parameters it takes.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">resource</span> <span style="color:#f1fa8c">&#34;aws_ssm_maintenance_window_task&#34; &#34;patch_with_healthcheck&#34;</span> {
-  window_id        <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_ssm_maintenance_window</span>.<span style="color:#ff79c6">patch_with_healthcheck</span>.<span style="color:#ff79c6">id</span>
-  task_type        <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;AUTOMATION&#34;</span>
-  task_arn         <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_ssm_document</span>.<span style="color:#ff79c6">graceful_reboot_instance</span>.<span style="color:#ff79c6">arn</span>
-  priority         <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
-  service_role_arn <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">aws_iam_role</span>.<span style="color:#ff79c6">patch_mw_role</span>.<span style="color:#ff79c6">arn</span>
+</code></pre></div><p>We&rsquo;ll also need to update our <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window.tf#L22>maintenance window task</a> to correctly reflect this new document, along with the new parameters it takes.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>resource</span> <span style=color:#f1fa8c>&#34;aws_ssm_maintenance_window_task&#34; &#34;patch_with_healthcheck&#34;</span> {
+  window_id        <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_ssm_maintenance_window</span>.<span style=color:#ff79c6>patch_with_healthcheck</span>.<span style=color:#ff79c6>id</span>
+  task_type        <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;AUTOMATION&#34;</span>
+  task_arn         <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_ssm_document</span>.<span style=color:#ff79c6>graceful_reboot_instance</span>.<span style=color:#ff79c6>arn</span>
+  priority         <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>10</span>
+  service_role_arn <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>aws_iam_role</span>.<span style=color:#ff79c6>patch_mw_role</span>.<span style=color:#ff79c6>arn</span>
 
-  max_concurrency <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;1&#34;</span>
-  max_errors      <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;0&#34;</span>
+  max_concurrency <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;1&#34;</span>
+  max_errors      <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;0&#34;</span>
 
-  <span style="color:#ff79c6">targets</span> {
-    key    <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;WindowTargetIds&#34;</span>
-    values <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">aws_ssm_maintenance_window_target</span>.<span style="color:#ff79c6">patch_with_healthcheck_target</span>.<span style="color:#ff79c6">id</span>]
+  <span style=color:#ff79c6>targets</span> {
+    key    <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;WindowTargetIds&#34;</span>
+    values <span style=color:#ff79c6>=</span> [<span style=color:#ff79c6>aws_ssm_maintenance_window_target</span>.<span style=color:#ff79c6>patch_with_healthcheck_target</span>.<span style=color:#ff79c6>id</span>]
   }
 
-  <span style="color:#ff79c6">task_invocation_parameters</span> {
-    <span style="color:#ff79c6">automation_parameters</span> {
-      document_version <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;$LATEST&#34;</span>
+  <span style=color:#ff79c6>task_invocation_parameters</span> {
+    <span style=color:#ff79c6>automation_parameters</span> {
+      document_version <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;$LATEST&#34;</span>
 
-      <span style="color:#ff79c6">parameter</span> {
-        name <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;InstanceId&#34;</span>
-        values <span style="color:#ff79c6">=</span> [<span style="color:#f1fa8c">&#34;{{ TARGET_ID }}&#34;</span>]
+      <span style=color:#ff79c6>parameter</span> {
+        name <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;InstanceId&#34;</span>
+        values <span style=color:#ff79c6>=</span> [<span style=color:#f1fa8c>&#34;{{ TARGET_ID }}&#34;</span>]
       }
 
-      <span style="color:#ff79c6">parameter</span> {
-        name <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;TargetGroupArn&#34;</span>
-        values <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">module</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">target_group_arns</span>[<span style="color:#bd93f9">0</span>]]
+      <span style=color:#ff79c6>parameter</span> {
+        name <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;TargetGroupArn&#34;</span>
+        values <span style=color:#ff79c6>=</span> [<span style=color:#ff79c6>module</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>target_group_arns</span>[<span style=color:#bd93f9>0</span>]]
       }
     }
   }
 }
-</code></pre></div><p>And lastly, we&rsquo;ll need to update the <a href="https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window_iam.tf#L30">IAM role permissions</a> for <code>aws_iam_role.patch_mw_role.arn</code> as it will be invoking more actions.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#ff79c6">data</span> <span style="color:#f1fa8c">&#34;aws_iam_policy_document&#34; &#34;mw_role_additional&#34;</span> {
-  <span style="color:#ff79c6">statement</span> {
-    sid    <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;AllowSSM&#34;</span>
-    effect <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Allow&#34;</span>
+</code></pre></div><p>And lastly, we&rsquo;ll need to update the <a href=https://github.com/jdheyburn/terraform-examples/blob/main/aws-ssm-automation-3/maintenance_window_iam.tf#L30>IAM role permissions</a> for <code>aws_iam_role.patch_mw_role.arn</code> as it will be invoking more actions.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-hcl data-lang=hcl><span style=color:#ff79c6>data</span> <span style=color:#f1fa8c>&#34;aws_iam_policy_document&#34; &#34;mw_role_additional&#34;</span> {
+  <span style=color:#ff79c6>statement</span> {
+    sid    <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;AllowSSM&#34;</span>
+    effect <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Allow&#34;</span>
 
-    actions <span style="color:#ff79c6">=</span> [
-      <span style="color:#f1fa8c">&#34;ssm:DescribeInstanceInformation&#34;</span>,
-      <span style="color:#f1fa8c">&#34;ssm:ListCommandInvocations&#34;</span>,
+    actions <span style=color:#ff79c6>=</span> [
+      <span style=color:#f1fa8c>&#34;ssm:DescribeInstanceInformation&#34;</span>,
+      <span style=color:#f1fa8c>&#34;ssm:ListCommandInvocations&#34;</span>,
     ]
 
-    resources <span style="color:#ff79c6">=</span> [<span style="color:#f1fa8c">&#34;*&#34;</span>]
+    resources <span style=color:#ff79c6>=</span> [<span style=color:#f1fa8c>&#34;*&#34;</span>]
   }
 
-  <span style="color:#ff79c6">statement</span> {
-    sid    <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;AllowElBRead&#34;</span>
-    effect <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Allow&#34;</span>
+  <span style=color:#ff79c6>statement</span> {
+    sid    <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;AllowElBRead&#34;</span>
+    effect <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Allow&#34;</span>
 
-    actions <span style="color:#ff79c6">=</span> [
-      <span style="color:#f1fa8c">&#34;elasticloadbalancing:DescribeTargetHealth&#34;</span>,
+    actions <span style=color:#ff79c6>=</span> [
+      <span style=color:#f1fa8c>&#34;elasticloadbalancing:DescribeTargetHealth&#34;</span>,
     ]
 
-    resources <span style="color:#ff79c6">=</span> [<span style="color:#f1fa8c">&#34;*&#34;</span>]
+    resources <span style=color:#ff79c6>=</span> [<span style=color:#f1fa8c>&#34;*&#34;</span>]
 
   }
 
-  <span style="color:#ff79c6">statement</span> {
-    sid <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;AllowELBWrite&#34;</span>
-    effect <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Allow&#34;</span>
+  <span style=color:#ff79c6>statement</span> {
+    sid <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;AllowELBWrite&#34;</span>
+    effect <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;Allow&#34;</span>
 
-    actions <span style="color:#ff79c6">=</span> [
-      <span style="color:#f1fa8c">&#34;elasticloadbalancing:DeregisterTargets&#34;</span>,
-      <span style="color:#f1fa8c">&#34;elasticloadbalancing:RegisterTargets&#34;</span>,
+    actions <span style=color:#ff79c6>=</span> [
+      <span style=color:#f1fa8c>&#34;elasticloadbalancing:DeregisterTargets&#34;</span>,
+      <span style=color:#f1fa8c>&#34;elasticloadbalancing:RegisterTargets&#34;</span>,
     ]
 
-    resources <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">module</span>.<span style="color:#ff79c6">hello_world_alb</span>.<span style="color:#ff79c6">target_group_arns</span>[<span style="color:#bd93f9">0</span>]]
+    resources <span style=color:#ff79c6>=</span> [<span style=color:#ff79c6>module</span>.<span style=color:#ff79c6>hello_world_alb</span>.<span style=color:#ff79c6>target_group_arns</span>[<span style=color:#bd93f9>0</span>]]
   }
 }
-</code></pre></div><h3 id="testing-the-new-document">Testing the new document</h3>
-<p>You can test the automation document by following the <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents">same process as before</a>, else you can test the whole stack via changing the <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents-in-maintenance-windows">execution time of the maintenance window</a>. I&rsquo;ll be following along with the latter.</p>
-<p>While the document is running you can re-use the same command to hit the ALB endpoint <a href="#testing-for-failure">from earlier</a> to see how traffic is distributed amongst the instances. You&rsquo;ll first see that it will only execute on one instance at a time, which was the enhancement we introduced in the <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/">last post</a>.</p>
-<figure class="center"><a href="graceful-document-overview.png">
-    <img src="graceful-document-overview.png"
-         alt="AWS console showing the automation document execution view. There are 3 task invocations, one for each instance in scope - they have all executed successfully and only one invocation was executed at a time."/> </a>
-</figure>
-
-<p>When we drill down into each invocation we can see the automation steps doing their magic.</p>
-<figure class="center"><a href="graceful-document-invocation-detail.png">
-    <img src="graceful-document-invocation-detail.png"
-         alt="AWS console showing the individual steps of the automation document removing the targeted instance from rotation before executing the maintenance automation document"/> </a>
-</figure>
-
-<p>We can have a look back at the ALB metrics again to see if we received any errors.</p>
-<figure class="center"><a href="graceful-results.png">
-    <img src="graceful-results.png"
-         alt="CloudWatch metrics view for the ALB RequestCount and HTTP_ELB_5XX_Count. The former hovers at approximately 100 requests per minute, whereas there are no error counts being reported."/> </a><figcaption>
-            <p>No error - no problem!</p>
-        </figcaption>
-</figure>
-
-<h2 id="conclusion">Conclusion</h2>
-<p>Each post prior to this one in the series has been leading up to where we are now - a means of achieving automated zero downtime maintenance for anything that sits behind an AWS ALB.</p>
-<p>SSM is very much a bit of a beast and I hope that this series has helped clear the fog and given yourselves an idea of what you can do with SSM to automate a variety of tasks in your AWS estate.</p>
-<p>Happy automating! 💪 🙌</p>
-
-      </div>
-
-
-      <footer>
-        
-
-<section class="see-also">
-  
-    
-    
-    
-      <h3>See also in Automate Instance Hygiene with AWS SSM</h3>
-      <nav>
-        <ul>
-        
-        
-          
-        
-          
-            <li>
-              <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/">Automate Instance Hygiene with AWS SSM: Automation Documents</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/">Automate Instance Hygiene with AWS SSM: Maintenance Windows</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/">Automate Instance Hygiene with AWS SSM: Command Documents</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
-  
-</section>
-
-
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-      </div>
-
-      
-  <footer class="footer">
-    <section class="container">
-      
-      
-        ©
-        
-        2021
-         Joseph D. Heyburn 
-      
-      
-         · 
-        Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-      
-      
-    </section>
-  </footer>
-
-    </main>
-
-    
-
-    
-
-  </body>
-
-</html>
+</code></pre></div><h3 id=testing-the-new-document>Testing the new document</h3><p>You can test the automation document by following the <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents>same process as before</a>, else you can test the whole stack via changing the <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/#testing-automation-documents-in-maintenance-windows>execution time of the maintenance window</a>. I&rsquo;ll be following along with the latter.</p><p>While the document is running you can re-use the same command to hit the ALB endpoint <a href=#testing-for-failure>from earlier</a> to see how traffic is distributed amongst the instances. You&rsquo;ll first see that it will only execute on one instance at a time, which was the enhancement we introduced in the <a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/>last post</a>.</p><figure class=center><a href=graceful-document-overview.png><img src=graceful-document-overview.png alt="AWS console showing the automation document execution view. There are 3 task invocations, one for each instance in scope - they have all executed successfully and only one invocation was executed at a time."></a></figure><p>When we drill down into each invocation we can see the automation steps doing their magic.</p><figure class=center><a href=graceful-document-invocation-detail.png><img src=graceful-document-invocation-detail.png alt="AWS console showing the individual steps of the automation document removing the targeted instance from rotation before executing the maintenance automation document"></a></figure><p>We can have a look back at the ALB metrics again to see if we received any errors.</p><figure class=center><a href=graceful-results.png><img src=graceful-results.png alt="CloudWatch metrics view for the ALB RequestCount and HTTP_ELB_5XX_Count. The former hovers at approximately 100 requests per minute, whereas there are no error counts being reported."></a><figcaption><p>No error - no problem!</p></figcaption></figure><h2 id=conclusion>Conclusion</h2><p>Each post prior to this one in the series has been leading up to where we are now - a means of achieving automated zero downtime maintenance for anything that sits behind an AWS ALB.</p><p>SSM is very much a bit of a beast and I hope that this series has helped clear the fog and given yourselves an idea of what you can do with SSM to automate a variety of tasks in your AWS estate.</p><p>Happy automating! 💪 🙌</p></div><footer><section class=see-also><h3>See also in Automate Instance Hygiene with AWS SSM</h3><nav><ul><li><a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/>Automate Instance Hygiene with AWS SSM: Automation Documents</a></li><li><a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-1/>Automate Instance Hygiene with AWS SSM: Maintenance Windows</a></li><li><a href=https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/>Automate Instance Hygiene with AWS SSM: Command Documents</a></li></ul></nav></section></footer></article></section></div><footer class=footer><section class=container>©
+2021
+Joseph D. Heyburn
+·
+Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main></body></html>
