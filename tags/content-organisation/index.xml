@@ -240,7 +240,7 @@ type: posts
 ---
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fixing-existing-urls&#34;&gt;Fixing Existing URLs&lt;/h3&gt;
 &lt;p&gt;Changing the section the article is in affects the URL too; meaning articles will appear at &lt;code&gt;https://jdheyburn.co.uk/blog/blog-bootstrap/&lt;/code&gt; instead of &lt;code&gt;https://jdheyburn.co.uk/posts/blog-bootstrap/&lt;/code&gt;. Therefore existing hyperlinks pointing to these articles will break.&lt;/p&gt;
-&lt;p&gt;Tnere is another quick fix available for us through the front matter setting &lt;code&gt;aliases&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;There is another quick fix available for us through the front matter setting &lt;code&gt;aliases&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
 &lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
 &lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;

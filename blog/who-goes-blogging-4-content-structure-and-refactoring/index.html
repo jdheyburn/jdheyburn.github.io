@@ -152,7 +152,7 @@ draft: <span style=color:#8be9fd;font-style:italic>true</span>
 type: posts
 <span style=color:#6272a4># ...</span>
 ---
-</code></pre></div><h3 id=fixing-existing-urls>Fixing Existing URLs</h3><p>Changing the section the article is in affects the URL too; meaning articles will appear at <code>https://jdheyburn.co.uk/blog/blog-bootstrap/</code> instead of <code>https://jdheyburn.co.uk/posts/blog-bootstrap/</code>. Therefore existing hyperlinks pointing to these articles will break.</p><p>Tnere is another quick fix available for us through the front matter setting <code>aliases</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>---
+</code></pre></div><h3 id=fixing-existing-urls>Fixing Existing URLs</h3><p>Changing the section the article is in affects the URL too; meaning articles will appear at <code>https://jdheyburn.co.uk/blog/blog-bootstrap/</code> instead of <code>https://jdheyburn.co.uk/posts/blog-bootstrap/</code>. Therefore existing hyperlinks pointing to these articles will break.</p><p>There is another quick fix available for us through the front matter setting <code>aliases</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>---
 <span style=color:#ff79c6>date</span>: 2020-03-10
 <span style=color:#ff79c6>title</span>: <span style=color:#f1fa8c>&#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&#34;</span>
 <span style=color:#ff79c6>description</span>: Migrating to GitHub Actions as our CI tool
