@@ -43,7 +43,7 @@ lrwxrwxrwx <span style=color:#bd93f9>1</span> root root <span style=color:#bd93f
 </code></pre></div><p>Finalise the new service with the two commands, enabling it on host startup and starting the service right now.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo systemctl <span style=color:#8be9fd;font-style:italic>enable</span> caddy.service
 sudo systemctl start caddy.service
 </code></pre></div><h2 id=conclusion>Conclusion</h2><p>For now I have all the above running bare-metal on one Pi instance, which produces a huge single point of failure in my network. In the future I&rsquo;d like to see how converting these to Docker containers and having them distributed on multiple Pis would increase the resiliency of these services.</p><p>Until then, these basic but essential services are being hosted at easy to remember domains, transported over an encrypted connection, for me to easily administer the network for when it gets more complex over time.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
-2021
+2022
 Joseph D. Heyburn
 ·
 Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main></body></html>
