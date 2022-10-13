@@ -25,43 +25,43 @@
 &lt;p&gt;It&amp;rsquo;s certainly been a while since the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/&#34;&gt;previous post&lt;/a&gt; in this series, which has become the home of any updates I make to my &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; website.&lt;/p&gt;
 &lt;p&gt;This post is a quick one but it&amp;rsquo;s something I&amp;rsquo;ve been meaning to fix for a while. The RSS feeds that are generated will also include code blocks as defined through code fences (```) or through &lt;code&gt;{{&amp;lt; highlight &amp;gt;}}&lt;/code&gt; shortcodes in your post content.&lt;/p&gt;
 &lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
-name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
-document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
-document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
-content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
-&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
-{
-healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
-output_s3_bucket_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
-output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
-}
-)
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whereas it should be rendering as:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
-  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
-  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
-  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
-
-  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
-    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
-    {
-      healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
-      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
-      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
-    }
-  )
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is happening during the &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/blob/master/.github/workflows/deploy.yml#L31&#34;&gt;GitHub Action&lt;/a&gt; that builds the website - I had previously been using the &lt;code&gt;--minify&lt;/code&gt; flag which follows &lt;a href=&#34;https://gohugo.io/getting-started/configuration/#configure-minify&#34;&gt;this configuration&lt;/a&gt; by default.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;output_s3_bucket_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whereas it should be rendering as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is happening during the &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/blob/master/.github/workflows/deploy.yml#L31&#34;&gt;GitHub Action&lt;/a&gt; that builds the website - I had previously been using the &lt;code&gt;--minify&lt;/code&gt; flag which follows &lt;a href=&#34;https://gohugo.io/getting-started/configuration/#configure-minify&#34;&gt;this configuration&lt;/a&gt; by default.&lt;/p&gt;
 &lt;p&gt;What&amp;rsquo;s happening is the RSS XML that Hugo generates for us is then being &lt;a href=&#34;https://en.wikipedia.org/wiki/Minification_(programming)&#34;&gt;minified&lt;/a&gt; to remove the whitespace generated in that file. This includes the whitespace that&amp;rsquo;s used to indent the code in the RSS feeds. Not. Good.&lt;/p&gt;
 &lt;p&gt;On original publication I thought setting &lt;code&gt;minify.tdewolff.xml.keepWhitespace = true&lt;/code&gt; would be enough. On &lt;a href=&#34;https://github.com/tdewolff/minify#xml&#34;&gt;closer reading&lt;/a&gt;, it does not have the desired effect.&lt;/p&gt;
 &lt;h2 id=&#34;the-fix&#34;&gt;The Fix&lt;/h2&gt;
 &lt;p&gt;In order to fix this we need to add in the below to the site&amp;rsquo;s config. Then we can remove the &lt;code&gt;--minify&lt;/code&gt; flag from our build script, since minification is enabled via our config now.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[minify]
-  disableXML = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-  minifyOutput = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[minify]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  disableXML = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  minifyOutput = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;I&amp;rsquo;m using &lt;code&gt;toml&lt;/code&gt; for my config, so make sure you change it to what your config is defined in (&lt;code&gt;yaml&lt;/code&gt; / &lt;code&gt;json&lt;/code&gt;)&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Hope this help you with fixing your RSS feeds too!&lt;/p&gt;
@@ -89,23 +89,23 @@ output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &l
 &lt;p&gt;Upgrading Hugo is as easy as downloading and replacing the executable you’ve placed in your &lt;code&gt;PATH&lt;/code&gt;, or running &lt;code&gt;brew upgrade hugo&lt;/code&gt; if using Homebrew on macOS.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;A quick execute of &lt;code&gt;hugo version&lt;/code&gt; tells us what we&amp;rsquo;re currently running. We can then have a look at the &lt;a href=&#34;https://github.com/gohugoio/hugo/releases/&#34;&gt;Hugo release page&lt;/a&gt; to find the latest one - which at the time of writing is &lt;a href=&#34;https://github.com/gohugoio/hugo/releases/tag/v0.68.3&#34;&gt;0.68.3&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ hugo version
-Hugo Static Site Generator v0.58.3-4AAC02D4/extended linux/amd64 BuildDate: 2019-09-19T15:34:54Z
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I run Linux so I would need to replace the executable on my &lt;code&gt;PATH&lt;/code&gt;. This can be done with a handy script to pull the archive and install it for us.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.68.3&amp;#34;&lt;/span&gt;
-wget &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
-tar -zxvf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt; hugo
-sudo mv -v hugo /usr/local/bin
-hugo version
-rm &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember that the hugo-coder theme requires the extended version of Hugo in order for it to render files correctly.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Hugo Static Site Generator v0.58.3-4AAC02D4/extended linux/amd64 BuildDate: 2019-09-19T15:34:54Z
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I run Linux so I would need to replace the executable on my &lt;code&gt;PATH&lt;/code&gt;. This can be done with a handy script to pull the archive and install it for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.68.3&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tar -zxvf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt; hugo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mv -v hugo /usr/local/bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember that the hugo-coder theme requires the extended version of Hugo in order for it to render files correctly.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;You can see where &lt;code&gt;hugo&lt;/code&gt; is currently installed on your system with the command &lt;code&gt;which hugo&lt;/code&gt;, given it is in your &lt;code&gt;PATH&lt;/code&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Executing &lt;code&gt;hugo version&lt;/code&gt; one more time confirms if the upgrade took place.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ hugo version
-Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-for-any-issues&#34;&gt;Testing For Any Issues&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-for-any-issues&#34;&gt;Testing For Any Issues&lt;/h3&gt;
 &lt;p&gt;At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code&gt;hugo serve&lt;/code&gt; command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p&gt;
 &lt;p&gt;However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#validation-and-testing&#34;&gt;later in this post&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;updating-hugo-in-cicd&#34;&gt;Updating Hugo in CI/CD&lt;/h3&gt;
@@ -117,41 +117,40 @@ Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020
 &lt;p&gt;As mentioned before, I&amp;rsquo;m using hugo-coder as the theme for my Hugo website which is being pulled as a submodule in my git repository. I can interface with it via the command &lt;code&gt;git submodules&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;One of the cool things about &lt;code&gt;git submodules&lt;/code&gt; is I don&amp;rsquo;t need to have a copy of the source code for the theme in my project. I can just reference the codebase at a particular point in time - or a commit, and git will pull in the resources for which then my Hugo website can utilise it.&lt;/p&gt;
 &lt;p&gt;We already defined this back in the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/&#34;&gt;first post of this series&lt;/a&gt;, in our root directory we created a file called &lt;code&gt;.gitmodules&lt;/code&gt; with the following contents:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;submodule &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;themes/hugo-coder&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;path&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; themes/hugo-coder
-	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; https://github.com/luizdepra/hugo-coder.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Line by line, we are giving the submodule a name, telling git where to check out the module to, and lastly where git can find the repository for the module when we checkout our project.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;submodule &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;themes/hugo-coder&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;path&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; themes/hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; https://github.com/luizdepra/hugo-coder.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Line by line, we are giving the submodule a name, telling git where to check out the module to, and lastly where git can find the repository for the module when we checkout our project.&lt;/p&gt;
 &lt;p&gt;When we pull in the submodule for the first time, it creates a tree in our projects &lt;code&gt;.git/modules&lt;/code&gt; filled with metadata about the submodule.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree .git/modules/themes/hugo-coder -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
-.git/modules/themes/hugo-coder
-├── branches
-├── config
-├── description
-├── HEAD
-├── hooks
-├── index
-├── info
-├── logs
-├── objects
-├── packed-refs
-└── refs
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree .git/modules/themes/hugo-coder -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.git/modules/themes/hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── branches
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── config
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── description
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── hooks
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── index
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── info
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── objects
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── packed-refs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── refs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;The &lt;code&gt;.git/&lt;/code&gt; directory contains all the metadata about your repository so that &lt;code&gt;git&lt;/code&gt; knows where to pull/push to/from the repository, &lt;a href=&#34;https://githowto.com/git_internals_git_directory&#34;&gt;amongst other things&lt;/a&gt;. It has a near identical directory structure to the one shown above.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;One of the files in this directory is called &lt;code&gt;HEAD&lt;/code&gt;, and it contains the commit of which &lt;code&gt;git&lt;/code&gt; should checkout the submodule&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat .git/modules/themes/hugo-coder/HEAD
-e66c1740611b15eee0069811d10b5a22b0dc4332
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can even view this commit in the repository at &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&#34;&gt;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e66c1740611b15eee0069811d10b5a22b0dc4332
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can even view this commit in the repository at &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&#34;&gt;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;upgrading-submodules&#34;&gt;Upgrading Submodules&lt;/h3&gt;
 &lt;p&gt;To upgrade submodules in your project, you simply need to execute the command below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git submodule update --recursive --remote
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then check the value in &lt;code&gt;.git/modules/themes/hugo-coder/HEAD&lt;/code&gt; and see what this is updated to.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat .git/modules/themes/hugo-coder/HEAD
-acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
-         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git submodule update --recursive --remote
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then check the value in &lt;code&gt;.git/modules/themes/hugo-coder/HEAD&lt;/code&gt; and see what this is updated to.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
+&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
+         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -177,9 +176,8 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/figure&gt;
 
 &lt;p&gt;For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
-         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt; &lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
+         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I saw several cases of this, and including a &lt;a href=&#34;https://github.com/igorshubovych/markdownlint-cli&#34;&gt;markdown linter&lt;/a&gt; in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p&gt;
@@ -188,17 +186,16 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;h2 id=&#34;adding-series-links-in-content-footer&#34;&gt;Adding Series Links in Content Footer&lt;/h2&gt;
 &lt;p&gt;The hugo-coder theme now has better support for series - these are articles that directly follow on from one another, such as this Who Goes Blogging one. Series are nothing new to Hugo and we could have done them with the version we upgraded from, only in &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/27e83b1e5a9d8b7bbd42d202bd5ef57adcce659b&#34;&gt;this commit for hugo-coder&lt;/a&gt; has it added a layout for it to be rendered.&lt;/p&gt;
 &lt;p&gt;To create a series, we use the &lt;code&gt;series&lt;/code&gt; front matter setting for articles. For the Who Goes Blogging articles, adding the front matter to them looks like this.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
-&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
-&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;series&lt;/span&gt;:
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;  - Who Goes Blogging
-&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;tags&lt;/span&gt;:
-&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
----
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once this is done for all pages, hugo-coder will render the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion&#34;&gt;&lt;strong&gt;See also in &amp;hellip;&lt;/strong&gt;&lt;/a&gt; section at the article footer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;series&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;  - Who Goes Blogging
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once this is done for all pages, hugo-coder will render the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion&#34;&gt;&lt;strong&gt;See also in &amp;hellip;&lt;/strong&gt;&lt;/a&gt; section at the article footer.&lt;/p&gt;
 &lt;figure&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png&#34; class=&#34;screenshotimg&#34;
          alt=&#34;Screenshot showing series rendered in the page footer&#34;/&gt; 
@@ -211,52 +208,52 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;p&gt;The type of a markdown file (defined by the front matter setting &lt;code&gt;type&lt;/code&gt;) tells Hugo where to look for in the &lt;code&gt;layouts/&lt;/code&gt; directory of your project. The Hugo theme you&amp;rsquo;re using will already have these all defined, hence why they are predefined themes! Before Hugo looks for these layout HTML files in your theme, it will check for them in your projects &lt;code&gt;layouts/&lt;/code&gt; directory first.&lt;/p&gt;
 &lt;p&gt;In other words, the order of precedence (or hierarchy) for HTML files is anything in the project &lt;code&gt;layouts/&lt;/code&gt; directory takes a higher priority than that in your theme - as described in Hugo&amp;rsquo;s &lt;a href=&#34;https://gohugo.io/templates/lookup-order/&#34;&gt;documentation for template lookup order&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;See below for a directory tree explaning this - a lot of content has been removed for brevity.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree layouts
-layouts
-├── posts
-│   └── single.html					&lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will use this file to render your HTML&lt;/span&gt;
-└── themes
-    └── hugo-coder
-	    └── layouts
-			└── posts
-			    └── single.html     &lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will ignore this one in the themes directory&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   └── single.html					&lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will use this file to render your HTML&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── themes
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    └── hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    └── layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			└── posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			    └── single.html     &lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will ignore this one in the themes directory&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
 &lt;p&gt;The primer above gives a hint as to what file we need to modify. The &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/blob/master/layouts/posts/single.html&#34;&gt;&lt;code&gt;single.html&lt;/code&gt;&lt;/a&gt; file is in charge of how articles are rendered. Since we want everything else to remain the same about this file, we can take a copy of the file as it currently stands and place it into our project root.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir layouts/posts
-cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;I won&amp;rsquo;t go into the details here, I&amp;rsquo;ll leave that to you to make changes to see how they affect the rendering of the page.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
-  {{ if .Params.featured_image }}
-  &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Featured image&amp;#34;&lt;/span&gt; /&amp;gt;
-  {{ end }}
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;  {{ partial &amp;#34;toc.html&amp;#34; . }}
-&lt;/span&gt;  {{ .Content }}
-&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ if .Params.featured_image }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Featured image&amp;#34;&lt;/span&gt; /&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ end }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;  {{ partial &amp;#34;toc.html&amp;#34; . }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ .Content }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;We&amp;rsquo;re not done there - we&amp;rsquo;ve referenced a &lt;a href=&#34;https://gohugo.io/templates/partials/&#34;&gt;partial template file&lt;/a&gt; here. These allow us to reuse HTML files in multiple places, or to break up a large HTML file into smaller, more easier to manage chunks.&lt;/p&gt;
 &lt;p&gt;Partial templates are found under the &lt;code&gt;layouts/partials&lt;/code&gt; directory and follow the same principle as defined in the primer for template lookups, and are referenced back as &lt;code&gt;{{ partial &amp;quot;&amp;lt;partial_name&amp;gt;.html&amp;quot; . }}&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s go ahead and create the &lt;code&gt;layouts/partials/toc.html&lt;/code&gt; file and populate it as below.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
-  {{.TableOfContents}}
-&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
-{{ end }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is similar to &lt;a href=&#34;https://gohugo.io/content-management/toc/#template-example-toc-partial&#34;&gt;Hugo&amp;rsquo;s example&lt;/a&gt; but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{.TableOfContents}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ end }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is similar to &lt;a href=&#34;https://gohugo.io/content-management/toc/#template-example-toc-partial&#34;&gt;Hugo&amp;rsquo;s example&lt;/a&gt; but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p&gt;
 &lt;p&gt;Previewing it by &lt;code&gt;hugo serve&lt;/code&gt; we should get something that appears as below.&lt;/p&gt;
 &lt;figure&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/completed-toc.png&#34; class=&#34;screenshotimg&#34;
@@ -285,9 +282,9 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 
 &lt;h4 id=&#34;fix-emojis&#34;&gt;Fix Emojis&lt;/h4&gt;
 &lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;# layouts/shortcodes/emoji.html
-{{ .Get 0 | emojify }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# layouts/shortcodes/emoji.html
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ .Get 0 | emojify }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/&#34;&gt;Shortcodes&lt;/a&gt; are similar to partial templates in that they contain HTML, but they are usually for referring to one HTML element as opposed to multiple.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Then in my markdown I would refer back to them such as &lt;code&gt;{{&amp;lt; emoji &amp;quot;:wave:&amp;quot; &amp;gt;}}&lt;/code&gt;. However in headings they rendered as below&amp;hellip;&lt;/p&gt;
@@ -334,13 +331,12 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;p&gt;This looks to be a bug within Hugo itself, since I was able to get &lt;strong&gt;strong&lt;/strong&gt; and &lt;em&gt;emphasise&lt;/em&gt; to render fine - I &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7169&#34;&gt;raised an issue&lt;/a&gt; on the project - I can live with it for now.&lt;/p&gt;
 &lt;h2 id=&#34;emojify-everything&#34;&gt;Emojify Everything!&lt;/h2&gt;
 &lt;p&gt;Continuing on the theme of emojis; we were able to get them to appear in the Table of Contents fine. But what about in the titles of the articles themselves? We can add them in the &lt;code&gt;title&lt;/code&gt; front matter setting like below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2019-07-05
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
----
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2019-07-05
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(1)&lt;/strong&gt; Post title&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-post-title.png&#34; class=&#34;screenshotimg&#34;
@@ -348,9 +344,8 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(2)&lt;/strong&gt; Browser title&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
+         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(3)&lt;/strong&gt; Type list entry&lt;/p&gt;
@@ -376,15 +371,14 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/figure&gt;
 
 &lt;p&gt;And the browser title is fixed accordingly:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
+         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;fix-type-list-entry&#34;&gt;Fix Type List Entry&lt;/h3&gt;
 &lt;p&gt;We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code&gt;posts&lt;/code&gt; and make the modification there - &lt;code&gt;layouts/posts/li.html&lt;/code&gt;. We&amp;rsquo;ll need to do the same here as we did for &lt;code&gt;single.html&lt;/code&gt; and copy it to our project root.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Once done, we can see it reflect nicely in the list:&lt;/p&gt;
@@ -430,112 +424,112 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;p&gt;The alternative way to organise content is the &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#leaf-bundles&#34;&gt;Leaf Bundle&lt;/a&gt;. This is where at a branch level you have a directory with the name of the article you wish to publish, followed by an &lt;code&gt;index.md&lt;/code&gt; file with the article content - such as &lt;code&gt;content/posts/blog-bootstrap/index.md&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Any page resources defined in this directory can be referenced relatively in the markdown files within it, such that any images can be stored within &lt;code&gt;content/posts/blog-bootstrap/&lt;/code&gt; and referred to in the markdown as &lt;code&gt;figure src=&amp;quot;my-relative-img.png&amp;quot; ...&lt;/code&gt; as opposed to &lt;code&gt;src=&amp;quot;/images/my-not-relative-img.png&amp;quot; ...&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;This allows me to organise content much more effectively such that we will be going from this structure:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree content/posts 
-content/posts
-├── blog-bootstrap.md
-├── extending-gotests-for-strict-error-tests.md
-├── on-becoming-an-open-source-software-contributor.md
-├── three-ways-to-spice-up-your-python-code.md
-├── who-goes-blogging-0-applying-cartography.md
-├── who-goes-blogging-1-getting-started.md
-├── who-goes-blogging-2-custom-domain.md
-├── who-goes-blogging-3-1-deployment-methods-travisci.md
-└── who-goes-blogging-3-2-deployment-methods-github-actions.md
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; files
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree static/images 
-static/images
-├── analytics_example.png
-├── ...                     &lt;span style=&#34;color:#6272a4&#34;&gt;# Everything stored in a flat hierarchy&lt;/span&gt;
-└── type_hinting.png
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;57&lt;/span&gt; files
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree content/posts
-content/posts
-├── blog-bootstrap
-│   └── index.md
-├── extending-gotests-for-strict-error-tests
-│   └── index.md
-├── on-becoming-an-open-source-software-contributor
-│   ├── card.png
-│   ├── elephant-cartoon.png
-│   └── index.md
-├── ...                     
-└── who-goes-blogging-3-2-deployment-methods-github-actions
-    ├── gha-deploy-key.png
-    ├── gha-secrets-key.png
-    ├── github-actions-build.png
-    ├── index.md
-    └── travis-disable-build.png
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;45&lt;/span&gt; files
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One other benefit of grouping all content together in a bundle is it allows you to use just one command to add your article content to the repository - no more will images in another directory be forgotten about!&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add content/blog/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$articleName&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;transformation-script&#34;&gt;Transformation Script&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree content/posts 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── blog-bootstrap.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── extending-gotests-for-strict-error-tests.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── on-becoming-an-open-source-software-contributor.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── three-ways-to-spice-up-your-python-code.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-0-applying-cartography.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-1-getting-started.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-2-custom-domain.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-3-1-deployment-methods-travisci.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── who-goes-blogging-3-2-deployment-methods-github-actions.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; files
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree static/images 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;static/images
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── analytics_example.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── ...                     &lt;span style=&#34;color:#6272a4&#34;&gt;# Everything stored in a flat hierarchy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── type_hinting.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;57&lt;/span&gt; files
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree content/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── blog-bootstrap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   └── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── extending-gotests-for-strict-error-tests
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   └── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── on-becoming-an-open-source-software-contributor
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   ├── card.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   ├── elephant-cartoon.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   └── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── ...                     
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── who-goes-blogging-3-2-deployment-methods-github-actions
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── gha-deploy-key.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── gha-secrets-key.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── github-actions-build.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    └── travis-disable-build.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;45&lt;/span&gt; files
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One other benefit of grouping all content together in a bundle is it allows you to use just one command to add your article content to the repository - no more will images in another directory be forgotten about!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add content/blog/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$articleName&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;transformation-script&#34;&gt;Transformation Script&lt;/h3&gt;
 &lt;p&gt;As opposed to doing the transformation manually, I&amp;rsquo;ve written a script which will move and alter the files for us.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# in project root dir&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;posts&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;find content/posts -type f -name &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;*.md&amp;#39;&lt;/span&gt; -not -path &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;**/index.md&amp;#39;&lt;/span&gt; -not -path &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;**/_index.md&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$posts&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; | &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;read&lt;/span&gt; p; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
-    &lt;span style=&#34;color:#6272a4&#34;&gt;# Move to leaf bundle&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;postFname&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;basename -- &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$p&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;title&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;postFname&lt;/span&gt;%.*&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;leafBundleDir&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;content/posts/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$title&lt;/span&gt;
-    mkdir &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;newPostLocation&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;/index.md
-    git mv -v &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$p&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
-
-    &lt;span style=&#34;color:#6272a4&#34;&gt;# Move images referenced in the articles to new leaf bundle dir&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;images&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;grep -oP &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;images\/.*.(png|jpg|jpeg)&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt; | xargs -n1 | sort -u&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
-    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$images&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; | &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;read&lt;/span&gt; i; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
-        &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt; -z &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;continue&lt;/span&gt;
-        &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;imgFname&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;basename -- &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
-        git mv -v static/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$imgFname&lt;/span&gt;
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;
-
-    &lt;span style=&#34;color:#6272a4&#34;&gt;# Change references to images in the article&lt;/span&gt;
-    &lt;span style=&#34;color:#6272a4&#34;&gt;## figure src=&amp;#34;/images/namecheap-domain-purchase.png&amp;#34;&lt;/span&gt;
-    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/src=&amp;#34;\/images\//src=&amp;#34;/g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
-    &lt;span style=&#34;color:#6272a4&#34;&gt;## images:&lt;/span&gt;
-    &lt;span style=&#34;color:#6272a4&#34;&gt;##   - images/namecheap_landing.png&lt;/span&gt;
-    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/- images\//- /g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
-    &lt;span style=&#34;color:#6272a4&#34;&gt;## [blog_arch]: /images/blog-arch-cover.png&lt;/span&gt;
-    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/: \/images\//: /g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
-    git add &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# in project root dir&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;posts&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;find content/posts -type f -name &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;*.md&amp;#39;&lt;/span&gt; -not -path &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;**/index.md&amp;#39;&lt;/span&gt; -not -path &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;**/_index.md&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$posts&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; | &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;read&lt;/span&gt; p; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;# Move to leaf bundle&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;postFname&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;basename -- &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$p&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;title&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;postFname&lt;/span&gt;%.*&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;leafBundleDir&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;content/posts/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$title&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    mkdir &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;newPostLocation&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;/index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git mv -v &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$p&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;# Move images referenced in the articles to new leaf bundle dir&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;images&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;grep -oP &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;images\/.*.(png|jpg|jpeg)&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt; | xargs -n1 | sort -u&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$images&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; | &lt;span style=&#34;color:#ff79c6&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;read&lt;/span&gt; i; &lt;span style=&#34;color:#ff79c6&#34;&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt; -z &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;continue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;imgFname&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;basename -- &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        git mv -v static/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$i&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$leafBundleDir&lt;/span&gt;/&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$imgFname&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;# Change references to images in the article&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;## figure src=&amp;#34;/images/namecheap-domain-purchase.png&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/src=&amp;#34;\/images\//src=&amp;#34;/g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;## images:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;##   - images/namecheap_landing.png&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/- images\//- /g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;## [blog_arch]: /images/blog-arch-cover.png&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/: \/images\//: /g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git add &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;$newPostLocation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;done&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;Breaking down the script, firstly we are retrieving all posts that aren&amp;rsquo;t already converted to a leaf bundle and looping over them, where lines 4-9 performs the conversion itself.&lt;/p&gt;
@@ -548,8 +542,8 @@ content/posts
 &lt;h2 id=&#34;renaming-content-section&#34;&gt;Renaming Content Section&lt;/h2&gt;
 &lt;p&gt;A gripe I&amp;rsquo;ve had with my site is when you click on &lt;strong&gt;Blog&lt;/strong&gt; in the site header it takes you to &lt;strong&gt;Posts&lt;/strong&gt;. Similar to the previous section this is because of &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#branch-bundles&#34;&gt;Branch Bundles&lt;/a&gt; which are any directory that sits underneath the &lt;code&gt;content&lt;/code&gt; directory. The bundle name here is what forms the URL and the parent page for those articles &lt;a href=&#34;https://gohugo.io/content-management/sections/&#34;&gt;as defined&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Based on this information, migrating should be as easy as&amp;hellip;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git mv content/posts/ content/blog/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Despite doing this, we come across some problems&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ git mv content/posts/ content/blog/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Despite doing this, we come across some problems&amp;hellip;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;We lose the correct rendering for the article
 &lt;ul&gt;
@@ -563,115 +557,112 @@ content/posts
 &lt;/li&gt;
 &lt;li&gt;Blog landing page is now &lt;strong&gt;Blogs&lt;/strong&gt;?? (see below)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt; &lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s walk through them one by one.&lt;/p&gt;
 &lt;h3 id=&#34;fixing-article-rendering&#34;&gt;Fixing Article Rendering&lt;/h3&gt;
 &lt;p&gt;We just made our existing articles leaf bundles that sat under &lt;code&gt;content/posts&lt;/code&gt;, but now this is renamed to &lt;code&gt;content/blog&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree contents/blog -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
-content/blog
-├── blog-bootstrap
-├── extending-gotests-for-strict-error-tests
-├── on-becoming-an-open-source-software-contributor
-├── three-ways-to-spice-up-your-python-code
-├── who-goes-blogging-0-applying-cartography
-├── who-goes-blogging-1-getting-started
-├── who-goes-blogging-2-custom-domain
-├── who-goes-blogging-3-1-deployment-methods-travisci
-└── who-goes-blogging-3-2-deployment-methods-github-actions
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; files
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The section of which your article sits underneath also tells Hugo how it should render the page - known as &lt;a href=&#34;https://gohugo.io/content-management/types/#defining-a-content-type&#34;&gt;Content Types&lt;/a&gt;. Take the article blog-bootstrap which is under &lt;code&gt;posts&lt;/code&gt;; Hugo will look in the theme for &lt;code&gt;layouts/posts&lt;/code&gt; for &lt;code&gt;html&lt;/code&gt; files to render it against* - this is how the articles go from a markdown file to rendered HTML.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree contents/blog -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content/blog
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── blog-bootstrap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── extending-gotests-for-strict-error-tests
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── on-becoming-an-open-source-software-contributor
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── three-ways-to-spice-up-your-python-code
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-0-applying-cartography
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-1-getting-started
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-2-custom-domain
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── who-goes-blogging-3-1-deployment-methods-travisci
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── who-goes-blogging-3-2-deployment-methods-github-actions
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; files
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The section of which your article sits underneath also tells Hugo how it should render the page - known as &lt;a href=&#34;https://gohugo.io/content-management/types/#defining-a-content-type&#34;&gt;Content Types&lt;/a&gt;. Take the article blog-bootstrap which is under &lt;code&gt;posts&lt;/code&gt;; Hugo will look in the theme for &lt;code&gt;layouts/posts&lt;/code&gt; for &lt;code&gt;html&lt;/code&gt; files to render it against* - this is how the articles go from a markdown file to rendered HTML.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;* Hugo will &lt;a href=&#34;https://gohugo.io/templates/lookup-order/&#34;&gt;first look&lt;/a&gt; in your local project for any overriding files.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree themes/hugo-coder/layouts/posts 
-themes/hugo-coder/layouts/posts
-├── li.html
-├── list.html
-└── single.html
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt; files
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
-         alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree themes/hugo-coder/layouts/posts 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;themes/hugo-coder/layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── li.html
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── list.html
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── single.html
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt; files
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p&gt;
+&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
+         alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;One way of fixing this would be to also change the &lt;code&gt;hugo-coder&lt;/code&gt; theme from &lt;code&gt;layouts/posts&lt;/code&gt; to &lt;code&gt;layouts/blog&lt;/code&gt; - however a much simpler solution exists. We can use the &lt;code&gt;type&lt;/code&gt; front matter setting to tell Hugo what layout to use to render it.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
-&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Migrating to GitHub Actions as our CI tool
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
-&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
----&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Migrating to GitHub Actions as our CI tool
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Hugo &lt;a href=&#34;https://gohugo.io/content-management/front-matter&#34;&gt;front matter&lt;/a&gt; are content parameter settings you place into the heading of the content - an example of this is right above!&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Having to define this in every new article can become repetitive. We can make this easier for ourselves by using &lt;a href=&#34;https://gohugo.io/content-management/archetypes/&#34;&gt;archetypes&lt;/a&gt;; which are essentially templates that new content is templated from.&lt;/p&gt;
 &lt;p&gt;In your project root directory, create the &lt;code&gt;archetypes/blog&lt;/code&gt; directory and in there a file called &lt;code&gt;index.md&lt;/code&gt;, and populate it with the below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;draft&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
-&lt;span style=&#34;color:#6272a4&#34;&gt;# ...       Add in other defaults as you see fit&lt;/span&gt;
----
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can then create new content from this template like so:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ hugo new --kind blog blog/blog-post 
-/home/jdheyburn/projects/jdheyburn.co.uk/content/blog/blog-post created
- 
-$ tree content/blog/blog-post         
-content/blog/blog-post
-└── index.md
-
-&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; file
-
-$ cat content/blog/blog-post/index.md 
----
-draft: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;true&lt;/span&gt;
-type: posts
-&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
----
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fixing-existing-urls&#34;&gt;Fixing Existing URLs&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;draft&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...       Add in other defaults as you see fit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can then create new content from this template like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ hugo new --kind blog blog/blog-post 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/home/jdheyburn/projects/jdheyburn.co.uk/content/blog/blog-post created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree content/blog/blog-post         
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content/blog/blog-post
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; file
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat content/blog/blog-post/index.md 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;draft: &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;type: posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fixing-existing-urls&#34;&gt;Fixing Existing URLs&lt;/h3&gt;
 &lt;p&gt;Changing the section the article is in affects the URL too; meaning articles will appear at &lt;code&gt;https://jdheyburn.co.uk/blog/blog-bootstrap/&lt;/code&gt; instead of &lt;code&gt;https://jdheyburn.co.uk/posts/blog-bootstrap/&lt;/code&gt;. Therefore existing hyperlinks pointing to these articles will break.&lt;/p&gt;
 &lt;p&gt;There is another quick fix available for us through the front matter setting &lt;code&gt;aliases&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
-&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Migrating to GitHub Actions as our CI tool
-&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aliases&lt;/span&gt;:
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;    - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
-&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
----&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Migrating to GitHub Actions as our CI tool
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;type&lt;/span&gt;: posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aliases&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;    - /posts/who-goes-blogging-3-2-deployment-methods-github-actions/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;You can read more about how &lt;code&gt;aliases&lt;/code&gt; does its operations &lt;a href=&#34;https://gohugo.io/content-management/urls/#aliases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;from-blogs-to-blog&#34;&gt;From Blogs to Blog&lt;/h3&gt;
 &lt;p&gt;Earlier on, we came across this weird bug&amp;hellip;&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt; &lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This is occurring because of the translation feature of Hugo (sourced from &lt;a href=&#34;https://gohugo.io/functions/i18n/&#34;&gt;i18n&lt;/a&gt;) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p&gt;
 &lt;p&gt;Remembering that &lt;code&gt;content/blog&lt;/code&gt; is a &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#branch-bundles&#34;&gt;branch bundle&lt;/a&gt;, we can override the inferred title with a &lt;code&gt;_index.md&lt;/code&gt; file at that directory.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# content/blog/_index.md&lt;/span&gt;
----
-title: Blog
-type: posts
----
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We have another &lt;code&gt;type: posts&lt;/code&gt; setting here because similar to above, we want Hugo to render the landing page the same as we did for posts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# content/blog/_index.md&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title: Blog
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;type: posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We have another &lt;code&gt;type: posts&lt;/code&gt; setting here because similar to above, we want Hugo to render the landing page the same as we did for posts.&lt;/p&gt;
 &lt;h3 id=&#34;heading-to-blog&#34;&gt;Heading to Blog&lt;/h3&gt;
 &lt;p&gt;Lastly and most easily, the &lt;strong&gt;Blog&lt;/strong&gt; shortcut at the top-right corner of the page still directs us to &lt;code&gt;/posts&lt;/code&gt; - we need to change that in the top-level &lt;code&gt;config.toml&lt;/code&gt; to point to &lt;code&gt;/blog&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[[languages.en.menu.main]]
-name = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Blog&amp;#34;&lt;/span&gt;
-weight = &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
-url = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/blog/&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Thanks for reading!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[languages.en.menu.main]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Blog&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;weight = &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/blog/&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Thanks for reading!&lt;/p&gt;
 </description>
     </item>
     

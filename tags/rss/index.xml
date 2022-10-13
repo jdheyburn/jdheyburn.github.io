@@ -25,43 +25,43 @@
 &lt;p&gt;It&amp;rsquo;s certainly been a while since the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/&#34;&gt;previous post&lt;/a&gt; in this series, which has become the home of any updates I make to my &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; website.&lt;/p&gt;
 &lt;p&gt;This post is a quick one but it&amp;rsquo;s something I&amp;rsquo;ve been meaning to fix for a while. The RSS feeds that are generated will also include code blocks as defined through code fences (```) or through &lt;code&gt;{{&amp;lt; highlight &amp;gt;}}&lt;/code&gt; shortcodes in your post content.&lt;/p&gt;
 &lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
-name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
-document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
-document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
-content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
-&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
-{
-healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
-output_s3_bucket_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
-output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
-}
-)
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whereas it should be rendering as:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
-  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
-  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
-  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
-
-  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
-    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
-    {
-      healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
-      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
-      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
-    }
-  )
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is happening during the &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/blob/master/.github/workflows/deploy.yml#L31&#34;&gt;GitHub Action&lt;/a&gt; that builds the website - I had previously been using the &lt;code&gt;--minify&lt;/code&gt; flag which follows &lt;a href=&#34;https://gohugo.io/getting-started/configuration/#configure-minify&#34;&gt;this configuration&lt;/a&gt; by default.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;output_s3_bucket_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whereas it should be rendering as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  name            &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  document_type   &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  document_format &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YAML&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  content &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;templatefile&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;documents/patch_with_healthcheck_template.yml&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      healthcheck_document_arn &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_ssm_document&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;perform_healthcheck_s3&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;arn&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      output_s3_bucket_name    &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;aws_s3_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;script_bucket&lt;/span&gt;.&lt;span style=&#34;color:#ff79c6&#34;&gt;id&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      output_s3_key_prefix     &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ssm_output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is happening during the &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/blob/master/.github/workflows/deploy.yml#L31&#34;&gt;GitHub Action&lt;/a&gt; that builds the website - I had previously been using the &lt;code&gt;--minify&lt;/code&gt; flag which follows &lt;a href=&#34;https://gohugo.io/getting-started/configuration/#configure-minify&#34;&gt;this configuration&lt;/a&gt; by default.&lt;/p&gt;
 &lt;p&gt;What&amp;rsquo;s happening is the RSS XML that Hugo generates for us is then being &lt;a href=&#34;https://en.wikipedia.org/wiki/Minification_(programming)&#34;&gt;minified&lt;/a&gt; to remove the whitespace generated in that file. This includes the whitespace that&amp;rsquo;s used to indent the code in the RSS feeds. Not. Good.&lt;/p&gt;
 &lt;p&gt;On original publication I thought setting &lt;code&gt;minify.tdewolff.xml.keepWhitespace = true&lt;/code&gt; would be enough. On &lt;a href=&#34;https://github.com/tdewolff/minify#xml&#34;&gt;closer reading&lt;/a&gt;, it does not have the desired effect.&lt;/p&gt;
 &lt;h2 id=&#34;the-fix&#34;&gt;The Fix&lt;/h2&gt;
 &lt;p&gt;In order to fix this we need to add in the below to the site&amp;rsquo;s config. Then we can remove the &lt;code&gt;--minify&lt;/code&gt; flag from our build script, since minification is enabled via our config now.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[minify]
-  disableXML = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-  minifyOutput = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[minify]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  disableXML = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  minifyOutput = &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;I&amp;rsquo;m using &lt;code&gt;toml&lt;/code&gt; for my config, so make sure you change it to what your config is defined in (&lt;code&gt;yaml&lt;/code&gt; / &lt;code&gt;json&lt;/code&gt;)&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Hope this help you with fixing your RSS feeds too!&lt;/p&gt;
@@ -78,9 +78,8 @@ output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &l
 &lt;p&gt;I uploaded my completed RSS file to &lt;a href=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920&#34;&gt;GitHub Gist&lt;/a&gt; 🚀&lt;/p&gt;
 &lt;h2 id=&#34;what-is-rss&#34;&gt;What is RSS?&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/RSS&#34;&gt;RSS&lt;/a&gt; is a great way to &amp;ldquo;subscribe&amp;rdquo; to websites to ensure that you don&amp;rsquo;t miss content from them. The standard for how it is generated has been the same for decades now - however its still the best supported and most accepted way to receive updates. It is simply a standardised XML file that allows consumers such as RSS aggregators to parse the content of the post - for which there are many to choose from (RIP &lt;a href=&#34;https://en.wikipedia.org/wiki/Google_Reader&#34;&gt;Google Reader&lt;/a&gt;).&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-complete.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png&#34;
-         alt=&#34;inoreader as an RSS feed aggregator&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-complete.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png&#34;
+         alt=&#34;inoreader as an RSS feed aggregator&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;My RSS aggregator of choice currently is &lt;a href=&#34;https://www.inoreader.com/&#34;&gt;inoreader&lt;/a&gt; - I&amp;rsquo;ll be using this in my examples&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -90,17 +89,15 @@ output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &l
 &lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;
 &lt;p&gt;Some (but not all) websites only include the first paragraph of their post in an RSS update (aka summary), along with a message after that paragraph requesting the reader to visit the site in a browser to view the rest of the content.&lt;/p&gt;
 &lt;p&gt;This is a common feature of WordPress blogs - and it is done to have you load the full website and along with it, all the code for providing the owner with user analytics, and advertising - if they have it. So really they&amp;rsquo;re getting the benefit of being able to publish updates via a standardised approach (RSS), to then lure you onto the website.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-post-show-more-content.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png&#34;
-         alt=&#34;An RSS post loading incompletely&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-post-show-more-content.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png&#34;
+         alt=&#34;An RSS post loading incompletely&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hugo &lt;em&gt;kind of&lt;/em&gt; does this through the highlighted line in the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml&#34;&gt;templated RSS XML file&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ .Summary | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;.Summary&lt;/code&gt; will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;rsquo;ve produced a very short article!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-incomplete-post.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png&#34;
-         alt=&#34;Hugo producing a summarised RSS post&#34;/&gt; &lt;/a&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ .Summary | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;.Summary&lt;/code&gt; will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;rsquo;ve produced a very short article!&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-incomplete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png&#34;
+         alt=&#34;Hugo producing a summarised RSS post&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I&amp;rsquo;m not against the practice of previewing the post, if a blog provides revenue for the author(s) then you will need to force readers to view the full  website for analytics and advertising (businesses gotta make money!).&lt;/p&gt;
@@ -110,45 +107,44 @@ output_s3_key_prefix &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &l
 &lt;p&gt;Before we start editing files, we need to produce our own copy of the template RSS XML file. This is embedded directly within Hugo itself and not packaged in with your theme.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;There&amp;rsquo;s every chance your theme is generating one for you. Run the below command to see if there is anything for you to copy from.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;find themes/ -type f -name &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;*.xml&amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;find themes/ -type f -name &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;*.xml&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;p&gt;We&amp;rsquo;ve discussed template lookup orders before in &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#template-lookup-order-primer&#34;&gt;previous posts&lt;/a&gt; - we can overwrite the default of any file used in generating the website by placing it in your local project root.&lt;/p&gt;
 &lt;p&gt;We can start to make modifications to the &lt;code&gt;rss.xml&lt;/code&gt; file by copying the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml&#34;&gt;default&lt;/a&gt; into the directory where Hugo will read it from.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Assuming you are in project root&lt;/span&gt;
-wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded/templates/_default/rss.xml -O layouts/_default/rss.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We know that line 35 containing &lt;code&gt;.Summary&lt;/code&gt; is causing the issue here. All we need to do is change it to &lt;code&gt;.Content&lt;/code&gt; - then Hugo will print out the entire content of your post. See the highlighted line below for the change.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;36
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;37
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;38
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;39
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Assuming you are in project root&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded/templates/_default/rss.xml -O layouts/_default/rss.xml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We know that line 35 containing &lt;code&gt;.Summary&lt;/code&gt; is causing the issue here. All we need to do is change it to &lt;code&gt;.Content&lt;/code&gt; - then Hugo will print out the entire content of your post. See the highlighted line below for the change.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;36
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;37
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;38
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;39
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;item&amp;gt;&lt;/span&gt;
-      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;{{ .Title }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
-      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;link&amp;gt;&lt;/span&gt;{{ .Permalink }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/link&amp;gt;&lt;/span&gt;
-      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;pubDate&amp;gt;&lt;/span&gt;{{ .Date.Format &amp;#34;Mon, 02 Jan 2006 15:04:05 -0700&amp;#34; | safeHTML }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/pubDate&amp;gt;&lt;/span&gt;
-      {{ with .Site.Author.email }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;author&amp;gt;&lt;/span&gt;{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/author&amp;gt;&lt;/span&gt;{{end}}
-      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;guid&amp;gt;&lt;/span&gt;{{ .Permalink }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/guid&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ .Content | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
-&lt;/span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
-    {{ end }}
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/channel&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/rss&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;item&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;{{ .Title }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;link&amp;gt;&lt;/span&gt;{{ .Permalink }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/link&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;pubDate&amp;gt;&lt;/span&gt;{{ .Date.Format &amp;#34;Mon, 02 Jan 2006 15:04:05 -0700&amp;#34; | safeHTML }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/pubDate&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      {{ with .Site.Author.email }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;author&amp;gt;&lt;/span&gt;{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/author&amp;gt;&lt;/span&gt;{{end}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;guid&amp;gt;&lt;/span&gt;{{ .Permalink }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/guid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ .Content | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {{ end }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/channel&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/rss&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s now view the changes in the RSS reader.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-complete-post.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png&#34;
-         alt=&#34;Hugo RSS post displaying all content&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-complete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png&#34;
+         alt=&#34;Hugo RSS post displaying all content&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;We can now see much more content is being produced - and with proper HTML this time!&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -159,9 +155,8 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;rendering-images-in-rss-posts&#34;&gt;Rendering images in RSS posts&lt;/h2&gt;
 &lt;p&gt;Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code&gt;alt&lt;/code&gt;) text is being displayed instead.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png&#34;
-         alt=&#34;Hugo RSS post with missing images, alt text displayed instead&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png&#34;
+         alt=&#34;Hugo RSS post with missing images, alt text displayed instead&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Note the highlighted alt texts of images&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -174,18 +169,18 @@ wget https://raw.githubusercontent.com/gohugoio/hugo/master/tpl/tplimpl/embedded
 &lt;h3 id=&#34;why-it-is-breaking-&#34;&gt;Why it is breaking 😤&lt;/h3&gt;
 &lt;p&gt;In &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/&#34;&gt;part 4&lt;/a&gt; of this series, we looked at placing resources for a post in the same directory as the content markdown file (also known as &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#leaf-bundles&#34;&gt;leaf bundles&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;That means for a given directory tree structure:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree content/blog
-content/blog
-└── some-blog-post
-    ├── image-file-name.png
-    └── index.md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We would use the following shortcode to generate the &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; block in &lt;code&gt;index.md&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;{{&amp;lt; figure src=&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-file-name.png&amp;#34;&lt;/span&gt; alt=&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Here is an image!&amp;#34;&lt;/span&gt; &amp;gt;}}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This produces the block:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;figure&lt;/span&gt;&amp;gt;
-    &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-file-name.png&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Here is an image!&amp;#34;&lt;/span&gt;&amp;gt;  
-&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;figure&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since this contains no preceding forward-slash &lt;code&gt;/&lt;/code&gt; in &lt;code&gt;src&lt;/code&gt;, this becomes a &lt;em&gt;relative path&lt;/em&gt;. This means the webserver will look for the image at the path relative to the current page.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree content/blog
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;content/blog
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── some-blog-post
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── image-file-name.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    └── index.md
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We would use the following shortcode to generate the &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; block in &lt;code&gt;index.md&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{&amp;lt; figure src=&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-file-name.png&amp;#34;&lt;/span&gt; alt=&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Here is an image!&amp;#34;&lt;/span&gt; &amp;gt;}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This produces the block:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;figure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-file-name.png&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Here is an image!&amp;#34;&lt;/span&gt;&amp;gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;figure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since this contains no preceding forward-slash &lt;code&gt;/&lt;/code&gt; in &lt;code&gt;src&lt;/code&gt;, this becomes a &lt;em&gt;relative path&lt;/em&gt;. This means the webserver will look for the image at the path relative to the current page.&lt;/p&gt;
 &lt;p&gt;So when we navigate to &lt;code&gt;blog/some-blog-post/&lt;/code&gt; in our web browser (as dictated from the above tree structure), your browser will request the image at &lt;code&gt;blog/some-blog-post/image-file-name.png&lt;/code&gt; for you.&lt;/p&gt;
 &lt;p&gt;Why is this relevant? This same &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; block is being rendered in the description of your RSS XML file, including the relative image location. RSS is very simple and renders only complete URLs (e.g. &lt;code&gt;https://jdheyburn.co.uk/blog/some-blog-post/image-file-name.png&lt;/code&gt;) - so when we just specify the relative path, it cannot find the image and thus prints out the &lt;code&gt;alt&lt;/code&gt; text.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -194,8 +189,8 @@ content/blog
 &lt;h3 id=&#34;fix-image-rendering&#34;&gt;Fix image rendering&lt;/h3&gt;
 &lt;p&gt;The fix for this involves some Go magic. We need to prepend the permalink for the current post that&amp;rsquo;s being printed out to anything that contains a relative path &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;We need to go back to the same line where we added &lt;code&gt;.Content&lt;/code&gt; and change it to:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ replaceRE &amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34; (printf &amp;#34;%s%s%s&amp;#34; &amp;#34;img src=\&amp;#34;&amp;#34; .Permalink &amp;#34;$1\&amp;#34;&amp;#34;) .Content | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This calls the Hugo function &lt;a href=&#34;https://gohugo.io/functions/replacere/&#34;&gt;replaceRE&lt;/a&gt; which enables us to perform a find-and-replace using &lt;a href=&#34;https://www.regular-expressions.info/tutorial.html&#34;&gt;regular expressions (regex)&lt;/a&gt;, and it takes three inputs:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ replaceRE &amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34; (printf &amp;#34;%s%s%s&amp;#34; &amp;#34;img src=\&amp;#34;&amp;#34; .Permalink &amp;#34;$1\&amp;#34;&amp;#34;) .Content | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This calls the Hugo function &lt;a href=&#34;https://gohugo.io/functions/replacere/&#34;&gt;replaceRE&lt;/a&gt; which enables us to perform a find-and-replace using &lt;a href=&#34;https://www.regular-expressions.info/tutorial.html&#34;&gt;regular expressions (regex)&lt;/a&gt;, and it takes three inputs:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;PATTERN&lt;/code&gt; is the regex pattern used to find the text we want to remove
 &lt;ul&gt;
@@ -217,72 +212,70 @@ content/blog
 &lt;p&gt;&lt;code&gt;REPLACEMENT&lt;/code&gt; is calling another Hugo function called &lt;a href=&#34;https://gohugo.io/functions/printf/&#34;&gt;printf&lt;/a&gt; to construct the replacement text. We&amp;rsquo;re pretty much just injecting the page &lt;code&gt;.Permalink&lt;/code&gt; prior to the captured text from the &lt;code&gt;PATTERN&lt;/code&gt; - so that RSS can then display the complete URL. While adding back the &lt;code&gt;img src=&amp;quot;&amp;quot;&lt;/code&gt; that was removed.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;INPUT&lt;/code&gt; will be the page &lt;code&gt;.Content&lt;/code&gt;, what we were printing out before.&lt;/p&gt;
 &lt;p&gt;Once we&amp;rsquo;ve made the change, images are now rendered properly!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-images-post.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png&#34;
-         alt=&#34;Hugo RSS post with images being correctly rendered&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png&#34;
+         alt=&#34;Hugo RSS post with images being correctly rendered&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE 2020-05-16&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Upon posting this, I noticed I needed to do the same thing for hyperlinks referencing headings with the same post. For instance the markdown below which renders a hyperlink to a heading&amp;hellip;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;[&lt;span style=&#34;color:#ff79c6&#34;&gt;images to display in RSS content&lt;/span&gt;](&lt;span style=&#34;color:#50fa7b&#34;&gt;#rendering-images-in-rss-posts&lt;/span&gt;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Will render this in RSS:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://jdheyburn.co.uk/#rendering-images-in-rss-posts&amp;#34;&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Which does not take the reader to the right location at all. What we need to do is repeat the regex used above in &lt;code&gt;rss.xml&lt;/code&gt; to catch these and replace them with the complete URL. See below for the snippet.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;{{&lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt; $content &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; replaceRE &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;a href=\&amp;#34;(#.*?)\&amp;#34;&amp;#34;&lt;/span&gt; (printf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;%s%s%s&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;a href=\&amp;#34;&amp;#34;&lt;/span&gt; .Permalink &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span&gt;) .Content &lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt;}}
-{{&lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt; $content = replaceRE &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34;&lt;/span&gt; (printf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;%s%s%s&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;img src=\&amp;#34;&amp;#34;&lt;/span&gt; .Permalink &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span&gt;) $content &lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt;}}
-&amp;lt;description&amp;gt;{{ $content | html }}&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;/&lt;/span&gt;description&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[&lt;span style=&#34;color:#ff79c6&#34;&gt;images to display in RSS content&lt;/span&gt;](&lt;span style=&#34;color:#50fa7b&#34;&gt;#rendering-images-in-rss-posts&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Will render this in RSS:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://jdheyburn.co.uk/#rendering-images-in-rss-posts&amp;#34;&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Which does not take the reader to the right location at all. What we need to do is repeat the regex used above in &lt;code&gt;rss.xml&lt;/code&gt; to catch these and replace them with the complete URL. See below for the snippet.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{&lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt; $content &lt;span style=&#34;color:#ff79c6&#34;&gt;:=&lt;/span&gt; replaceRE &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;a href=\&amp;#34;(#.*?)\&amp;#34;&amp;#34;&lt;/span&gt; (printf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;%s%s%s&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;a href=\&amp;#34;&amp;#34;&lt;/span&gt; .Permalink &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span&gt;) .Content &lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt;}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{&lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt; $content = replaceRE &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;img src=\&amp;#34;(.*?)\&amp;#34;&amp;#34;&lt;/span&gt; (printf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;%s%s%s&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;img src=\&amp;#34;&amp;#34;&lt;/span&gt; .Permalink &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$1\&amp;#34;&amp;#34;&lt;/span&gt;) $content &lt;span style=&#34;color:#ff79c6&#34;&gt;-&lt;/span&gt;}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;description&amp;gt;{{ $content | html }}&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;/&lt;/span&gt;description&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;h2 id=&#34;adding-cards-for-posts&#34;&gt;Adding cards for posts&lt;/h2&gt;
 &lt;p&gt;Not dissimilar to &lt;a href=&#34;https://barkersocial.com/social-cards/&#34;&gt;social media cards&lt;/a&gt;, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-enclosure-card-view.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png&#34;
-         alt=&#34;inoreader displaying images for each post when in card view&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png&#34;
+         alt=&#34;inoreader displaying images for each post when in card view&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;While in card view for inoreader, we can see featured images being displayed&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You can do these in RSS via the &lt;a href=&#34;https://www.w3schools.com/xml/rss_tag_enclosure.asp&#34;&gt;enclosure&lt;/a&gt; tag&amp;hellip;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-location.png&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have a look at our &lt;code&gt;layouts/_default/rss.xml&lt;/code&gt; file, we don&amp;rsquo;t have this defined. We could go and add it in now, but I would like a unified social media image to be used across all platforms. This will enable me to focus my effort on generating a single social media card image that is shared across all methods of consumption.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image-location.png&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have a look at our &lt;code&gt;layouts/_default/rss.xml&lt;/code&gt; file, we don&amp;rsquo;t have this defined. We could go and add it in now, but I would like a unified social media image to be used across all platforms. This will enable me to focus my effort on generating a single social media card image that is shared across all methods of consumption.&lt;/p&gt;
 &lt;p&gt;Based on the above, my theme (hugo-coder), renders the tags required for social media cards through the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/twitter_cards.html&#34;&gt;internal template&lt;/a&gt; for &lt;a href=&#34;https://gohugo.io/templates/internal/#use-the-twitter-cards-template&#34;&gt;twitter_cards&lt;/a&gt;. A snippet of the logic that determines this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{- with $.Params.images -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt;/&amp;gt;
-{{ else -}}
-{{- $images := $.Resources.ByType &amp;#34;image&amp;#34; -}}
-{{- $featured := $images.GetMatch &amp;#34;*feature*&amp;#34; -}}
-{{- if not $featured }}{{ $featured = $images.GetMatch &amp;#34;{*cover*,*thumbnail*}&amp;#34; }}{{ end -}}
-{{- with $featured -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ $featured.Permalink }}&amp;#34;&lt;/span&gt;/&amp;gt;
-{{- else -}}
-{{- with $.Site.Params.images -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt;/&amp;gt;
-{{ else -}}
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with $.Params.images -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ else -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $images := $.Resources.ByType &amp;#34;image&amp;#34; -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $featured := $images.GetMatch &amp;#34;*feature*&amp;#34; -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- if not $featured }}{{ $featured = $images.GetMatch &amp;#34;{*cover*,*thumbnail*}&amp;#34; }}{{ end -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with $featured -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ $featured.Permalink }}&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- else -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with $.Site.Params.images -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:card&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;summary_large_image&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;twitter:image&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ else -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;The hierarchy of images used to render the social media card goes like this:&lt;/p&gt;
 &lt;ol&gt;
@@ -293,43 +286,43 @@ content/blog
 &lt;/ol&gt;
 &lt;h3 id=&#34;adding-enclosure-tags&#34;&gt;Adding enclosure tags&lt;/h3&gt;
 &lt;p&gt;We can effectively copy and paste the code being used for generating Twitter cards and modify it for enclosure tags. The snippet of code ultimately ends up looking like this  👇&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{- $pagePermalink := .Permalink -}}
-{{- with .Params.images -}}
-{{- $img := index . 0 -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ printf &amp;#34;&lt;/span&gt;%&lt;span style=&#34;color:#50fa7b&#34;&gt;s&lt;/span&gt;%&lt;span style=&#34;color:#50fa7b&#34;&gt;s&lt;/span&gt;&amp;#34; $&lt;span style=&#34;color:#50fa7b&#34;&gt;pagePermalink&lt;/span&gt; $&lt;span style=&#34;color:#50fa7b&#34;&gt;img&lt;/span&gt; }}&amp;#34; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
-{{ else -}}
-{{- $images := .Resources.ByType &amp;#34;image&amp;#34; -}}
-{{- $featured := $images.GetMatch &amp;#34;*feature*&amp;#34; -}}
-{{- if not $featured }}{{ $featured = $images.GetMatch &amp;#34;{*cover*,*thumbnail*}&amp;#34; }}{{ end -}}
-{{- with $featured -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ $featured.Permalink }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
-{{- else -}}
-{{- with .Site.Params.images -}}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
-{{- end -}}
-{{- end -}}
-{{- end }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $pagePermalink := .Permalink -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with .Params.images -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $img := index . 0 -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ printf &amp;#34;&lt;/span&gt;%&lt;span style=&#34;color:#50fa7b&#34;&gt;s&lt;/span&gt;%&lt;span style=&#34;color:#50fa7b&#34;&gt;s&lt;/span&gt;&amp;#34; $&lt;span style=&#34;color:#50fa7b&#34;&gt;pagePermalink&lt;/span&gt; $&lt;span style=&#34;color:#50fa7b&#34;&gt;img&lt;/span&gt; }}&amp;#34; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ else -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $images := .Resources.ByType &amp;#34;image&amp;#34; -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $featured := $images.GetMatch &amp;#34;*feature*&amp;#34; -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- if not $featured }}{{ $featured = $images.GetMatch &amp;#34;{*cover*,*thumbnail*}&amp;#34; }}{{ end -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with $featured -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ $featured.Permalink }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- else -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with .Site.Params.images -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;url&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ index . 0 | absURL }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;image/jpg&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;enclosure&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- end -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- end -}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- end }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Walking through what this is doing:&lt;/p&gt;
 &lt;ul&gt;
@@ -344,27 +337,25 @@ content/blog
 &lt;/ul&gt;
 &lt;p&gt;With lessons learnt trying to get &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/#rendering-images-in-rss-posts&#34;&gt;images to display in RSS content&lt;/a&gt;, I am rendering the full URL of the image to ensure RSS is always able to retrieve it.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m going to follow lines 12-13 above and have a default card defined at the site level parameters. In my &lt;code&gt;config.toml&lt;/code&gt; I&amp;rsquo;ll need to add the following&amp;hellip;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[params]
-    images = [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span&gt;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;hellip;while also ensuring that I&amp;rsquo;ve placed the image under &lt;code&gt;static/images/jdheyburn_co_uk_card.png&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[params]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    images = [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;hellip;while also ensuring that I&amp;rsquo;ve placed the image under &lt;code&gt;static/images/jdheyburn_co_uk_card.png&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Once all that is done and deployed - we will have an RSS post card that looks like this  🙌&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-enclosure-card-view.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png&#34;
-         alt=&#34;inoreader displaying an image for a Hugo post&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png&#34;
+         alt=&#34;inoreader displaying an image for a Hugo post&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can now advertise our RSS subscription URL to readers. My theme &lt;code&gt;hugo-coder&lt;/code&gt; supports this as a social button on the home page. We just need to add the below block to the &lt;code&gt;config.toml&lt;/code&gt; file.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;[[params.social]]
-    name = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;RSS&amp;#34;&lt;/span&gt;
-    icon = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-rss&amp;#34;&lt;/span&gt;
-    weight = &lt;span style=&#34;color:#bd93f9&#34;&gt;6&lt;/span&gt;
-    url = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://jdheyburn.co.uk/index.xml&amp;#34;&lt;/span&gt;
-    rel = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;alternate&amp;#34;&lt;/span&gt;
-    type = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;application/rss+xml&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once done - our homepage will have the button displayed.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-subscription-button.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png&#34;
-         alt=&#34;RSS subscription button displayed on the homepage&#34;/&gt; &lt;/a&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[params.social]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;RSS&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-rss&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    weight = &lt;span style=&#34;color:#bd93f9&#34;&gt;6&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    url = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://jdheyburn.co.uk/index.xml&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rel = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;alternate&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    type = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;application/rss+xml&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once done - our homepage will have the button displayed.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-subscription-button.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png&#34;
+         alt=&#34;RSS subscription button displayed on the homepage&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;summarising-changes-to-rss-xml&#34;&gt;Summarising changes to RSS XML&lt;/h2&gt;

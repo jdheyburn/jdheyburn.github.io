@@ -39,27 +39,25 @@
 &lt;h3 id=&#34;deployment-keys-setup&#34;&gt;Deployment Keys Setup&lt;/h3&gt;
 &lt;p&gt;The very first thing we need to do is set up some keys that will allow our source repository (where the workflow will reside on) to push the built project to the GitHub Pages repo.&lt;/p&gt;
 &lt;p&gt;In your terminal, create those keys now and copy the contents of the public key to your clipboard.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ ssh-keygen -t rsa -b &lt;span style=&#34;color:#bd93f9&#34;&gt;4096&lt;/span&gt; -C &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;git config user.email&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; -f ~/.ssh/gh-pages -N &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
-Generating public/private rsa key pair.
-Your identification has been saved in /home/jdheyburn/.ssh/gh-pages.
-Your public key has been saved in /home/jdheyburn/.ssh/gh-pages.pub
-&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
-
-$ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ ssh-keygen -t rsa -b &lt;span style=&#34;color:#bd93f9&#34;&gt;4096&lt;/span&gt; -C &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;$(&lt;/span&gt;git config user.email&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; -f ~/.ssh/gh-pages -N &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Generating public/private rsa key pair.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Your identification has been saved in /home/jdheyburn/.ssh/gh-pages.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Your public key has been saved in /home/jdheyburn/.ssh/gh-pages.pub
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;macOS has a handy terminal command to copy file contents to the clipboard called &lt;code&gt;pbcopy&lt;/code&gt;. I&amp;rsquo;ve created an alias on my Linux laptop that does the same.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;alias pbcopy=&amp;quot;xclip -selection clipboard&amp;quot;&lt;/code&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In GitHub load up your GitHub Pages repo and navigate to &lt;code&gt;Settings&lt;/code&gt; and then &lt;code&gt;Deploy keys&lt;/code&gt;. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code&gt;Allow write access&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;gha-deploy-key.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png&#34;
-         alt=&#34;GitHub Pages repo deploy keys page&#34;/&gt; &lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;gha-deploy-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png&#34;
+         alt=&#34;GitHub Pages repo deploy keys page&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Copy the contents of the &lt;em&gt;private key&lt;/em&gt; you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code&gt;Settings&lt;/code&gt; page, then &lt;code&gt;Secrets&lt;/code&gt;. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;gha-secrets-key.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png&#34;
-         alt=&#34;GitHub source code repo secrets page&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;gha-secrets-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png&#34;
+         alt=&#34;GitHub source code repo secrets page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;No secrets here!&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -71,19 +69,19 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 
 &lt;p&gt;This config is much simpler to understand than the Travis one - let&amp;rsquo;s break it down once more.&lt;/p&gt;
 &lt;h4 id=&#34;build-metadata-and-environment&#34;&gt;Build Metadata and Environment&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Build and deploy to jdheyburn.github.io
-
-&lt;span style=&#34;color:#ff79c6&#34;&gt;on&lt;/span&gt;:
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;push&lt;/span&gt;:
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;branches&lt;/span&gt;:
-      - master
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;schedule&lt;/span&gt;:
-    - &lt;span style=&#34;color:#ff79c6&#34;&gt;cron&lt;/span&gt;:  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0 10 * * *&amp;#34;&lt;/span&gt;
-
-&lt;span style=&#34;color:#ff79c6&#34;&gt;jobs&lt;/span&gt;:
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;deploy&lt;/span&gt;:
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;runs-on&lt;/span&gt;: ubuntu-18.04
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is pretty box standard at this point. We&amp;rsquo;re simply giving the name to the workflow and saying to run it on every push to the &lt;code&gt;master&lt;/code&gt; branch.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Build and deploy to jdheyburn.github.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - master
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;schedule&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ff79c6&#34;&gt;cron&lt;/span&gt;:  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0 10 * * *&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;runs-on&lt;/span&gt;: ubuntu-18.04
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is pretty box standard at this point. We&amp;rsquo;re simply giving the name to the workflow and saying to run it on every push to the &lt;code&gt;master&lt;/code&gt; branch.&lt;/p&gt;
 &lt;p&gt;An enhancement that we&amp;rsquo;re adding is the &lt;code&gt;on.schedule.cron&lt;/code&gt; setting. This tells Actions not only to build the project on every push to the &lt;code&gt;master&lt;/code&gt; branch but on a timed schedule too - in my example this is at 10am everyday. We could have done the same via Travis, but that can only be &lt;a href=&#34;https://docs.travis-ci.com/user/cron-jobs/&#34;&gt;configured via the GUI&lt;/a&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The benefit to this is the way in which Hugo generates content. Hugo will only build content pages where the date on the content is either today or in the past, and is not a draft.&lt;/p&gt;
@@ -94,53 +92,53 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;p&gt;In order to keep our build the same as Travis&amp;rsquo;s, we could instruct the job to run on &lt;code&gt;ubuntu-16.04&lt;/code&gt;, nonetheless I&amp;rsquo;m pretty confident it will run on the next &lt;a href=&#34;https://wiki.ubuntu.com/Releases&#34;&gt;LTS of Ubuntu&lt;/a&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h4 id=&#34;project-checkout&#34;&gt;Project Checkout&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
-&lt;span style=&#34;color:#ff79c6&#34;&gt;steps&lt;/span&gt;:
-  - &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: actions/checkout@v2
-
-  - &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Checkout submodules
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;shell&lt;/span&gt;: bash
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: |&lt;span style=&#34;color:#f1fa8c&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      auth_header=&amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;#34;
-&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      git submodule sync --recursive
-&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      git -c &amp;#34;http.extraheader=$auth_header&amp;#34; -c protocol.version=2 submodule update --init --force --recursive --depth=1&lt;/span&gt;      
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we&amp;rsquo;re executing the GitHub &lt;a href=&#34;https://github.com/actions/checkout&#34;&gt;checkout action&lt;/a&gt; which will pull the repo to the build server. It&amp;rsquo;s worth noting that this action version I&amp;rsquo;m using here doesn&amp;rsquo;t checkout git submodules too - which is a problem for us as that&amp;rsquo;s how we&amp;rsquo;re currently pulling the theme for our Hugo site. We can workaround it with the next step in the build - &lt;code&gt;Checkout submodules&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: actions/checkout@v2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Checkout submodules
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;shell&lt;/span&gt;: bash
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: |&lt;span style=&#34;color:#f1fa8c&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      auth_header=&amp;#34;$(git config --local --get http.https://github.com/.extraheader)&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      git submodule sync --recursive
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      git -c &amp;#34;http.extraheader=$auth_header&amp;#34; -c protocol.version=2 submodule update --init --force --recursive --depth=1&lt;/span&gt;      
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we&amp;rsquo;re executing the GitHub &lt;a href=&#34;https://github.com/actions/checkout&#34;&gt;checkout action&lt;/a&gt; which will pull the repo to the build server. It&amp;rsquo;s worth noting that this action version I&amp;rsquo;m using here doesn&amp;rsquo;t checkout git submodules too - which is a problem for us as that&amp;rsquo;s how we&amp;rsquo;re currently pulling the theme for our Hugo site. We can workaround it with the next step in the build - &lt;code&gt;Checkout submodules&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;This functionality was available in v1 of the action, so you can use that if you&amp;rsquo;d prefer:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;steps&lt;/span&gt;:
-  - &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: actions/checkout@v2
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;: 
-      &lt;span style=&#34;color:#ff79c6&#34;&gt;submodules&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: actions/checkout@v2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;submodules&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s worth noting that we didn&amp;rsquo;t have to do this step for Travis - since it will checkout the repository with submodules already.&lt;/p&gt;
 &lt;p&gt;This is because GitHub Actions can be used for many more things than just repository code manipulation where you may not necessarily need the repo checked out.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h4 id=&#34;build-and-deploy-setup&#34;&gt;Build and Deploy Setup&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Setup Hugo
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: peaceiris/actions-hugo@v2
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;:
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;hugo-version&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.58.3&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;extended&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As stated we&amp;rsquo;re going to be using the Action &lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;actions-hugo&lt;/a&gt; to set up &lt;code&gt;hugo&lt;/code&gt; on our build server. It can take in a number of parameters to allow us to customise it; for us we&amp;rsquo;re only concerned with hardcoding the version of Hugo, and to use the Hugo Extended binary as required by our theme.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Setup Hugo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: peaceiris/actions-hugo@v2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;hugo-version&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.58.3&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;extended&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As stated we&amp;rsquo;re going to be using the Action &lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;actions-hugo&lt;/a&gt; to set up &lt;code&gt;hugo&lt;/code&gt; on our build server. It can take in a number of parameters to allow us to customise it; for us we&amp;rsquo;re only concerned with hardcoding the version of Hugo, and to use the Hugo Extended binary as required by our theme.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;At the time of writing 0.58.3 is not the latest version of Hugo, whereas when I wrote &lt;code&gt;.travis.yml&lt;/code&gt; it was. I want the GitHub Actions build to be as close as possible to the TravisCI build in order to make them as similar as possible to prevent any unexpected build errors.&lt;/p&gt;
 &lt;p&gt;Once I&amp;rsquo;ve achieved a successful build - I&amp;rsquo;ll look to upgrade to a newer version, and then iron out any issues from there.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Build
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: hugo --gc --minify
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once &lt;code&gt;hugo&lt;/code&gt; is set up we can then build it easily enough, as self-documented in the code.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Copy CNAME
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: cp CNAME ./public/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Lastly, we can&amp;rsquo;t forget to copy the &lt;code&gt;CNAME&lt;/code&gt; file we made in &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#solidying-our-changes-with-a-cname-file&#34;&gt;part 2&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Build
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: hugo --gc --minify
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once &lt;code&gt;hugo&lt;/code&gt; is set up we can then build it easily enough, as self-documented in the code.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Copy CNAME
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;run&lt;/span&gt;: cp CNAME ./public/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Lastly, we can&amp;rsquo;t forget to copy the &lt;code&gt;CNAME&lt;/code&gt; file we made in &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#solidying-our-changes-with-a-cname-file&#34;&gt;part 2&lt;/a&gt;.&lt;/p&gt;
 &lt;h4 id=&#34;deployment-to-github-pages&#34;&gt;Deployment to GitHub Pages&lt;/h4&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Deploy
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: peaceiris/actions-gh-pages@v3
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;:
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;deploy_key&lt;/span&gt;: ${{ secrets.DEPLOY_KEY }}
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;external_repository&lt;/span&gt;: jdheyburn/jdheyburn.github.io
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;publish_branch&lt;/span&gt;: master
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;publish_dir&lt;/span&gt;: ./public
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;commit_message&lt;/span&gt;: ${{ github.event.head_commit.message }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;actions-gh-pages&lt;/a&gt;. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Deploy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;uses&lt;/span&gt;: peaceiris/actions-gh-pages@v3
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;deploy_key&lt;/span&gt;: ${{ secrets.DEPLOY_KEY }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;external_repository&lt;/span&gt;: jdheyburn/jdheyburn.github.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;publish_branch&lt;/span&gt;: master
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;publish_dir&lt;/span&gt;: ./public
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;commit_message&lt;/span&gt;: ${{ github.event.head_commit.message }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the deployment to GitHub Pages I&amp;rsquo;m using the action &lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;actions-gh-pages&lt;/a&gt;. Again it only requires a bare minimum of parameters to work; an explanation of what I&amp;rsquo;m using is:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;deploy_key&lt;/code&gt; is the &lt;em&gt;private key&lt;/em&gt; we set up &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/#deployment-keys-setup&#34;&gt;earlier in this post&lt;/a&gt; in &lt;code&gt;Settings&lt;/code&gt; -&amp;gt; &lt;code&gt;Secrets&lt;/code&gt;
 &lt;ul&gt;
@@ -163,18 +161,16 @@ $ pbcopy &amp;lt; ~/.ssh/gh-pages.pub
 &lt;h2 id=&#34;bringing-it-all-together-again&#34;&gt;Bringing It All Together (Again)&lt;/h2&gt;
 &lt;p&gt;If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p&gt;
 &lt;p&gt;For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href=&#34;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&#34;&gt;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a&gt; for me) and disabling &lt;code&gt;Build pushed branches&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-disable-build.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png&#34;
-         alt=&#34;Build pushed branches disabled on Travis&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-disable-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png&#34;
+         alt=&#34;Build pushed branches disabled on Travis&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code&gt;Actions&lt;/code&gt; tab of your source code repo on GitHub.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add --all
-git commit -m &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span&gt;
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;a href=&#34;github-actions-build.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png&#34;
-         alt=&#34;Successful build on GitHub Actions&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;a href=&#34;github-actions-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png&#34;
+         alt=&#34;Successful build on GitHub Actions&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Great success!&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -215,44 +211,39 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Now there are many CI tools out there with the most well known likely to be &lt;a href=&#34;https://jenkins.io/&#34;&gt;Jenkins&lt;/a&gt;, but there are also hosted solutions available which will take your code and perform your pipelines against them.&lt;/p&gt;
 &lt;p&gt;One of those hosted solutions is &lt;a href=&#34;https://travis-ci.com/&#34;&gt;TravisCI&lt;/a&gt;, where they integrate quite nicely with GitHub repositories to attach &lt;a href=&#34;https://developer.github.com/webhooks/&#34;&gt;webhooks&lt;/a&gt; against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p&gt;
 &lt;p&gt;So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-free.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png&#34;
-         alt=&#34;Screenshot of Travis free pricing plan&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-free.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png&#34;
+         alt=&#34;Screenshot of Travis free pricing plan&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Free is definitely a thing you love to see&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;travisci-account-setup&#34;&gt;TravisCI Account Setup&lt;/h2&gt;
 &lt;p&gt;The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em&gt;another&lt;/em&gt; account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href=&#34;https://travis-ci.com/&#34;&gt;https://travis-ci.com/&lt;/a&gt; and click on &lt;code&gt;Sign in with GitHub&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-landing.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png&#34;
-         alt=&#34;Screenshot of Travis landing page&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png&#34;
+         alt=&#34;Screenshot of Travis landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;GitHub will ask you if you &lt;em&gt;really&lt;/em&gt; want to share some of your GitHub data with Travis.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-authorise.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png&#34;
-         alt=&#34;Screenshot of GitHub authorising Travis&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-authorise.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png&#34;
+         alt=&#34;Screenshot of GitHub authorising Travis&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Another green button? Why not!&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p&gt;
 &lt;p&gt;All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href=&#34;https://travis-ci.com/account/repositories&#34;&gt;https://travis-ci.com/account/repositories&lt;/a&gt; page is what you need for that - then click on the &lt;code&gt;Activate&lt;/code&gt; button.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-github-apps-integration.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png&#34;
-         alt=&#34;Screenshot of GitHub Apps Integration&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-github-apps-integration.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png&#34;
+         alt=&#34;Screenshot of GitHub Apps Integration&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;&amp;hellip;More green buttons?!&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now on the next screen you may or may not want the default selection of &lt;code&gt;All repositories&lt;/code&gt; which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href=&#34;https://en.wikipedia.org/wiki/Principle_of_least_privilege&#34;&gt;&lt;em&gt;principle of least privilege&lt;/em&gt;&lt;/a&gt; (POLP); not just for users but for services too.&lt;/p&gt;
 &lt;p&gt;For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code&gt;jdheyburn.co.uk&lt;/code&gt; and &lt;code&gt;jdheyburn.github.io&lt;/code&gt; - it also gives you a cleaner Travis dashboard too.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-repos-selection.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png&#34;
-         alt=&#34;Screenshot of GitHub Travis Repository Authorisation&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-repos-selection.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png&#34;
+         alt=&#34;Screenshot of GitHub Travis Repository Authorisation&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;back-to-github&#34;&gt;Back to GitHub&lt;/h3&gt;
@@ -260,15 +251,13 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Navigate to the &lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;GitHub Personal Access Tokens&lt;/a&gt; page and click on &lt;code&gt;Generate new token&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code&gt;repo&lt;/code&gt; checkbox as done so below.&lt;/p&gt;
 &lt;p&gt;After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code&gt;Generate token&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png&#34;
-         alt=&#34;Screenshot of GitHub Personal Access Token Creation - repos is checked&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png&#34;
+         alt=&#34;Screenshot of GitHub Personal Access Token Creation - repos is checked&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The token&amp;rsquo;s secret will display on the next screen. &lt;strong&gt;Make sure you copy it&lt;/strong&gt; and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat-created.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png&#34;
-         alt=&#34;Screenshot of GitHub Personal Access Token Creation - token complete&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat-created.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png&#34;
+         alt=&#34;Screenshot of GitHub Personal Access Token Creation - token complete&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;travisci-configuration&#34;&gt;TravisCI Configuration&lt;/h2&gt;
@@ -279,17 +268,17 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Let&amp;rsquo;s break it down section by section.&lt;/p&gt;
 &lt;h3 id=&#34;build-environment&#34;&gt;Build Environment&lt;/h3&gt;
 &lt;p&gt;These settings here all refer to the build environment that we&amp;rsquo;d like our project to build on.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;dist&lt;/span&gt;: xenial
-
-&lt;span style=&#34;color:#ff79c6&#34;&gt;git&lt;/span&gt;:
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;depth&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
-
-&lt;span style=&#34;color:#ff79c6&#34;&gt;env&lt;/span&gt;:
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;global&lt;/span&gt;:
-    - HUGO_VERSION=&amp;#34;0.58.3&amp;#34;
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;matrix&lt;/span&gt;:
-    &lt;span style=&#34;color:#ff79c6&#34;&gt;secure&lt;/span&gt;: REDACTED
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;dist&lt;/code&gt; specifies what platform Travis should build the project on. In this case &lt;code&gt;xenial&lt;/code&gt; refers to Ubuntu 16.04, which is a Linux distribution. There are &lt;a href=&#34;https://docs.travis-ci.com/user/reference/overview/&#34;&gt;several others&lt;/a&gt; to choose from and more likely than not you&amp;rsquo;ll want the platform to be Linux. However if you had a Windows application written in &lt;code&gt;.NET&lt;/code&gt; then you would likely want it built on a Windows Server since that is what supports it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;dist&lt;/span&gt;: xenial
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;git&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;depth&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;global&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - HUGO_VERSION=&amp;#34;0.58.3&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;matrix&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;secure&lt;/span&gt;: REDACTED
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;dist&lt;/code&gt; specifies what platform Travis should build the project on. In this case &lt;code&gt;xenial&lt;/code&gt; refers to Ubuntu 16.04, which is a Linux distribution. There are &lt;a href=&#34;https://docs.travis-ci.com/user/reference/overview/&#34;&gt;several others&lt;/a&gt; to choose from and more likely than not you&amp;rsquo;ll want the platform to be Linux. However if you had a Windows application written in &lt;code&gt;.NET&lt;/code&gt; then you would likely want it built on a Windows Server since that is what supports it.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;git.depth&lt;/code&gt; tells Travis how many commits of your project to check out. This is passed directory to the &lt;code&gt;git&lt;/code&gt; parameter &lt;code&gt;--depth&lt;/code&gt; (more info on that &lt;a href=&#34;https://git-scm.com/docs/git-clone&#34;&gt;here&lt;/a&gt;). For our use case we&amp;rsquo;re not interested in this option so we set it to &lt;code&gt;false&lt;/code&gt; to disable the flag being passed to &lt;code&gt;git&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;env.global&lt;/code&gt; allows us to define what variables should be set in the environment. This is done in the form of an array of strings in the format &lt;code&gt;key=value&lt;/code&gt;. So given the example, &lt;code&gt;HUGO_VERSION&lt;/code&gt; will be set to &lt;code&gt;0.58.3&lt;/code&gt;. We&amp;rsquo;ll come back to this later.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;env.matrix&lt;/code&gt; is the encrypted value that gets passed to the &lt;code&gt;GITHUB_TOKEN&lt;/code&gt; environment variable which is used to allow Travis to commit the built project to our GitHub Pages repo.&lt;/p&gt;
@@ -298,11 +287,11 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/ul&gt;
 &lt;h3 id=&#34;external-dependencies&#34;&gt;External Dependencies&lt;/h3&gt;
 &lt;p&gt;Once the build environment is defined, we can tell Travis to pull in some additional dependencies or files required for our project. Now remember this is a &lt;code&gt;hugo&lt;/code&gt; project and we needed to install it on our local machines to run &lt;code&gt;deploy.sh&lt;/code&gt;, we need to do the same for Travis too.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;install&lt;/span&gt;:
-- wget -q https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
-- tar xf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
-- mv hugo ~/bin/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember we defined &lt;code&gt;HUGO_VERSION&lt;/code&gt; earlier? This is where it is called back again. In order, the steps we&amp;rsquo;re performing are:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;install&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- wget -q https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- tar xf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- mv hugo ~/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember we defined &lt;code&gt;HUGO_VERSION&lt;/code&gt; earlier? This is where it is called back again. In order, the steps we&amp;rsquo;re performing are:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Downloading the archive containing the specified &lt;code&gt;hugo&lt;/code&gt; version&lt;/li&gt;
 &lt;li&gt;Extracting all contents of the archive&lt;/li&gt;
@@ -315,19 +304,19 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;h4 id=&#34;previous-issues&#34;&gt;Previous Issues&lt;/h4&gt;
 &lt;p&gt;In a previous version of &lt;code&gt;hugo&lt;/code&gt; I used, there was an additional dependency I needed to include. The &lt;code&gt;hugo-coder&lt;/code&gt; theme requires to be built with Hugo Extended since it requires Sass/SCSS support.&lt;/p&gt;
 &lt;p&gt;For this particular Hugo Extended version, it required a library which was not included in the build server distribution in the past. On the plus side - Travis allows us to define additional build steps to ensure all required libraries are on the build server beforehand.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;before_install&lt;/span&gt;:
-  &lt;span style=&#34;color:#6272a4&#34;&gt;# This workaround is required to avoid libstdc++ errors while running &amp;#34;extended&amp;#34; hugo with SASS support.&lt;/span&gt;
- - wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb
- - sudo dpkg --force-all -i libstdc++6
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However in later versions of Hugo (including the one I am using today) this dependency is no longer required, hence why it is commented out in &lt;code&gt;.travis.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;before_install&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# This workaround is required to avoid libstdc++ errors while running &amp;#34;extended&amp;#34; hugo with SASS support.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; - wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; - sudo dpkg --force-all -i libstdc++6
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However in later versions of Hugo (including the one I am using today) this dependency is no longer required, hence why it is commented out in &lt;code&gt;.travis.yml&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;You may not need this stage in your pipeline, I know my project no longer requires it. However this may come in handy later knowing that you have the option of specifying more pipeline steps if the build distribution you&amp;rsquo;re using requires some additional dependencies.&lt;/p&gt;
 &lt;h3 id=&#34;build-script&#34;&gt;Build Script&lt;/h3&gt;
 &lt;p&gt;Now onto the juicy stuff - building the project. This is pretty much where the &lt;code&gt;deploy.sh&lt;/code&gt; starts from, since on our local machines we already had the &lt;code&gt;hugo&lt;/code&gt; binary installed.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;script&lt;/span&gt;:
-- hugo version
-- hugo --gc --minify
-- cp CNAME public/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not a lot is going on here, but to detail what each step is doing:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- hugo --gc --minify
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- cp CNAME public/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not a lot is going on here, but to detail what each step is doing:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;Print out the version of &lt;code&gt;hugo&lt;/code&gt; being used&lt;/p&gt;
@@ -345,7 +334,7 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;li&gt;This helps keep a tidy environment for the build server.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--minify&lt;/code&gt; performs &lt;a href=&#34;https://en.wikipedia.org/wiki/Minification_(programming)&#34;&gt;minification&lt;/a&gt; on your website to reduce the size of the generated content, enabling it to load faster on your users&#39; devices
+&lt;li&gt;&lt;code&gt;--minify&lt;/code&gt; performs &lt;a href=&#34;https://en.wikipedia.org/wiki/Minification_(programming)&#34;&gt;minification&lt;/a&gt; on your website to reduce the size of the generated content, enabling it to load faster on your users&amp;rsquo; devices
 &lt;ul&gt;
 &lt;li&gt;Coupled with a CDN like in the &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#adding-our-cdn-layer&#34;&gt;previous part&lt;/a&gt;, your website will load almost instantly&lt;/li&gt;
 &lt;/ul&gt;
@@ -365,16 +354,16 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;deploy-to-github-pages&#34;&gt;Deploy to GitHub Pages&lt;/h3&gt;
 &lt;p&gt;Once the project has been built, we need to push it to the GitHub Pages repository. Travis has &lt;a href=&#34;https://docs.travis-ci.com/user/deployment/pages/&#34;&gt;good documentation&lt;/a&gt; on this. My setup follows the below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;deploy&lt;/span&gt;:
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;provider&lt;/span&gt;: pages
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;skip-cleanup&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;github-token&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$GITHUB_TOKEN&amp;#34;&lt;/span&gt;
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;keep-history&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;local-dir&lt;/span&gt;: public
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;repo&lt;/span&gt;: jdheyburn/jdheyburn.github.io
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;target-branch&lt;/span&gt;: master
-  &lt;span style=&#34;color:#ff79c6&#34;&gt;verbose&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the last time, let&amp;rsquo;s walk through what each of these is doing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;provider&lt;/span&gt;: pages
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;skip-cleanup&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;github-token&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$GITHUB_TOKEN&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;keep-history&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;local-dir&lt;/span&gt;: public
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;repo&lt;/span&gt;: jdheyburn/jdheyburn.github.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;target-branch&lt;/span&gt;: master
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;verbose&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the last time, let&amp;rsquo;s walk through what each of these is doing.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;provider&lt;/code&gt; tells Travis this is a GitHub Pages deployment&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;skip-cleanup&lt;/code&gt; set to &lt;code&gt;true&lt;/code&gt;, so that Travis does not delete the build before we&amp;rsquo;ve got the chance to upload it&lt;/li&gt;
@@ -404,10 +393,10 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;That concludes the configuration section. Remember to change it or add in some other functionality needed for your project and save it to &lt;code&gt;.travis.yml&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;bringing-it-all-together&#34;&gt;Bringing It All Together&lt;/h2&gt;
 &lt;p&gt;Now you&amp;rsquo;ve completed your config file, let&amp;rsquo;s check it all in to GitHub.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add --all
-git commit -m &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;Adding CI&amp;#39;&lt;/span&gt;
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Travis will automatically detect that a new change has been made against your repo. And with the inclusion of &lt;code&gt;.travis.yml&lt;/code&gt;, it will now work against that file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;Adding CI&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Travis will automatically detect that a new change has been made against your repo. And with the inclusion of &lt;code&gt;.travis.yml&lt;/code&gt;, it will now work against that file.&lt;/p&gt;
 &lt;p&gt;You can view the status of your repository&amp;rsquo;s build by navigating to it from the &lt;a href=&#34;https://travis-ci.com/dashboard&#34;&gt;dashboard&lt;/a&gt; and clicking on it.&lt;/p&gt;
 &lt;p&gt;If any of the commands in the &lt;code&gt;script&lt;/code&gt; section of the config return a &lt;a href=&#34;https://en.wikipedia.org/wiki/Exit_status#Shell_and_scripts&#34;&gt;nonzero status code&lt;/a&gt;, the build will fail. If this happens then have a look at a build log and investigate the issue. More likely than not someone else has encountered the problem before, so Google is your gatekeeper to solutions!&lt;/p&gt;
 &lt;p&gt;Once you&amp;rsquo;ve got a successful build, that means your website has been deployed to the GitHub Pages repo and will be available on the web to view. In a browser you can now view your changes on the website.&lt;/p&gt;

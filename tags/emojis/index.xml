@@ -32,23 +32,23 @@
 &lt;p&gt;Upgrading Hugo is as easy as downloading and replacing the executable you’ve placed in your &lt;code&gt;PATH&lt;/code&gt;, or running &lt;code&gt;brew upgrade hugo&lt;/code&gt; if using Homebrew on macOS.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;A quick execute of &lt;code&gt;hugo version&lt;/code&gt; tells us what we&amp;rsquo;re currently running. We can then have a look at the &lt;a href=&#34;https://github.com/gohugoio/hugo/releases/&#34;&gt;Hugo release page&lt;/a&gt; to find the latest one - which at the time of writing is &lt;a href=&#34;https://github.com/gohugoio/hugo/releases/tag/v0.68.3&#34;&gt;0.68.3&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ hugo version
-Hugo Static Site Generator v0.58.3-4AAC02D4/extended linux/amd64 BuildDate: 2019-09-19T15:34:54Z
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I run Linux so I would need to replace the executable on my &lt;code&gt;PATH&lt;/code&gt;. This can be done with a handy script to pull the archive and install it for us.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.68.3&amp;#34;&lt;/span&gt;
-wget &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
-tar -zxvf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt; hugo
-sudo mv -v hugo /usr/local/bin
-hugo version
-rm &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember that the hugo-coder theme requires the extended version of Hugo in order for it to render files correctly.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Hugo Static Site Generator v0.58.3-4AAC02D4/extended linux/amd64 BuildDate: 2019-09-19T15:34:54Z
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I run Linux so I would need to replace the executable on my &lt;code&gt;PATH&lt;/code&gt;. This can be done with a handy script to pull the archive and install it for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;0.68.3&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://github.com/gohugoio/hugo/releases/download/v&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;/hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tar -zxvf &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt; hugo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo mv -v hugo /usr/local/bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hugo_extended_&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;HUGO_VERSION&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;_Linux-64bit.tar.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember that the hugo-coder theme requires the extended version of Hugo in order for it to render files correctly.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;You can see where &lt;code&gt;hugo&lt;/code&gt; is currently installed on your system with the command &lt;code&gt;which hugo&lt;/code&gt;, given it is in your &lt;code&gt;PATH&lt;/code&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Executing &lt;code&gt;hugo version&lt;/code&gt; one more time confirms if the upgrade took place.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ hugo version
-Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-for-any-issues&#34;&gt;Testing For Any Issues&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ hugo version
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020-03-24T12:13:38Z
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing-for-any-issues&#34;&gt;Testing For Any Issues&lt;/h3&gt;
 &lt;p&gt;At this point I would advise you do some testing with the new version to determine if your site is not only rendering as expected but functioning too. You can do this with the good old &lt;code&gt;hugo serve&lt;/code&gt; command as you would have used before when writing out articles, and fixing anything that looks out of place.&lt;/p&gt;
 &lt;p&gt;However, since I&amp;rsquo;m going to be upgrading the hugo theme too, I&amp;rsquo;ll do my testing in one hit &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#validation-and-testing&#34;&gt;later in this post&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;updating-hugo-in-cicd&#34;&gt;Updating Hugo in CI/CD&lt;/h3&gt;
@@ -60,41 +60,40 @@ Hugo Static Site Generator v0.68.3-157669A0/extended linux/amd64 BuildDate: 2020
 &lt;p&gt;As mentioned before, I&amp;rsquo;m using hugo-coder as the theme for my Hugo website which is being pulled as a submodule in my git repository. I can interface with it via the command &lt;code&gt;git submodules&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;One of the cool things about &lt;code&gt;git submodules&lt;/code&gt; is I don&amp;rsquo;t need to have a copy of the source code for the theme in my project. I can just reference the codebase at a particular point in time - or a commit, and git will pull in the resources for which then my Hugo website can utilise it.&lt;/p&gt;
 &lt;p&gt;We already defined this back in the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/&#34;&gt;first post of this series&lt;/a&gt;, in our root directory we created a file called &lt;code&gt;.gitmodules&lt;/code&gt; with the following contents:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;submodule &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;themes/hugo-coder&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;path&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; themes/hugo-coder
-	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; https://github.com/luizdepra/hugo-coder.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Line by line, we are giving the submodule a name, telling git where to check out the module to, and lastly where git can find the repository for the module when we checkout our project.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;submodule &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;themes/hugo-coder&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;path&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; themes/hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; https://github.com/luizdepra/hugo-coder.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Line by line, we are giving the submodule a name, telling git where to check out the module to, and lastly where git can find the repository for the module when we checkout our project.&lt;/p&gt;
 &lt;p&gt;When we pull in the submodule for the first time, it creates a tree in our projects &lt;code&gt;.git/modules&lt;/code&gt; filled with metadata about the submodule.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree .git/modules/themes/hugo-coder -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
-.git/modules/themes/hugo-coder
-├── branches
-├── config
-├── description
-├── HEAD
-├── hooks
-├── index
-├── info
-├── logs
-├── objects
-├── packed-refs
-└── refs
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree .git/modules/themes/hugo-coder -L &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.git/modules/themes/hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── branches
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── config
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── description
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── hooks
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── index
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── info
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── objects
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── packed-refs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── refs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;The &lt;code&gt;.git/&lt;/code&gt; directory contains all the metadata about your repository so that &lt;code&gt;git&lt;/code&gt; knows where to pull/push to/from the repository, &lt;a href=&#34;https://githowto.com/git_internals_git_directory&#34;&gt;amongst other things&lt;/a&gt;. It has a near identical directory structure to the one shown above.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;One of the files in this directory is called &lt;code&gt;HEAD&lt;/code&gt;, and it contains the commit of which &lt;code&gt;git&lt;/code&gt; should checkout the submodule&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat .git/modules/themes/hugo-coder/HEAD
-e66c1740611b15eee0069811d10b5a22b0dc4332
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can even view this commit in the repository at &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&#34;&gt;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e66c1740611b15eee0069811d10b5a22b0dc4332
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can even view this commit in the repository at &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&#34;&gt;https://github.com/luizdepra/hugo-coder/commit/e66c1740611b15eee0069811d10b5a22b0dc4332&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;upgrading-submodules&#34;&gt;Upgrading Submodules&lt;/h3&gt;
 &lt;p&gt;To upgrade submodules in your project, you simply need to execute the command below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git submodule update --recursive --remote
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then check the value in &lt;code&gt;.git/modules/themes/hugo-coder/HEAD&lt;/code&gt; and see what this is updated to.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ cat .git/modules/themes/hugo-coder/HEAD
-acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
-         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git submodule update --recursive --remote
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then check the value in &lt;code&gt;.git/modules/themes/hugo-coder/HEAD&lt;/code&gt; and see what this is updated to.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
+&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
+         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -120,9 +119,8 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/figure&gt;
 
 &lt;p&gt;For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
-         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt; &lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
+         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I saw several cases of this, and including a &lt;a href=&#34;https://github.com/igorshubovych/markdownlint-cli&#34;&gt;markdown linter&lt;/a&gt; in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p&gt;
@@ -131,17 +129,16 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;h2 id=&#34;adding-series-links-in-content-footer&#34;&gt;Adding Series Links in Content Footer&lt;/h2&gt;
 &lt;p&gt;The hugo-coder theme now has better support for series - these are articles that directly follow on from one another, such as this Who Goes Blogging one. Series are nothing new to Hugo and we could have done them with the version we upgraded from, only in &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/27e83b1e5a9d8b7bbd42d202bd5ef57adcce659b&#34;&gt;this commit for hugo-coder&lt;/a&gt; has it added a layout for it to be rendered.&lt;/p&gt;
 &lt;p&gt;To create a series, we use the &lt;code&gt;series&lt;/code&gt; front matter setting for articles. For the Who Goes Blogging articles, adding the front matter to them looks like this.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
-&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
-&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;series&lt;/span&gt;:
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;  - Who Goes Blogging
-&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;tags&lt;/span&gt;:
-&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
----
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once this is done for all pages, hugo-coder will render the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion&#34;&gt;&lt;strong&gt;See also in &amp;hellip;&lt;/strong&gt;&lt;/a&gt; section at the article footer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2020-03-10
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who Goes Blogging 3.2: Deployment Methods - GitHub Actions&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;series&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;  - Who Goes Blogging
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;#...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once this is done for all pages, hugo-coder will render the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/#conclusion&#34;&gt;&lt;strong&gt;See also in &amp;hellip;&lt;/strong&gt;&lt;/a&gt; section at the article footer.&lt;/p&gt;
 &lt;figure&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/series-footer-section.png&#34; class=&#34;screenshotimg&#34;
          alt=&#34;Screenshot showing series rendered in the page footer&#34;/&gt; 
@@ -154,52 +151,52 @@ acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;p&gt;The type of a markdown file (defined by the front matter setting &lt;code&gt;type&lt;/code&gt;) tells Hugo where to look for in the &lt;code&gt;layouts/&lt;/code&gt; directory of your project. The Hugo theme you&amp;rsquo;re using will already have these all defined, hence why they are predefined themes! Before Hugo looks for these layout HTML files in your theme, it will check for them in your projects &lt;code&gt;layouts/&lt;/code&gt; directory first.&lt;/p&gt;
 &lt;p&gt;In other words, the order of precedence (or hierarchy) for HTML files is anything in the project &lt;code&gt;layouts/&lt;/code&gt; directory takes a higher priority than that in your theme - as described in Hugo&amp;rsquo;s &lt;a href=&#34;https://gohugo.io/templates/lookup-order/&#34;&gt;documentation for template lookup order&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;See below for a directory tree explaning this - a lot of content has been removed for brevity.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ tree layouts
-layouts
-├── posts
-│   └── single.html					&lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will use this file to render your HTML&lt;/span&gt;
-└── themes
-    └── hugo-coder
-	    └── layouts
-			└── posts
-			    └── single.html     &lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will ignore this one in the themes directory&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;│   └── single.html					&lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will use this file to render your HTML&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;└── themes
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    └── hugo-coder
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    └── layouts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			└── posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			    └── single.html     &lt;span style=&#34;color:#6272a4&#34;&gt;# hugo will ignore this one in the themes directory&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
 &lt;p&gt;The primer above gives a hint as to what file we need to modify. The &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/blob/master/layouts/posts/single.html&#34;&gt;&lt;code&gt;single.html&lt;/code&gt;&lt;/a&gt; file is in charge of how articles are rendered. Since we want everything else to remain the same about this file, we can take a copy of the file as it currently stands and place it into our project root.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir layouts/posts
-cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;I won&amp;rsquo;t go into the details here, I&amp;rsquo;ll leave that to you to make changes to see how they affect the rendering of the page.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
-&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
-&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
-  {{ if .Params.featured_image }}
-  &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Featured image&amp;#34;&lt;/span&gt; /&amp;gt;
-  {{ end }}
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;  {{ partial &amp;#34;toc.html&amp;#34; . }}
-&lt;/span&gt;  {{ .Content }}
-&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ if .Params.featured_image }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{{ .Params.featured_image }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;alt&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Featured image&amp;#34;&lt;/span&gt; /&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ end }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;  {{ partial &amp;#34;toc.html&amp;#34; . }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{ .Content }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;We&amp;rsquo;re not done there - we&amp;rsquo;ve referenced a &lt;a href=&#34;https://gohugo.io/templates/partials/&#34;&gt;partial template file&lt;/a&gt; here. These allow us to reuse HTML files in multiple places, or to break up a large HTML file into smaller, more easier to manage chunks.&lt;/p&gt;
 &lt;p&gt;Partial templates are found under the &lt;code&gt;layouts/partials&lt;/code&gt; directory and follow the same principle as defined in the primer for template lookups, and are referenced back as &lt;code&gt;{{ partial &amp;quot;&amp;lt;partial_name&amp;gt;.html&amp;quot; . }}&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s go ahead and create the &lt;code&gt;layouts/partials/toc.html&lt;/code&gt; file and populate it as below.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
-&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
-  {{.TableOfContents}}
-&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
-{{ end }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is similar to &lt;a href=&#34;https://gohugo.io/content-management/toc/#template-example-toc-partial&#34;&gt;Hugo&amp;rsquo;s example&lt;/a&gt; but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ if and (gt .WordCount 400 ) (.Site.Params.toc) }}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {{.TableOfContents}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#ff79c6&#34;&gt;aside&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ end }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is similar to &lt;a href=&#34;https://gohugo.io/content-management/toc/#template-example-toc-partial&#34;&gt;Hugo&amp;rsquo;s example&lt;/a&gt; but just tweaked a bit. I&amp;rsquo;m not looking to do anything too fancy with the styling just yet, but maybe later on.&lt;/p&gt;
 &lt;p&gt;Previewing it by &lt;code&gt;hugo serve&lt;/code&gt; we should get something that appears as below.&lt;/p&gt;
 &lt;figure&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/completed-toc.png&#34; class=&#34;screenshotimg&#34;
@@ -228,9 +225,9 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 
 &lt;h4 id=&#34;fix-emojis&#34;&gt;Fix Emojis&lt;/h4&gt;
 &lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;# layouts/shortcodes/emoji.html
-{{ .Get 0 | emojify }}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# layouts/shortcodes/emoji.html
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ .Get 0 | emojify }}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/&#34;&gt;Shortcodes&lt;/a&gt; are similar to partial templates in that they contain HTML, but they are usually for referring to one HTML element as opposed to multiple.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Then in my markdown I would refer back to them such as &lt;code&gt;{{&amp;lt; emoji &amp;quot;:wave:&amp;quot; &amp;gt;}}&lt;/code&gt;. However in headings they rendered as below&amp;hellip;&lt;/p&gt;
@@ -277,13 +274,12 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;p&gt;This looks to be a bug within Hugo itself, since I was able to get &lt;strong&gt;strong&lt;/strong&gt; and &lt;em&gt;emphasise&lt;/em&gt; to render fine - I &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7169&#34;&gt;raised an issue&lt;/a&gt; on the project - I can live with it for now.&lt;/p&gt;
 &lt;h2 id=&#34;emojify-everything&#34;&gt;Emojify Everything!&lt;/h2&gt;
 &lt;p&gt;Continuing on the theme of emojis; we were able to get them to appear in the Table of Contents fine. But what about in the titles of the articles themselves? We can add them in the &lt;code&gt;title&lt;/code&gt; front matter setting like below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2019-07-05
-&lt;span style=&#34;display:block;width:100%;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
----
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2019-07-05
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex; background-color:#3d3f4a&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:​​​snake: Three Ways To Spice Up Your Python Code&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Having a look around the site we see these aren&amp;rsquo;t getting rendered correctly in a number of places&amp;hellip;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(1)&lt;/strong&gt; Post title&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-post-title.png&#34; class=&#34;screenshotimg&#34;
@@ -291,9 +287,8 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(2)&lt;/strong&gt; Browser title&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
+         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(3)&lt;/strong&gt; Type list entry&lt;/p&gt;
@@ -319,15 +314,14 @@ cp -v themes/hugo-coder/layouts/posts/single.html layouts/posts
 &lt;/figure&gt;
 
 &lt;p&gt;And the browser title is fixed accordingly:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
+         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;fix-type-list-entry&#34;&gt;Fix Type List Entry&lt;/h3&gt;
 &lt;p&gt;We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code&gt;posts&lt;/code&gt; and make the modification there - &lt;code&gt;layouts/posts/li.html&lt;/code&gt;. We&amp;rsquo;ll need to do the same here as we did for &lt;code&gt;single.html&lt;/code&gt; and copy it to our project root.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Once done, we can see it reflect nicely in the list:&lt;/p&gt;

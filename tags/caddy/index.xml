@@ -26,9 +26,8 @@
 &lt;p&gt;Both of these services can be accessed through web browsers at the IP address and ports where they are being hosted, such as &lt;code&gt;http://192.168.1.10:8093/admin/&lt;/code&gt; in the case of PiHole. Having to remember the IP address and the port can be a pain. We can front these services with a rememberable domain name which points to these services - of which I&amp;rsquo;ve written about in a &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;securing-with-https&#34;&gt;Securing with HTTPS&lt;/h3&gt;
 &lt;p&gt;The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;insecure-pihole.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&#34;
-         alt=&#34;Insecure PiHole connection&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;insecure-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&#34;
+         alt=&#34;Insecure PiHole connection&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -50,15 +49,15 @@
 &lt;/blockquote&gt;
 &lt;p&gt;To build using xcaddy, you need to make sure you have &lt;a href=&#34;https://golang.org/doc/install&#34;&gt;Go installed&lt;/a&gt; on your machine.&lt;/p&gt;
 &lt;p&gt;Note that I am building Caddy on my laptop, but running it on a Pi, so I will have to specify the architecture that Pi is running on so that Go can correctly build it.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Download xcaddy&lt;/span&gt;
-go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
-
-&lt;span style=&#34;color:#6272a4&#34;&gt;# Build custom Caddy binary for Raspberry Pi&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOOS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;linux &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARCH&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;arm &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARM&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;7&lt;/span&gt; xcaddy build --with github.com/caddy-dns/cloudflare
-
-&lt;span style=&#34;color:#6272a4&#34;&gt;# Copy the new binary across to the Pi&lt;/span&gt;
-scp caddy pi:/home/pi/caddy/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;caddy-configuration&#34;&gt;Caddy Configuration&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Download xcaddy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Build custom Caddy binary for Raspberry Pi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOOS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;linux &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARCH&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;arm &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARM&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;7&lt;/span&gt; xcaddy build --with github.com/caddy-dns/cloudflare
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Copy the new binary across to the Pi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp caddy pi:/home/pi/caddy/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;caddy-configuration&#34;&gt;Caddy Configuration&lt;/h2&gt;
 &lt;p&gt;The configuration I&amp;rsquo;m using can be seen below. Some things to note:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;I&amp;rsquo;m using Cloudflare as the DNS name servers for the domain, even though I purchased my domain from namecheap
@@ -90,11 +89,10 @@ scp caddy pi:/home/pi/caddy/
 
 &lt;h2 id=&#34;updating-dns-records&#34;&gt;Updating DNS Records&lt;/h2&gt;
 &lt;p&gt;Remember that the domain names aren&amp;rsquo;t actually publicly accessible. At a basic level we can update the &lt;code&gt;/etc/hosts&lt;/code&gt; file of the machine we&amp;rsquo;re running on to add a record telling our machine how to resolve the domain.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo sh -c &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-dns-records.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&#34;
-         alt=&#34;Adding domain records to DNS server&#34;/&gt; &lt;/a&gt;&lt;figcaption&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo sh -c &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-dns-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&#34;
+         alt=&#34;Adding domain records to DNS server&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
             &lt;p&gt;PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p&gt;
         &lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -102,49 +100,46 @@ scp caddy pi:/home/pi/caddy/
 &lt;p&gt;The IP addresses you see above are pointing to the host running Caddy, the Raspberry Pi.&lt;/p&gt;
 &lt;h2 id=&#34;verifying-caddy&#34;&gt;Verifying Caddy&lt;/h2&gt;
 &lt;p&gt;Once the config file is built, you can perform a test run to confirm everything is working by executing this command.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo ./caddy run --config config.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ./caddy run --config config.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;We need to execute using &lt;code&gt;sudo&lt;/code&gt; so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-pihole.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&#34;
-         alt=&#34;PiHole appearing in browser through a domain name&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&#34;
+         alt=&#34;PiHole appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-unifi.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&#34;
-         alt=&#34;UniFi Controller appearing in browser through a domain name&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-unifi.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&#34;
+         alt=&#34;UniFi Controller appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-certificate.png&#34;&gt;
-    &lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&#34;
-         alt=&#34;Certificate used by PiHole&#34;/&gt; &lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-certificate.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&#34;
+         alt=&#34;Certificate used by PiHole&#34;/&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;enabling-caddy-service&#34;&gt;Enabling Caddy Service&lt;/h2&gt;
 &lt;p&gt;Since we&amp;rsquo;re not using the standard Caddy installation method, we will need to specify a service unit file so that Caddy starts up at the same time as the host - which is what PiHole and UniFi are doing currently.&lt;/p&gt;
 &lt;p&gt;First check to see if there is a stale service there already.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ ls -la /etc/systemd/system/caddy.service
-lrwxrwxrwx &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; root root &lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; Jun  &lt;span style=&#34;color:#bd93f9&#34;&gt;4&lt;/span&gt; 09:14 /etc/systemd/system/caddy.service -&amp;gt; /dev/null
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you get the above then remove the symlink so that we can create a file there.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;rm /etc/systemd/system/caddy.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then populate the same file with the below, remembering the change the location of the Caddy config file to where it exists on your machine.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Unit&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;Caddy Reverse Proxy
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Wants&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network-online.target
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network.target network-online.target
- 
-&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Service&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;/usr/local/bin/caddy run --config /home/jdheyburn/homelab/caddy/config.json
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Restart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;on-abort
- 
-&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Install&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;multi-user.target
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finalise the new service with the two commands, enabling it on host startup and starting the service right now.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo systemctl &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;enable&lt;/span&gt; caddy.service
-sudo systemctl start caddy.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ ls -la /etc/systemd/system/caddy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lrwxrwxrwx &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; root root &lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; Jun  &lt;span style=&#34;color:#bd93f9&#34;&gt;4&lt;/span&gt; 09:14 /etc/systemd/system/caddy.service -&amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you get the above then remove the symlink so that we can create a file there.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm /etc/systemd/system/caddy.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then populate the same file with the below, remembering the change the location of the Caddy config file to where it exists on your machine.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Unit&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;Caddy Reverse Proxy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Wants&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network-online.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network.target network-online.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Service&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;/usr/local/bin/caddy run --config /home/jdheyburn/homelab/caddy/config.json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Restart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;on-abort
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Install&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;multi-user.target
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finalise the new service with the two commands, enabling it on host startup and starting the service right now.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;enable&lt;/span&gt; caddy.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl start caddy.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;For now I have all the above running bare-metal on one Pi instance, which produces a huge single point of failure in my network. In the future I&amp;rsquo;d like to see how converting these to Docker containers and having them distributed on multiple Pis would increase the resiliency of these services.&lt;/p&gt;
 &lt;p&gt;Until then, these basic but essential services are being hosted at easy to remember domains, transported over an encrypted connection,  for me to easily administer the network for when it gets more complex over time.&lt;/p&gt;
 </description>
