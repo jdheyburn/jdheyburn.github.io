@@ -6,10 +6,303 @@
     <description>Recent content in Blog on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 03 Jun 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 17 Oct 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Converting to the Church of Nix</title><enclosure url="https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix/</guid>-->
+      <description>&lt;p&gt;I&amp;rsquo;ve &lt;a href=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/&#34;&gt;written in the past&lt;/a&gt; about some services I host at home which were running on a Raspberry Pi 3 with Raspbian. Making changes to the host was done ad-hoc with no configuration management tool like Ansible, so should anything happen to the host and it dies, I won&amp;rsquo;t have a way to reproduce what I had working before.&lt;/p&gt;
+&lt;p&gt;Naturally last December, the Pi SD card got corrupted and lost everything that was on there.&lt;/p&gt;
+&lt;p&gt;Rather than rebuilding things how they were in the same way as before, I wanted to look into a better way to ensure I could reproduce services installed and manage configurations on a host to mitigate this in the future.&lt;/p&gt;
+&lt;p&gt;NixOS came to mind as it solves these problems and more, I had tried to get it working on the Pi and on my Dell XPS 9360 laptop in the past with unsuccessful results. This time round there is much greater support for NixOS on Pi, and coupled with some more motivation, I decided to make the switch.&lt;/p&gt;
+&lt;p&gt;In this series I&amp;rsquo;ll be writing about my setup, how I deploy modules, onboarding flakes, and problems I came across along the way. The series will be more NixOS config management orientated, while being referred back to in other posts where I&amp;rsquo;ll talk about some of the services I&amp;rsquo;m running via NixOS. This post kicks off with a quick introduction with some more in-depth posts to come.&lt;/p&gt;
+&lt;h2 id=&#34;why-nixos&#34;&gt;Why NixOS&lt;/h2&gt;
+&lt;p&gt;For a quick 411, there are 3 components that fall under the &amp;ldquo;Nix&amp;rdquo; umbrella:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nix / Nixlang
+&lt;ul&gt;
+&lt;li&gt;The functional, declarative language that is used to build, manipulate, packages, files, configurations, within the ecosystem&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Nixpkgs
+&lt;ul&gt;
+&lt;li&gt;A package manager that can be installed on a Linux machine, or on macOS via &lt;a href=&#34;https://github.com/LnL7/nix-darwin&#34;&gt;nix-darwin&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Think an alternative to &lt;code&gt;apt&lt;/code&gt;, &lt;code&gt;brew&lt;/code&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;NixOS
+&lt;ul&gt;
+&lt;li&gt;An operating system that uses Nixpkgs as its package manager, but also can configure OS-level configurations, hardware settings, services, via Nixlang&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Nixpkgs are designed to be easily reproducible by defining explicit versions and hashes of software and its dependencies - and the same goes for NixOS which takes this same philisophy and applies it beyond software. Nix builds this software and stores it in the Nix store (appropriately named &lt;code&gt;/nix/store&lt;/code&gt;), where a previous deployment of a configuration can be rolled back easily with a single command. This makes it useful for experiments or to rollback when shit hits the fan.&lt;/p&gt;
+&lt;p&gt;There are plenty of talented people who have written about it before, so I&amp;rsquo;ll link them here:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://nixos.org/manual/nix/stable/introduction.html&#34;&gt;NixOS manual introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ianthehenry.com/posts/how-to-learn-nix/introduction/&#34;&gt;How to Learn Nix, Part 1: What&amp;rsquo;s all this about?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So the 3 components together allow for some pretty powerful stuff. Your NixOS configurations are written to a &lt;code&gt;.nix&lt;/code&gt; suffixed file by default located at  &lt;code&gt;/etc/nixos/configuration.nix&lt;/code&gt;, which can contain minimal config:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ config&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;...&lt;/span&gt; }:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  networking&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;hostName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;my-hostname&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#6272a4&#34;&gt;# Define your hostname.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# Set your time zone.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  time&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;timeZone &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Europe/London&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# Define a user account. Don&amp;#39;t forget to set a password with ‘passwd’.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  users&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;users&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;my-user &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    isNormalUser &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    home &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/home/my-user&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    extraGroups &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;wheel&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;networkmanager&amp;#34;&lt;/span&gt; ]; &lt;span style=&#34;color:#6272a4&#34;&gt;# Enable ‘sudo’ for the user.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    password &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hunter2&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  environment&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;systemPackages &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt; pkgs; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    vim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whenever we want to deploy the configuration to make it live, we can use the command &lt;code&gt;nixos-rebuild switch&lt;/code&gt;, which will read this file and build the packages and configurations requested.&lt;/p&gt;
+&lt;p&gt;Should we want to have Firefox installed? We can just define it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;environment&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;systemPackages = &lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt; pkgs; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  vim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# add in the below&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  firefox
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we want to enable SSH access to our hosts, it&amp;rsquo;s easy to do that:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# Enable the OpenSSH daemon.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;openssh = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    permitRootLogin &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;no&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    passwordAuthentication &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Services are usually defined with the syntax &lt;code&gt;services.SERVICE_NAME.enable&lt;/code&gt;, however as shown above we can see &lt;code&gt;permitRootLogin&lt;/code&gt; and &lt;code&gt;passwordAuthentication&lt;/code&gt; attributes are defined. These inputs are read by the &lt;a href=&#34;https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/networking/ssh/sshd.nix#L148&#34;&gt;service in nixpkgs&lt;/a&gt; to then be &lt;a href=&#34;https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/networking/ssh/sshd.nix#L533&#34;&gt;output as configuration&lt;/a&gt; for the service.&lt;/p&gt;
+&lt;p&gt;One last example, what if the service we just deployed requires a particular port opened? NixOS can do that too!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;networking&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;firewall&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;allowedTCPPorts = [ &lt;span style=&#34;color:#bd93f9&#34;&gt;4040&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you compare that against traditional package managers, you would first have to install the software &lt;em&gt;and then&lt;/em&gt; configure it, probably by hand. On top of that, you would have to manage the versioning of the configuration using another tool. &lt;strong&gt;NixOS does all of that for you&lt;/strong&gt; - provided that you&amp;rsquo;re checking in your NixOS configuration files!&lt;/p&gt;
+&lt;p&gt;Just to cap off - if something broke during the &lt;code&gt;nixos-rebuild switch&lt;/code&gt; command and you want to go back to the previous state, then we can do so with &lt;code&gt;nixos-rebuild switch --rollback&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;layout&#34;&gt;Layout&lt;/h2&gt;
+&lt;p&gt;Before going into the details of the setup I&amp;rsquo;m running I think it helps to have some context of where I was before the migration.&lt;/p&gt;
+&lt;h3 id=&#34;legacy&#34;&gt;Legacy&lt;/h3&gt;
+&lt;p&gt;Prior to starting this, I had this setup across my network:&lt;/p&gt;
+&lt;h4 id=&#34;dee&#34;&gt;dee&lt;/h4&gt;
+&lt;p&gt;My starting point for playing with self-hosting, it was a Raspberry Pi 3.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Service&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Reverse proxy for all services in the network&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NFS server&lt;/td&gt;
+&lt;td&gt;Network wide storage, backed up to cloud storage&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://pi-hole.net/&#34;&gt;PiHole&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;For adblocking and local DNS resolution&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;UniFi Controller&lt;/td&gt;
+&lt;td&gt;Control plane for my UniFi devices at home&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;frank&#34;&gt;frank&lt;/h4&gt;
+&lt;p&gt;A Ubuntu VM on a Proxmox hypervisor, built so that I could play with Proxmox and docker containers.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Service&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://heimdall.site/&#34;&gt;Heimdall&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Dashboard for services&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/huginn/huginn&#34;&gt;Huginn&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Experiment with automation (such as &lt;a href=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/&#34;&gt;NHS vaccine alerts&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.portainer.io/&#34;&gt;Portainer&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;UI for docker containers&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;today&#34;&gt;Today&lt;/h3&gt;
+&lt;p&gt;Host frank is unchanged from above today, while here&amp;rsquo;s what I have running elsewhere.&lt;/p&gt;
+&lt;h4 id=&#34;dee-1&#34;&gt;dee&lt;/h4&gt;
+&lt;p&gt;Upgraded to a Raspberry Pi 4 (NixOS is RAM hungry!) in an &lt;a href=&#34;https://thepihut.com/products/argon-one-m-2-raspberry-pi-4-case&#34;&gt;Argon One case&lt;/a&gt;.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Service&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/AdguardTeam/AdGuardHome&#34;&gt;AdGuardHome&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;For adblocking and local DNS resolution (replaces PiHole)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Reverse proxy for services &lt;em&gt;local to the host&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://healthchecks.io/&#34;&gt;Healthchecks&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Monitor cron jobs (primarily the backup jobs for now)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://min.io/&#34;&gt;Minio&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;S3 compatible storage&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NFS server&lt;/td&gt;
+&lt;td&gt;Network wide storage, backed up to cloud storage&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.plex.tv/&#34;&gt;Plex&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Music and video player&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;UniFi Controller&lt;/td&gt;
+&lt;td&gt;Control plane for UniFi devices&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;dennis&#34;&gt;dennis&lt;/h4&gt;
+&lt;p&gt;New VM running NixOS on the Proxmox HV. I built this as I had some RAM issues on dee, which I subsequently fixed but ended up putting more services on there to experiment with multiple hosts.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Service&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Reverse proxy for services &lt;em&gt;local to the host&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://dashy.to/&#34;&gt;Dashy&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Replaces Heimdall as a dashboard for services&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://grafana.com/&#34;&gt;Grafana&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Metric and log visualisation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://grafana.com/oss/loki/&#34;&gt;Loki&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Log collections&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://prometheus.io/&#34;&gt;Prometheus&lt;/a&gt; with &lt;a href=&#34;https://thanos.io/&#34;&gt;Thanos&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Metric scraping and long term storage&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://victoriametrics.com/&#34;&gt;Victoria Metrics&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Metric scraping (just testing as a potential Prometheus replacement)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;additional-features&#34;&gt;Additional features&lt;/h2&gt;
+&lt;p&gt;Besides NixOS itself, there are some extra features which I&amp;rsquo;m using in the stack:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://xeiaso.net/blog/nix-flakes-1-2022-02-21&#34;&gt;nix flakes&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Version pin dependencies&lt;/li&gt;
+&lt;li&gt;Allows for an additional layer of reproducibility&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/ryantm/agenix&#34;&gt;agenix&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Encryption using &lt;a href=&#34;https://github.com/FiloSottile/age&#34;&gt;age&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Allows for secrets to be safely checked in to Git repos so that they can be used in configurations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/serokell/deploy-rs&#34;&gt;deploy-rs&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Deploy NixOS configurations to hosts remotely&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/nix-community/home-manager&#34;&gt;home-manager&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Allows configuration of user-level programs and settings&lt;/li&gt;
+&lt;li&gt;Typically used as a &lt;a href=&#34;https://www.freecodecamp.org/news/dotfiles-what-is-a-dot-file-and-how-to-create-it-in-mac-and-linux/&#34;&gt;dotfile&lt;/a&gt; manager, which can replace tools such as &lt;a href=&#34;https://www.chezmoi.io/&#34;&gt;chezmoi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Can be applied to non-NixOS machines&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/NixOS/nixos-hardware&#34;&gt;nixos-hardware&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Crowdsourced configuration best practices to get NixOS running smoothly on particular hardware&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;configurations&#34;&gt;Configurations&lt;/h2&gt;
+&lt;p&gt;Since NixOS can be used to build packages and services, it can also be used to build configurations. I have defined a service &amp;ldquo;catalog&amp;rdquo; which acts as a source of truth for services, so that dependent services can refer back to this to build their own config. Some examples of this are generating configs used for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DNS rewrites to forward DNS names to the host hosting the service&lt;/li&gt;
+&lt;li&gt;Reverse proxy the service to the port&lt;/li&gt;
+&lt;li&gt;Dashy for the home dashboard&lt;/li&gt;
+&lt;li&gt;Prometheus monitoring service endpoints&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The inspiration for having a centralised location for service catalog came from jhillyerd - where they &lt;a href=&#34;https://github.com/jhillyerd/homelab/blob/main/nixos/catalog.nix&#34;&gt;achieve the same thing&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;My NixOS configurations are stored in &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs&#34;&gt;GitHub&lt;/a&gt;, so you can have a browse through there. Subsequent posts will dive into what each of these is doing in more detail, but here&amp;rsquo;s a high-level of the top-level directories.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;common/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Settings that are applied to all hosts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;home-manager/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User-level programs and settings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;hosts/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Configurations for individual hosts, along with their hardware configs via &lt;a href=&#34;https://github.com/NixOS/nixos-hardware&#34;&gt;nixos-hardware&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;modules/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Where services and their dependencies are defined&lt;/li&gt;
+&lt;li&gt;Rarely do I install software via just &lt;code&gt;services.SERVICE_NAME.enable = true&lt;/code&gt;, there is usually extra properties to come with it - so having wrapping them in a custom module is usually easiest for me to maintain&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;overlays/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nix overlays allow you to overwrite packages and configurations pulled from a dependency&lt;/li&gt;
+&lt;li&gt;In my case here, I&amp;rsquo;m using it to fix some bugs in one program, and add functionality to another&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;secrets/&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Where agenix secrets are stored&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;catalog.nix&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Contains information about the various services and where&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;flake.nix&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The main entry point into the configurations when deploying&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This is only a quick introduction into the series which introduces NixOS, what I&amp;rsquo;m using it for, and a high-level look into the configurations.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Alerting on NHS Coronavirus Vaccine Updates With Huginn</title><enclosure url="https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/cover.png" type="image/jpg"></enclosure>
