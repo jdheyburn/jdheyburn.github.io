@@ -304,7 +304,7 @@
 </span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>export</span> <span style=color:#8be9fd;font-style:italic>RESTIC_PASSWORD_FILE</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;/path/to/passwordfile
 </span></span></span><span style=display:flex><span><span style=color:#f1fa8c>restic -r b2:BUCKET_NAME:restic/small-files snapshots --last
 </span></span></span></code></pre></div><p>From here you can then use the same commands as in the local repository to traverse the snapshots and restore.</p><h2 id=conclusion>Conclusion</h2><p>The process above is probably more complex than what it needs to be; having a separate process for backing up and restoring. Since I want to back up to the NFS locally first followed by B2, this approach made the most sense as it allows me to minimise download costs from B2 through targeting the local repository first.</p><p>What&rsquo;s most important is that backups are being made, and that I <em>can</em> restore from them.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
-2022
+2023
 Joseph D. Heyburn
 ·
 Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main></body></html>
