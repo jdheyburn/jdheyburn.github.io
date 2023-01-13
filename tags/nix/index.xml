@@ -1,15 +1,149 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>homelab on JDHeyburn</title>
-    <link>https://jdheyburn.co.uk/tags/homelab/</link>
-    <description>Recent content in homelab on JDHeyburn</description>
+    <title>nix on JDHeyburn</title>
+    <link>https://jdheyburn.co.uk/tags/nix/</link>
+    <description>Recent content in nix on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 17 Oct 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 13 Jan 2023 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://jdheyburn.co.uk/tags/homelab/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jdheyburn.co.uk/tags/nix/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Nix Cheat Sheet</title><enclosure url="https://jdheyburn.co.uk/blog/nix-cheat-sheet/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/nix-cheat-sheet/</link>
+      <pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/nix-cheat-sheet/</guid>-->
+      <description>&lt;p&gt;The world of Nix has a bit of a steep learning curve. As I write blog posts on the subject, I&amp;rsquo;ll refer to some of the tips and tricks from the cheat sheet here.&lt;/p&gt;
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+&lt;p&gt;Here are a list of resources I use to search for Nix options, services, and any Nix built-in functions.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://search.nixos.org/packages?channel=unstable&amp;amp;from=0&amp;amp;size=50&amp;amp;sort=relevance&#34;&gt;NixOS Search&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mynixos.com/&#34;&gt;MyNixOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://noogle.dev/&#34;&gt;noogle&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;functions-and-lambdas&#34;&gt;Functions (and Lambdas)&lt;/h2&gt;
+&lt;p&gt;In some languages you typically have a formal declaration of a function (or lambda), such as for Python:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;double_num&lt;/span&gt;(num_to_double)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; num_to_double &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nixlang is a functional language, and a typical behaviour of these is to define lambdas and assign them to variables.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;double_num = num_to_double: num_to_double &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The lambda is defined when we create parameters for that lambda, which are defined by having a variable name prefixed by a colon. From the example above, the parameter for the &lt;code&gt;double_num&lt;/code&gt; lambda is &lt;code&gt;num_to_double&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Once all the parameters are defined we move onto the body, in which the final statement is returned, similarly to the &lt;a href=&#34;https://franzejr.github.io/best-ruby/idiomatic_ruby/implicit_return.html&#34;&gt;implicit return in Ruby&lt;/a&gt;. Here we&amp;rsquo;re just using the maths expression &lt;code&gt;num_to_double * 2&lt;/code&gt; to have the intended outcome.&lt;/p&gt;
+&lt;h2 id=&#34;check-if-attribute-is-in-attrset-shorthand&#34;&gt;Check if attribute is in attrset shorthand&lt;/h2&gt;
+&lt;p&gt;You can use the built in function &lt;a href=&#34;https://nixos.org/manual/nix/stable/language/builtins.html#builtins-hasAttr&#34;&gt;hasAttr&lt;/a&gt; to determine if an attribute exists within an attrset.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;hasAttr&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt; attrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;true
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;hasAttr&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt; attrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use the &lt;code&gt;?&lt;/code&gt; operator as an alternate way of doing the same.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;true
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;merge-two-attrsets-shorthand&#34;&gt;Merge two attrsets shorthand&lt;/h2&gt;
+&lt;p&gt;You can use the &lt;code&gt;//&lt;/code&gt; operator to merge the contents of the attrset on the right into the attrset on the left.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrset = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; } &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { key2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrset
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; key2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the attribute already exists in the left attrset, then it is overwritten.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrSet = attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;newKey1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;newKey1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;add-an-attribute-to-an-attrset&#34;&gt;Add an attribute to an attrset&lt;/h2&gt;
+&lt;p&gt;Given an attrset with this structure:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  keyName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can use the &lt;code&gt;map&lt;/code&gt; function to loop over each attrName (attribute name (aka key)) and its value in &lt;code&gt;items&lt;/code&gt; to create a new attrset with its attrName added to it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newItems = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (key: items&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;key&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; key; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames items);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;map&lt;/code&gt; function takes two parameters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a lambda that should be performed against each element
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(key: items.&amp;quot;${key}&amp;quot; // { name = key; })&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;This lambda takes a parameter &lt;code&gt;key&lt;/code&gt;, and returns the attribute value at &lt;code&gt;items.key&lt;/code&gt;, and merges it with the attrset &lt;code&gt;{ name = key; }&lt;/code&gt; using the [[#Merge two attrsets shorthand]].&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;a list of elements
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(builtins.attrNames items)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;builtins.attrNames&lt;/code&gt; is a function that takes a attrset and returns all the attribute names (keys) for it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So &lt;code&gt;newItems&lt;/code&gt; will equal the below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newItems
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;map&lt;/code&gt; function is also useful for converting an attrset to a list, since a list is what is returns by default.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items_list = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (key: items&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;key&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames items);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items_list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;converting-a-list-to-an-attribute-set&#34;&gt;Converting a list to an attribute set&lt;/h2&gt;
+&lt;p&gt;When we [[#Add an attribute to an attrset|add an attribute to an attset]], the &lt;code&gt;map&lt;/code&gt; function returns a list, when we may want to have an attrset back instead.&lt;/p&gt;
+&lt;p&gt;We can use the &lt;code&gt;builtins.listToAttrs&lt;/code&gt; function to convert it to one. It takes one argument, a list of attrsets that contain two attributes; &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;value&lt;/code&gt; - the former becomes the attrName and the latter its value.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ list = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName2&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value3 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;listToAttrs list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;attrSet&lt;/code&gt; will then equal the below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;attrSet = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    keyName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    keyName2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value3 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     
     <item>
       <title>Converting to the Church of Nix</title><enclosure url="https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix/cover.png" type="image/jpg"></enclosure>
@@ -301,140 +435,6 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;This is only a quick introduction into the series which introduces NixOS, what I&amp;rsquo;m using it for, and a high-level look into the configurations.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Reverse Proxy Multiple Domains Using Caddy 2</title><enclosure url="https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/cover.png" type="image/jpg"></enclosure>
-      <link>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</link>
-      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/</guid>-->
-      <description>&lt;p&gt;During lockdown, I&amp;rsquo;ve spent a bit of time improving our home network. The bigger picture of which I&amp;rsquo;ll write about in a future post. But for now, I came across some challenges with running &lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy 2&lt;/a&gt; as a reverse proxy for multiple domains used internally.&lt;/p&gt;
-&lt;p&gt;If you&amp;rsquo;ve stumbled across this looking for the end config file for Caddy, then you can &lt;a href=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration&#34;&gt;skip there&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;A few months back I kitted out my home with some &lt;a href=&#34;https://www.ui.com/products/#unifi&#34;&gt;Ubiquiti UniFi&lt;/a&gt; gear to fix our crappy Wifi at home, following inspiration from &lt;a href=&#34;https://www.troyhunt.com/ubiquiti-all-the-things-how-i-finally-fixed-my-dodgy-wifi/&#34;&gt;Troy Hunt&lt;/a&gt; and &lt;a href=&#34;https://scotthelme.co.uk/my-ubiquiti-home-network/&#34;&gt;Scott Helme&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In order to administrate UniFi devices, you&amp;rsquo;ll need the &lt;a href=&#34;https://www.ui.com/unifi/unifi-cloud-key/&#34;&gt;UniFi Cloud Key&lt;/a&gt; which runs the Controller software to do just that. Although if you have a spare Raspberry Pi lying around, you can download the &lt;a href=&#34;https://www.ui.com/download/unifi/&#34;&gt;software&lt;/a&gt; for free and run it on there - this is what I did.&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;ve also wanted to protect my home network with a self-hosted DNS server, such as &lt;a href=&#34;https://pi-hole.net/&#34;&gt;PiHole&lt;/a&gt;. I won&amp;rsquo;t go into depth about how that was done, but you can follow &lt;a href=&#34;https://scotthelme.co.uk/securing-dns-across-all-of-my-devices-with-pihole-dns-over-https-1-1-1-1/&#34;&gt;Scott Helme&amp;rsquo;s guide&lt;/a&gt; on how you can set the same up.&lt;/p&gt;
-&lt;p&gt;Both of these services can be accessed through web browsers at the IP address and ports where they are being hosted, such as &lt;code&gt;http://192.168.1.10:8093/admin/&lt;/code&gt; in the case of PiHole. Having to remember the IP address and the port can be a pain. We can front these services with a rememberable domain name which points to these services - of which I&amp;rsquo;ve written about in a &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=&#34;securing-with-https&#34;&gt;Securing with HTTPS&lt;/h3&gt;
-&lt;p&gt;The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;insecure-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&#34;
-         alt=&#34;Insecure PiHole connection&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p&gt;
-        &lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt; is a web server similar to Apache, nginx, et al., but it is different in that it enables HTTPS by default and upgrades requests from HTTP to HTTPS. Managing certificates for HTTPS is a pain - so Caddy does that too, so long as you can prove you own the domain you are hosting requests at. We can use Caddy in a reverse proxy mode, allowing us to access services at endpoints such as &lt;code&gt;https://pihole.domain.local&lt;/code&gt; in our browsers and forward them to the corresponding IP address hosting the service.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;A &lt;a href=&#34;https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/&#34;&gt;reverse proxy&lt;/a&gt; is a service that simply forwards client requests onto the server on the clients behalf.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;proving-domain-ownership&#34;&gt;Proving Domain Ownership&lt;/h2&gt;
-&lt;p&gt;Caddy uses &lt;a href=&#34;https://letsencrypt.org/&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt; (LE) to provide certificates for domains. Since domains can be exposed publicly, we will have to prove ownership of the domain to have LE issue certificates on our behalf - so we&amp;rsquo;ll have to purchase the domain from a registrar. I talked about how to do this for this website &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#acquire-a-domain&#34;&gt;in the past&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;LE supports several &lt;a href=&#34;https://letsencrypt.org/docs/challenge-types/&#34;&gt;challenge methods&lt;/a&gt; in order to prove you own the domain. This helps mitigates attacks by adversaries by claiming they own a domain such as &lt;code&gt;natwest.co.uk&lt;/code&gt; - allowing them to create phishing attacks and steal banking information.&lt;/p&gt;
-&lt;p&gt;Since my network is only visible internally for the moment (i.e. the domain will only resolve to an IP address on my network) - I cannot use HTTP or TLS since these require the domain to resolve to a public IP address to a web server hosting a challenge file requested by LE. Therefore the only option I have is DNS challenge, where a randomly string generated by LE is placed into the &lt;a href=&#34;https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/&#34;&gt;TXT record&lt;/a&gt; of a DNS record to confirm ownership.&lt;/p&gt;
-&lt;h2 id=&#34;building-our-caddy&#34;&gt;Building Our Caddy&lt;/h2&gt;
-&lt;p&gt;For this exercise I&amp;rsquo;ll be using the latest version, Caddy 2, which allows for plugins to be built into the binary depending on your use case - including &lt;a href=&#34;https://caddyserver.com/docs/automatic-https#dns-challenge&#34;&gt;DNS challenge&lt;/a&gt;. This plugin isn&amp;rsquo;t included by default, so we&amp;rsquo;ll need to build our own Caddy binary. The tool to do this is called &lt;a href=&#34;https://github.com/caddyserver/xcaddy&#34;&gt;xcaddy&lt;/a&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;UPDATE 2020-09-30&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Looks like Caddy now comes with a &lt;a href=&#34;https://caddyserver.com/download&#34;&gt;nice web interface&lt;/a&gt; for downloading a Caddy binary with whatever plugins you desire. I just tested out the &lt;code&gt;Linux arm 7&lt;/code&gt; platform with just the &lt;code&gt;github.com/caddy-dns/cloudflare&lt;/code&gt; plugin, and it was able to run my Caddy configuration below perfectly!&lt;/p&gt;
-&lt;p&gt;Once you&amp;rsquo;ve got the binary downloaded, copy it to the Pi then skip to &lt;a href=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/#caddy-configuration&#34;&gt;Caddy Configuration&lt;/a&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;To build using xcaddy, you need to make sure you have &lt;a href=&#34;https://golang.org/doc/install&#34;&gt;Go installed&lt;/a&gt; on your machine.&lt;/p&gt;
-&lt;p&gt;Note that I am building Caddy on my laptop, but running it on a Pi, so I will have to specify the architecture that Pi is running on so that Go can correctly build it.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Download xcaddy&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Build custom Caddy binary for Raspberry Pi&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOOS&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;linux &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARCH&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;arm &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;GOARM&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;7&lt;/span&gt; xcaddy build --with github.com/caddy-dns/cloudflare
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Copy the new binary across to the Pi&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp caddy pi:/home/pi/caddy/
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;caddy-configuration&#34;&gt;Caddy Configuration&lt;/h2&gt;
-&lt;p&gt;The configuration I&amp;rsquo;m using can be seen below. Some things to note:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;I&amp;rsquo;m using Cloudflare as the DNS name servers for the domain, even though I purchased my domain from namecheap
-&lt;ul&gt;
-&lt;li&gt;This repeats an &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/#adding-our-cdn-layer&#34;&gt;exercise I&amp;rsquo;ve done previously&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;I&amp;rsquo;ve done this for two reasons:
-&lt;ul&gt;
-&lt;li&gt;Caddy at the time of writing does not have a namecheap DNS challenge plugin&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s a proven method I know already&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;A &lt;code&gt;CLOUDFLARE_API_TOKEN&lt;/code&gt; is required to have Caddy set the TXT record DNS challenge received from LE
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys&#34;&gt;Guide for the same&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Caddy is reverse proxying traffic to services running locally on the Pi&lt;/li&gt;
-&lt;li&gt;Caddy is not verifying the certificate being hosted by the UniFi Controller (&lt;code&gt;insecure_skip_verify = true&lt;/code&gt;)
-&lt;ul&gt;
-&lt;li&gt;The controller self-signs a certificate, and the reverse proxy has no means of establishing a chain of trust to verify the certificate&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s not a best practice to not verify the chain of trust, however I&amp;rsquo;m happy to accept the risk for now&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;a href=&#34;https://caddyserver.com/docs/json/&#34;&gt;Click here&lt;/a&gt; to see documentation on Caddy JSON config files.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/ca668a9d162535ab92db2cfa6f4e4e54.js&#34;&gt;&lt;/script&gt;
-
-&lt;h2 id=&#34;updating-dns-records&#34;&gt;Updating DNS Records&lt;/h2&gt;
-&lt;p&gt;Remember that the domain names aren&amp;rsquo;t actually publicly accessible. At a basic level we can update the &lt;code&gt;/etc/hosts&lt;/code&gt; file of the machine we&amp;rsquo;re running on to add a record telling our machine how to resolve the domain.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo sh -c &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-dns-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&#34;
-         alt=&#34;Adding domain records to DNS server&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p&gt;
-        &lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;The IP addresses you see above are pointing to the host running Caddy, the Raspberry Pi.&lt;/p&gt;
-&lt;h2 id=&#34;verifying-caddy&#34;&gt;Verifying Caddy&lt;/h2&gt;
-&lt;p&gt;Once the config file is built, you can perform a test run to confirm everything is working by executing this command.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ./caddy run --config config.json
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
-&lt;p&gt;We need to execute using &lt;code&gt;sudo&lt;/code&gt; so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&#34;
-         alt=&#34;PiHole appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-unifi.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&#34;
-         alt=&#34;UniFi Controller appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-certificate.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&#34;
-         alt=&#34;Certificate used by PiHole&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-
-&lt;h2 id=&#34;enabling-caddy-service&#34;&gt;Enabling Caddy Service&lt;/h2&gt;
-&lt;p&gt;Since we&amp;rsquo;re not using the standard Caddy installation method, we will need to specify a service unit file so that Caddy starts up at the same time as the host - which is what PiHole and UniFi are doing currently.&lt;/p&gt;
-&lt;p&gt;First check to see if there is a stale service there already.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ ls -la /etc/systemd/system/caddy.service
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lrwxrwxrwx &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt; root root &lt;span style=&#34;color:#bd93f9&#34;&gt;9&lt;/span&gt; Jun  &lt;span style=&#34;color:#bd93f9&#34;&gt;4&lt;/span&gt; 09:14 /etc/systemd/system/caddy.service -&amp;gt; /dev/null
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you get the above then remove the symlink so that we can create a file there.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm /etc/systemd/system/caddy.service
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then populate the same file with the below, remembering the change the location of the Caddy config file to where it exists on your machine.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Unit&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Description&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;Caddy Reverse Proxy
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Wants&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network-online.target
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;After&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;network.target network-online.target
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Service&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;ExecStart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;/usr/local/bin/caddy run --config /home/jdheyburn/homelab/caddy/config.json
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Restart&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;on-abort
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;[&lt;/span&gt;Install&lt;span style=&#34;color:#ff79c6&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;WantedBy&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;multi-user.target
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finalise the new service with the two commands, enabling it on host startup and starting the service right now.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;enable&lt;/span&gt; caddy.service
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo systemctl start caddy.service
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;For now I have all the above running bare-metal on one Pi instance, which produces a huge single point of failure in my network. In the future I&amp;rsquo;d like to see how converting these to Docker containers and having them distributed on multiple Pis would increase the resiliency of these services.&lt;/p&gt;
-&lt;p&gt;Until then, these basic but essential services are being hosted at easy to remember domains, transported over an encrypted connection,  for me to easily administer the network for when it gets more complex over time.&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>code snippets on JDHeyburn</title>
+    <link>https://jdheyburn.co.uk/tags/code-snippets/</link>
+    <description>Recent content in code snippets on JDHeyburn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 13 Jan 2023 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jdheyburn.co.uk/tags/code-snippets/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Nix Cheat Sheet</title><enclosure url="https://jdheyburn.co.uk/blog/nix-cheat-sheet/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/nix-cheat-sheet/</link>
+      <pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/nix-cheat-sheet/</guid>-->
+      <description>&lt;p&gt;The world of Nix has a bit of a steep learning curve. As I write blog posts on the subject, I&amp;rsquo;ll refer to some of the tips and tricks from the cheat sheet here.&lt;/p&gt;
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+&lt;p&gt;Here are a list of resources I use to search for Nix options, services, and any Nix built-in functions.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://search.nixos.org/packages?channel=unstable&amp;amp;from=0&amp;amp;size=50&amp;amp;sort=relevance&#34;&gt;NixOS Search&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mynixos.com/&#34;&gt;MyNixOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://noogle.dev/&#34;&gt;noogle&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;functions-and-lambdas&#34;&gt;Functions (and Lambdas)&lt;/h2&gt;
+&lt;p&gt;In some languages you typically have a formal declaration of a function (or lambda), such as for Python:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;double_num&lt;/span&gt;(num_to_double)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; num_to_double &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nixlang is a functional language, and a typical behaviour of these is to define lambdas and assign them to variables.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;double_num = num_to_double: num_to_double &lt;span style=&#34;color:#ff79c6&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The lambda is defined when we create parameters for that lambda, which are defined by having a variable name prefixed by a colon. From the example above, the parameter for the &lt;code&gt;double_num&lt;/code&gt; lambda is &lt;code&gt;num_to_double&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Once all the parameters are defined we move onto the body, in which the final statement is returned, similarly to the &lt;a href=&#34;https://franzejr.github.io/best-ruby/idiomatic_ruby/implicit_return.html&#34;&gt;implicit return in Ruby&lt;/a&gt;. Here we&amp;rsquo;re just using the maths expression &lt;code&gt;num_to_double * 2&lt;/code&gt; to have the intended outcome.&lt;/p&gt;
+&lt;h2 id=&#34;check-if-attribute-is-in-attrset-shorthand&#34;&gt;Check if attribute is in attrset shorthand&lt;/h2&gt;
+&lt;p&gt;You can use the built in function &lt;a href=&#34;https://nixos.org/manual/nix/stable/language/builtins.html#builtins-hasAttr&#34;&gt;hasAttr&lt;/a&gt; to determine if an attribute exists within an attrset.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;hasAttr&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt; attrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;true
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;hasAttr&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt; attrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use the &lt;code&gt;?&lt;/code&gt; operator as an alternate way of doing the same.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;true
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;merge-two-attrsets-shorthand&#34;&gt;Merge two attrsets shorthand&lt;/h2&gt;
+&lt;p&gt;You can use the &lt;code&gt;//&lt;/code&gt; operator to merge the contents of the attrset on the right into the attrset on the left.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrset = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; } &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { key2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrset
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; key2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key2&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the attribute already exists in the left attrset, then it is overwritten.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;key1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrSet = attrSet &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;newKey1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newAttrSet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ key1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;newKey1&amp;#34;&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;add-an-attribute-to-an-attrset&#34;&gt;Add an attribute to an attrset&lt;/h2&gt;
+&lt;p&gt;Given an attrset with this structure:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  keyName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can use the &lt;code&gt;map&lt;/code&gt; function to loop over each attrName (attribute name (aka key)) and its value in &lt;code&gt;items&lt;/code&gt; to create a new attrset with its attrName added to it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newItems = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (key: items&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;key&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; key; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames items);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;map&lt;/code&gt; function takes two parameters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a lambda that should be performed against each element
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(key: items.&amp;quot;${key}&amp;quot; // { name = key; })&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;This lambda takes a parameter &lt;code&gt;key&lt;/code&gt;, and returns the attribute value at &lt;code&gt;items.key&lt;/code&gt;, and merges it with the attrset &lt;code&gt;{ name = key; }&lt;/code&gt; using the [[#Merge two attrsets shorthand]].&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;a list of elements
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(builtins.attrNames items)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;builtins.attrNames&lt;/code&gt; is a function that takes a attrset and returns all the attribute names (keys) for it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So &lt;code&gt;newItems&lt;/code&gt; will equal the below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ newItems
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;map&lt;/code&gt; function is also useful for converting an attrset to a list, since a list is what is returns by default.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items_list = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (key: items&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;key&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames items);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ items_list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;converting-a-list-to-an-attribute-set&#34;&gt;Converting a list to an attribute set&lt;/h2&gt;
+&lt;p&gt;When we [[#Add an attribute to an attrset|add an attribute to an attset]], the &lt;code&gt;map&lt;/code&gt; function returns a list, when we may want to have an attrset back instead.&lt;/p&gt;
+&lt;p&gt;We can use the &lt;code&gt;builtins.listToAttrs&lt;/code&gt; function to convert it to one. It takes one argument, a list of attrsets that contain two attributes; &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;value&lt;/code&gt; - the former becomes the attrName and the latter its value.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ list = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;keyName2&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value3 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ attrSet = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;listToAttrs list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;attrSet&lt;/code&gt; will then equal the below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;attrSet = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    keyName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value1 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    keyName2 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        value3 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
