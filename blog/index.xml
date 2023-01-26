@@ -18,6 +18,15 @@
       
       <guid>https://jdheyburn.co.uk/blog/nix-cheat-sheet/</guid>-->
       <description>&lt;p&gt;The world of Nix has a bit of a steep learning curve. As I write blog posts on the subject, I&amp;rsquo;ll refer to some of the tips and tricks from the cheat sheet here.&lt;/p&gt;
+&lt;h2 id=&#34;documentation&#34;&gt;Documentation&lt;/h2&gt;
+&lt;p&gt;A list of Nix documentation I refer to, along with some getting started pages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://nixos.org/manual/nixpkgs/stable/&#34;&gt;Nixpkgs manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nixos.org/manual/nixos/stable/&#34;&gt;NixOS manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nix.dev/&#34;&gt;nix.dev&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nixos.org/guides/nix-pills/&#34;&gt;Nix Pills&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zero-to-nix.com/&#34;&gt;Zero to Nix&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
 &lt;p&gt;Here are a list of resources I use to search for Nix options, services, and any Nix built-in functions.&lt;/p&gt;
 &lt;ul&gt;
