@@ -6,10 +6,812 @@
     <description>Recent content in nix on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 13 Jan 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/tags/nix/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Automating service configurations with NixOS</title><enclosure url="https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/cover.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/</link>
+      <pubDate>Thu, 02 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/</guid>-->
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix&#34;&gt;last post&lt;/a&gt; I mentioned that I use a &amp;ldquo;service catalog&amp;rdquo; as a source of truth for what is deployed where and how it should be configured. This catalog is read by a number of services to determine the locations of those services so that can be referred back to.&lt;/p&gt;
+&lt;p&gt;NixOS makes it easy to get services up and running with sensible defaults. But once those services are online we need a means of routing traffic to them from a nice domain (e.g. &lt;code&gt;service_name.svc.joannet.casa&lt;/code&gt;), and monitoring against the service to alert when it&amp;rsquo;s down.&lt;/p&gt;
+&lt;p&gt;Since NixOS manages the services and their configuration, we can have it create configurations for services that enable connectivity.&lt;/p&gt;
+&lt;p&gt;For my use case the tasks it performs are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DNS rewrites to forward DNS names to the node hosting the service
+&lt;ul&gt;
+&lt;li&gt;I use &lt;a href=&#34;https://github.com/AdguardTeam/AdGuardHome/&#34;&gt;AdGuardHome&lt;/a&gt; as my DNS server, so it generates the config for&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Reverse proxy the service to the port the service runs on the host
+&lt;ul&gt;
+&lt;li&gt;Each host has a &lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt; instance deployed to it, which reverse proxies all the services that run on that host&lt;/li&gt;
+&lt;li&gt;Caddy needs to be aware of the domain to forward traffic to, at the particular port&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dashy.to/&#34;&gt;Dashy&lt;/a&gt; for the home dashboard
+&lt;ul&gt;
+&lt;li&gt;A dashboard which let&amp;rsquo;s you create bookmarks, and more&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Monitoring service endpoints
+&lt;ul&gt;
+&lt;li&gt;We want to be informed when services go down, so we can automate writing the &lt;a href=&#34;https://github.com/prometheus/blackbox_exporter&#34;&gt;Prometheus blackbox exporter&lt;/a&gt; config - scraped by &lt;a href=&#34;https://victoriametrics.com/&#34;&gt;VictoriaMetrics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Then there is a &lt;a href=&#34;https://grafana.com/&#34;&gt;Grafana&lt;/a&gt; alert which is configured to alert when the probe fails&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When I add a new service to the catalog and deploy the NixOS configs to the nodes, all the above is taken care of for me.&lt;/p&gt;
+&lt;h2 id=&#34;catalog-definitions&#34;&gt;Catalog definitions&lt;/h2&gt;
+&lt;p&gt;In &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/catalog.nix&#34;&gt;catalog.nix,&lt;/a&gt; there is an attribute called &lt;code&gt;services&lt;/code&gt; which is an attribute set (attrset) of service names to its service definition. The service name is what Caddy and AdGuardHome will assume to be the domain name to forward requests to, although with an option to make this configurable.&lt;/p&gt;
+&lt;p&gt;Also in catalog.nix is another attribute &lt;code&gt;nodes&lt;/code&gt; which maps hostnames to node definitions. Service definitions in their current form are dependent on node definitions, so let&amp;rsquo;s dive into the latter first.&lt;/p&gt;
+&lt;h3 id=&#34;node-definitions&#34;&gt;Node definitions&lt;/h3&gt;
+&lt;p&gt;A node definition has these attributes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ip.private&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;private IP address&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ip.tailscale&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Tailscale IP address&lt;/li&gt;
+&lt;li&gt;Not currently used yet, but will look to add functionality when I want to set up connectivity to the services over Tailscale&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;system&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;What architecture the host is on&lt;/li&gt;
+&lt;li&gt;Used to determine what flavour of nixpkgs should be used&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;isNixOS&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;boolean representing if this is running NixOS, as I have some legacy hosts which are not yet migrated over&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nixosHardware&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;optional; any &lt;a href=&#34;https://github.com/NixOS/nixos-hardware&#34;&gt;nixos-hardware&lt;/a&gt; modules to include into the configuration too&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s see an example node definition for the &lt;code&gt;dee&lt;/code&gt; host.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nodesBase = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    dee &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;private &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;192.168.1.10&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;tailscale &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;100.127.189.33&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      system &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aarch64-linux&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      isNixOS &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      nixosHardware &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; nixos-hardware&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixosModules&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;raspberry-pi-4;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You&amp;rsquo;ll notice node definitions are defined under &lt;code&gt;nodesBase&lt;/code&gt; , this is because I want &lt;code&gt;nodes&lt;/code&gt; to have the hostname enriched in each node definition at &lt;code&gt;hostName&lt;/code&gt;. We&amp;rsquo;re already defining the hostname as the attribute name, we can follow the &lt;a href=&#34;https://en.wikipedia.org/wiki/Don%27t_repeat_yourself&#34;&gt;Don&amp;rsquo;t Repeat Yourself&lt;/a&gt; (DRY) principle by doing some Nixlang work:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  nodes = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;listToAttrs (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (hostName: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; hostName;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; (nodesBase&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;hostName&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { hostName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; hostName; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }) (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames nodesBase));
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From my Nixlang cheatsheet, we can [[#Add an attribute to an attrset]] to enrich each base node definition with the &lt;code&gt;hostName&lt;/code&gt; (the attribute name of &lt;code&gt;nodesBase&lt;/code&gt;), and then [[#Converting a list to attributes|convert the returned list to an attrset]]. After this a subset of &lt;code&gt;nodes&lt;/code&gt; would be equal to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nodes = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    dee &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      hostName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dee&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;private &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;192.168.1.10&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;tailscale &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;100.127.189.33&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      system &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aarch64-linux&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      isNixOS &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      nixosHardware &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; nixos-hardware&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixosModules&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;raspberry-pi-4;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;# ... remaining nodes here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;service-definitions&#34;&gt;Service definitions&lt;/h3&gt;
+&lt;p&gt;The service definition accepts these attributes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;host&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The node that runs this service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;port&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The port this service runs at&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;blackbox.name&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The display name to use for this service for blackbox&lt;/li&gt;
+&lt;li&gt;For when the domain name doesn&amp;rsquo;t map to the service name
+&lt;ul&gt;
+&lt;li&gt;i.e. the Dashy service is reachable at &lt;code&gt;home.svc.joannet.casa&lt;/code&gt;, but we want blackbox to announce the service as &lt;code&gt;dashy&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;blackbox.path&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Blackbox by default will take the root domain name as the health check endpoint. If that should not the case then you can add a suffix path here&lt;/li&gt;
+&lt;li&gt;e.g. &lt;code&gt;/health&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caddify.enable&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Whether Caddy which runs on the same host should reverse proxy to this service at the port defined&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caddify.skip_tls_verify&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Whether Caddy should ignore TLS verification when forwarding traffic to this service&lt;/li&gt;
+&lt;li&gt;Usually for when the backend service defaults to HTTPS, and I cba to set up a certificate trust&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caddify.forwardTo&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Define a node here different to the host to have that node set up reverse proxy instead&lt;/li&gt;
+&lt;li&gt;Currently I&amp;rsquo;m using this to reverse proxy for services where nodes do not have Caddy on them (i.e. non-NixOS nodes)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caddify.paths&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;A list of paths, additional path forwarding to ports that&lt;/li&gt;
+&lt;li&gt;Used this for testing path forwarding for minio console, but reverted as it didn&amp;rsquo;t play nice - I&amp;rsquo;m not using this for anything right now&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;path&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The URL path to forward (e.g. &lt;code&gt;/ui/*&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;port&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The port to forward to&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dashy.section&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;What section in Dashy it should fall under&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dashy.description&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The description to use in Dashy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dashy.icon&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The icon to display in Dashy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;An example service definition would look like this.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;servicesBase = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    adguard &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      host &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; nodes&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dee;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      port &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;3000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;section &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;networks&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;description &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;DNS resolver&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;hl-adguardhome&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So this will set for us the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DNS entry in AdGuardHome for &lt;code&gt;adguard.svc.joannet.casa&lt;/code&gt;, which creates an A record to the private IP address of host &lt;code&gt;dee&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Configures Caddy on &lt;code&gt;dee&lt;/code&gt; to reverse proxy traffic received on &lt;code&gt;adguard.svc.joannet.casa&lt;/code&gt; and forward it to &lt;code&gt;127.0.0.1:3000&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Because I&amp;rsquo;m using Caddy, I get &lt;a href=&#34;https://caddyserver.com/docs/automatic-https&#34;&gt;HTTPS for free&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Creates an entry in Dashy, in the section &lt;code&gt;networks&lt;/code&gt; with the provided description and gives it a pretty icon&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Additionally, the AdGuardHome module will use the port configured at the port to use when starting the service, meaning that I don&amp;rsquo;t duplicate the port (DRY principle again).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;adguardhome = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  settings &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    bind_port &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;adguard&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;port;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#6272a4&#34;&gt;# ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Similarly to &lt;code&gt;nodes&lt;/code&gt;, I add the service name into the definition by duplicating &lt;code&gt;servicesBase&lt;/code&gt; to &lt;code&gt;services&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;services = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;listToAttrs (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (serviceName: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; serviceName;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; (servicesBase&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;serviceName&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; serviceName; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}) (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames servicesBase));
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;reading-catalog-definitions&#34;&gt;Reading catalog definitions&lt;/h2&gt;
+&lt;p&gt;To generate the configs for each service, we have to parse the contents of catalog.nix using Nixlang (have you seen &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet&#34;&gt;the cheat sheet&lt;/a&gt;?).&lt;/p&gt;
+&lt;h3 id=&#34;dns-rewrites&#34;&gt;DNS rewrites&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;tl;dr:&lt;/strong&gt; &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/dns/default.nix&#34;&gt;See here&lt;/a&gt; for the configuration in GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;AdGuard can respond to DNS requests by answering an IP address for it. The configuration for this is structured like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;dns&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;rewrites&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ff79c6&#34;&gt;domain&lt;/span&gt;: service.DOMAIN
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;answer&lt;/span&gt;: IP_ADDRESS
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can use Nix to build this configuration for us.&lt;/p&gt;
+&lt;p&gt;In my &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/dns/default.nix&#34;&gt;module for DNS&lt;/a&gt;, we start by retrieving all services that should be behind Caddy using filterAttrs, and then converting to a list by passing that output to attrValues.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# Get services which are being served by caddy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  caddy_services = attrValues (filterAttrs (svc_name: svc_def:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;enable&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;filterAttrs takes two arguments, a lambda to filter the attributes by, and the attrset to filter.&lt;/p&gt;
+&lt;p&gt;Taking what we &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet/#functions-and-lambdas&#34;&gt;learnt about lambdas&lt;/a&gt;, we know that the filtering lambda takes two parameters (&lt;code&gt;svc_name&lt;/code&gt; and &lt;code&gt;svc_def&lt;/code&gt;), and evaluates the body of &lt;code&gt;svc_def ? &amp;quot;caddify&amp;quot; &amp;amp;&amp;amp; svc_def.caddify ? &amp;quot;enable&amp;quot; &amp;amp;&amp;amp; svc_def.caddify.enable&lt;/code&gt;. Since the &lt;code&gt;caddify&lt;/code&gt; field in the service definition is optional, we can use &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet/#check-if-attribute-is-in-attrset-shorthand&#34;&gt;shorthand&lt;/a&gt; to determine if the field is present in the attribute (&lt;code&gt;svc_def ? &amp;quot;caddify&amp;quot;&lt;/code&gt; and &lt;code&gt;svc_def.caddify ? &amp;quot;enable&amp;quot;&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;When learning new languages I like to make comparisons to other languages so that we can see what&amp;rsquo;s happening - the equivalent for above would look like this in Python.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;caddy_services &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; svc_name, svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; catalog_services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;items():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; svc_def \
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;and&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;enable&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; svc_def[&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt;] \
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;and&lt;/span&gt; svc_def[&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt;][&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;enable&amp;#34;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    caddy_services[svc_name] &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; svc_def
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# For any Python comprehension fans&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;caddy_services &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  svc_name: svc_def
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;for&lt;/span&gt; svc_name, svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; catalog_services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;items()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; svc_def
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;and&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;enable&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; svc_def[&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;and&lt;/span&gt; svc_def[&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt;][&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;enable&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;filterAttrs&lt;/code&gt; returns us an attrset, whereas we&amp;rsquo;d like a list so that we can map over each element. We can call &lt;code&gt;attrValues&lt;/code&gt; to retrieve the list of values that make up this attrset. It the same as if we were to call &lt;code&gt;caddy_services.values()&lt;/code&gt; in Python.&lt;/p&gt;
+&lt;p&gt;We now need to define a function which will help us to determine the IP address that the domain should be forwarded to. The service definition contains a &lt;code&gt;host&lt;/code&gt; attribute which is set to a node definition, however there are some services at home which are not running NixOS and so won&amp;rsquo;t have Caddy.&lt;/p&gt;
+&lt;p&gt;For these services they should be routed to a host which does have Caddy, and this is what the &lt;code&gt;caddify.forwardTo&lt;/code&gt; is for. We can write a lambda that will return the correct node definition if this attribute exists in the service definition:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;getCaddyDestination = service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;forwardTo&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;forwardTo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;host;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This function is used when we map over &lt;code&gt;caddy_services&lt;/code&gt; to generate the attrset containing &lt;code&gt;domain&lt;/code&gt; and &lt;code&gt;answer&lt;/code&gt; - the format for AdGuard to perform DNS rewrites. As &lt;code&gt;getCaddyDestination&lt;/code&gt; returns us a node definition, we can traverse it to retrieve the private IP address.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rewrites = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  domain &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.svc.joannet.casa&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  answer &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; (getCaddyDestination service)&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;private;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}) caddy_services;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The last thing we need to do is refer to &lt;code&gt;rewrites&lt;/code&gt; when we &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/dns/default.nix#L65&#34;&gt;write the config&lt;/a&gt; for AdGuard.&lt;/p&gt;
+&lt;h3 id=&#34;caddy-config&#34;&gt;Caddy config&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;tl;dr:&lt;/strong&gt; &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/caddy/default.nix&#34;&gt;See here&lt;/a&gt; for the configuration in GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Once DNS is configured, any DNS requests for &lt;code&gt;service.svc.joannet.casa&lt;/code&gt; will be answered with the IP address of the reverse proxy (Caddy) that can serve that request, so let&amp;rsquo;s configure Caddy on how to handle that request.&lt;/p&gt;
+&lt;p&gt;My setup is probably more complex than what&amp;rsquo;s needed, since Caddy requires config for services &lt;em&gt;running on the same host&lt;/em&gt;, as well as any additional &lt;em&gt;services it should forward to other hosts&lt;/em&gt;. For the sake of brevity I&amp;rsquo;ll focus on the former, since the latter is done in a similar manner (look for &lt;code&gt;forward_services&lt;/code&gt; and &lt;code&gt;forward_routes&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;I use the &lt;a href=&#34;https://caddyserver.com/docs/json/&#34;&gt;JSON structure&lt;/a&gt; to configure Caddy, since I&amp;rsquo;m generating these programatically. The config that we want generated for the services is in this format:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;apps&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;servers&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;srv0&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;listen&amp;#34;&lt;/span&gt;: [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:443&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;routes&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;match&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt;: [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;service.svc.joannet.casa&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;terminal&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handle&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handler&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;subroute&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;routes&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handle&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handler&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;reverse_proxy&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;upstreams&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                            {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                              &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;dial&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;localhost:PORT&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                          ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                      ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                  ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#6272a4&#34;&gt;// ... other services here
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;          ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;tls&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;automation&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;policies&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;subjects&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;service.svc.joannet.casa&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#6272a4&#34;&gt;// ... other services here
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;          ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;issuers&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#6272a4&#34;&gt;// ... removed for brevity
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;          ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;That&amp;rsquo;s a lot of nesting - no wonder why they encourage using a &lt;a href=&#34;https://caddyserver.com/docs/caddyfile&#34;&gt;Caddyfile&lt;/a&gt; instead - infact &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/2962a4f61c124289cc05ea4398d5cd15adc4b191/modules/caddy/Caddyfile&#34;&gt;here is the Caddyfile&lt;/a&gt; I used before I migrated to this.&lt;/p&gt;
+&lt;p&gt;I could template the config for that instead, however I wanted to play around with learning how to manipulate attrsets, since this is how the majority of options are configured in Nix.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For each service, we need to create a route:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;match&amp;#34;&lt;/span&gt;: [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt;: [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;service.svc.joannet.casa&amp;#34;&lt;/span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;terminal&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handle&amp;#34;&lt;/span&gt;: [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handler&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;subroute&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;routes&amp;#34;&lt;/span&gt;: [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handle&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#6272a4&#34;&gt;// ... insert route handler
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;      ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;route-functions&#34;&gt;Route functions&lt;/h4&gt;
+&lt;p&gt;Translating this to a function yields this result.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;route = { name&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; port&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; upstream &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; skip_tls_verify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; false
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; paths &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; [ ] }:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    subroutes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service: routeHandler service) (paths &lt;span style=&#34;color:#ff79c6&#34;&gt;++&lt;/span&gt; [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      port &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; port;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      upstream &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; upstream;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      skip_tls_verify &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; skip_tls_verify;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    match &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{ host &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;name&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.svc.joannet.casa&amp;#34;&lt;/span&gt; ]; }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    terminal &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    handle &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      handler &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;subroute&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      routes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; subroutes;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;route&lt;/code&gt; becomes a function which takes in an attrset with these parameters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;port&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;the service port to reverse proxy the request to&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;upstream&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;IP address to forward the request to, defaults to &lt;code&gt;localhost&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;skip_tls_verify&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;whether to ignore TLS certificate verification, defaults to &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;path&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;whether any query paths should be used instead of the domain
+&lt;ul&gt;
+&lt;li&gt;i.e. forward to &lt;code&gt;/path&lt;/code&gt; instead of &lt;code&gt;/&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After then within the &lt;code&gt;let&lt;/code&gt; block we can create some local variables. In &lt;code&gt;subroutes&lt;/code&gt; we&amp;rsquo;re mapping over the parameters and creating a &lt;code&gt;routeHandler&lt;/code&gt; from them (shown below). Since any defined path forwarding must take precedence, it is prepended to the base path handler.&lt;/p&gt;
+&lt;p&gt;Then in the return block we return a route entry for this service. Within &lt;code&gt;handle[0].routes&lt;/code&gt; we need a &amp;ldquo;route handler&amp;rdquo;, this can take different formats depending on whether you want to disable verification of TLS connections to the upstream service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;handler&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;reverse_proxy&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;upstreams&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;dial&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;localhost:PORT&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;// optional below, to disable TLS verification
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;transport&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;protocol&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;tls&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;insecure_skip_verify&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can write a function that can output this for us:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;routeHandler =
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  { port&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; upstream &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; skip_tls_verify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; false&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; path &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; [ ] }:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    base_handle &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      handler &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;reverse_proxy&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      upstreams &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{ dial &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;upstream&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;toString&lt;/span&gt; port&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;; }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    handle &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; base_handle &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; optionalAttrs (skip_tls_verify) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      transport &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        protocol &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        tls&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;insecure_skip_verify &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    handle &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ handle ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  } &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; optionalAttrs (length path &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;) { match &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{ path &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; path; }]; };
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;routeHandler&lt;/code&gt; function this takes the same parameters as the &lt;code&gt;route&lt;/code&gt; function. We know that each route handler needs at least a &lt;code&gt;handler&lt;/code&gt; and &lt;code&gt;upstreams&lt;/code&gt;, so let&amp;rsquo;s define them in the local variable &lt;code&gt;base_handle&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Then if &lt;code&gt;skip_tls_verify&lt;/code&gt; is true, we want to append on the &lt;code&gt;transport&lt;/code&gt; block - this is making use of the &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet/#merge-two-attrsets-shorthand&#34;&gt;merge attrset shorthand&lt;/a&gt; &lt;code&gt;//&lt;/code&gt; to do this.&lt;/p&gt;
+&lt;p&gt;In the return block, we&amp;rsquo;re returning a attrset with the newly created route handler. Optionally if any additional paths were defined then add a match block to them too.&lt;/p&gt;
+&lt;h4 id=&#34;constructing-caddy-config&#34;&gt;Constructing Caddy config&lt;/h4&gt;
+&lt;p&gt;To start, we need to pull the services from catalog that are being hosted on this node, then convert it to a list.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;host_services = attrValues (filterAttrs (svc_name: svc_def:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;host&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;hostName &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; config&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;networking&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;hostName
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable) catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For each service we want to generate a Caddy route for it, using our &lt;code&gt;route&lt;/code&gt; function from earlier.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;catalog_routes = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  route {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    port &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;port;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    skip_tls_verify &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;skip_tls_verify&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;skip_tls_verify;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    paths &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; optionals (service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;paths&amp;#34;&lt;/span&gt;) service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;paths;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }) host_services;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then the last thing we need is the list of the domains that can be used for &lt;code&gt;tls.automation.policies[0].subjects&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;subject_names = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.svc.joannet.casa&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (host_services);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can declare these variables in the Caddy service options:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddy = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# ... removed for brevity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  configFile &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;writeText &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Caddyfile&amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;toJSON {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    logging&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;logs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;default&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;level &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ERROR&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    apps &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      http&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;servers&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;srv0 &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        listen &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;:443&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        routes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; catalog_routes;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      tls&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;automation&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;policies &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        subjects &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; subject_names;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        issuers &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            module &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;acme&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            ca &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://acme-v02.api.letsencrypt.org/directory&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            challenges&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dns&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;provider &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;cloudflare&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              api_token &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{env.CLOUDFLARE_API_TOKEN}&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            module &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;zerossl&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            ca &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://acme-v02.api.letsencrypt.org/directory&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            challenges&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dns&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;provider &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;cloudflare&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              api_token &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;{env.CLOUDFLARE_API_TOKEN}&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m using &lt;a href=&#34;https://github.com/ryantm/agenix&#34;&gt;agenix&lt;/a&gt; to expose my Cloudflare token in Caddys environment variables.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;After this is deployed, we will now be able to access services at easy to remember domain names, forwarded to the host on the network.&lt;/p&gt;
+&lt;h3 id=&#34;monitoring&#34;&gt;Monitoring&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;tl;dr:&lt;/strong&gt; &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/prometheus-stack/scrape-configs.nix&#34;&gt;See here&lt;/a&gt; for the configuration in GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;To monitor the services I&amp;rsquo;m using the &lt;a href=&#34;https://github.com/prometheus/blackbox_exporter&#34;&gt;Prometheus blackbox exporter&lt;/a&gt; - a big thanks to maxanderson&amp;rsquo;s &lt;a href=&#34;https://github.com/maxandersen/internet-monitoring/blob/master/prometheus/prometheus.yml&#34;&gt;internetmonitoring&lt;/a&gt; for the inspiration.&lt;/p&gt;
+&lt;p&gt;Blackbox has a &lt;a href=&#34;https://github.com/prometheus/blackbox_exporter/tree/master/prober&#34;&gt;multitude of probes&lt;/a&gt; you can use - for our use case we want to use the http probe, which returns the HTTP response code, probe duration, and also returns info on TLS certificates.&lt;/p&gt;
+&lt;h4 id=&#34;blackbox-configuration&#34;&gt;Blackbox configuration&lt;/h4&gt;
+&lt;p&gt;Given we can build a list of services, we want to write configuration that blackbox can parse to probe these. We can pass a target list of the format:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# format&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url;human_name;routing
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# examples&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://service_name.svc.joannet.casa;service_name;internal
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://grafana.svc.joannet.casa;grafana;internal
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://loki.svc.joannet.casa/ready;loki;internal
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://bbc.co.uk;bbc.co.uk;external
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://jdheyburn.co.uk;jdheyburn.co.uk;external
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;url&lt;/code&gt; is the endpoint that the probe should hit, followed by a &lt;code&gt;human_name&lt;/code&gt; which allows us to make it easily identifiable when querying/alerting, and lastly a &lt;code&gt;routing&lt;/code&gt; which can be one of internal or external - which we can use to filter metrics on later.&lt;/p&gt;
+&lt;p&gt;We can then use Prometheus&amp;rsquo;s relabel configs to parse these and map them to labels in the probe. So let&amp;rsquo;s get building by first building the list of services as we&amp;rsquo;ve done so previously.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;caddified_services = attrValues (filterAttrs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (svc_name: svc_def: svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;caddify&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And now map these services into the desired format of &lt;code&gt;url;human_name;routing&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;internal_https_targets = &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  getPath &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    optionalString (service &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;blackbox&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackbox &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;path&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;path;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  getHumanName &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; service &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;blackbox&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackbox &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.svc.joannet.casa&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;getPath service&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    getHumanName service
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;;internal&amp;#34;&lt;/span&gt;) caddified_services;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;let&lt;/code&gt; blocks can be used in Nix to define local variables when assigning statements (I&amp;rsquo;ve used them previously in functions). I&amp;rsquo;m defining two functions in this block, &lt;code&gt;getPath&lt;/code&gt; and &lt;code&gt;getHumanName&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;getPath&lt;/code&gt; checks to see if there is a health check path to append to the service URL, because the health check endpoint may not necessarily be at the root path (&lt;code&gt;/&lt;/code&gt;) as we see for the case of &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/catalog.nix#L94&#34;&gt;Loki&lt;/a&gt; (&lt;code&gt;/ready&lt;/code&gt;). So we perform a look up to see if a path is defined in the service definition, else we don&amp;rsquo;t append one (&lt;code&gt;optionalString&lt;/code&gt; will return an empty string (&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;) if the condition is false).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;getHumanName&lt;/code&gt; checks to see if there&amp;rsquo;s a human name we should override with, else the default service name is used. This is useful where the domain name doesn&amp;rsquo;t necessarily map to the service that underlines it, such as &lt;code&gt;home.svc.joannet.casa&lt;/code&gt; is the service &lt;code&gt;dashy&lt;/code&gt; - &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/catalog.nix#L70&#34;&gt;this override&lt;/a&gt; prevents the human name being set as &lt;code&gt;home&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Blackbox can be used to monitor any endpoint. It can be useful to have it monitor endpoints external to my local services so that I can ensure my Internet is connected. Let&amp;rsquo;s create that list and merge it with our internal targets.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;external_targets = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (url: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;url&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;url&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;;external&amp;#34;&lt;/span&gt;) [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;bbc.co.uk&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;github.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;google.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;jdheyburn.co.uk&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# concatenate the two together&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;https_targets = external_targets &lt;span style=&#34;color:#ff79c6&#34;&gt;++&lt;/span&gt; internal_https_targets;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we need to define some relabelling so that blackbox knows how to parse it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;relabel_configs = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    source_labels &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;__address__&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    regex &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;(.*);(.*);(.*)&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#6272a4&#34;&gt;# first is the url, thus unique for instance&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    target_label &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;instance&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    replacement &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$1&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    source_labels &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;__address__&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    regex &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;(.*);(.*);(.*)&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#6272a4&#34;&gt;# second is humanname to use in charts&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    target_label &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;humanname&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    replacement &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$2&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    source_labels &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;__address__&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    regex &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;(.*);(.*);(.*)&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#6272a4&#34;&gt;# third state whether this is testing external or internal network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    target_label &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;routing&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    replacement &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;$3&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    source_labels &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;instance&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    target_label &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;__param_target&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    target_label &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;__address__&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    replacement &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;127.0.0.1:&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;toString&lt;/span&gt; catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackboxExporter&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;port&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first three configs are using regex to parse the format of &lt;code&gt;url;human_name;routing&lt;/code&gt; to map them to labels. We then take the newly created &lt;code&gt;instance&lt;/code&gt; label and map it to &lt;code&gt;__param_target&lt;/code&gt;, which is the endpoint that blackbox will probe against. Lastly we define the exporter address that Prometheus should scrape at, which is the local blackbox instance running at the defined port.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll now need to add this config to the Prometheus scrape configs:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    job_name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;blackbox-https&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    metrics_path &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;/probe&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    params&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;module &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;http_2xx&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    static_configs &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{ targets &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;https_targets; }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    relabel_configs &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; blackbox&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;relabel_configs;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now that we have the scrape config that our scraper can use (i.e. VictoriaMetrics), we&amp;rsquo;ll need to boot up the blackbox exporter so that there&amp;rsquo;s something to scrape against.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;prometheus&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;exporters&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackbox = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  port &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;blackboxExporter&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;port;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  configFile &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;writeText &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;blackbox.json&amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;toJSON {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    modules&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;http_2xx &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      prober &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      timeout &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;5s&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      http&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;fail_if_not_ssl &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      http&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;preferred_ip_protocol &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;ip4&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      http&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;valid_status_codes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#bd93f9&#34;&gt;200&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;401&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;403&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;visualising-and-alerting&#34;&gt;Visualising and alerting&lt;/h4&gt;
+&lt;p&gt;It&amp;rsquo;s all well and good having VictoriaMetrics scrape and poll, but let&amp;rsquo;s use Grafana to visualise all this. I think I sourced it from &lt;a href=&#34;https://grafana.com/grafana/dashboards/14928-prometheus-blackbox-exporter/&#34;&gt;this dashboard&lt;/a&gt;, in either case I&amp;rsquo;d recommend to use it!&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;blackbox-dashboard.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/blackbox-dashboard.png&#34;
+         alt=&#34;A Grafana dashboard showing the data points of the healthchecks against various internal and external websites&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;You&amp;rsquo;ll notice that some services are responding with 4XX codes, this is because the probes are not being authenticated - but I&amp;rsquo;m getting &lt;em&gt;some&lt;/em&gt; response from the service which shows that something is working. These 4XX codes don&amp;rsquo;t cause a probe to fail, which is down to how I configured the blackbox exporter in the previous section: &lt;code&gt;http.valid_status_codes = [ 200 401 403 ];&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I also have an alert set up in Grafana to alert on the metric &lt;code&gt;probe_success&lt;/code&gt;. This metric will report 1 when it was successful, else 0. Given that I want to be alerted when a service has gone down for 5 minutes, I can give the alert a metric query of &lt;code&gt;max by(humanname) (probe_success{routing=&amp;quot;internal&amp;quot;})&lt;/code&gt;, which will produce a unique metric for each &lt;code&gt;humanname&lt;/code&gt; (i.e. service). This is assigned to the variable A.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m only interested in alerting on internally routed services, external is out of my control.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-1.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/create-alert-1.png&#34;
+         alt=&#34;Grafana create alert page, entering the metric that we want to be alerting on, followed by the expressions to be made against the metric result&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Expression B is then reducing the metric output to a single value, which will be the maximum value for that period.&lt;/p&gt;
+&lt;p&gt;Lastly expression C checks if B is less than 1, which is what will be produced if the probe failed.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-2.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/create-alert-2.png&#34;
+         alt=&#34;Grafana create alert page, defining how the alert should be evaluated and what details to accompany with it&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Next up I&amp;rsquo;m setting how often the alert should poll, and some additional details on the alert, which can be used in the body to link to the blackbox dashboard for diagnosing.&lt;/p&gt;
+&lt;p&gt;By default all alerts go to my root notification policy, which is to send me an email. I&amp;rsquo;ve got SMTP set up on my Grafana instance, but I&amp;rsquo;ll dive into that another time. In the meantime, here&amp;rsquo;s a screenshot of an email alert!&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-grafana-email-alert.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/example-grafana-email-alert.png&#34;
+         alt=&#34;An example Grafana email alert, it reports that two services are down&#34; width=&#34;400x&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;dashy&#34;&gt;Dashy&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;tl;dr:&lt;/strong&gt; &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/dashy/default.nix&#34;&gt;See here&lt;/a&gt; for the configuration in GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://dashy.to/&#34;&gt;Dashy&lt;/a&gt; is a customisable dashboard that can act as a homepage for your web browser to help you navigate to services, bookmarks, and more. I&amp;rsquo;m using it to keep a visual track on the services that I&amp;rsquo;m running at home.&lt;/p&gt;
+&lt;p&gt;The desired end result looks like this:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;dashy-homepage.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/dashy-homepage.png&#34;
+         alt=&#34;Dashy homepage with columns for each type of service that is being hosted, followed by those such services&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The config for Dashy looks like the below, so let&amp;rsquo;s get Nix to build it for us!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;appConfig&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#6272a4&#34;&gt;# ... removed for brevity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;pageInfo&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: Joannet
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;navLinks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ff79c6&#34;&gt;path&lt;/span&gt;: https://dashy.to/docs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: Dashy Documentation
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;sections&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ff79c6&#34;&gt;name&lt;/span&gt;: Media
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;icon&lt;/span&gt;: fas fa-play-circle
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;items&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ff79c6&#34;&gt;title&lt;/span&gt;: plex
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;description&lt;/span&gt;: Watch TV and movies
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;icon&lt;/span&gt;: hl-plex
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;url&lt;/span&gt;: https://plex.svc.joannet.casa
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  -  &lt;span style=&#34;color:#6272a4&#34;&gt;# additional sections here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;building-dashy-config&#34;&gt;Building Dashy config&lt;/h4&gt;
+&lt;p&gt;We start off with a baseline of sections we want Dashy to look for, since a section requires an icon (the image to the left of the section name in the above screenshot).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sections = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Media&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-play-circle&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Monitoring&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-heartbeat&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Networks&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-network-wired&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Storage&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-database&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Virtualisation&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;fas fa-cloud&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And in what might come across as &lt;a href=&#34;https://knowyourmeme.com/memes/how-to-draw-an-owl&#34;&gt;draw the rest of the fucking owl&lt;/a&gt;, we build the sections list&amp;hellip;!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sectionServices = &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  isDashyService &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; section_name: svc_def:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dashy&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dashy &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;section&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;section
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; section_name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  createSectionItems &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; services:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (service: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      title &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      description &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;description;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      url &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;.svc.joannet.casa&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      icon &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; service&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dashy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;icon;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }) services;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  sectionItems &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; sectionName:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    createSectionItems (attrValues (filterAttrs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (svc_name: svc_def: isDashyService (toLower sectionName) svc_def)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (section: section &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { items &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; sectionItems section&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;name; }) sections;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s expand on this. Three functions are being defined in this let block:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;isDashyService&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Returns true we should include this service in the current iterated section&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/#service-definitions&#34;&gt;Service definitions&lt;/a&gt; opt-in to what Dashy section they belong to&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;createSectionItems&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;For a given list of services, create the item definition for that service as required by Dashy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sectionItems&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;For the current iterated section:
+&lt;ul&gt;
+&lt;li&gt;filter on services to be added to the section&lt;/li&gt;
+&lt;li&gt;convert that to a list&lt;/li&gt;
+&lt;li&gt;create section items from it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then for each element in &lt;code&gt;sections&lt;/code&gt;, enrich it with an &lt;code&gt;items&lt;/code&gt; attribute with the output of &lt;code&gt;sectionItems&lt;/code&gt; function.&lt;/p&gt;
+&lt;p&gt;This &lt;code&gt;sectionServices&lt;/code&gt; variable is then added to &lt;code&gt;dashyConfig&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dashyConfig = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  pageInfo &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    title &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Joannet&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    navLinks &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      title &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dashy Documentation&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      path &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;https://dashy.to/docs&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  appConfig &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    theme &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;nord-frost&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    iconSize &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;large&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    layout &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;vertical&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    preventWriteToDisk &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    preventLocalSave &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    disableConfiguration &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; false;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    hideComponents &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      hideSettings &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      hideFooter &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  sections &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; sectionServices;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We&amp;rsquo;ll then need to convert it to a YAML file. This was a bit tricky to set up, but I sought inspiration from this &lt;a href=&#34;https://github.com/NixOS/nixpkgs/blob/17b0cf40e3ce85207d180d792cddc4a37125db36/nixos/modules/services/home-automation/home-assistant.nix#L15-L18&#34;&gt;code block&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;format = pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;formats&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;yaml { };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;configFile =
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;runCommand &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dashy-configuration.yaml&amp;#34;&lt;/span&gt; { preferLocalBuild &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true; } &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    cp &lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;format&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;generate &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dashy-configuration.yaml&amp;#34;&lt;/span&gt; dashyConfig&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt; $out
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    sed -i -e &amp;#34;s/&amp;#39;\!\([a-z_]\+\) \(.*\)&amp;#39;/\!\1 \2/;s/^\!\!/\!/;&amp;#34; $out
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;  &amp;#39;&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then &lt;code&gt;configFile&lt;/code&gt; is exposed to the container where the app is running. You can also see below that the port from catalog is used here to expose the service.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;virtualisation&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;oci-containers&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;containers&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dashy = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  image &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;lissy93/dashy:&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;version&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  volumes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;configFile&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;:/app/public/conf.yml&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ports &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;toString&lt;/span&gt; catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;home&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;port&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;:80&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;deployment-configurations&#34;&gt;Deployment configurations&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This next section talks about some more advanced features of Nix, of which introducing them is out of scope for this blog post given its length. I&amp;rsquo;ll discuss how the catalog is used here and link back a more in-depth blog when it is published.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It&amp;rsquo;s not just service configurations that use the catalog too - I use &lt;a href=&#34;https://github.com/serokell/deploy-rs&#34;&gt;deploy-rs&lt;/a&gt; to deploy these configurations to NixOS nodes, reading from the node definitions in catalog. Given that various services are interdependent on each other across varying nodes, deploy-rs allows me to deploy all configurations at the same time from one command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# all hosts&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nix run github:serokell/deploy-rs -- -s &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# per host&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nix run github:serokell/deploy-rs -- -s &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;.#dennis&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;deploy-rs requires you to enable &lt;a href=&#34;https://www.tweag.io/blog/2020-05-25-flakes/&#34;&gt;Nix Flakes&lt;/a&gt; in your config, allowing you to fix all your dependencies to a particular version, with a hash. This ensures that you are &lt;em&gt;always&lt;/em&gt; able to reproduce the config no matter what rebuilds you do. It primarily is used for locking dependencies of a particular package, but it can also be used for locking dependencies of NixOS configs.&lt;/p&gt;
+&lt;p&gt;deploy-rs piggybacks on flakes to define what hosts it should deploy too, requiring a &lt;code&gt;deploy.nodes&lt;/code&gt; attrset of hostnames to a &lt;a href=&#34;https://github.com/serokell/deploy-rs#node&#34;&gt;definition&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;deploy = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  nodes &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    dennis &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      hostname &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;192.168.1.12&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      profiles &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        system &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          user &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          path &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; deploy-rs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;lib&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;x86_64-linux&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;activate&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixos self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixosConfigurations&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;dennis;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          sshOpts &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;-o&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;IdentitiesOnly=yes&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Given that I have node NixOS configurations defined in the &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/tree/debed8c96d722fb988fb61ca106b6bf3e11414e4/hosts&#34;&gt;hosts directory&lt;/a&gt;, I can retrieved the hostnames and use these to poll the hosts defined in &lt;code&gt;catalog.nodes&lt;/code&gt; to construct a new attrset that deploy-rs requires.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# Defined earlier in the flake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hosts = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;readDir &lt;span style=&#34;color:#f1fa8c&#34;&gt;./hosts&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;deploy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nodes = &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;listToAttrs (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;map&lt;/span&gt; (host:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt; node &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nodes&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;host&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      hostname &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; node&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;ip&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;private;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      profiles&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;system &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        user &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        path &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; deploy-rs&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;lib&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;node&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;system&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;activate&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixos
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          self&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;nixosConfigurations&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;host&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        sshOpts &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [ &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;-o&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;IdentitiesOnly=yes&amp;#34;&lt;/span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }) hosts);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What&amp;rsquo;s happening here is I&amp;rsquo;m pulling from the node definitions the IP address used to reach the host, as well as the system architecture for that node, so that we can call the correct deploy-rs library. Lastly I feed it its nixosConfiguration that should be deployed to the node - this is a &lt;a href=&#34;https://www.tweag.io/blog/2020-07-31-nixos-flakes/&#34;&gt;requirement of using a flake&lt;/a&gt; to deploy configs.&lt;/p&gt;
+&lt;p&gt;While brief, I didn&amp;rsquo;t want to overload this section with nuances of how flakes are set up. You can see &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/flake.nix&#34;&gt;my flake.nix&lt;/a&gt; if you are keen to see how it all pieces together.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion-and-improvements&#34;&gt;Conclusion and improvements&lt;/h2&gt;
+&lt;p&gt;I don&amp;rsquo;t like how I have to define which host the service is running on, I think it would be better to have it so that wherever the modules are enabled, then the catalog discovers that. It&amp;rsquo;s only a tiny bit of duplication so its not been at the top of my list to improve on.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d like to also define as much Grafana configuration as possible using this. I provided a GUI walkthrough of how I set up the alerting, but it would be great to have Nix build this for us instead.&lt;/p&gt;
+&lt;p&gt;While not largely catalog related, we can extend on &lt;a href=&#34;https://github.com/nix-community/home-manager&#34;&gt;home-manager&lt;/a&gt; to allow us to be able to use the catalog to deploy Nix configs to non-NixOS nodes. When we do this, we will use the package manager component of Nix (nixpkgs) to manage the packages on a host.&lt;/p&gt;
+&lt;p&gt;The catalog has been largely beneficial as my source of truth; adding a service in here means that I automatically get an endpoint for it with forwarding, and have it monitored too - plus with easy extensibility to other use cases as they come. It&amp;rsquo;s also enabled configurations to be read across different hosts, without the use of a service discovery component. It&amp;rsquo;s one of the benefits of using/experimenting with NixOS of which I&amp;rsquo;m glad I&amp;rsquo;ve invested the time in and look forward to playing around with more in future.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Nix Cheat Sheet</title><enclosure url="https://jdheyburn.co.uk/blog/nix-cheat-sheet/cover.png" type="image/jpg"></enclosure>
