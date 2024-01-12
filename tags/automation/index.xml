@@ -3176,6 +3176,7 @@
 &lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Trying to write my next blog post about AWS SSM, and had a load of hours wiped out trying to troubleshoot an issue with SSM agents... turns out AWS AMIs install these bad agent versions by default 😭&lt;a href=&#34;https://t.co/mgFMVyB5fL&#34;&gt;https://t.co/mgFMVyB5fL&lt;/a&gt;&lt;/p&gt;&amp;mdash; Joseph D. Heyburn (@jdheyburn) &lt;a href=&#34;https://twitter.com/jdheyburn/status/1320011701480284162?ref_src=twsrc%5Etfw&#34;&gt;October 24, 2020&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
 
+
 &lt;p&gt;Let&amp;rsquo;s now dive into the output of the Linux instance.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;s3-command-document-success-linux.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success-linux.png&#34;
          alt=&#34;Breakdown of steps invoked on Linux for a the command document we executed earlier, Windows steps are skipped&#34;/&gt;&lt;/a&gt;

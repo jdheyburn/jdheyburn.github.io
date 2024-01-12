@@ -6,10 +6,633 @@
     <description>Recent content in Blog on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 12 Jan 2024 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How I use Obsidian to journal</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</link>
+      <pubDate>Fri, 12 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</guid>-->
+      <description>&lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;I use Obsidian for journalling&lt;/li&gt;
+&lt;li&gt;You can view the &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1&#34;&gt;templates&lt;/a&gt; I use for creating my daily, weekly, monthly, and quarterly notes&lt;/li&gt;
+&lt;li&gt;See &lt;a href=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/#deep-dive-into-note-templates&#34;&gt;Deep dive into note templates&lt;/a&gt; on how these templates work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;introduction-to-obsidian&#34;&gt;Introduction to Obsidian&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ve been using &lt;a href=&#34;https://obsidian.md/&#34;&gt;Obsidian&lt;/a&gt; for over 2 years now as my primary note-taking tool. Previously I was using &lt;a href=&#34;https://www.notion.so/&#34;&gt;Notion&lt;/a&gt; but then I got frustrated with the clunkiness of it (of which I am sure it has improved since then) and also required Internet connectivity to run - none of the files were local. Before that, I&amp;rsquo;d been keeping a physical notebook which wasn&amp;rsquo;t actually of much use for recalling information from time gone by.&lt;/p&gt;
+&lt;p&gt;Obsidian is just one application used in personal knowledge management (PKM) and is a tool for thought (TfT). It is &lt;em&gt;not&lt;/em&gt; open-source, however, it is built by a very small, independent team of developers who are passionate about privacy, and user feedback, and who have &lt;a href=&#34;https://obsidian.md/about&#34;&gt;promised&lt;/a&gt; to never accept VC investment to remain independent.&lt;/p&gt;
+&lt;p&gt;Since &lt;a href=&#34;https://www.youtube.com/watch?v=z58FsjT-UO8&#34;&gt;kepano became CEO of Obsidian&lt;/a&gt;, they have been highlighting what sets Obsidian apart from other PKM tools. Ensuring that it is local-first means that you can use Obsidian without your data being stored anywhere. The files are in &lt;a href=&#34;https://en.wikipedia.org/wiki/Markdown&#34;&gt;markdown&lt;/a&gt; format, which is the de-facto standard for documentation - no proprietary file formats are used here. With these main points, if Obsidian were to cease to exist, you could pick your files up and move them to another app. These make Obsidian work &lt;strong&gt;blazingly quick&lt;/strong&gt; - no loading screens or sluggish navigating; everything loads immediately.&lt;/p&gt;
+&lt;p&gt;Obsidian&amp;rsquo;s functionality is propelled by the amazing community which has written several plugins that provide it the flexibility to be used for many use cases. Including databases, &lt;a href=&#34;https://github.com/mgmeyers/obsidian-kanban&#34;&gt;Kanban boards&lt;/a&gt;, project management&amp;hellip; there are &lt;a href=&#34;https://obsidian.md/plugins&#34;&gt;over 1,000&lt;/a&gt; to choose from.&lt;/p&gt;
+&lt;p&gt;The application itself is free, but if you want to synchronise notes between different desktops or even the mobile app, they offer a &lt;a href=&#34;https://obsidian.md/sync&#34;&gt;Sync feature&lt;/a&gt; for a cost. You could also achieve file sync using a third party, but given that it is a small independent team working on the app, I&amp;rsquo;m happy to pay for Sync as a means of supporting them too. There are also options for &lt;a href=&#34;https://help.obsidian.md/Licenses+and+payment/Catalyst+license&#34;&gt;one time payments&lt;/a&gt; to help assist them too (I am a Supporter!).&lt;/p&gt;
+&lt;p&gt;While I don&amp;rsquo;t see myself necessarily as a power user (at least, my notes are somewhat all-over-the-shop and unlinked), I wanted to write up how I&amp;rsquo;ve been using it for journalling over the last 2 years. I hope this then becomes a series of my journey through PKM, and to share additional blog posts which I hope inspire others.&lt;/p&gt;
+&lt;h2 id=&#34;why-journal&#34;&gt;Why journal?&lt;/h2&gt;
+&lt;p&gt;Everyone has their reasons for journalling; some people use it to track thoughts, emotions, etc. For myself though as I started approaching my late twenties I felt that life was passing by very quickly - unsure of what I had accomplished or even done on a particular day, and what the general theme of a week or month was to me. I use journalling as a reference back to see how far I have progressed whether in my career or my personal life.&lt;/p&gt;
+&lt;p&gt;Obsidian has made this extremely easy for me to do with its &lt;a href=&#34;https://help.obsidian.md/Plugins/Daily+notes&#34;&gt;Daily Notes feature&lt;/a&gt;. These are simply notes that are specific to one day only and can be created from a template so that you don&amp;rsquo;t need to populate them in the boilerplate.&lt;/p&gt;
+&lt;p&gt;In this post, I&amp;rsquo;ll walk through the setup that I use for daily journalling, which then bubbles up to weekly, monthly, and then quarterly notes. You can see some sample screenshots below.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;
+         alt=&#34;Daily note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;Daily note&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;
+         alt=&#34;Weekly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;Weekly note&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;
+         alt=&#34;Monthly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;Monthly note&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;
+         alt=&#34;Quarterly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
+            &lt;p&gt;Quarterly note&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;This is achieved with these community plugins:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Calendar
+&lt;ul&gt;
+&lt;li&gt;Provides a calendar widget in the right pane of Obsidian&lt;/li&gt;
+&lt;li&gt;Clicking on a day or week takes you to its respective note&lt;/li&gt;
+&lt;li&gt;I find it&amp;rsquo;s an easy way to generate historical daily and weekly notes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Dataview
+&lt;ul&gt;
+&lt;li&gt;Enables querying of properties from notes and displaying them into another&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Periodic Notes
+&lt;ul&gt;
+&lt;li&gt;Quickly create daily, weekly, monthly, quarterly, and yearly notes&lt;/li&gt;
+&lt;li&gt;Configurable to choose the name format of the notes, which template to use, and where to place the notes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Templater
+&lt;ul&gt;
+&lt;li&gt;Creates files from a template&lt;/li&gt;
+&lt;li&gt;Allows you to dynamically generate the content of notes from logic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setting-up-the-workflow&#34;&gt;Setting up the workflow&lt;/h2&gt;
+&lt;p&gt;In this section I&amp;rsquo;ll run through the templates, plugins, and configuration you need to replicate the same workflow in the folder that you have open in Obsidian (known as a &lt;a href=&#34;https://help.obsidian.md/Getting+started/Create+a+vault&#34;&gt;vault&lt;/a&gt;).&lt;/p&gt;
+&lt;h3 id=&#34;template-files&#34;&gt;Template files&lt;/h3&gt;
+&lt;p&gt;I use templates extensively for dynamically generating notes, especially on notes that are created every day.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;templates/DailySummary.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;templates/WeeklySummary.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;templates/MonthlySummary.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;templates/QuarterlySummary.md
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;See the links below for the templates needed for journalling.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-dailysummary-txt&#34;&gt;Daily&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-weeklysummary-txt&#34;&gt;Weekly&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-monthlysummary-txt&#34;&gt;Monthly&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-quarterlysummary-txt&#34;&gt;Quarterly&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I run through the sections of each of these templates later on.&lt;/p&gt;
+&lt;h3 id=&#34;plugins-and-configuration&#34;&gt;Plugins and configuration&lt;/h3&gt;
+&lt;p&gt;Now that we have the template files, we can configure the plugins. Make sure you &lt;a href=&#34;https://help.obsidian.md/Extending+Obsidian/Community+plugins&#34;&gt;install them first&lt;/a&gt; if you&amp;rsquo;re following along as a guide. As a reminder the plugins you&amp;rsquo;ll need are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/liamcain/obsidian-calendar-plugin&#34;&gt;Calendar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/blacksmithgu/obsidian-dataview&#34;&gt;Dataview&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/liamcain/obsidian-periodic-notes&#34;&gt;Periodic Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/SilentVoid13/Templater&#34;&gt;Templater&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;calendar&#34;&gt;Calendar&lt;/h4&gt;
+&lt;p&gt;For this I enable &lt;strong&gt;Show week number&lt;/strong&gt; to let me click on week numbers to create notes from them in the widget.&lt;/p&gt;
+&lt;p&gt;I like to enable &lt;strong&gt;Confirm before creating a new note&lt;/strong&gt; so that I don&amp;rsquo;t accidentally create notes I didn&amp;rsquo;t mean to when clicking in the widget.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;calendar-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/calendar-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;dataview&#34;&gt;Dataview&lt;/h4&gt;
+&lt;p&gt;After installation, there&amp;rsquo;s no additional config needed for Dataview.&lt;/p&gt;
+&lt;h4 id=&#34;periodic-notes&#34;&gt;Periodic Notes&lt;/h4&gt;
+&lt;p&gt;I enable all toggles with the exception of &lt;strong&gt;Quarterly Notes&lt;/strong&gt; and &lt;strong&gt;Yearly Notes&lt;/strong&gt;, since I don&amp;rsquo;t have these templated just yet.&lt;/p&gt;
+&lt;p&gt;The config for each note is as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Daily Notes
+&lt;ul&gt;
+&lt;li&gt;Format: &lt;code&gt;YYYY-MM-DD&lt;/code&gt; (the default)
+&lt;ul&gt;
+&lt;li&gt;Creates files in the format &lt;code&gt;2023-11-20&lt;/code&gt;, which is the&lt;a href=&#34;https://en.wikipedia.org/wiki/ISO_8601&#34;&gt;ISO 8601 standard&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;A benefit of this format is that alphabetical order is the same as chronological&lt;/li&gt;
+&lt;li&gt;So as daily notes are created, they are already in order&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Daily Note Template: &lt;code&gt;templates/DailySummary.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note Folder: &lt;code&gt;planner/daily&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Weekly Notes
+&lt;ul&gt;
+&lt;li&gt;Format: &lt;code&gt;YYYY-[W]ww&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates files in the format &lt;code&gt;2023-W46&lt;/code&gt;, also ISO 8601 compliant&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Weekly Note Template: &lt;code&gt;templates/WeeklySummary.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note Folder: &lt;code&gt;planner/weekly&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Monthly Notes
+&lt;ul&gt;
+&lt;li&gt;Format: &lt;code&gt;YYYY-MM-[M]&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates notes in the format &lt;code&gt;2023-11-M&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Monthly Note Template: &lt;code&gt;templates/MonthlySummary.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note Folder: &lt;code&gt;planner/monthly&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Quarterly Notes
+&lt;ul&gt;
+&lt;li&gt;Format: &lt;code&gt;YYYY-[Q]Q&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;e.g. &lt;code&gt;2023-Q4&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Quarterly Note Template: &lt;code&gt;templates/QuarterlySummary.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note Folder: &lt;code&gt;planner/quarterly&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-notes-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-notes-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;templater&#34;&gt;Templater&lt;/h4&gt;
+&lt;p&gt;Other than setting the &lt;strong&gt;Template folder location&lt;/strong&gt; to &lt;code&gt;templates&lt;/code&gt;, there is no other config needed.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;templater-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/templater-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;connecting-everything-together&#34;&gt;Connecting everything together&lt;/h3&gt;
+&lt;p&gt;If everything is set up correctly, you should be able to click on a day or week in the Calendar widget and it should generate a note for you. Another way to create these is via the command palette, which can be access through the hotkey &lt;code&gt;Cmd+P&lt;/code&gt; or &lt;code&gt;Ctrl+P&lt;/code&gt; - this is how I create monthly notes.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-command-palette.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/periodic-notes-command-palette.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;deep-dive-into-note-templates&#34;&gt;Deep dive into note templates&lt;/h2&gt;
+&lt;h3 id=&#34;daily&#34;&gt;Daily&lt;/h3&gt;
+&lt;p&gt;The daily note is generated from &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-dailysummary-txt&#34;&gt;this template&lt;/a&gt;, and all daily notes are stored in &lt;code&gt;planner/daily&lt;/code&gt;.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a walkthrough on what&amp;rsquo;s happening in each section.&lt;/p&gt;
+&lt;h4 id=&#34;properties&#34;&gt;Properties&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://help.obsidian.md/Editing+and+formatting/Properties&#34;&gt;Properties&lt;/a&gt; define the metadata of the note, which can be used to query your notes to retrieve data back using Dataview. You define it in your notes via &lt;a href=&#34;https://jekyllrb.com/docs/front-matter/&#34;&gt;YAML front matter&lt;/a&gt;, which is YAML values wrapped around lines of &lt;code&gt;---&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- &lt;span style=&#34;color:#6272a4&#34;&gt;# Front matter starts here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;key&lt;/span&gt;: value
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- &lt;span style=&#34;color:#6272a4&#34;&gt;# Front matter ends here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normal markdown text from here
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Templater is used to populate the property values in the front matter, so let&amp;rsquo;s look at the &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-dailysummary-txt-L1-L13&#34;&gt;local variables used&lt;/a&gt; in the daily note template.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(&lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Date&lt;/span&gt;(tp.file.title));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;days&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousDayFmt &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; previousDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-DD&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; lastYearDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;years&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; nextDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.clone().add(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;days&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; nextDayFmt &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; nextDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-DD&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[W]ww&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-[M]&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisDayLong &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;dddd Do MMMM YYYY&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisYear &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Y]&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;-%&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Reviewing each one of these:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thisDay&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates a &lt;a href=&#34;https://silentvoid13.github.io/Templater/internal-functions/internal-modules/date-module.html?highlight=moment#momentjs&#34;&gt;moment.js&lt;/a&gt; object for the date that this daily note represents&lt;/li&gt;
+&lt;li&gt;Remember that daily notes are created in the format &lt;code&gt;YYYY-MM-DD&lt;/code&gt; (&lt;code&gt;2023-11-20&lt;/code&gt;), which is already the format for the &lt;code&gt;Date&lt;/code&gt; constructor&lt;/li&gt;
+&lt;li&gt;By using the file name as the source of truth, it allows me to create daily notes from the Calendar widget just by clicking on the dates&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;previousDay&lt;/code&gt; and &lt;code&gt;previousDayFmt&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Calculate the day previous to this one, and then format it in to &lt;code&gt;YYYY-MM-DD&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Used for navigation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nextDay&lt;/code&gt; and &lt;code&gt;nextDayFmt&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Similar to above, but for the succeeding day&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lastYearDay&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Calculate the same day last year&lt;/li&gt;
+&lt;li&gt;Used to query the journal entry from last year&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisWeek&lt;/code&gt;, &lt;code&gt;thisMonth&lt;/code&gt;, &lt;code&gt;thisYear&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The week/month/year that this day is in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisDayLong&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;A long format of this date (i.e. &lt;code&gt;Monday 20th November 2023&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You&amp;rsquo;ll notice that I have to clone &lt;code&gt;thisDay&lt;/code&gt;, because &lt;code&gt;add()&lt;/code&gt; and &lt;code&gt;subtract()&lt;/code&gt; are mutating.&lt;/p&gt;
+&lt;p&gt;These variables then get placed into the YAML front matter for the note. You&amp;rsquo;ll notice that there is &lt;code&gt;date&lt;/code&gt; and &lt;code&gt;createdAt&lt;/code&gt; which is a standard across any note in my vault and represent the date and time the note was created.&lt;/p&gt;
+&lt;p&gt;Additionally there is a &lt;code&gt;dateShort&lt;/code&gt; property which is the date of the note, but formatted in a nicer manner for when the note is recalled.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: &amp;lt;% tp.date.now(&amp;#34;YYYY-MM-DD&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: &amp;lt;% tp.file.creation_date() %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;weekly&lt;/span&gt;: &amp;lt;% thisWeek %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;monthly&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &amp;lt;% thisMonth %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &amp;lt;% thisYear %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;dateShort&lt;/span&gt;: &amp;lt;% thisDay.format(&amp;#34;dddd Do MMMM&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aliases&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &amp;lt;% thisDayLong %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After templating it looks like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2023-11-20
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: 2023-11-20 &lt;span style=&#34;color:#bd93f9&#34;&gt;18&lt;/span&gt;:&lt;span style=&#34;color:#bd93f9&#34;&gt;33&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;weekly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-W47
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;monthly&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#bd93f9&#34;&gt;2023-11&lt;/span&gt;-M
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;dateShort&lt;/span&gt;: Monday 20th November
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;aliases&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - Monday 20th November 2023
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since Obsidian has first-class support for properties, it creates a nice interface.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-properties.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-properties.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;navigation&#34;&gt;Navigation&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;# &amp;lt;% thisDayLong %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&amp;lt;&amp;lt; [[planner/daily/&amp;lt;% previousDayFmt %&amp;gt;|&amp;lt;% previousDayFmt %&amp;gt;]] || [[planner/daily/&amp;lt;% nextDayFmt %&amp;gt;|&amp;lt;% nextDayFmt %&amp;gt;]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&amp;lt;% thisWeek %&amp;gt;]]  || [[&amp;lt;% thisMonth %&amp;gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is the main title for the note I&amp;rsquo;m working in. There are also links to other notes related to this day, such as the adjacent days (although I primarily use the hotkeys &lt;code&gt;Ctrl+1&lt;/code&gt; and &lt;code&gt;Ctrl+3&lt;/code&gt; to navigate previous and next days respectively), along with a link to the weekly and monthly notes for this day.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;# Monday 20th November 2023
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&amp;lt;&amp;lt; [[planner/daily/2023-11-19|2023-11-19]] || [[planner/daily/2023-11-21|2023-11-21]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[2023-W47]]  || [[2023-11-M]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This visualises as:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-navigation-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;See below for the hotkeys I have set up for navigating daily notes. Even if I don&amp;rsquo;t have hotkeys for them, I can still access the &lt;a href=&#34;https://help.obsidian.md/Plugins/Command+palette&#34;&gt;command palette&lt;/a&gt; at the hotkey &lt;code&gt;Ctrl+P&lt;/code&gt;, or &lt;code&gt;Cmd+P&lt;/code&gt; or macOS.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-hotkeys.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/periodic-notes-hotkeys.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;summary&#34;&gt;Summary&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summary 🏁
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;TABLE WITHOUT ID DailySummary as &amp;#34;This time last year: &amp;lt;% lastYearDay.format(&amp;#34;dddd Do MMMM YYYY&amp;#34;) %&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM &amp;#34;planner/daily&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WHERE file.name = &amp;#34;&amp;lt;% lastYearDay.format(&amp;#34;YYYY-MM-DD&amp;#34;) %&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DailySummary:: 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After &lt;code&gt;DailySummary::&lt;/code&gt; is where I write the day&amp;rsquo;s journal entry. Before that though, I have a Dataview query which retrieves the journal entry for the same day, but the year before. I like retrieving the journal entry for the year before to frame time somewhat.&lt;/p&gt;
+&lt;p&gt;After templating, it looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summary 🏁
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;TABLE WITHOUT ID DailySummary as &amp;#34;This time last year: Sunday 20th November 2022&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM &amp;#34;planner/daily&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WHERE file.name = &amp;#34;2022-11-20&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DailySummary:: 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And here it is when rendered.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-summary-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-summary-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;a-bit-about-dataview-and-querying&#34;&gt;A bit about Dataview and querying&lt;/h4&gt;
+&lt;p&gt;Dataview is one of the most popular plugins for Obsidian, and there&amp;rsquo;s good reason for it. It opens up a whole world of dynamically presenting the files in your vault in a database-like manner. You can query for files themselves, or their metadata.&lt;/p&gt;
+&lt;p&gt;For example, the Dataview query below will retrieve all notes that are tagged with &lt;code&gt;#kubernetes&lt;/code&gt; and &lt;code&gt;#worklog&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;LIST
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM #kubernetes AND #worklog 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This then is visualised as:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/example-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;So how do you add metadata? Dataview allows for a &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/annotation/add-metadata/&#34;&gt;couple of methods&lt;/a&gt; ; including &lt;a href=&#34;https://jekyllrb.com/docs/front-matter/&#34;&gt;YAML front matter&lt;/a&gt; (aka &lt;a href=&#34;https://help.obsidian.md/Editing+and+formatting/Properties&#34;&gt;Properties&lt;/a&gt;), or in-line in the file via a key name appended by two colons - e.g. &lt;code&gt;NewProperty::&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I would definitely recommend to &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/&#34;&gt;check the docs&lt;/a&gt; for Dataview, I&amp;rsquo;ll be covering it in more detail in this post for my particular use-case.&lt;/p&gt;
+&lt;h3 id=&#34;weekly&#34;&gt;Weekly&lt;/h3&gt;
+&lt;p&gt;The weekly note is used to summarise what happened during a week. In order for me to recall each day, I use a Dataview query to retrieve the &lt;code&gt;DailySummary&lt;/code&gt; for each day in that week.&lt;/p&gt;
+&lt;p&gt;I use &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-weeklysummary-txt&#34;&gt;this template&lt;/a&gt; for my weekly notes, which produces the below.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;properties-1&#34;&gt;Properties&lt;/h4&gt;
+&lt;p&gt;These local variables are define in the template:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-&amp;amp;W WW&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisWeek.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;weeks&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; nextWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisWeek.clone().add(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;weeks&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; theseMonths &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [...&lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; Set([&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;4&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;5&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;6&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;7&lt;/span&gt;].map(d=&amp;gt;moment(&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;tp.file.title&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;d&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;`&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-W-E&amp;#34;&lt;/span&gt;).format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-[M]&amp;#34;&lt;/span&gt;)))]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisYear &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisWeek.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Y]&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;-%&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thisWeek&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates a &lt;a href=&#34;https://silentvoid13.github.io/Templater/internal-functions/internal-modules/date-module.html?highlight=moment#momentjs&#34;&gt;moment.js&lt;/a&gt; object for the week that this note is for&lt;/li&gt;
+&lt;li&gt;We&amp;rsquo;re parsing the file title (which is in the format &lt;code&gt;2023-W47&lt;/code&gt;) to create the object&lt;/li&gt;
+&lt;li&gt;Similarly to the daily note, this allows me to create weekly notes from the Calendar widget by clicking on the week number&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;previousWeek&lt;/code&gt; and &lt;code&gt;nextWeek&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Calculate the weeks that are adjacent to this one&lt;/li&gt;
+&lt;li&gt;Used for navigation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;theseMonths&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Calculates the months that this week traverses&lt;/li&gt;
+&lt;li&gt;It loops over days of the week (i.e. first day in the week), creates a new moment object, then formats it in the month format&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisYear&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The year that this week is in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These variables are then used in the YAML front matter below. There is some extra logic to print out &lt;code&gt;monthly&lt;/code&gt; into an array.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: &amp;lt;% tp.date.now(&amp;#34;YYYY-MM-DD&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: &amp;lt;% tp.file.creation_date() %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;monthly&lt;/span&gt;: &amp;lt;%* theseMonths.forEach(month =&amp;gt; tR += `\n - ${month}`) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &amp;lt;% thisYear %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After templating, it looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2023-11-20
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: 2023-11-20 &lt;span style=&#34;color:#bd93f9&#34;&gt;19&lt;/span&gt;:&lt;span style=&#34;color:#bd93f9&#34;&gt;35&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;monthly&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; - &lt;span style=&#34;color:#bd93f9&#34;&gt;2023-11&lt;/span&gt;-M
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Visualised as:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-properties-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-properties-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;navigation-1&#34;&gt;Navigation&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[&amp;lt;% previousWeek.format(&amp;#34;YYYY-[W]ww&amp;#34;) %&amp;gt;]] || [[&amp;lt;% nextWeek.format(&amp;#34;YYYY-[W]ww&amp;#34;) %&amp;gt;]] &amp;gt;&amp;gt;&amp;lt;%* theseMonths.forEach(month =&amp;gt; tR += &lt;span style=&#34;color:#f1fa8c&#34;&gt;`\n[[${month}]]`&lt;/span&gt;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I can navigate to adjacent weekly notes, and the monthly notes for this week from this panel. After templating it looks like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[2023-W46]] || [[2023-W48]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023-11&lt;/span&gt;-M]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then is visualised as:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-navigation-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;summary-1&#34;&gt;Summary&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;TABLE WITHOUT ID (&amp;#34;[[&amp;#34;+file.name+&amp;#34;|&amp;#34;+dateShort+&amp;#34;]]&amp;#34;) as &amp;#34;Daily Summaries&amp;#34;, DailySummary as &amp;#34; &amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM &amp;#34;planner/daily&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WHERE weekly = this.file.name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name ASC
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summary
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WeeklySummary:: 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;WeeklySummary::&lt;/code&gt; is where the summary of that week is entered. Above that is a Dataview query for retrieving all the daily entries for the days within that week. This renders the view below:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Let&amp;rsquo;s now break down what the query is doing, skipping over the first line for now.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;FROM &amp;quot;planner/daily&amp;quot;&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;limits searching for files in this directory, which is where my daily notes get placed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;WHERE weekly = this.file.name&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;filters the results to only match files where the &lt;code&gt;weekly&lt;/code&gt; property is equal to the name of the file &lt;em&gt;where the query is executed from&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;remember that this is executing from my weekly note, which is named &lt;code&gt;2023-W47&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;this will then only return daily notes for the given week&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SORT file.name ASC&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;arrange the files in alphabetical order&lt;/li&gt;
+&lt;li&gt;given we named the files in the ISO8601 date format, these are inherently ordered chronologically&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If we were to do a basic &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/queries/structure/#choose-a-output-format&#34;&gt;LIST&lt;/a&gt; output, with the query below&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;LIST
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM &amp;#34;planner/daily&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WHERE weekly = this.file.name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name ASC
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then it would print out a list of all the files with the given property.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-list-output.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/example-list-output.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;While this tells us what days were in the week, we can use the &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/queries/query-types/#table&#34;&gt;TABLE&lt;/a&gt; query to display metadata of the queried files in an easy to view format. So reviewing the first line of our original query again:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;TABLE WITHOUT ID (&amp;#34;[[&amp;#34;+file.name+&amp;#34;|&amp;#34;+dateShort+&amp;#34;]]&amp;#34;) as &amp;#34;Daily Summaries&amp;#34;, DailySummary as &amp;#34; &amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;TABLE WITHOUT ID&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;defines this as a TABLE query&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;WITHOUT ID&lt;/code&gt; will hide the name of the file, i.e. &lt;code&gt;2023-11-13&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;We want to hide it because we want to use the human friendly format instead&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now we define the name of the columns for the table.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(&amp;quot;[[&amp;quot;+file.name+&amp;quot;|&amp;quot;+dateShort+&amp;quot;]]&amp;quot;) as &amp;quot;Daily Summaries&amp;quot;&lt;/code&gt; will create a column named Daily Summaries, with the text being a hyperlink to the file of that daily note, with the display text being the human friendly text.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;DailySummary as &amp;quot; &amp;quot;&lt;/code&gt; creates a column with an empty name, using the file property &lt;code&gt;DailySummary&lt;/code&gt; as the values. Given that we&amp;rsquo;re setting an in-line property in the daily notes at &lt;code&gt;DailySummary::&lt;/code&gt;, the Dataview query is able to display back the values.&lt;/p&gt;
+&lt;p&gt;Once we&amp;rsquo;ve written the weekly summary, that bubbles up to the monthly note.&lt;/p&gt;
+&lt;h3 id=&#34;monthly&#34;&gt;Monthly&lt;/h3&gt;
+&lt;p&gt;The monthly note consolidates all the weekly notes into here so that I can write a summary, and is created from &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-monthlysummary-txt&#34;&gt;this template&lt;/a&gt;.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;properties-and-navigation&#34;&gt;Properties and navigation&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-&amp;amp;M &amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisQuarter &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Q]Q&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;months&amp;#39;&lt;/span&gt;)  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; nextMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.clone().add(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;months&amp;#39;&lt;/span&gt;)  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisYear &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Y]&amp;#34;&lt;/span&gt;)  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;-%&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thisMonth&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates a moment object for the month that this note is for&lt;/li&gt;
+&lt;li&gt;Similar to daily and weekly, we are parsing the title of the note to create the object&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisQuarter&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The quarter that this month is in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;previousMonth&lt;/code&gt; and &lt;code&gt;nextMonth&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Adjacent months to this one&lt;/li&gt;
+&lt;li&gt;Used for navigation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisYear&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The year that this month is in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These variables get used in the template for the YAML front matter, and navigation.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: &amp;lt;% tp.date.now(&amp;#34;YYYY-MM-DD&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: &amp;lt;% tp.file.creation_date() %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;quarterly&lt;/span&gt;: &amp;lt;% thisQuarter %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &amp;lt;% thisYear %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[&amp;lt;% previousMonth.format(&amp;#34;YYYY-MM-[M]&amp;#34;) %&amp;gt;]] || [[&amp;lt;% nextMonth.format(&amp;#34;YYYY-MM-[M]&amp;#34;) %&amp;gt;]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&amp;lt;% thisQuarter %&amp;gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&amp;lt;% thisYear %&amp;gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After templating, it looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2023-11-20
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: 2023-11-20 &lt;span style=&#34;color:#bd93f9&#34;&gt;19&lt;/span&gt;:&lt;span style=&#34;color:#bd93f9&#34;&gt;36&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;quarterly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-Q4
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[2023-10-M]] || [[2023-12-M]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-Q4]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And this is how both of them are rendered:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-properties-and-navigation.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-properties-and-navigation.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;summary-2&#34;&gt;Summary&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summaries 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```dataview
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&lt;/span&gt;Table without id (&amp;#34;[[&amp;#34;+file.name+&amp;#34;]]&amp;#34;) as &amp;#34;Weekly summaries&amp;#34;, WeeklySummary as &amp;#34; &amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FROM &amp;#34;planner/weekly&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WHERE contains(monthly, this.file.name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name ASC
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This Dataview query retrieves all the weekly summaries for the weeks in this month. It&amp;rsquo;s similar to the query used in weekly notes to retrieve daily summaries, with the exception that the &lt;code&gt;WHERE&lt;/code&gt; clause is modified to handle &lt;code&gt;monthly&lt;/code&gt;, given it&amp;rsquo;s an array.&lt;/p&gt;
+&lt;p&gt;Below that I have a heading for where the monthly summary would go.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;[!hint] 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;Anything written under the **Month summary** section is added to the quarterly review.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;### Monthly summary
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I tend to write a longer prose for the month summary, and so that wouldn&amp;rsquo;t fit in nicely in a Dataview query. Instead I embed the contents of the heading in the quarterly note, which I&amp;rsquo;ll talk about in that section. I include a &lt;a href=&#34;https://help.obsidian.md/Editing+and+formatting/Callouts&#34;&gt;callout&lt;/a&gt; which helps remind me of that set up.&lt;/p&gt;
+&lt;p&gt;When rendered, it looks like this:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;quarterly&#34;&gt;Quarterly&lt;/h3&gt;
+&lt;p&gt;I&amp;rsquo;ve not really built up a habit of writing a summary for quarterly notes, but I do collate the summaries of all months in a quarter into its note. These are located in &lt;code&gt;planner/quarterly&lt;/code&gt; in the format &lt;code&gt;yyyy-[Q]n.md&lt;/code&gt;, i.e. &lt;code&gt;2024-Q1.md&lt;/code&gt;.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;h4 id=&#34;properties-2&#34;&gt;Properties&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisQuarter &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-&amp;amp;Q Q&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; theseMonths &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [...&lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; Set([&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;].map(m=&amp;gt;thisQuarter.startOf(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;quarter&amp;#34;&lt;/span&gt;).clone().add(m, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;months&amp;#34;&lt;/span&gt;)))]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisYear &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisQuarter.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Y]&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;-%&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thisQuarter&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates a moment object for the quarter that this note is for&lt;/li&gt;
+&lt;li&gt;Similar to the other notes, it parses the title for this&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;theseMonths&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Creates an array of moment objects for all the months in the quarter&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thisYear&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;The year that this quarter is in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Out of these, only &lt;code&gt;thisYear&lt;/code&gt; is used in the properties&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: &amp;lt;% tp.date.now(&amp;#34;YYYY-MM-DD&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: &amp;lt;% tp.file.creation_date() %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &amp;lt;% thisYear %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;hellip;and here it is after templating:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;date&lt;/span&gt;: 2024-01-04
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;createdAt&lt;/span&gt;: 2024-01-04 &lt;span style=&#34;color:#bd93f9&#34;&gt;20&lt;/span&gt;:&lt;span style=&#34;color:#bd93f9&#34;&gt;31&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2024&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;summary-3&#34;&gt;Summary&lt;/h4&gt;
+&lt;p&gt;For bubbling up the monthly summaries into the quarter note, I embed the contents of each month&amp;rsquo;s &lt;code&gt;### Monthly summary&lt;/code&gt; heading into the note - which is done by &lt;a href=&#34;https://help.obsidian.md/Linking+notes+and+files/Internal+links#Link+to+a+heading+in+a+note&#34;&gt;linking to a header in a note&lt;/a&gt;, and then &lt;a href=&#34;https://help.obsidian.md/Linking+notes+and+files/Embedding+files#Embed+a+note+in+another+note&#34;&gt;embedding it&lt;/a&gt;: &lt;code&gt;![[2024-01-M#Monthly summary]]&lt;/code&gt;. This is a core feature of Obsidian and doesn&amp;rsquo;t require the Dataview plugin.&lt;/p&gt;
+&lt;p&gt;The reason I chose embedded a note heading is because the monthly summary tends to be a longer prose, whereas the smaller units that make up a month typically are a few sentences and so can be easily captured by a Dataview property.&lt;/p&gt;
+&lt;p&gt;Taking a look at how the template works, it loops over each element in &lt;code&gt;theseMonths&lt;/code&gt; and formats the markdown out for each month:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summary
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;Insert quarterly summary here
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Months
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;%* theseMonths.forEach(month =&amp;gt; { %&amp;gt;### &amp;lt;% month.format(&amp;#34;MMMM&amp;#34;) %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;![[&amp;lt;% month.format(&amp;#34;YYYY-MM-[M]&amp;#34;) %&amp;gt;#Monthly summary]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;%* }); %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And this is how it looks after templating:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Summary
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;Insert quarterly summary here
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;text-decoration:underline&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;## Months
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;### January
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;![[2024-01-M#Monthly summary]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;### February
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;![[2024-02-M#Monthly summary]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;### March
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;![[2024-03-M#Monthly summary]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;All of these monthly summaries can be rather long, so the quarterly summary is written at the top.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This post ended up way more in-depth then I anticipated, and so it was written over several weeks, which might&amp;rsquo;ve caused some inconsistencies in my screenshots, so apologies for that!&lt;/p&gt;
+&lt;p&gt;You might be asking where the yearly note gets created (i.e. &lt;code&gt;2024-Y&lt;/code&gt;) - and the truth is that these are not templated yet. I create these ad-hoc whenever I start to write my year review. Even for these, I tend to read through the monthly summaries (given their longer prose) to build together how I think the year went.&lt;/p&gt;
+&lt;p&gt;However the main purpose of this post is to share my flow for journalling, and what tools I use to help achieve that. I do have some improvements I wish to make such as moving notes away from their respective flat directories. i.e.:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Daily notes move from &lt;code&gt;planner/daily&lt;/code&gt; to be grouped by year and month: &lt;code&gt;planner/daily/YYYY/MM&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Weekly notes move from &lt;code&gt;planner/weekly&lt;/code&gt; to &lt;code&gt;planner/weekly/YYYY&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Monthly notes move from &lt;code&gt;planner/monthly&lt;/code&gt; to &lt;code&gt;planner/monthly/YYYY&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hopefully I&amp;rsquo;ve given enough of a walkthrough to allow you to come up with a flow of your own! In the future I&amp;rsquo;ll look to document additional functionalities I have in my daily notes such as task management.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Automating service configurations with NixOS</title><enclosure url="https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/cover.png" type="image/jpg"></enclosure>
@@ -4064,6 +4687,7 @@
 &lt;p&gt;If you got any failures, make sure to dive into the failed invocation and see why it failed. Did it fail because of your healthcheck command? Then it is working as intended! Although if it failed on &lt;code&gt;aws:downloadContent&lt;/code&gt;, check to make sure your instances are running the latest version of SSM agent. You can do this with the &lt;code&gt;AWS-UpdateSSMAgent&lt;/code&gt; SSM document. Don&amp;rsquo;t be like me and spend hours troubleshooting against an out-of-date SSM agent! 😂&lt;/p&gt;
 &lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Trying to write my next blog post about AWS SSM, and had a load of hours wiped out trying to troubleshoot an issue with SSM agents... turns out AWS AMIs install these bad agent versions by default 😭&lt;a href=&#34;https://t.co/mgFMVyB5fL&#34;&gt;https://t.co/mgFMVyB5fL&lt;/a&gt;&lt;/p&gt;&amp;mdash; Joseph D. Heyburn (@jdheyburn) &lt;a href=&#34;https://twitter.com/jdheyburn/status/1320011701480284162?ref_src=twsrc%5Etfw&#34;&gt;October 24, 2020&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
 
 &lt;p&gt;Let&amp;rsquo;s now dive into the output of the Linux instance.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;s3-command-document-success-linux.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-0/s3-command-document-success-linux.png&#34;
