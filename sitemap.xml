@@ -3,12 +3,24 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://jdheyburn.co.uk/blog/</loc>
-    <lastmod>2024-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</loc>
-    <lastmod>2024-01-12T00:00:00+00:00</lastmod>
+    <loc>https://jdheyburn.co.uk/tags/caddy/</loc>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/</loc>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/nixos/</loc>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/blog/caddy-nix-config-refactor/</loc>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
+    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</loc>
     <lastmod>2024-01-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/journalling/</loc>
@@ -18,9 +30,6 @@
     <lastmod>2024-01-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/pkm/</loc>
-    <lastmod>2024-01-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/</loc>
     <lastmod>2024-01-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/</loc>
@@ -139,9 +148,6 @@
   </url><url>
     <loc>https://jdheyburn.co.uk/blog/using-terraform-to-manage-aws-patch-baselines-at-enterprise-scale/</loc>
     <lastmod>2020-07-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/caddy/</loc>
-    <lastmod>2020-09-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/certificates/</loc>
     <lastmod>2020-09-30T00:00:00+00:00</lastmod>

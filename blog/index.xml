@@ -6,10 +6,62 @@
     <description>Recent content in Blog on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 12 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 07 Mar 2024 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Simplifying Caddy configs in NixOS</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/caddy-nix-config-refactor/</link>
+      <pubDate>Thu, 07 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/caddy-nix-config-refactor/</guid>-->
+      <description>&lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;My Caddy configs before were &lt;a href=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/#caddy-config&#34;&gt;bloody awfully&lt;/a&gt; complicated&lt;/li&gt;
+&lt;li&gt;I scrapped that way of doing it and made it simpler in &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/pull/66&#34;&gt;this pull request&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;a-gentle-reminder&#34;&gt;A gentle reminder&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ve written before about how I use Caddy to &lt;a href=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/&#34;&gt;reverse proxy&lt;/a&gt; my internal services. Since then I&amp;rsquo;ve migrated to NixOS and am using that to &lt;a href=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/#caddy-config&#34;&gt;automatically generate&lt;/a&gt; the Caddy config.&lt;/p&gt;
+&lt;p&gt;However the approach I used was extremely over-engineered and unnecessarily complicates one of the benefits of Caddy, which is the simplicity of its &lt;a href=&#34;https://caddyserver.com/docs/caddyfile&#34;&gt;Caddyfile DSL&lt;/a&gt;. It was interesting to see how I could generate configs from Nix attribute sets, which served as a learning exercise and the basis for the &lt;a href=&#34;blog/nix-cheat-sheet/&#34;&gt;Nix cheat sheet&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;NixOS allows you to &lt;a href=&#34;https://github.com/NixOS/nixpkgs/blob/abde03c6b3d19be0a69c57e5a1f475b03a09dd71/nixos/modules/services/web-servers/caddy/default.nix#L11-L48&#34;&gt;specify Caddy config&lt;/a&gt; in a way that allows you to modularise it. Migrating to this structure will provide cleaner code for future iterations.&lt;/p&gt;
+&lt;p&gt;Previously I had created the &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/caddy/default.nix&#34;&gt;module for Caddy&lt;/a&gt; in such a way that it would discover what services required a reverse proxy fronting it on said host. This snippet from the previous config would look up from the catalog for any services that were due to be hosted on this machine, then build the Caddy config from there.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;host_services = attrValues (filterAttrs (svc_name: svc_def:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  svc_def &lt;span style=&#34;color:#ff79c6&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;host&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;hostName &lt;span style=&#34;color:#ff79c6&#34;&gt;==&lt;/span&gt; config&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;networking&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;hostName
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; svc_def&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddify&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable) catalog&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;services);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;i-have-seen-the-light&#34;&gt;I have seen the light&lt;/h2&gt;
+&lt;p&gt;Instead of doing all the building of the Caddy JSON config by hand, I can declare a block in each service module &lt;em&gt;that requires it&lt;/em&gt; which will ensure Caddy will create a reverse proxy for it. This means a module now encapsulates everything that is required for this service to function properly.&lt;/p&gt;
+&lt;p&gt;Such a module would then look like the below, with some lines removed for brevity. You can see it in full in &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/46eca0686b735ff74a19867c625e7ecca2d9034a/modules/plex/default.nix&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-nix&#34; data-lang=&#34;nix&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ config&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; pkgs&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; lib&lt;span style=&#34;color:#ff79c6&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;...&lt;/span&gt; }:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;with&lt;/span&gt; lib;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;let&lt;/span&gt; cfg &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; config&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;modules&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;plex;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;in&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  options&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;modules&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;plex &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; { enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; mkEnableOption &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Deploy plex&amp;#34;&lt;/span&gt;; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  config &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; mkIf cfg&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;enable {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;caddy&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;virtualHosts&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;plex.svc.joannet.casa&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;extraConfig &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      tls {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;      reverse_proxy localhost:32400
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;    &amp;#39;&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    services&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;plex &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      enable &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      openFirewall &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; true;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is a lot simpler, and it meant that I was able to remove a &lt;strong&gt;lot&lt;/strong&gt; of complicated Nix code in the &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/pull/66&#34;&gt;pull request&lt;/a&gt; to achieve the same thing. The end result is a solution that is much easier to understand and pragmatic.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m still using a &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/46eca0686b735ff74a19867c625e7ecca2d9034a/modules/dns/default.nix#L8-L31&#34;&gt;similar method&lt;/a&gt; for when writing the AdGuardHome DNS config, but I changed the functions to more appropriate names. You can &lt;a href=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/#dns-rewrites&#34;&gt;revisit the previous blog post&lt;/a&gt; where I walk through that.&lt;/p&gt;
+&lt;p&gt;This refactoring to more complete modules isn&amp;rsquo;t ground-breaking by any means, but I wanted to share this win I gained 👍.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>How I use Obsidian to journal</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
