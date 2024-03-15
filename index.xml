@@ -6,10 +6,47 @@
     <description>Recent content on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 07 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 15 Mar 2024 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>I&#39;m going to KubeConEU 2024</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/attending-kubeconeu-2024/</link>
+      <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/attending-kubeconeu-2024/</guid>-->
+      <description>&lt;p&gt;I was lucky enough to win a &lt;a href=&#34;https://www.dragonflydb.io/&#34;&gt;DragonflyDB&lt;/a&gt; competition for a free ticket to &lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/&#34;&gt;KubeCon Europe 2024&lt;/a&gt; in Paris!&lt;/p&gt;
+&lt;p&gt;Feel free to &lt;a href=&#34;https://jdheyburn.co.uk/contact/&#34;&gt;reach out&lt;/a&gt; if you fancy meeting up for a chat about everything and anything! I&amp;rsquo;m more than happy to chat the below, with some good starting points.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes
+&lt;ul&gt;
+&lt;li&gt;Sample installation of third-party agents on nodes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Redis
+&lt;ul&gt;
+&lt;li&gt;Backups with Velero&lt;/li&gt;
+&lt;li&gt;Migrating data into Kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Observability
+&lt;ul&gt;
+&lt;li&gt;Prometheus, Thanos, and Grafana&lt;/li&gt;
+&lt;li&gt;Datadog&lt;/li&gt;
+&lt;li&gt;OpenTelemetry
+&lt;ul&gt;
+&lt;li&gt;I&amp;rsquo;m &lt;em&gt;really&lt;/em&gt; interested in finding out more about this&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And anything that I might&amp;rsquo;ve blogged about before, including Nix more recently.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll be at the Paris Expo from Tuesday for the co-located events. Hope to see some of you there!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Simplifying Caddy configs in NixOS</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
@@ -7569,6 +7606,7 @@ If you would like to find out more about that and DevOps culture, check out thes
       
       <guid>https://jdheyburn.co.uk/contact/</guid>-->
       <description>&lt;p&gt;You can get in contact with me via any of the below:&lt;/p&gt;
+&lt;p&gt;🐘 &lt;a href=&#34;https://hachyderm.io/@jdheyburn&#34;&gt;Mastodon&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;🐤 &lt;a href=&#34;https://twitter.com/jdheyburn/&#34;&gt;Twitter&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;✉️ jdheyburn [at] gmail [dot] com&lt;/p&gt;
 </description>
