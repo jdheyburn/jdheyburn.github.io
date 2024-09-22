@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>cloudflare on JDHeyburn</title>
+    <title>Cloudflare on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/cloudflare/</link>
-    <description>Recent content in cloudflare on JDHeyburn</description>
+    <description>Recent content in Cloudflare on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 12 Dec 2019 00:00:00 +0000</lastBuildDate>
@@ -37,21 +37,21 @@
 &lt;p&gt;GitHub has a &lt;a href=&#34;https://help.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site&#34;&gt;series of documentation&lt;/a&gt; on applying a custom domain to GitHub Pages in much greater detail than what I am about to write out, should you wish to find out more information.&lt;/p&gt;
 &lt;h2 id=&#34;acquire-a-domain&#34;&gt;Acquire a Domain&lt;/h2&gt;
 &lt;p&gt;The rest of the post will depict a lot of Namecheap semantics, since that is the registrar I have access to. You can choose to follow the guide alongside a different registrar if you wish, at a high-level they will be pretty similar. For now, let&amp;rsquo;s move on ahead with Namecheap and navigate through to the &lt;a href=&#34;https://www.namecheap.com/&#34;&gt;domain purchase page&lt;/a&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;namecheap_landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;The hardest part is deciding on the domain name&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap_landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap_landing.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain landing page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;The hardest part is deciding on the domain name&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;figure&gt;&lt;a href=&#34;namecheap-domain-purchase.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain purchase page&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap-domain-purchase.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain purchase page&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once you&amp;rsquo;ve set up an account and purchased your domain, your accounts domain landing page will look something like the below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;namecheap-domain-acquired.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap-domain-acquired.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain landing page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you purchase a domain from Namecheap, by default it will be pointing to their own domain name service (DNS) nameservers, as you can see from the picture above.&lt;/p&gt;
@@ -67,18 +67,18 @@
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;cloudflare-our-domain&#34;&gt;Cloudflare our Domain&lt;/h3&gt;
 &lt;p&gt;Create an account with &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt; if you haven&amp;rsquo;t done so already. Once done you&amp;rsquo;ll need to click &lt;strong&gt;Add Site&lt;/strong&gt; at the top of the browser dashboard. Enter your newly purchased domain from the previous section.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-add-domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png&#34;
-         alt=&#34;Screenshot depicting the Cloudflare add domain page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Enter your newly purchased domain from the previous section&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-add-domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png&#34;
+    alt=&#34;Screenshot depicting the Cloudflare add domain page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Enter your newly purchased domain from the previous section&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Go ahead now and select the free plan, if you want to &lt;a href=&#34;https://www.cloudflare.com/en-gb/plans/&#34;&gt;go more advanced&lt;/a&gt; then you can do so.&lt;/p&gt;
 &lt;p&gt;Once that&amp;rsquo;s created you&amp;rsquo;ll see Cloudflare scan the DNS records for this domain you&amp;rsquo;ve added - for now let&amp;rsquo;s navigate back to the &lt;a href=&#34;https://dash.cloudflare.com/&#34;&gt;Cloudflare Dashboard&lt;/a&gt; and selecting the domain. You&amp;rsquo;ll be presented with a page similar to below, minus all the activity!&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-domain-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png&#34;
-         alt=&#34;Screenshot depicting the Cloudflare domain home page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-domain-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png&#34;
+    alt=&#34;Screenshot depicting the Cloudflare domain home page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;update-cloudflare-dns-records&#34;&gt;Update Cloudflare DNS Records&lt;/h3&gt;
@@ -93,32 +93,32 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;185.199.110.153
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;185.199.111.153
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s add these to the Cloudflare DNS page below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-dns-record.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png&#34;
-         alt=&#34;Screenshot depicting adding DNS records to Cloudflare&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Add in the GitHub IP addresses one by one&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-dns-record.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png&#34;
+    alt=&#34;Screenshot depicting adding DNS records to Cloudflare&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Add in the GitHub IP addresses one by one&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once done - your records will look something like this:&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-completed-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png&#34;
-         alt=&#34;Screenshot depicting completed DNS management&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-completed-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png&#34;
+    alt=&#34;Screenshot depicting completed DNS management&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice an additional CNAME record at the bottom for &lt;code&gt;www&lt;/code&gt;. This will redirect any requests made to &lt;code&gt;www.jdheyburn.co.uk&lt;/code&gt; to &lt;code&gt;jdheyburn.co.uk&lt;/code&gt;. This could be something you&amp;rsquo;d want to replicate too if you wish.&lt;/p&gt;
 &lt;p&gt;One thing to note down before we move on is to capture the Cloudflare DNS Nameservers that have been assigned to our domain. You can find these on the same DNS management page we are on, but by just scrolling down we can see these nameservers.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png&#34;
-         alt=&#34;Screenshot depicting completed Cloudflare DNS nameservers&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Make a note of these nameservers for your domain&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png&#34;
+    alt=&#34;Screenshot depicting completed Cloudflare DNS nameservers&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Make a note of these nameservers for your domain&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;direct-namecheap-to-cloudflare&#34;&gt;Direct Namecheap to Cloudflare&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#acquire-a-domain&#34;&gt;Earlier in this post&lt;/a&gt;, I mentioned that a newly created Namecheap domain will default to their own DNS nameservers. We want to change this to Cloudflares DNS nameservers from which we configured our DNS records.&lt;/p&gt;
 &lt;p&gt;Navigate to the &lt;a href=&#34;https://ap.www.namecheap.com/domains/list/&#34;&gt;Namecheap management page&lt;/a&gt; for your domain and enter the Cloudflare nameservers once you have selected &lt;strong&gt;Custom DNS&lt;/strong&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;namecheap-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png&#34;
-         alt=&#34;Screenshot depicting completed nameservers pointing to Cloudflare&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Add in your Cloudflare domains from previously&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;namecheap-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png&#34;
+    alt=&#34;Screenshot depicting completed nameservers pointing to Cloudflare&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Add in your Cloudflare domains from previously&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once this is done you may need to wait a while for the DNS updates to propagate throughout the world. While we&amp;rsquo;re waiting for that, there&amp;rsquo;s one final piece of the puzzle which can keep us busy.&lt;/p&gt;
@@ -133,17 +133,17 @@
 &lt;p&gt;For this step, you need to navigate to the settings pages for your &lt;code&gt;.github.io&lt;/code&gt; repo containing your rendered code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://github.com/&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io/settings
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now scroll down, keep going until you hit the &lt;strong&gt;GitHub Pages&lt;/strong&gt; heading. Here you will see a form for entering a custom domain; do the honours and enter it in like below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;github_pages_setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/github_pages_setup.png&#34;
-         alt=&#34;Screenshot depicting GitHub Pages form for specifying a custom domain&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Ignore my already published domain&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;github_pages_setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/github_pages_setup.png&#34;
+    alt=&#34;Screenshot depicting GitHub Pages form for specifying a custom domain&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Ignore my already published domain&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now again wait for DNS to propagate across the world. When GitHub is happy with the changes then you will see the green banner similar to the one in the screenshot above. This means everything is being served up! Why not give it a try ourselves? Head to your domain now and see if everything is working!&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;jdheyburn_co_uk_custom_domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png&#34;
-         alt=&#34;Screenshot depicting completed custom domain&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;You should end up with something like this!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;jdheyburn_co_uk_custom_domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png&#34;
+    alt=&#34;Screenshot depicting completed custom domain&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;You should end up with something like this!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;solidying-our-changes-with-a-cname-file&#34;&gt;Solidying our changes with a CNAME file&lt;/h4&gt;
@@ -158,12 +158,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;building-into-our-deploy-script&#34;&gt;Building into our deploy script&lt;/h4&gt;
 &lt;p&gt;Once that is done, you will need to modify your &lt;code&gt;deploy.sh&lt;/code&gt; script to copy over the file into your generated Hugo site, because Hugo won&amp;rsquo;t do it for you! Don&amp;rsquo;t have the deploy script or need a refresher? Head back to the &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/#bash-script-deploying&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;You will want to copy it after Hugo has done its thing, take a look at the Gist below - line 9 is your friend.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/e84bab9176dc1753416637324a04603d.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/e84bab9176dc1753416637324a04603d.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;What this is doing is taking the &lt;code&gt;CNAME&lt;/code&gt; file that already exists in our &lt;code&gt;blog-source&lt;/code&gt; repo and moving it to the generated &lt;code&gt;public/&lt;/code&gt; directory which Hugo created for us. It is then this &lt;code&gt;public/&lt;/code&gt; directory that gets committed to the GitHub Pages repo.&lt;/p&gt;
 &lt;p&gt;Then that&amp;rsquo;s it! Take a look at my &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.github.io&#34;&gt;finished repo&lt;/a&gt; and you&amp;rsquo;ll see where &lt;code&gt;CNAME&lt;/code&gt; fits in.&lt;/p&gt;
 &lt;h2 id=&#34;bonus-tld-redirection&#34;&gt;Bonus: TLD Redirection&lt;/h2&gt;
-&lt;p&gt;Let me tell you a story. Your website is up and operational. You&amp;rsquo;re super proud of it, and you give yourself a round of applause 👏&lt;/p&gt;
+&lt;p&gt;Let me tell you a story. Your website is up and operational. You&amp;rsquo;re super proud of it, and you give yourself a round of applause &amp;#x1f44f;&lt;/p&gt;
 &lt;p&gt;But you don&amp;rsquo;t want to be the only person looking at it, you want the whole world to! You tell your parents, your significant other, the dog off the street - they all remember the name of your website, but &lt;em&gt;was it at &lt;code&gt;.com&lt;/code&gt; or &lt;code&gt;.&amp;lt;insert snazzy TLD here&amp;gt;&lt;/code&gt;&lt;/em&gt;?&lt;/p&gt;
 &lt;p&gt;Of course, you domain isn&amp;rsquo;t at &lt;code&gt;.com&lt;/code&gt;, that&amp;rsquo;s boring as hell! You just forked out $50 on a &lt;code&gt;.dev&lt;/code&gt; TLD, and no one will see it!&lt;/p&gt;
 &lt;p&gt;Luckily there is a way&amp;hellip;&lt;/p&gt;
@@ -180,14 +180,14 @@
 &lt;h2 id=&#34;cloudflare-domain-redirection&#34;&gt;Cloudflare Domain Redirection&lt;/h2&gt;
 &lt;p&gt;Assuming that you&amp;rsquo;ve completed steps 1 and 2, we&amp;rsquo;ll need to configure the redirection - but we don&amp;rsquo;t do this via inserting a DNS record like we did previously, Cloudflare has a feature that handles that for us called &lt;strong&gt;Page Rules&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;On your Cloudflare website landing page, navigate to &lt;strong&gt;Page Rules&lt;/strong&gt; in the toolbar at the top and then &lt;strong&gt;Create Page Rule&lt;/strong&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_page_rules.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png&#34;
-         alt=&#34;Screenshot depicting how to access the Create Page Rule feature&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_page_rules.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png&#34;
+    alt=&#34;Screenshot depicting how to access the Create Page Rule feature&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the next screen we&amp;rsquo;re going to define the rule. Cloudflare have &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/categories/200276257-Page-Rules&#34;&gt;documentation on Page Rules&lt;/a&gt;, and even more &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/articles/200172286-Configuring-URL-forwarding-or-redirects-with-Cloudflare-Page-Rules&#34;&gt;specifically on redirection&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;From this screen you will want something that appears as below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_new_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png&#34;
-         alt=&#34;Screenshot depicting how to populate the Create Page Rule form&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_new_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png&#34;
+    alt=&#34;Screenshot depicting how to populate the Create Page Rule form&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s break down what&amp;rsquo;s happening here:&lt;/p&gt;
@@ -207,8 +207,8 @@
 &lt;p&gt;Having the forwarded URL set to the &lt;code&gt;https://&lt;/code&gt; scheme will ensure that your users will receive your website encrypted, safe from man-in-the-middle attacks.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Lastly, click on &lt;strong&gt;Save and Deploy&lt;/strong&gt; to finalise your changes; you&amp;rsquo;ll have a view such as below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_completed_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png&#34;
-         alt=&#34;Screenshot depicting the newly created page rule&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_completed_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png&#34;
+    alt=&#34;Screenshot depicting the newly created page rule&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;That&amp;rsquo;s all you need - once again you will have to wait for DNS replication to trickle down. You can repeat this over again for other domains you may have.&lt;/p&gt;
@@ -291,10 +291,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;cd&lt;/span&gt; blog-source
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hugo serve
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That last command will locally serve the example site, so that you can view it at &lt;code&gt;http://localhost:1313/&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;local_example_site.jpg&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg&#34;
-         alt=&#34;Screenshot depicting the locally run example site&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Success!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;local_example_site.jpg&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started//blog/who-goes-blogging-1-getting-started/local_example_site.jpg&#34;
+    alt=&#34;Screenshot depicting the locally run example site&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Success!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;experimenting&#34;&gt;Experimenting&lt;/h3&gt;
@@ -361,8 +361,8 @@
 &lt;p&gt;That&amp;rsquo;s when you can make true comparisons in any system. As such the aim of this series of posts will be to explain how this website is architected, so that we may reference it in future posts. Later on, I&amp;rsquo;ll also talk about how you&amp;rsquo;re able to get yourself set up as well.&lt;/p&gt;
 &lt;h3 id=&#34;the-setup&#34;&gt;The Setup&lt;/h3&gt;
 &lt;p&gt;Because we all love an architecture diagram, let&amp;rsquo;s slap one in now.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;blog-arch-cover.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png&#34;
-         alt=&#34;An architecture diagram of my portfolio site&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blog-arch-cover.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography//blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png&#34;
+    alt=&#34;An architecture diagram of my portfolio site&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Wow. That is&amp;hellip; really not much at all. Apologies if you were expecting a lot more arrows and boxes!&lt;/p&gt;
@@ -389,8 +389,8 @@
 &lt;h4 id=&#34;analytics&#34;&gt;Analytics&lt;/h4&gt;
 &lt;p&gt;Because everyone loves graphs and numbers&amp;hellip; right??&amp;hellip; Alright just me then&amp;hellip;&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;ll be able to see how many requests are being served up, where requests originate from, amongst others. Take a look at an example below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;analytics_example.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/analytics_example.png&#34;
-         alt=&#34;A graph displaying total requests, and how many of them were cached&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;analytics_example.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography//blog/who-goes-blogging-0-applying-cartography/analytics_example.png&#34;
+    alt=&#34;A graph displaying total requests, and how many of them were cached&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;custom-domain&#34;&gt;Custom domain&lt;/h4&gt;

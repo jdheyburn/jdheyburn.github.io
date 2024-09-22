@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>typing on JDHeyburn</title>
+    <title>Typing on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/typing/</link>
-    <description>Recent content in typing on JDHeyburn</description>
+    <description>Recent content in Typing on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Fri, 05 Jul 2019 00:00:00 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Fri, 05 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/</guid>-->
-      <description>&lt;h2 id=&#34;spice-up-your-life-python-&#34;&gt;Spice Up Your &lt;del&gt;Life&lt;/del&gt; Python 🐍&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;spice-up-your-life-python-snake&#34;&gt;Spice Up Your &lt;del&gt;Life&lt;/del&gt; Python &amp;#x1f40d;&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;m currently working on a side project that I&amp;rsquo;ve written in Python. Now I&amp;rsquo;ve have a lot of experience with Python before, I used it primarily to write a load of scripts for automating processes for when Bash didn&amp;rsquo;t quite cut it. Don&amp;rsquo;t get me wrong Bash is great, but like for every other language out there, each has its purpose in the world.&lt;/p&gt;
 &lt;p&gt;My experience with Python didn&amp;rsquo;t go beyond setting some variables, hitting endpoints, executing some Bash commands to install some vendor components. All of which is what makes Python so great right? Implying on types is useful for some cases. In fact this reminds me of a tweet I saw, I can&amp;rsquo;t find it again but it went something like this:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -150,14 +150,14 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_increment &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now when we pass in a &lt;code&gt;str&lt;/code&gt; as the parameter, we still get the same error we saw before. However, if the IDE you are using supports it, you will receive &lt;strong&gt;type hints&lt;/strong&gt;!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_hinting.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_hinting.png&#34;
-         alt=&#34;Screenshot displaying type hinting provided by Visual Studio Code&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_hinting.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code//blog/three-ways-to-spice-up-your-python-code/type_hinting.png&#34;
+    alt=&#34;Screenshot displaying type hinting provided by Visual Studio Code&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I&amp;rsquo;m using VSCode with the Python extension installed too, you can see the hint that appears includes the type of the parameter.&lt;/p&gt;
 &lt;p&gt;VSCode also has the ability to check the type of the value you are passing into the function:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking.png&#34;
-         alt=&#34;Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code//blog/three-ways-to-spice-up-your-python-code/type_checking.png&#34;
+    alt=&#34;Screenshot displaying type checking provided by Visual Studio Code - the illegal type is highlighted by pyright&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Here we have a visual indicator that the string is incompatible with the int type of the function. Alongside this, in the Problems tab we have a full explanation on what has gone wrong. This is both provided by the &lt;code&gt;pyright&lt;/code&gt; extension which can be found in the VSCode Extensions section.&lt;/p&gt;
@@ -167,13 +167,13 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    incremented_int &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; int_to_inc &lt;span style=&#34;color:#ff79c6&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; incremented_int
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note the only change here is the &lt;code&gt;-&amp;gt; int&lt;/code&gt; which specifies the type it is returning. Now our type checker will highlight to us when we violate this in two scenarios:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_return.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png&#34;
-         alt=&#34;Screenshot displaying type checking, highlighting the bad return value&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_return.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code//blog/three-ways-to-spice-up-your-python-code/type_checking_bad_return.png&#34;
+    alt=&#34;Screenshot displaying type checking, highlighting the bad return value&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The IDE has shown us that the function is expected to return a type different to what it is actually returning&amp;hellip;&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_assign.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png&#34;
-         alt=&#34;Screenshot displaying type checking, highlighting the bad assigned variable&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;type_checking_bad_assign.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/three-ways-to-spice-up-your-python-code//blog/three-ways-to-spice-up-your-python-code/type_checking_bad_assign.png&#34;
+    alt=&#34;Screenshot displaying type checking, highlighting the bad assigned variable&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And in this snapshot, we are trying to assign a variable of type &lt;code&gt;str&lt;/code&gt; to the output of the function which returns an &lt;code&gt;int&lt;/code&gt;!&lt;/p&gt;
@@ -307,7 +307,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Normal service is resumed!!&lt;/p&gt;
 &lt;h2 id=&#34;closing&#34;&gt;Closing&lt;/h2&gt;
 &lt;p&gt;I hope the hints detailed in this helped you as much as it did for me! I&amp;rsquo;m sure there are many more tips out there - as I discover them be sure that I&amp;rsquo;ll share them once I find them, along with documenting more on the side project I&amp;rsquo;ve been working on!&lt;/p&gt;
-&lt;p&gt;Thanks for reading 😃&lt;/p&gt;
+&lt;p&gt;Thanks for reading &amp;#x1f603;&lt;/p&gt;
 </description>
     </item>
     

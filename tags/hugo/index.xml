@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>hugo on JDHeyburn</title>
+    <title>Hugo on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/hugo/</link>
-    <description>Recent content in hugo on JDHeyburn</description>
+    <description>Recent content in Hugo on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
@@ -24,7 +24,7 @@
 &lt;/blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s certainly been a while since the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/&#34;&gt;previous post&lt;/a&gt; in this series, which has become the home of any updates I make to my &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; website.&lt;/p&gt;
 &lt;p&gt;This post is a quick one but it&amp;rsquo;s something I&amp;rsquo;ve been meaning to fix for a while. The RSS feeds that are generated will also include code blocks as defined through code fences (```) or through &lt;code&gt;{{&amp;lt; highlight &amp;gt;}}&lt;/code&gt; shortcodes in your post content.&lt;/p&gt;
-&lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
@@ -149,10 +149,10 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
-         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
+    alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;validation-and-testing&#34;&gt;Validation and Testing&lt;/h2&gt;
@@ -176,8 +176,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
-         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
+    alt=&#34;Screenshot showing git diff between old and new list&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I saw several cases of this, and including a &lt;a href=&#34;https://github.com/igorshubovych/markdownlint-cli&#34;&gt;markdown linter&lt;/a&gt; in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p&gt;
@@ -227,13 +227,13 @@
 &lt;p&gt;I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
@@ -281,7 +281,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;fix-emojis&#34;&gt;Fix Emojis&lt;/h4&gt;
-&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
+&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis &amp;#x2049;&amp;#xfe0f; Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# layouts/shortcodes/emoji.html
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ .Get 0 | emojify }}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
@@ -306,7 +306,7 @@
          alt=&#34;Screenshot with heading example with emoji 2&#34;/&gt; 
 &lt;/figure&gt;
 
-&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; 😅&lt;/p&gt;
+&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; &amp;#x1f605;&lt;/p&gt;
 &lt;p&gt;Firstly in the site &lt;code&gt;config.toml&lt;/code&gt; I added &lt;code&gt;enableEmoji = true&lt;/code&gt; at the root level and then proceeded to change all occurrence of &lt;code&gt;{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code&gt; to &lt;code&gt;:emoji_name:&lt;/code&gt;. With that I can then remove &lt;code&gt;layouts/shortcodes/emoji.html&lt;/code&gt; since it&amp;rsquo;s not being referred back to anymore.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png&#34; class=&#34;screenshotimg&#34;
@@ -316,7 +316,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;markdown-not-rendering&#34;&gt;Markdown Not Rendering&lt;/h4&gt;
-&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python 🐍&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
+&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python :snake:&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png&#34; class=&#34;screenshotimg&#34;
          alt=&#34;Screenshot showing a heading formatted correctly with markdown&#34;/&gt; 
@@ -344,8 +344,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(2)&lt;/strong&gt; Browser title&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of broken emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(3)&lt;/strong&gt; Type list entry&lt;/p&gt;
@@ -361,7 +361,7 @@
 &lt;p&gt;By doing this we will &lt;em&gt;always&lt;/em&gt; emojify the titles even if in our &lt;code&gt;config.toml&lt;/code&gt; we specified &lt;code&gt;enableEmoji = false&lt;/code&gt;, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code&gt;false&lt;/code&gt;. We could do some conditional logic on the &lt;code&gt;enableEmoji&lt;/code&gt; setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code&gt;{{ if .Site.enableEmoji }}&lt;/code&gt;. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code&gt;hugo-coder&lt;/code&gt; theme. I&amp;rsquo;ve raised a &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7171&#34;&gt;couple&lt;/a&gt; of &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7170&#34;&gt;issues&lt;/a&gt; against Hugo requesting these features.&lt;/p&gt;
 &lt;p&gt;Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p&gt;
 &lt;p&gt;See the Gist below for my completed &lt;code&gt;single.html&lt;/code&gt; file, including the TOC addition earlier.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p&gt;
 &lt;p&gt;The end result for the title will look like this:&lt;/p&gt;
@@ -371,15 +371,15 @@
 &lt;/figure&gt;
 
 &lt;p&gt;And the browser title is fixed accordingly:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of fixed emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;fix-type-list-entry&#34;&gt;Fix Type List Entry&lt;/h3&gt;
 &lt;p&gt;We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code&gt;posts&lt;/code&gt; and make the modification there - &lt;code&gt;layouts/posts/li.html&lt;/code&gt;. We&amp;rsquo;ll need to do the same here as we did for &lt;code&gt;single.html&lt;/code&gt; and copy it to our project root.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Once done, we can see it reflect nicely in the list:&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
@@ -400,7 +400,7 @@
 &lt;li&gt;Added support for emojis in post titles&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;You can view all the changes made in this post at this &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/pull/2&#34;&gt;pull request&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Thanks for reading! 🌝&lt;/p&gt;
+&lt;p&gt;Thanks for reading! &amp;#x1f31d;&lt;/p&gt;
 </description>
     </item>
     
@@ -470,35 +470,35 @@
 &lt;p&gt;As opposed to doing the transformation manually, I&amp;rsquo;ve written a script which will move and alter the files for us.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# in project root dir&lt;/span&gt;
@@ -537,7 +537,7 @@
 &lt;p&gt;Lastly, we then need to change the post content itself so that it references images in the location relative to the leaf bundle instead of under &lt;code&gt;static/images&lt;/code&gt; - lines 21-26 accomplish this.&lt;/p&gt;
 &lt;p&gt;Hugo allows you to define &lt;code&gt;img&lt;/code&gt; blocks in several ways, where I&amp;rsquo;m currently using 3 of these methods. I &lt;del&gt;probably&lt;/del&gt; should replace these with one approach - for the time being 3 &lt;code&gt;sed&lt;/code&gt; commands will do the trick for me.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;I&amp;rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&amp;rsquo;m not an expert at them so I&amp;rsquo;d rather crack on with what I know 😃&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&amp;rsquo;m not an expert at them so I&amp;rsquo;d rather crack on with what I know &amp;#x1f603;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;renaming-content-section&#34;&gt;Renaming Content Section&lt;/h2&gt;
 &lt;p&gt;A gripe I&amp;rsquo;ve had with my site is when you click on &lt;strong&gt;Blog&lt;/strong&gt; in the site header it takes you to &lt;strong&gt;Posts&lt;/strong&gt;. Similar to the previous section this is because of &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#branch-bundles&#34;&gt;Branch Bundles&lt;/a&gt; which are any directory that sits underneath the &lt;code&gt;content&lt;/code&gt; directory. The bundle name here is what forms the URL and the parent page for those articles &lt;a href=&#34;https://gohugo.io/content-management/sections/&#34;&gt;as defined&lt;/a&gt;.&lt;/p&gt;
@@ -557,8 +557,8 @@
 &lt;/li&gt;
 &lt;li&gt;Blog landing page is now &lt;strong&gt;Blogs&lt;/strong&gt;?? (see below)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+    alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s walk through them one by one.&lt;/p&gt;
@@ -589,10 +589,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt; files
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
-         alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
+    alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;One way of fixing this would be to also change the &lt;code&gt;hugo-coder&lt;/code&gt; theme from &lt;code&gt;layouts/posts&lt;/code&gt; to &lt;code&gt;layouts/blog&lt;/code&gt; - however a much simpler solution exists. We can use the &lt;code&gt;type&lt;/code&gt; front matter setting to tell Hugo what layout to use to render it.&lt;/p&gt;
@@ -644,8 +644,8 @@
 &lt;p&gt;You can read more about how &lt;code&gt;aliases&lt;/code&gt; does its operations &lt;a href=&#34;https://gohugo.io/content-management/urls/#aliases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;from-blogs-to-blog&#34;&gt;From Blogs to Blog&lt;/h3&gt;
 &lt;p&gt;Earlier on, we came across this weird bug&amp;hellip;&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+    alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This is occurring because of the translation feature of Hugo (sourced from &lt;a href=&#34;https://gohugo.io/functions/i18n/&#34;&gt;i18n&lt;/a&gt;) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p&gt;

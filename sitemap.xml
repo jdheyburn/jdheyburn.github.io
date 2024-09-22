@@ -2,26 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://jdheyburn.co.uk/blog/adding-aria2-download-manager/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/aria2/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/bandcamp/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://jdheyburn.co.uk/blog/</loc>
-    <lastmod>2024-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/caddy/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/nix/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/selfhosted/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://jdheyburn.co.uk/tags/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/blog/attending-kubeconeu-2024/</loc>
     <lastmod>2024-03-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://jdheyburn.co.uk/</loc>
-    <lastmod>2024-03-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://jdheyburn.co.uk/tags/kubecon/</loc>
     <lastmod>2024-03-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/</loc>
-    <lastmod>2024-03-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/caddy/</loc>
-    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/nixos/</loc>
-    <lastmod>2024-03-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/blog/caddy-nix-config-refactor/</loc>
     <lastmod>2024-03-07T00:00:00+00:00</lastmod>
@@ -45,9 +57,6 @@
     <lastmod>2023-02-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/homelab/</loc>
-    <lastmod>2023-02-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/nix/</loc>
     <lastmod>2023-02-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://jdheyburn.co.uk/tags/code-snippets/</loc>
@@ -194,6 +203,9 @@
     <loc>https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/</loc>
     <lastmod>2020-03-31T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://jdheyburn.co.uk/tags/ci/cd/</loc>
+    <lastmod>2020-03-10T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://jdheyburn.co.uk/tags/github-actions/</loc>
     <lastmod>2020-03-10T00:00:00+00:00</lastmod>
   </url><url>
@@ -267,7 +279,5 @@
     <loc>https://jdheyburn.co.uk/about/</loc>
   </url><url>
     <loc>https://jdheyburn.co.uk/categories/</loc>
-  </url><url>
-    <loc>https://jdheyburn.co.uk/tags/ci/cd/</loc>
   </url>
 </urlset>

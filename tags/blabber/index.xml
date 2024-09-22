@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>blabber on JDHeyburn</title>
+    <title>Blabber on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/blabber/</link>
-    <description>Recent content in blabber on JDHeyburn</description>
+    <description>Recent content in Blabber on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 11 Feb 2019 00:00:00 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>https://jdheyburn.co.uk/blog/blog-bootstrap/</guid>-->
-      <description>&lt;p&gt;Howdy! 👋&lt;/p&gt;
+      <description>&lt;p&gt;Howdy! &amp;#x1f44b;&lt;/p&gt;
 &lt;p&gt;This site will be an area for me to braindump everything and anything that comes across my mind - although I&amp;rsquo;ll try my best to keep it tech-focused!&lt;/p&gt;
 &lt;p&gt;The blog platform itself is pretty basic. It is built using &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;, hosted using &lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt;, while served over a custom domain via CloudFlare. While this isn&amp;rsquo;t exactly anything to brag about, it is only meant to be a quick and easy platform to spin up and get hosted so that I can focus on what really matters&amp;hellip; the content!&lt;/p&gt;
 &lt;p&gt;It also gives me an opportunity to migrate the platform from GitHub Pages onto another hosted platform. Maybe that is AWS, which is a perfect learning opportunity, or even customise the theme of this blog (which is very cool already - thanks &lt;a href=&#34;https://themes.gohugo.io/hugo-coder/&#34;&gt;hugo-coder!&lt;/a&gt;) that I have left as its default. All of which provides me with more content to blog about!&lt;/p&gt;

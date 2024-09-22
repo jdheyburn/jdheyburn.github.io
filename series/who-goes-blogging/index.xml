@@ -24,7 +24,7 @@
 &lt;/blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s certainly been a while since the &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/&#34;&gt;previous post&lt;/a&gt; in this series, which has become the home of any updates I make to my &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; website.&lt;/p&gt;
 &lt;p&gt;This post is a quick one but it&amp;rsquo;s something I&amp;rsquo;ve been meaning to fix for a while. The RSS feeds that are generated will also include code blocks as defined through code fences (```) or through &lt;code&gt;{{&amp;lt; highlight &amp;gt;}}&lt;/code&gt; shortcodes in your post content.&lt;/p&gt;
-&lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;However for some reason the code blocks generated in my RSS feeds were losing their indentation. Take this code snippet example from my &lt;a href=&#34;https://jdheyburn.co.uk/blog/automate-instance-hygiene-with-aws-ssm-2/&#34;&gt;latest post&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;aws_ssm_document&amp;#34; &amp;#34;patch_with_healthcheck&amp;#34;&lt;/span&gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;PatchWithHealthcheck&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document_type &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Automation&amp;#34;&lt;/span&gt;
@@ -75,13 +75,13 @@
       
       <guid>https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/</guid>-->
       <description>&lt;p&gt;I &amp;ldquo;fixed&amp;rdquo; the default RSS template used by Hugo to show the full article content, along with images, and also talk about how to have social media cards appear in the RSS items too.&lt;/p&gt;
-&lt;p&gt;I uploaded my completed RSS file to &lt;a href=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920&#34;&gt;GitHub Gist&lt;/a&gt; 🚀&lt;/p&gt;
+&lt;p&gt;I uploaded my completed RSS file to &lt;a href=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920&#34;&gt;GitHub Gist&lt;/a&gt; &amp;#x1f680;&lt;/p&gt;
 &lt;h2 id=&#34;what-is-rss&#34;&gt;What is RSS?&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/RSS&#34;&gt;RSS&lt;/a&gt; is a great way to &amp;ldquo;subscribe&amp;rdquo; to websites to ensure that you don&amp;rsquo;t miss content from them. The standard for how it is generated has been the same for decades now - however its still the best supported and most accepted way to receive updates. It is simply a standardised XML file that allows consumers such as RSS aggregators to parse the content of the post - for which there are many to choose from (RIP &lt;a href=&#34;https://en.wikipedia.org/wiki/Google_Reader&#34;&gt;Google Reader&lt;/a&gt;).&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-complete.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png&#34;
-         alt=&#34;inoreader as an RSS feed aggregator&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;My RSS aggregator of choice currently is &lt;a href=&#34;https://www.inoreader.com/&#34;&gt;inoreader&lt;/a&gt; - I&amp;rsquo;ll be using this in my examples&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-complete.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-complete.png&#34;
+    alt=&#34;inoreader as an RSS feed aggregator&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;My RSS aggregator of choice currently is &lt;a href=&#34;https://www.inoreader.com/&#34;&gt;inoreader&lt;/a&gt; - I&amp;rsquo;ll be using this in my examples&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hugo &lt;a href=&#34;https://gohugo.io/templates/rss/&#34;&gt;generates RSS XML&lt;/a&gt; files from a template that will loop over your content and expose this at an endpoint for RSS aggregators to subscribe to and periodically check for updates against. Hugo generates a bunch of RSS XML files at different sections of the website, allowing consumers to subscribe to the section that interests them most - you can even subscribe to tags if that XML is being generated!&lt;/p&gt;
@@ -89,15 +89,15 @@
 &lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;
 &lt;p&gt;Some (but not all) websites only include the first paragraph of their post in an RSS update (aka summary), along with a message after that paragraph requesting the reader to visit the site in a browser to view the rest of the content.&lt;/p&gt;
 &lt;p&gt;This is a common feature of WordPress blogs - and it is done to have you load the full website and along with it, all the code for providing the owner with user analytics, and advertising - if they have it. So really they&amp;rsquo;re getting the benefit of being able to publish updates via a standardised approach (RSS), to then lure you onto the website.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-post-show-more-content.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png&#34;
-         alt=&#34;An RSS post loading incompletely&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-post-show-more-content.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-post-show-more-content.png&#34;
+    alt=&#34;An RSS post loading incompletely&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hugo &lt;em&gt;kind of&lt;/em&gt; does this through the highlighted line in the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/_default/rss.xml&#34;&gt;templated RSS XML file&lt;/a&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;{{ .Summary | html }}&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;.Summary&lt;/code&gt; will do what was just described, print out the first paragraph of your post. However unlike WordPress, it doesn&amp;rsquo;t actually say if there is more content. So users may not load your full website, instead thinking you&amp;rsquo;ve produced a very short article!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-incomplete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png&#34;
-         alt=&#34;Hugo producing a summarised RSS post&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-incomplete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-incomplete-post.png&#34;
+    alt=&#34;Hugo producing a summarised RSS post&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I&amp;rsquo;m not against the practice of previewing the post, if a blog provides revenue for the author(s) then you will need to force readers to view the full  website for analytics and advertising (businesses gotta make money!).&lt;/p&gt;
@@ -116,17 +116,17 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We know that line 35 containing &lt;code&gt;.Summary&lt;/code&gt; is causing the issue here. All we need to do is change it to &lt;code&gt;.Content&lt;/code&gt; - then Hugo will print out the entire content of your post. See the highlighted line below for the change.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;36
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;37
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;38
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;39
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;36
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;37
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;38
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;39
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;item&amp;gt;&lt;/span&gt;
@@ -143,10 +143,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s now view the changes in the RSS reader.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-complete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png&#34;
-         alt=&#34;Hugo RSS post displaying all content&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;We can now see much more content is being produced - and with proper HTML this time!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-complete-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-complete-post.png&#34;
+    alt=&#34;Hugo RSS post displaying all content&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;We can now see much more content is being produced - and with proper HTML this time!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;blockquote&gt;
@@ -155,10 +155,10 @@
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;rendering-images-in-rss-posts&#34;&gt;Rendering images in RSS posts&lt;/h2&gt;
 &lt;p&gt;Depending on how you are retrieving images - you may find that they are not displaying, and that the image alterative (&lt;code&gt;alt&lt;/code&gt;) text is being displayed instead.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png&#34;
-         alt=&#34;Hugo RSS post with missing images, alt text displayed instead&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Note the highlighted alt texts of images&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-missing-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-missing-images-post.png&#34;
+    alt=&#34;Hugo RSS post with missing images, alt text displayed instead&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Note the highlighted alt texts of images&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;blockquote&gt;
@@ -166,7 +166,7 @@
 &lt;p&gt;They help boost accessibility to your website should the user have a text-to-voice application reading your website.&lt;/p&gt;
 &lt;p&gt;They also provide a helpful description to your image in case it cannot load - which happens more often than you think!&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id=&#34;why-it-is-breaking-&#34;&gt;Why it is breaking 😤&lt;/h3&gt;
+&lt;h3 id=&#34;why-it-is-breaking-triumph&#34;&gt;Why it is breaking &amp;#x1f624;&lt;/h3&gt;
 &lt;p&gt;In &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/&#34;&gt;part 4&lt;/a&gt; of this series, we looked at placing resources for a post in the same directory as the content markdown file (also known as &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#leaf-bundles&#34;&gt;leaf bundles&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;That means for a given directory tree structure:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ tree content/blog
@@ -212,8 +212,8 @@
 &lt;p&gt;&lt;code&gt;REPLACEMENT&lt;/code&gt; is calling another Hugo function called &lt;a href=&#34;https://gohugo.io/functions/printf/&#34;&gt;printf&lt;/a&gt; to construct the replacement text. We&amp;rsquo;re pretty much just injecting the page &lt;code&gt;.Permalink&lt;/code&gt; prior to the captured text from the &lt;code&gt;PATTERN&lt;/code&gt; - so that RSS can then display the complete URL. While adding back the &lt;code&gt;img src=&amp;quot;&amp;quot;&lt;/code&gt; that was removed.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;INPUT&lt;/code&gt; will be the page &lt;code&gt;.Content&lt;/code&gt;, what we were printing out before.&lt;/p&gt;
 &lt;p&gt;Once we&amp;rsquo;ve made the change, images are now rendered properly!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png&#34;
-         alt=&#34;Hugo RSS post with images being correctly rendered&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-images-post.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-images-post.png&#34;
+    alt=&#34;Hugo RSS post with images being correctly rendered&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;blockquote&gt;
@@ -229,10 +229,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;h2 id=&#34;adding-cards-for-posts&#34;&gt;Adding cards for posts&lt;/h2&gt;
 &lt;p&gt;Not dissimilar to &lt;a href=&#34;https://barkersocial.com/social-cards/&#34;&gt;social media cards&lt;/a&gt;, you can also have cards appear for your RSS posts in order to make them more attractive for readers to click on!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png&#34;
-         alt=&#34;inoreader displaying images for each post when in card view&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;While in card view for inoreader, we can see featured images being displayed&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;inoreader-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/inoreader-enclosure-card-view.png&#34;
+    alt=&#34;inoreader displaying images for each post when in card view&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;While in card view for inoreader, we can see featured images being displayed&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You can do these in RSS via the &lt;a href=&#34;https://www.w3schools.com/xml/rss_tag_enclosure.asp&#34;&gt;enclosure&lt;/a&gt; tag&amp;hellip;&lt;/p&gt;
@@ -241,22 +241,22 @@
 &lt;p&gt;Based on the above, my theme (hugo-coder), renders the tags required for social media cards through the &lt;a href=&#34;https://github.com/gohugoio/hugo/blob/master/tpl/tplimpl/embedded/templates/twitter_cards.html&#34;&gt;internal template&lt;/a&gt; for &lt;a href=&#34;https://gohugo.io/templates/internal/#use-the-twitter-cards-template&#34;&gt;twitter_cards&lt;/a&gt;. A snippet of the logic that determines this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- with $.Params.images -}}
@@ -285,25 +285,25 @@
 &lt;li&gt;The default image defined at the site level params&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;adding-enclosure-tags&#34;&gt;Adding enclosure tags&lt;/h3&gt;
-&lt;p&gt;We can effectively copy and paste the code being used for generating Twitter cards and modify it for enclosure tags. The snippet of code ultimately ends up looking like this  👇&lt;/p&gt;
+&lt;p&gt;We can effectively copy and paste the code being used for generating Twitter cards and modify it for enclosure tags. The snippet of code ultimately ends up looking like this  &amp;#x1f447;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{- $pagePermalink := .Permalink -}}
@@ -340,9 +340,9 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[params]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    images = [&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;images/jdheyburn_co_uk_card.png&amp;#34;&lt;/span&gt;]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;hellip;while also ensuring that I&amp;rsquo;ve placed the image under &lt;code&gt;static/images/jdheyburn_co_uk_card.png&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Once all that is done and deployed - we will have an RSS post card that looks like this  🙌&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png&#34;
-         alt=&#34;inoreader displaying an image for a Hugo post&#34;/&gt;&lt;/a&gt;
+&lt;p&gt;Once all that is done and deployed - we will have an RSS post card that looks like this  &amp;#x1f64c;&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;hugo-enclosure-card-view.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/hugo-enclosure-card-view.png&#34;
+    alt=&#34;inoreader displaying an image for a Hugo post&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can now advertise our RSS subscription URL to readers. My theme &lt;code&gt;hugo-coder&lt;/code&gt; supports this as a social button on the home page. We just need to add the below block to the &lt;code&gt;config.toml&lt;/code&gt; file.&lt;/p&gt;
@@ -354,16 +354,16 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rel = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;alternate&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    type = &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;application/rss+xml&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once done - our homepage will have the button displayed.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-subscription-button.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png&#34;
-         alt=&#34;RSS subscription button displayed on the homepage&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;rss-subscription-button.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds//blog/who-goes-blogging-6-three-steps-to-improve-hugos-rss-feeds/rss-subscription-button.png&#34;
+    alt=&#34;RSS subscription button displayed on the homepage&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;summarising-changes-to-rss-xml&#34;&gt;Summarising changes to RSS XML&lt;/h2&gt;
 &lt;p&gt;You can view the gist below to see my complete RSS XML file after all the above has been added. If you wish to use it, you&amp;rsquo;ll need to place it in &lt;code&gt;layouts/_default/rss.xml&lt;/code&gt; in your project directory.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/a0a2c678f8f9795088b2779ec6af9920/revisions&#34;&gt;Click here&lt;/a&gt; for a &lt;code&gt;git diff&lt;/code&gt; view on the changes I made from the default RSS XML file.&lt;/p&gt;
-&lt;p&gt;Thanks for reading! 💯&lt;/p&gt;
+&lt;p&gt;Thanks for reading! &amp;#x1f4af;&lt;/p&gt;
 </description>
     </item>
     
@@ -448,10 +448,10 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
-         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
+    alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;validation-and-testing&#34;&gt;Validation and Testing&lt;/h2&gt;
@@ -475,8 +475,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
-         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
+    alt=&#34;Screenshot showing git diff between old and new list&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I saw several cases of this, and including a &lt;a href=&#34;https://github.com/igorshubovych/markdownlint-cli&#34;&gt;markdown linter&lt;/a&gt; in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p&gt;
@@ -526,13 +526,13 @@
 &lt;p&gt;I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
@@ -580,7 +580,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;fix-emojis&#34;&gt;Fix Emojis&lt;/h4&gt;
-&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
+&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis &amp;#x2049;&amp;#xfe0f; Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# layouts/shortcodes/emoji.html
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ .Get 0 | emojify }}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
@@ -605,7 +605,7 @@
          alt=&#34;Screenshot with heading example with emoji 2&#34;/&gt; 
 &lt;/figure&gt;
 
-&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; 😅&lt;/p&gt;
+&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; &amp;#x1f605;&lt;/p&gt;
 &lt;p&gt;Firstly in the site &lt;code&gt;config.toml&lt;/code&gt; I added &lt;code&gt;enableEmoji = true&lt;/code&gt; at the root level and then proceeded to change all occurrence of &lt;code&gt;{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code&gt; to &lt;code&gt;:emoji_name:&lt;/code&gt;. With that I can then remove &lt;code&gt;layouts/shortcodes/emoji.html&lt;/code&gt; since it&amp;rsquo;s not being referred back to anymore.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png&#34; class=&#34;screenshotimg&#34;
@@ -615,7 +615,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;markdown-not-rendering&#34;&gt;Markdown Not Rendering&lt;/h4&gt;
-&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python 🐍&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
+&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python :snake:&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png&#34; class=&#34;screenshotimg&#34;
          alt=&#34;Screenshot showing a heading formatted correctly with markdown&#34;/&gt; 
@@ -643,8 +643,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(2)&lt;/strong&gt; Browser title&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of broken emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(3)&lt;/strong&gt; Type list entry&lt;/p&gt;
@@ -660,7 +660,7 @@
 &lt;p&gt;By doing this we will &lt;em&gt;always&lt;/em&gt; emojify the titles even if in our &lt;code&gt;config.toml&lt;/code&gt; we specified &lt;code&gt;enableEmoji = false&lt;/code&gt;, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code&gt;false&lt;/code&gt;. We could do some conditional logic on the &lt;code&gt;enableEmoji&lt;/code&gt; setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code&gt;{{ if .Site.enableEmoji }}&lt;/code&gt;. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code&gt;hugo-coder&lt;/code&gt; theme. I&amp;rsquo;ve raised a &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7171&#34;&gt;couple&lt;/a&gt; of &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7170&#34;&gt;issues&lt;/a&gt; against Hugo requesting these features.&lt;/p&gt;
 &lt;p&gt;Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p&gt;
 &lt;p&gt;See the Gist below for my completed &lt;code&gt;single.html&lt;/code&gt; file, including the TOC addition earlier.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p&gt;
 &lt;p&gt;The end result for the title will look like this:&lt;/p&gt;
@@ -670,15 +670,15 @@
 &lt;/figure&gt;
 
 &lt;p&gt;And the browser title is fixed accordingly:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of fixed emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;fix-type-list-entry&#34;&gt;Fix Type List Entry&lt;/h3&gt;
 &lt;p&gt;We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code&gt;posts&lt;/code&gt; and make the modification there - &lt;code&gt;layouts/posts/li.html&lt;/code&gt;. We&amp;rsquo;ll need to do the same here as we did for &lt;code&gt;single.html&lt;/code&gt; and copy it to our project root.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Once done, we can see it reflect nicely in the list:&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
@@ -699,7 +699,7 @@
 &lt;li&gt;Added support for emojis in post titles&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;You can view all the changes made in this post at this &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/pull/2&#34;&gt;pull request&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Thanks for reading! 🌝&lt;/p&gt;
+&lt;p&gt;Thanks for reading! &amp;#x1f31d;&lt;/p&gt;
 </description>
     </item>
     
@@ -769,35 +769,35 @@
 &lt;p&gt;As opposed to doing the transformation manually, I&amp;rsquo;ve written a script which will move and alter the files for us.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;19
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;20
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;21
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;22
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;23
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;24
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;25
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;26
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;27
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;28
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;# in project root dir&lt;/span&gt;
@@ -836,7 +836,7 @@
 &lt;p&gt;Lastly, we then need to change the post content itself so that it references images in the location relative to the leaf bundle instead of under &lt;code&gt;static/images&lt;/code&gt; - lines 21-26 accomplish this.&lt;/p&gt;
 &lt;p&gt;Hugo allows you to define &lt;code&gt;img&lt;/code&gt; blocks in several ways, where I&amp;rsquo;m currently using 3 of these methods. I &lt;del&gt;probably&lt;/del&gt; should replace these with one approach - for the time being 3 &lt;code&gt;sed&lt;/code&gt; commands will do the trick for me.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;I&amp;rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&amp;rsquo;m not an expert at them so I&amp;rsquo;d rather crack on with what I know 😃&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m sure that a few lines could be cut out with some better regex expressions - but I&amp;rsquo;m not an expert at them so I&amp;rsquo;d rather crack on with what I know &amp;#x1f603;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;renaming-content-section&#34;&gt;Renaming Content Section&lt;/h2&gt;
 &lt;p&gt;A gripe I&amp;rsquo;ve had with my site is when you click on &lt;strong&gt;Blog&lt;/strong&gt; in the site header it takes you to &lt;strong&gt;Posts&lt;/strong&gt;. Similar to the previous section this is because of &lt;a href=&#34;https://gohugo.io/content-management/page-bundles/#branch-bundles&#34;&gt;Branch Bundles&lt;/a&gt; which are any directory that sits underneath the &lt;code&gt;content&lt;/code&gt; directory. The bundle name here is what forms the URL and the parent page for those articles &lt;a href=&#34;https://gohugo.io/content-management/sections/&#34;&gt;as defined&lt;/a&gt;.&lt;/p&gt;
@@ -856,8 +856,8 @@
 &lt;/li&gt;
 &lt;li&gt;Blog landing page is now &lt;strong&gt;Blogs&lt;/strong&gt;?? (see below)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+    alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s walk through them one by one.&lt;/p&gt;
@@ -888,10 +888,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt; directories, &lt;span style=&#34;color:#bd93f9&#34;&gt;3&lt;/span&gt; files
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When we change the section name the article sits in, Hugo will not know how to render it correctly and will resolve to the default rendering for the theme. This ends us with something like the below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
-         alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;posts-blog-rendering-error.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/posts-blog-rendering-error.png&#34;
+    alt=&#34;Screenshot of comparison of correct and incorrect rendering - publish date, minutes to read, and tags are missing&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Correct rendering on the left - notice publish date, minutes to read, and tags are missing&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;One way of fixing this would be to also change the &lt;code&gt;hugo-coder&lt;/code&gt; theme from &lt;code&gt;layouts/posts&lt;/code&gt; to &lt;code&gt;layouts/blog&lt;/code&gt; - however a much simpler solution exists. We can use the &lt;code&gt;type&lt;/code&gt; front matter setting to tell Hugo what layout to use to render it.&lt;/p&gt;
@@ -943,8 +943,8 @@
 &lt;p&gt;You can read more about how &lt;code&gt;aliases&lt;/code&gt; does its operations &lt;a href=&#34;https://gohugo.io/content-management/urls/#aliases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;from-blogs-to-blog&#34;&gt;From Blogs to Blog&lt;/h3&gt;
 &lt;p&gt;Earlier on, we came across this weird bug&amp;hellip;&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
-         alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blogs-landing-page.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-4-content-structure-and-refactoring//blog/who-goes-blogging-4-content-structure-and-refactoring/blogs-landing-page.png&#34;
+    alt=&#34;Screenshot of Blog landing page with incorrect Blogs title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This is occurring because of the translation feature of Hugo (sourced from &lt;a href=&#34;https://gohugo.io/functions/i18n/&#34;&gt;i18n&lt;/a&gt;) which converts singular word titles to plural on content section landing pages, since Hugo is listing them out. This made sense when our previous section name was posts, but now we&amp;rsquo;d rather it have say blog.&lt;/p&gt;
@@ -975,15 +975,15 @@
       <description>&lt;h2 id=&#34;from-travisci-to-github-actions&#34;&gt;From TravisCI to GitHub Actions&lt;/h2&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-3-1-deployment-methods-travisci/&#34;&gt;previous post&lt;/a&gt; we looked at moving to a CI/CD model by moving from the &lt;code&gt;deploy.sh&lt;/code&gt; script to TravisCI.&lt;/p&gt;
 &lt;p&gt;In this post we will look at how we can migrate from TravisCI to &lt;a href=&#34;https://help.github.com/en/actions/getting-started-with-github-actions/about-github-actions&#34;&gt;GitHub Actions&lt;/a&gt;, GitHub&amp;rsquo;s own CI/CD tool.&lt;/p&gt;
-&lt;p&gt;This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! 🚀&lt;/p&gt;
-&lt;h3 id=&#34;benefits-&#34;&gt;Benefits ✅&lt;/h3&gt;
+&lt;p&gt;This post will also be useful if you are looking to onboard GitHub Actions as your CI/CD pipeline! &amp;#x1f680;&lt;/p&gt;
+&lt;h3 id=&#34;benefits-white_check_mark&#34;&gt;Benefits &amp;#x2705;&lt;/h3&gt;
 &lt;p&gt;Let&amp;rsquo;s talk about why we want to migrate away from TravisCI in the first place.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Firstly and most importantly&lt;/strong&gt;, there is a whole community of shared actions (a set of build instructions) which can save you a &lt;em&gt;huge&lt;/em&gt; amount of time when it comes to piecing together a CI pipeline. If the TravisCI config seemed a bit intimidating, then these will be a whole lot more gentler to you.&lt;/p&gt;
 &lt;p&gt;Whereas in our Travis config we had to define the individual commands needed to set up our environment and then how to build it, there&amp;rsquo;s an &lt;a href=&#34;https://github.com/marketplace/actions/hugo-setup&#34;&gt;action&lt;/a&gt; for that! Want to include some markdown linting? There&amp;rsquo;s an &lt;a href=&#34;https://github.com/marketplace/actions/markdownlint-cli&#34;&gt;action&lt;/a&gt; for that!&lt;/p&gt;
 &lt;p&gt;I think you folks get the picture now. There&amp;rsquo;s an &lt;a href=&#34;https://github.com/sdras/awesome-actions&#34;&gt;awesome-actions&lt;/a&gt; repository worth checking out for more actions.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Secondly&lt;/strong&gt;, all your DevOps tools are in one place! I&amp;rsquo;m a big sucker for &lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt; and while I don&amp;rsquo;t use it for my personal projects, I&amp;rsquo;ve used it in a past life and found its seamless integration with all other tools second-to-none. Not having to worry about integrating between multiple services can only increase your productivity - allowing you to focus more on the application you&amp;rsquo;re writing.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Lastly&lt;/strong&gt;, all configuration is managed in the workflow configuration file. One enhancement in particular that we will be introducing can be achieved with an additional setting in the workflow config file; for us to achieve the same in Travis would have to be done via the GUI. I&amp;rsquo;m a big sucker for having configuration baked into code so this is a very good plus.&lt;/p&gt;
-&lt;h3 id=&#34;pricing-&#34;&gt;Pricing ⏰&lt;/h3&gt;
+&lt;h3 id=&#34;pricing-alarm_clock&#34;&gt;Pricing &amp;#x23f0;&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;However&lt;/strong&gt; - one downsides to GitHub Actions is how many build minutes you get. Remember Travis allowed unlimited build minutes for a public repository? With Actions - you are limited to &lt;a href=&#34;https://github.com/pricing&#34;&gt;2,000 minutes in their free plan&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;ve been building your project in Travis already, you&amp;rsquo;ll notice it has been building (in my case at least) in ~30 seconds. With a bit of maths we can then say we will have 4,000 builds in a month on GitHub Actions.&lt;/p&gt;
 &lt;p&gt;Given that this isn&amp;rsquo;t a huge project with multiple contributors working on it, I think it&amp;rsquo;s safe to say we won&amp;rsquo;t ever reach this limit - unless you&amp;rsquo;re churning out blog posts left right and centre!&lt;/p&gt;
@@ -1006,21 +1006,21 @@
 &lt;p&gt;&lt;code&gt;alias pbcopy=&amp;quot;xclip -selection clipboard&amp;quot;&lt;/code&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In GitHub load up your GitHub Pages repo and navigate to &lt;code&gt;Settings&lt;/code&gt; and then &lt;code&gt;Deploy keys&lt;/code&gt;. Give it an appropriate name, and paste in the public key. Make sure you check &lt;code&gt;Allow write access&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;gha-deploy-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png&#34;
-         alt=&#34;GitHub Pages repo deploy keys page&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;gha-deploy-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions//blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-deploy-key.png&#34;
+    alt=&#34;GitHub Pages repo deploy keys page&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;Copy the contents of the &lt;em&gt;private key&lt;/em&gt; you created earlier (perhaps using your new command?! 😏) and navigate to the source code repository&amp;rsquo;s &lt;code&gt;Settings&lt;/code&gt; page, then &lt;code&gt;Secrets&lt;/code&gt;. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;gha-secrets-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png&#34;
-         alt=&#34;GitHub source code repo secrets page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;No secrets here!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;p&gt;Copy the contents of the &lt;em&gt;private key&lt;/em&gt; you created earlier (perhaps using your new command?! &amp;#x1f60f;) and navigate to the source code repository&amp;rsquo;s &lt;code&gt;Settings&lt;/code&gt; page, then &lt;code&gt;Secrets&lt;/code&gt;. You&amp;rsquo;ll need to give it a sensible name as this then referred to later in the workflow configuration. Paste the private key in the value field.&lt;/p&gt;
+&lt;figure&gt;&lt;a href=&#34;gha-secrets-key.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions//blog/who-goes-blogging-3-2-deployment-methods-github-actions/gha-secrets-key.png&#34;
+    alt=&#34;GitHub source code repo secrets page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;No secrets here!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;workflow-configuration&#34;&gt;Workflow Configuration&lt;/h3&gt;
 &lt;p&gt;In the root directory of your source code repo, create a directory called &lt;code&gt;.github/workflows&lt;/code&gt;. In this directory is where GitHub Actions will look for jobs to do. Create a &lt;code&gt;yml&lt;/code&gt; file in this directory to contain your build job definition. I went ahead and named mine &lt;code&gt;deploy.yml&lt;/code&gt;, but you can name it whatever you like.&lt;/p&gt;
 &lt;p&gt;I used the &lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-repository-type---project&#34;&gt;example&lt;/a&gt; provided in the &lt;code&gt;actions-gh-pages&lt;/code&gt; documentation as a base for my build definition.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/b4b2cad15604de30f21ad0e1a85ee6b9.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/b4b2cad15604de30f21ad0e1a85ee6b9.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;This config is much simpler to understand than the Travis one - let&amp;rsquo;s break it down once more.&lt;/p&gt;
 &lt;h4 id=&#34;build-metadata-and-environment&#34;&gt;Build Metadata and Environment&lt;/h4&gt;
@@ -1116,25 +1116,25 @@
 &lt;h2 id=&#34;bringing-it-all-together-again&#34;&gt;Bringing It All Together (Again)&lt;/h2&gt;
 &lt;p&gt;If you&amp;rsquo;re migrating from a previous CI tool (perhaps Travis?) then you&amp;rsquo;ll need to disable the builds on there since you may cause a conflict either build process.&lt;/p&gt;
 &lt;p&gt;For Travis, you can do that by navigating to your source code repo settings on Travis (&lt;a href=&#34;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&#34;&gt;https://travis-ci.com/jdheyburn/jdheyburn.co.uk/settings&lt;/a&gt; for me) and disabling &lt;code&gt;Build pushed branches&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-disable-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png&#34;
-         alt=&#34;Build pushed branches disabled on Travis&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-disable-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions//blog/who-goes-blogging-3-2-deployment-methods-github-actions/travis-disable-build.png&#34;
+    alt=&#34;Build pushed branches disabled on Travis&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now that&amp;rsquo;s done, go ahead and check in your new GitHub Actions workflow file and then navigate to the &lt;code&gt;Actions&lt;/code&gt; tab of your source code repo on GitHub.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git add --all
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;Migrate to GitHub Actions&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git push
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;a href=&#34;github-actions-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png&#34;
-         alt=&#34;Successful build on GitHub Actions&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Great success!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;a href=&#34;github-actions-build.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-2-deployment-methods-github-actions//blog/who-goes-blogging-3-2-deployment-methods-github-actions/github-actions-build.png&#34;
+    alt=&#34;Successful build on GitHub Actions&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Great success!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hopefully your build went to success! If it didn&amp;rsquo;t have a look through the logs and see what the issue was. It took me a few builds to determine my finalised workflow config. You can even see it at my &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/actions&#34;&gt;source code repo Actions page&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Now that we&amp;rsquo;ve migrated across over to GitHub Actions, we can close out the permissions that TravisCI has on our projects, and demise any secret keys we gave it.&lt;/p&gt;
 &lt;p&gt;From the tone of my writing you can probably tell which one I favour. That&amp;rsquo;s not to say I do not like TravisCI - each service has its own pros and cons. For this particular project, I prefer the one platform approach for which I am used to in GitLab. The number of build minutes available for GA is a concern, but not one I will have to worry about for now.&lt;/p&gt;
-&lt;p&gt;Thanks for reading! 🌝&lt;/p&gt;
+&lt;p&gt;Thanks for reading! &amp;#x1f31d;&lt;/p&gt;
 </description>
     </item>
     
@@ -1150,7 +1150,7 @@
 &lt;p&gt;For this part, I will tell you about how I migrated from deploying via a script, to a CI/CD tool - namely &lt;a href=&#34;https://travis-ci.com/&#34;&gt;TravisCI&lt;/a&gt;. Then I will document how I migrated from this, to the new &lt;a href=&#34;https://github.com/features/actions&#34;&gt;GitHub Actions&lt;/a&gt;; GitHub&amp;rsquo;s offering into the CI/CD space.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;code&gt;CI/CD&lt;/code&gt; is an acronym for Continuous Integration / Continuous Deployment which is a very important concept in the DevOps culture.
-If you would like to find out more about that and DevOps culture, check out these resources 👇&lt;/p&gt;
+If you would like to find out more about that and DevOps culture, check out these resources &amp;#x1f447;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.atlassian.com/devops&#34;&gt;https://www.atlassian.com/devops&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0&#34;&gt;https://medium.com/faun/the-basics-of-continuous-integration-delivery-with-10-most-popular-tools-to-use-9514231533f0&lt;/a&gt;&lt;/li&gt;
@@ -1166,39 +1166,39 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Now there are many CI tools out there with the most well known likely to be &lt;a href=&#34;https://jenkins.io/&#34;&gt;Jenkins&lt;/a&gt;, but there are also hosted solutions available which will take your code and perform your pipelines against them.&lt;/p&gt;
 &lt;p&gt;One of those hosted solutions is &lt;a href=&#34;https://travis-ci.com/&#34;&gt;TravisCI&lt;/a&gt;, where they integrate quite nicely with GitHub repositories to attach &lt;a href=&#34;https://developer.github.com/webhooks/&#34;&gt;webhooks&lt;/a&gt; against them. They have several pricing options available, but for public open source projects, it is completely free!&lt;/p&gt;
 &lt;p&gt;So it is a good idea to set your source code repository on GitHub to be public. TravisCI does include (at the time of writing) private projects in their free plan, but you are capped in some shape or form on how much the platform will do for you.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-free.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png&#34;
-         alt=&#34;Screenshot of Travis free pricing plan&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Free is definitely a thing you love to see&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-free.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-free.png&#34;
+    alt=&#34;Screenshot of Travis free pricing plan&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Free is definitely a thing you love to see&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;travisci-account-setup&#34;&gt;TravisCI Account Setup&lt;/h2&gt;
 &lt;p&gt;The TravisCI account setup for TravisCI is very streamlined - instead of creating &lt;em&gt;another&lt;/em&gt; account for you to manage, it integrates in with GitHub, so this is the account you use to sign-up with. Head over to &lt;a href=&#34;https://travis-ci.com/&#34;&gt;https://travis-ci.com/&lt;/a&gt; and click on &lt;code&gt;Sign in with GitHub&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png&#34;
-         alt=&#34;Screenshot of Travis landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-landing.png&#34;
+    alt=&#34;Screenshot of Travis landing page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;You can&amp;rsquo;t resist a big green button&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;GitHub will ask you if you &lt;em&gt;really&lt;/em&gt; want to share some of your GitHub data with Travis.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-authorise.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png&#34;
-         alt=&#34;Screenshot of GitHub authorising Travis&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Another green button? Why not!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-authorise.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-authorise.png&#34;
+    alt=&#34;Screenshot of GitHub authorising Travis&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Another green button? Why not!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely 😦 - let&amp;rsquo;s fix that!&lt;/p&gt;
+&lt;p&gt;Once you&amp;rsquo;ve done that, you&amp;rsquo;ll be redirected to your new Travis Dashboard which&amp;hellip; is looking rather lonely &amp;#x1f626; - let&amp;rsquo;s fix that!&lt;/p&gt;
 &lt;p&gt;All we&amp;rsquo;ve done so far is allowed Travis to reach GitHub for creating an account for us - we now need to activate GitHub Apps integration to permit it to read and write to our repositories. The &lt;a href=&#34;https://travis-ci.com/account/repositories&#34;&gt;https://travis-ci.com/account/repositories&lt;/a&gt; page is what you need for that - then click on the &lt;code&gt;Activate&lt;/code&gt; button.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;travis-github-apps-integration.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png&#34;
-         alt=&#34;Screenshot of GitHub Apps Integration&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;&amp;hellip;More green buttons?!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;travis-github-apps-integration.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-apps-integration.png&#34;
+    alt=&#34;Screenshot of GitHub Apps Integration&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;&amp;hellip;More green buttons?!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now on the next screen you may or may not want the default selection of &lt;code&gt;All repositories&lt;/code&gt; which will give Travis read and write access to all your repos. I completely trust Travis if I were to select this, however it is a best practice to follow the &lt;a href=&#34;https://en.wikipedia.org/wiki/Principle_of_least_privilege&#34;&gt;&lt;em&gt;principle of least privilege&lt;/em&gt;&lt;/a&gt; (POLP); not just for users but for services too.&lt;/p&gt;
 &lt;p&gt;For the scope of this effort we&amp;rsquo;re only wanting Travis to read and manipulate against two repos, &lt;code&gt;jdheyburn.co.uk&lt;/code&gt; and &lt;code&gt;jdheyburn.github.io&lt;/code&gt; - it also gives you a cleaner Travis dashboard too.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-repos-selection.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png&#34;
-         alt=&#34;Screenshot of GitHub Travis Repository Authorisation&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-repos-selection.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-repos-selection.png&#34;
+    alt=&#34;Screenshot of GitHub Travis Repository Authorisation&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;back-to-github&#34;&gt;Back to GitHub&lt;/h3&gt;
@@ -1206,19 +1206,19 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Navigate to the &lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;GitHub Personal Access Tokens&lt;/a&gt; page and click on &lt;code&gt;Generate new token&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;ll come across a page asking for the name of the token being created. It doesn&amp;rsquo;t matter what you call it, but it may be useful to link it back to what it is being used for. You&amp;rsquo;re also going to want to select the &lt;code&gt;repo&lt;/code&gt; checkbox as done so below.&lt;/p&gt;
 &lt;p&gt;After this you don&amp;rsquo;t need to provide any more permissions to the token. Scroll down to the end of the page and click &lt;code&gt;Generate token&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png&#34;
-         alt=&#34;Screenshot of GitHub Personal Access Token Creation - repos is checked&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat.png&#34;
+    alt=&#34;Screenshot of GitHub Personal Access Token Creation - repos is checked&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The token&amp;rsquo;s secret will display on the next screen. &lt;strong&gt;Make sure you copy it&lt;/strong&gt; and place it somewhere you can refer back to it later such as a text editor like Notepad - we&amp;rsquo;ll need it again in the next section.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat-created.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png&#34;
-         alt=&#34;Screenshot of GitHub Personal Access Token Creation - token complete&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;travis-github-pat-created.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-3-1-deployment-methods-travisci//blog/who-goes-blogging-3-1-deployment-methods-travisci/travis-github-pat-created.png&#34;
+    alt=&#34;Screenshot of GitHub Personal Access Token Creation - token complete&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;travisci-configuration&#34;&gt;TravisCI Configuration&lt;/h2&gt;
 &lt;p&gt;Once we have our Travis account set up, we need to add in a &lt;a href=&#34;https://docs.travis-ci.com/user/tutorial/&#34;&gt;configuration file&lt;/a&gt; that Travis will read from to determine what steps we&amp;rsquo;d like it to perform.&lt;/p&gt;
 &lt;p&gt;In our source code repository (&lt;code&gt;jdheyburn.co.uk&lt;/code&gt; in my case) we want to create a file at the root directory and call it &lt;code&gt;.travis.yml&lt;/code&gt;. See below for an example of how I configured mine.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/073bd6d4cb9284774e7e7feee093d86f.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/073bd6d4cb9284774e7e7feee093d86f.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Let&amp;rsquo;s break it down section by section.&lt;/p&gt;
 &lt;h3 id=&#34;build-environment&#34;&gt;Build Environment&lt;/h3&gt;
@@ -1357,7 +1357,7 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Once you&amp;rsquo;ve got a successful build, that means your website has been deployed to the GitHub Pages repo and will be available on the web to view. In a browser you can now view your changes on the website.&lt;/p&gt;
 &lt;p&gt;If they aren&amp;rsquo;t there then your browser is most likely caching an older version. By default, websites served by GitHub Pages have a browser cache TTL &lt;a href=&#34;https://webapps.stackexchange.com/questions/119286/caching-assets-in-website-served-from-github-pages&#34;&gt;set to 10 minutes&lt;/a&gt;. So you can either wait 10 minutes, or clear your browser cache!&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;You&amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;rsquo;re happy with TravisCI then there&amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines 🙌&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;re on the way to DevOps masterclass. As mentioned the next post will focus on migrating to GitHub Actions so if you&amp;rsquo;re happy with TravisCI then there&amp;rsquo;s no more you need to do! Go ahead and add other repositories you may have to Travis and build up multiple pipelines &amp;#x1f64c;&lt;/p&gt;
 </description>
     </item>
     
@@ -1387,21 +1387,21 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;GitHub has a &lt;a href=&#34;https://help.github.com/en/github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site&#34;&gt;series of documentation&lt;/a&gt; on applying a custom domain to GitHub Pages in much greater detail than what I am about to write out, should you wish to find out more information.&lt;/p&gt;
 &lt;h2 id=&#34;acquire-a-domain&#34;&gt;Acquire a Domain&lt;/h2&gt;
 &lt;p&gt;The rest of the post will depict a lot of Namecheap semantics, since that is the registrar I have access to. You can choose to follow the guide alongside a different registrar if you wish, at a high-level they will be pretty similar. For now, let&amp;rsquo;s move on ahead with Namecheap and navigate through to the &lt;a href=&#34;https://www.namecheap.com/&#34;&gt;domain purchase page&lt;/a&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;namecheap_landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap_landing.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;The hardest part is deciding on the domain name&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap_landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap_landing.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain landing page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;The hardest part is deciding on the domain name&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;figure&gt;&lt;a href=&#34;namecheap-domain-purchase.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain purchase page&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap-domain-purchase.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-domain-purchase.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain purchase page&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once you&amp;rsquo;ve set up an account and purchased your domain, your accounts domain landing page will look something like the below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;namecheap-domain-acquired.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png&#34;
-         alt=&#34;Screenshot depicting the namecheap domain landing page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;namecheap-domain-acquired.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-domain-acquired.png&#34;
+    alt=&#34;Screenshot depicting the namecheap domain landing page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Make sure you have auto-renew selected, otherwise you can kiss that domain goodbye when it expires!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you purchase a domain from Namecheap, by default it will be pointing to their own domain name service (DNS) nameservers, as you can see from the picture above.&lt;/p&gt;
@@ -1417,18 +1417,18 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;cloudflare-our-domain&#34;&gt;Cloudflare our Domain&lt;/h3&gt;
 &lt;p&gt;Create an account with &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt; if you haven&amp;rsquo;t done so already. Once done you&amp;rsquo;ll need to click &lt;strong&gt;Add Site&lt;/strong&gt; at the top of the browser dashboard. Enter your newly purchased domain from the previous section.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-add-domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png&#34;
-         alt=&#34;Screenshot depicting the Cloudflare add domain page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Enter your newly purchased domain from the previous section&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-add-domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-add-domain.png&#34;
+    alt=&#34;Screenshot depicting the Cloudflare add domain page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Enter your newly purchased domain from the previous section&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Go ahead now and select the free plan, if you want to &lt;a href=&#34;https://www.cloudflare.com/en-gb/plans/&#34;&gt;go more advanced&lt;/a&gt; then you can do so.&lt;/p&gt;
 &lt;p&gt;Once that&amp;rsquo;s created you&amp;rsquo;ll see Cloudflare scan the DNS records for this domain you&amp;rsquo;ve added - for now let&amp;rsquo;s navigate back to the &lt;a href=&#34;https://dash.cloudflare.com/&#34;&gt;Cloudflare Dashboard&lt;/a&gt; and selecting the domain. You&amp;rsquo;ll be presented with a page similar to below, minus all the activity!&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-domain-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png&#34;
-         alt=&#34;Screenshot depicting the Cloudflare domain home page&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-domain-landing.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-domain-landing.png&#34;
+    alt=&#34;Screenshot depicting the Cloudflare domain home page&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Name me a more iconic duo than numbers and graphs. I&amp;rsquo;ll wait&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;update-cloudflare-dns-records&#34;&gt;Update Cloudflare DNS Records&lt;/h3&gt;
@@ -1443,32 +1443,32 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;185.199.110.153
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;185.199.111.153
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s add these to the Cloudflare DNS page below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-dns-record.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png&#34;
-         alt=&#34;Screenshot depicting adding DNS records to Cloudflare&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Add in the GitHub IP addresses one by one&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-dns-record.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-dns-record.png&#34;
+    alt=&#34;Screenshot depicting adding DNS records to Cloudflare&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Add in the GitHub IP addresses one by one&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once done - your records will look something like this:&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-completed-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png&#34;
-         alt=&#34;Screenshot depicting completed DNS management&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-completed-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-completed-records.png&#34;
+    alt=&#34;Screenshot depicting completed DNS management&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice an additional CNAME record at the bottom for &lt;code&gt;www&lt;/code&gt;. This will redirect any requests made to &lt;code&gt;www.jdheyburn.co.uk&lt;/code&gt; to &lt;code&gt;jdheyburn.co.uk&lt;/code&gt;. This could be something you&amp;rsquo;d want to replicate too if you wish.&lt;/p&gt;
 &lt;p&gt;One thing to note down before we move on is to capture the Cloudflare DNS Nameservers that have been assigned to our domain. You can find these on the same DNS management page we are on, but by just scrolling down we can see these nameservers.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png&#34;
-         alt=&#34;Screenshot depicting completed Cloudflare DNS nameservers&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Make a note of these nameservers for your domain&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare-nameservers.png&#34;
+    alt=&#34;Screenshot depicting completed Cloudflare DNS nameservers&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Make a note of these nameservers for your domain&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;direct-namecheap-to-cloudflare&#34;&gt;Direct Namecheap to Cloudflare&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-2-custom-domain/#acquire-a-domain&#34;&gt;Earlier in this post&lt;/a&gt;, I mentioned that a newly created Namecheap domain will default to their own DNS nameservers. We want to change this to Cloudflares DNS nameservers from which we configured our DNS records.&lt;/p&gt;
 &lt;p&gt;Navigate to the &lt;a href=&#34;https://ap.www.namecheap.com/domains/list/&#34;&gt;Namecheap management page&lt;/a&gt; for your domain and enter the Cloudflare nameservers once you have selected &lt;strong&gt;Custom DNS&lt;/strong&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;namecheap-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png&#34;
-         alt=&#34;Screenshot depicting completed nameservers pointing to Cloudflare&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Add in your Cloudflare domains from previously&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;namecheap-nameservers.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/namecheap-nameservers.png&#34;
+    alt=&#34;Screenshot depicting completed nameservers pointing to Cloudflare&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Add in your Cloudflare domains from previously&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Once this is done you may need to wait a while for the DNS updates to propagate throughout the world. While we&amp;rsquo;re waiting for that, there&amp;rsquo;s one final piece of the puzzle which can keep us busy.&lt;/p&gt;
@@ -1483,17 +1483,17 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;For this step, you need to navigate to the settings pages for your &lt;code&gt;.github.io&lt;/code&gt; repo containing your rendered code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;https://github.com/&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io/settings
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now scroll down, keep going until you hit the &lt;strong&gt;GitHub Pages&lt;/strong&gt; heading. Here you will see a form for entering a custom domain; do the honours and enter it in like below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;github_pages_setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/github_pages_setup.png&#34;
-         alt=&#34;Screenshot depicting GitHub Pages form for specifying a custom domain&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Ignore my already published domain&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;github_pages_setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/github_pages_setup.png&#34;
+    alt=&#34;Screenshot depicting GitHub Pages form for specifying a custom domain&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Ignore my already published domain&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now again wait for DNS to propagate across the world. When GitHub is happy with the changes then you will see the green banner similar to the one in the screenshot above. This means everything is being served up! Why not give it a try ourselves? Head to your domain now and see if everything is working!&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;jdheyburn_co_uk_custom_domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png&#34;
-         alt=&#34;Screenshot depicting completed custom domain&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;You should end up with something like this!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;jdheyburn_co_uk_custom_domain.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/jdheyburn_co_uk_custom_domain.png&#34;
+    alt=&#34;Screenshot depicting completed custom domain&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;You should end up with something like this!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;solidying-our-changes-with-a-cname-file&#34;&gt;Solidying our changes with a CNAME file&lt;/h4&gt;
@@ -1508,12 +1508,12 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;building-into-our-deploy-script&#34;&gt;Building into our deploy script&lt;/h4&gt;
 &lt;p&gt;Once that is done, you will need to modify your &lt;code&gt;deploy.sh&lt;/code&gt; script to copy over the file into your generated Hugo site, because Hugo won&amp;rsquo;t do it for you! Don&amp;rsquo;t have the deploy script or need a refresher? Head back to the &lt;a href=&#34;https://jdheyburn.co.uk/posts/who-goes-blogging-1-getting-started/#bash-script-deploying&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;You will want to copy it after Hugo has done its thing, take a look at the Gist below - line 9 is your friend.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/e84bab9176dc1753416637324a04603d.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/e84bab9176dc1753416637324a04603d.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;What this is doing is taking the &lt;code&gt;CNAME&lt;/code&gt; file that already exists in our &lt;code&gt;blog-source&lt;/code&gt; repo and moving it to the generated &lt;code&gt;public/&lt;/code&gt; directory which Hugo created for us. It is then this &lt;code&gt;public/&lt;/code&gt; directory that gets committed to the GitHub Pages repo.&lt;/p&gt;
 &lt;p&gt;Then that&amp;rsquo;s it! Take a look at my &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.github.io&#34;&gt;finished repo&lt;/a&gt; and you&amp;rsquo;ll see where &lt;code&gt;CNAME&lt;/code&gt; fits in.&lt;/p&gt;
 &lt;h2 id=&#34;bonus-tld-redirection&#34;&gt;Bonus: TLD Redirection&lt;/h2&gt;
-&lt;p&gt;Let me tell you a story. Your website is up and operational. You&amp;rsquo;re super proud of it, and you give yourself a round of applause 👏&lt;/p&gt;
+&lt;p&gt;Let me tell you a story. Your website is up and operational. You&amp;rsquo;re super proud of it, and you give yourself a round of applause &amp;#x1f44f;&lt;/p&gt;
 &lt;p&gt;But you don&amp;rsquo;t want to be the only person looking at it, you want the whole world to! You tell your parents, your significant other, the dog off the street - they all remember the name of your website, but &lt;em&gt;was it at &lt;code&gt;.com&lt;/code&gt; or &lt;code&gt;.&amp;lt;insert snazzy TLD here&amp;gt;&lt;/code&gt;&lt;/em&gt;?&lt;/p&gt;
 &lt;p&gt;Of course, you domain isn&amp;rsquo;t at &lt;code&gt;.com&lt;/code&gt;, that&amp;rsquo;s boring as hell! You just forked out $50 on a &lt;code&gt;.dev&lt;/code&gt; TLD, and no one will see it!&lt;/p&gt;
 &lt;p&gt;Luckily there is a way&amp;hellip;&lt;/p&gt;
@@ -1530,14 +1530,14 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;h2 id=&#34;cloudflare-domain-redirection&#34;&gt;Cloudflare Domain Redirection&lt;/h2&gt;
 &lt;p&gt;Assuming that you&amp;rsquo;ve completed steps 1 and 2, we&amp;rsquo;ll need to configure the redirection - but we don&amp;rsquo;t do this via inserting a DNS record like we did previously, Cloudflare has a feature that handles that for us called &lt;strong&gt;Page Rules&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;On your Cloudflare website landing page, navigate to &lt;strong&gt;Page Rules&lt;/strong&gt; in the toolbar at the top and then &lt;strong&gt;Create Page Rule&lt;/strong&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_page_rules.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png&#34;
-         alt=&#34;Screenshot depicting how to access the Create Page Rule feature&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_page_rules.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_page_rules.png&#34;
+    alt=&#34;Screenshot depicting how to access the Create Page Rule feature&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the next screen we&amp;rsquo;re going to define the rule. Cloudflare have &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/categories/200276257-Page-Rules&#34;&gt;documentation on Page Rules&lt;/a&gt;, and even more &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/articles/200172286-Configuring-URL-forwarding-or-redirects-with-Cloudflare-Page-Rules&#34;&gt;specifically on redirection&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;From this screen you will want something that appears as below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_new_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png&#34;
-         alt=&#34;Screenshot depicting how to populate the Create Page Rule form&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_new_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_new_page_rule.png&#34;
+    alt=&#34;Screenshot depicting how to populate the Create Page Rule form&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s break down what&amp;rsquo;s happening here:&lt;/p&gt;
@@ -1557,8 +1557,8 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;Having the forwarded URL set to the &lt;code&gt;https://&lt;/code&gt; scheme will ensure that your users will receive your website encrypted, safe from man-in-the-middle attacks.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Lastly, click on &lt;strong&gt;Save and Deploy&lt;/strong&gt; to finalise your changes; you&amp;rsquo;ll have a view such as below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;cloudflare_completed_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png&#34;
-         alt=&#34;Screenshot depicting the newly created page rule&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;cloudflare_completed_page_rule.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain//blog/who-goes-blogging-2-custom-domain/cloudflare_completed_page_rule.png&#34;
+    alt=&#34;Screenshot depicting the newly created page rule&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;That&amp;rsquo;s all you need - once again you will have to wait for DNS replication to trickle down. You can repeat this over again for other domains you may have.&lt;/p&gt;
@@ -1641,10 +1641,10 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;cd&lt;/span&gt; blog-source
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hugo serve
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That last command will locally serve the example site, so that you can view it at &lt;code&gt;http://localhost:1313/&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;local_example_site.jpg&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started/local_example_site.jpg&#34;
-         alt=&#34;Screenshot depicting the locally run example site&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Success!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;local_example_site.jpg&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-1-getting-started//blog/who-goes-blogging-1-getting-started/local_example_site.jpg&#34;
+    alt=&#34;Screenshot depicting the locally run example site&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Success!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;experimenting&#34;&gt;Experimenting&lt;/h3&gt;
@@ -1711,8 +1711,8 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;p&gt;That&amp;rsquo;s when you can make true comparisons in any system. As such the aim of this series of posts will be to explain how this website is architected, so that we may reference it in future posts. Later on, I&amp;rsquo;ll also talk about how you&amp;rsquo;re able to get yourself set up as well.&lt;/p&gt;
 &lt;h3 id=&#34;the-setup&#34;&gt;The Setup&lt;/h3&gt;
 &lt;p&gt;Because we all love an architecture diagram, let&amp;rsquo;s slap one in now.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;blog-arch-cover.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png&#34;
-         alt=&#34;An architecture diagram of my portfolio site&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;blog-arch-cover.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography//blog/who-goes-blogging-0-applying-cartography/blog-arch-cover.png&#34;
+    alt=&#34;An architecture diagram of my portfolio site&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Wow. That is&amp;hellip; really not much at all. Apologies if you were expecting a lot more arrows and boxes!&lt;/p&gt;
@@ -1739,8 +1739,8 @@ If you would like to find out more about that and DevOps culture, check out thes
 &lt;h4 id=&#34;analytics&#34;&gt;Analytics&lt;/h4&gt;
 &lt;p&gt;Because everyone loves graphs and numbers&amp;hellip; right??&amp;hellip; Alright just me then&amp;hellip;&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;ll be able to see how many requests are being served up, where requests originate from, amongst others. Take a look at an example below.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;analytics_example.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography/analytics_example.png&#34;
-         alt=&#34;A graph displaying total requests, and how many of them were cached&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;analytics_example.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-0-applying-cartography//blog/who-goes-blogging-0-applying-cartography/analytics_example.png&#34;
+    alt=&#34;A graph displaying total requests, and how many of them were cached&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;custom-domain&#34;&gt;Custom domain&lt;/h4&gt;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>emojis on JDHeyburn</title>
+    <title>Emojis on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/emojis/</link>
-    <description>Recent content in emojis on JDHeyburn</description>
+    <description>Recent content in Emojis on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
@@ -92,10 +92,10 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cat .git/modules/themes/hugo-coder/HEAD
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;acb4bf6f2dcce51a27dc0e1f1008afb369d378d8
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nice - this has changed from the previous value. We can jump over to GitHub to verify this is indeed the latest version.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
-         alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure&gt;&lt;a href=&#34;hugo-coder-commit.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/hugo-coder-commit.png&#34;
+    alt=&#34;Screenshot showing latest hugo-coder version in GitHub&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Verify at the &lt;a href=&#34;https://github.com/luizdepra/hugo-coder/commit/master&#34;&gt;GitHub repo page&lt;/a&gt;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;validation-and-testing&#34;&gt;Validation and Testing&lt;/h2&gt;
@@ -119,8 +119,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;For this I just needed to fix the markdown by adding another indent to the list item.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
-         alt=&#34;Screenshot showing git diff between old and new list&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;git-diff-list.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/git-diff-list.png&#34;
+    alt=&#34;Screenshot showing git diff between old and new list&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I saw several cases of this, and including a &lt;a href=&#34;https://github.com/igorshubovych/markdownlint-cli&#34;&gt;markdown linter&lt;/a&gt; in the CI/CD pipeline would help to prevent this. This is something I&amp;rsquo;ll look to include in the near future.&lt;/p&gt;
@@ -170,13 +170,13 @@
 &lt;p&gt;I want the TOC to appear before the main content, but after the featured image for the article (if there is any). Based on this the files is going to need the highlighted change below.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;
 &lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
-&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
-&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;29
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;30
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;31
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;32
+&lt;/span&gt;&lt;span style=&#34;background-color:#3d3f4a&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;33
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;34
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;35
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#ff79c6&#34;&gt;div&lt;/span&gt;&amp;gt;
@@ -224,7 +224,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;fix-emojis&#34;&gt;Fix Emojis&lt;/h4&gt;
-&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis ⁉️ Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
+&lt;p&gt;Who doesn&amp;rsquo;t love the use of emojis &amp;#x2049;&amp;#xfe0f; Well I don&amp;rsquo;t when they render badly. Before this exercise I was using a custom shortcode to render them.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# layouts/shortcodes/emoji.html
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{ .Get 0 | emojify }}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
@@ -249,7 +249,7 @@
          alt=&#34;Screenshot with heading example with emoji 2&#34;/&gt; 
 &lt;/figure&gt;
 
-&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; 😅&lt;/p&gt;
+&lt;p&gt;There is a fix for these, and it&amp;rsquo;s called &lt;em&gt;rendering emojis the correct way!&lt;/em&gt; &amp;#x1f605;&lt;/p&gt;
 &lt;p&gt;Firstly in the site &lt;code&gt;config.toml&lt;/code&gt; I added &lt;code&gt;enableEmoji = true&lt;/code&gt; at the root level and then proceeded to change all occurrence of &lt;code&gt;{{&amp;lt; emoji &amp;quot;:emoji_name:&amp;quot; &amp;gt;}}&lt;/code&gt; to &lt;code&gt;:emoji_name:&lt;/code&gt;. With that I can then remove &lt;code&gt;layouts/shortcodes/emoji.html&lt;/code&gt; since it&amp;rsquo;s not being referred back to anymore.&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/correct-emoji-headings.png&#34; class=&#34;screenshotimg&#34;
@@ -259,7 +259,7 @@
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;markdown-not-rendering&#34;&gt;Markdown Not Rendering&lt;/h4&gt;
-&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python 🐍&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
+&lt;p&gt;I also noticed that markdown wasn&amp;rsquo;t rendering properly too. Given the markdown &lt;code&gt;## Spice Up Your ~~Life~~ Python :snake:&lt;/code&gt;, which renders as a heading in the screenshot below&amp;hellip;&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
     &lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/markdown-heading-render.png&#34; class=&#34;screenshotimg&#34;
          alt=&#34;Screenshot showing a heading formatted correctly with markdown&#34;/&gt; 
@@ -287,8 +287,8 @@
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(2)&lt;/strong&gt; Browser title&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of broken emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;broken-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/broken-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of broken emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;(3)&lt;/strong&gt; Type list entry&lt;/p&gt;
@@ -304,7 +304,7 @@
 &lt;p&gt;By doing this we will &lt;em&gt;always&lt;/em&gt; emojify the titles even if in our &lt;code&gt;config.toml&lt;/code&gt; we specified &lt;code&gt;enableEmoji = false&lt;/code&gt;, or didn&amp;rsquo;t specify it at all. This will conflict with the default state of the setting which is &lt;code&gt;false&lt;/code&gt;. We could do some conditional logic on the &lt;code&gt;enableEmoji&lt;/code&gt; setting, but unfortunately this isn&amp;rsquo;t exposed to us to be able to perform something like &lt;code&gt;{{ if .Site.enableEmoji }}&lt;/code&gt;. Because of this we cannot create a pull request (PR) to merge it in with the &lt;code&gt;hugo-coder&lt;/code&gt; theme. I&amp;rsquo;ve raised a &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7171&#34;&gt;couple&lt;/a&gt; of &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/7170&#34;&gt;issues&lt;/a&gt; against Hugo requesting these features.&lt;/p&gt;
 &lt;p&gt;Since this is just for my website I am okay with the overriding behaviour of emojiying the title.&lt;/p&gt;
 &lt;p&gt;See the Gist below for my completed &lt;code&gt;single.html&lt;/code&gt; file, including the TOC addition earlier.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/35a10e346848379ec5f6f87cb48454cd/3a30b153aae5a761f62293add95187e280d8c3d3.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice I&amp;rsquo;m emojifying (surely I&amp;rsquo;ve said this enough times to make it into the Oxford Dictionary?!) the site title too. This is incase myself (or even yourselves) wish to add emojis there too.&lt;/p&gt;
 &lt;p&gt;The end result for the title will look like this:&lt;/p&gt;
@@ -314,15 +314,15 @@
 &lt;/figure&gt;
 
 &lt;p&gt;And the browser title is fixed accordingly:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
-         alt=&#34;Screenshot of fixed emoji on browser title&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;fixed-emoji-browser-title.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-5-updates-galore//blog/who-goes-blogging-5-updates-galore/fixed-emoji-browser-title.png&#34;
+    alt=&#34;Screenshot of fixed emoji on browser title&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;fix-type-list-entry&#34;&gt;Fix Type List Entry&lt;/h3&gt;
 &lt;p&gt;We need to find the file in the theme that determines how to render a list entry for a page of type &lt;code&gt;posts&lt;/code&gt; and make the modification there - &lt;code&gt;layouts/posts/li.html&lt;/code&gt;. We&amp;rsquo;ll need to do the same here as we did for &lt;code&gt;single.html&lt;/code&gt; and copy it to our project root.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -v themes/hugo-coder/layouts/posts/li.html layouts/posts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Likewise for the title in the previous section, we need to emojify the title of the article as it&amp;rsquo;s being listed out.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/177fb9f74a38306d9257fb7302ba221c.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Once done, we can see it reflect nicely in the list:&lt;/p&gt;
 &lt;figure class=&#34;center&#34;&gt;
@@ -343,7 +343,7 @@
 &lt;li&gt;Added support for emojis in post titles&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;You can view all the changes made in this post at this &lt;a href=&#34;https://github.com/jdheyburn/jdheyburn.co.uk/pull/2&#34;&gt;pull request&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Thanks for reading! 🌝&lt;/p&gt;
+&lt;p&gt;Thanks for reading! &amp;#x1f31d;&lt;/p&gt;
 </description>
     </item>
     

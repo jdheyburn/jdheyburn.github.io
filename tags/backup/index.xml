@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>backup on JDHeyburn</title>
+    <title>Backup on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/backup/</link>
-    <description>Recent content in backup on JDHeyburn</description>
+    <description>Recent content in Backup on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 04 May 2021 00:00:00 +0000</lastBuildDate>
@@ -25,10 +25,10 @@
 &lt;p&gt;Backups should be automated without us having to think of them (at least until you need to restore!), so for this I&amp;rsquo;ll be using systemd unit services with timers.&lt;/p&gt;
 &lt;p&gt;Restic is storing the snapshots in repositories on my local NFS server. I&amp;rsquo;m then using &lt;a href=&#34;https://www.backblaze.com/b2/cloud-storage.html&#34;&gt;Backblaze B2&lt;/a&gt; to store these in the cloud. At the time of writing they charge $0.005 GB/month for storage, and $0.01 per GB downloaded. So it costs more to download from B2, but since this is a disaster recovery backup I don&amp;rsquo;t anticipate downloading all that much. Being able to store it cheap over a long term is most important.&lt;/p&gt;
 &lt;p&gt;There are a load of other storage services too; here&amp;rsquo;s a list below taken from &lt;a href=&#34;https://www.backblaze.com/b2/cloud-storage.html&#34;&gt;Backblaze&amp;rsquo;s website&lt;/a&gt;. The other one I was contending with was &lt;a href=&#34;https://wasabi.com/cloud-storage-pricing/#three-info&#34;&gt;Wasabi&lt;/a&gt;; they&amp;rsquo;re only marginally more expensive than B2 for storage ($0.0059 GB/month), but they don&amp;rsquo;t charge for downloads.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;cloud-storage-price-comparison.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/cloud-storage-price-comparison.png&#34;
-         alt=&#34;A table showing the cost comparison of B2 versus S3, Azure, and Google Cloud Platform - B2 is the cheapest.&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Cloud storage cost comparisons&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;cloud-storage-price-comparison.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone//blog/backup-to-backblaze-b2-using-restic-and-rclone/cloud-storage-price-comparison.png&#34;
+    alt=&#34;A table showing the cost comparison of B2 versus S3, Azure, and Google Cloud Platform - B2 is the cheapest.&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Cloud storage cost comparisons&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;backup-contents-and-policy&#34;&gt;Backup contents and policy&lt;/h2&gt;
@@ -323,10 +323,10 @@
 &lt;p&gt;You&amp;rsquo;ll need to make sure you have &lt;code&gt;sendmail&lt;/code&gt; installed on the machine to do this.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt install sendmail -y
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For me, the emails landed in the spam folder - but once you configure a rule on your email client to always forward them to your inbox, you&amp;rsquo;ll always be notified if there&amp;rsquo;s an error.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;status-email.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone/status-email.png&#34;
-         alt=&#34;A screenshot showing an example email highlighting there has been a failure in the restic-all service.&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;The resulting email&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;status-email.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/backup-to-backblaze-b2-using-restic-and-rclone//blog/backup-to-backblaze-b2-using-restic-and-rclone/status-email.png&#34;
+    alt=&#34;A screenshot showing an example email highlighting there has been a failure in the restic-all service.&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;The resulting email&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;removing-aged-restic-snapshots&#34;&gt;Removing aged restic snapshots&lt;/h2&gt;

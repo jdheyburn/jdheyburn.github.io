@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>golang on JDHeyburn</title>
+    <title>Golang on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/golang/</link>
-    <description>Recent content in golang on JDHeyburn</description>
+    <description>Recent content in Golang on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate>
@@ -146,8 +146,8 @@
 &lt;li&gt;multiple values, and an error&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;I have the &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=golang.go&#34;&gt;Go plugin&lt;/a&gt; for VSCode, so I just need to right click over a function to have the dropdown menu appear with an option to generate tests.&lt;/p&gt;
-&lt;figure&gt;&lt;a href=&#34;generate-unit-tests.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation/generate-unit-tests.png&#34;
-         alt=&#34;VSCode dropdown with Go plugin&#34;/&gt;&lt;/a&gt;
+&lt;figure&gt;&lt;a href=&#34;generate-unit-tests.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/assertions-in-gotests-test-generation//blog/assertions-in-gotests-test-generation/generate-unit-tests.png&#34;
+    alt=&#34;VSCode dropdown with Go plugin&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;only-returns-an-error&#34;&gt;Only returns an error&lt;/h3&gt;
@@ -280,29 +280,29 @@
 &lt;h2 id=&#34;strict-error-tests-in-java&#34;&gt;Strict Error Tests in Java&lt;/h2&gt;
 &lt;p&gt;I love confirming the stability of my code through writing tests and practicing Test-driven development (TDD).  For Java, JUnit was my preferred testing framework of choice. When writing tests to confirm an exception had been thrown, I used the optional parameter &lt;code&gt;expected&lt;/code&gt; for the annotation &lt;code&gt;@Test&lt;/code&gt;, however I quickly found that this solution would not work for methods where I raised the same exception class multiple times for different error messages, and testing on those messages.&lt;/p&gt;
 &lt;p&gt;This is commonly found in writing a validation method such as the one below, which will take in a name of a dog and return a boolean if it is valid.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;boolean&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;String dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;throws&lt;/span&gt; DogValidationException &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;boolean&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;validateDogName&lt;/span&gt;(String dogName) &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;throws&lt;/span&gt; DogValidationException {
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;containsSymbols&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; (containsSymbols(dogName)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;dogName&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; 100&lt;span style=&#34;color:#ff79c6&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who has a name for a dog that long?!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;if&lt;/span&gt; (dogName.&lt;span style=&#34;color:#50fa7b&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;gt;&lt;/span&gt; 100) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ff79c6&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; DogValidationException(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Who has a name for a dog that long?!&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff79c6&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For this method, just using &lt;code&gt;@Test(expected = DogValidationException.class)&lt;/code&gt; on our test method is not sufficient; how can we determine that the exception was raised for a dogName.length breach and not for containing symbols?&lt;/p&gt;
 &lt;p&gt;In order for me to resolve this, I came across the &lt;code&gt;ExpectedException&lt;/code&gt; class for JUnit on &lt;a href=&#34;https://www.baeldung.com/junit-assert-exception&#34;&gt;Baeldung&lt;/a&gt; which enables us to specify the error message expected. Here it is applied to the test case for this method:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;@Rule
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; ExpectedException exceptionRule &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; ExpectedException&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;none&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; ExpectedException exceptionRule &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; ExpectedException.&lt;span style=&#34;color:#50fa7b&#34;&gt;none&lt;/span&gt;();
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;@Test
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;shouldHandleDogNameWithSymbols&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    exceptionRule&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;expect&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;DogValidationException&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    exceptionRule&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#50fa7b&#34;&gt;expectMessage&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    validateDogName&lt;span style=&#34;color:#ff79c6&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#8be9fd&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#50fa7b&#34;&gt;shouldHandleDogNameWithSymbols&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    exceptionRule.&lt;span style=&#34;color:#50fa7b&#34;&gt;expect&lt;/span&gt;(DogValidationException.&lt;span style=&#34;color:#50fa7b&#34;&gt;class&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    exceptionRule.&lt;span style=&#34;color:#50fa7b&#34;&gt;expectMessage&lt;/span&gt;(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Dogs cannot have symbols in their name!&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    validateDogName(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;GoodestBoy#1&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;applying-to-golang&#34;&gt;Applying to Golang&lt;/h2&gt;
 &lt;p&gt;Back to Golang, there is a built-in library aptly named &lt;code&gt;testing&lt;/code&gt; which enables us to assert on test conditions. When combined with &lt;a href=&#34;https://github.com/cweill/gotests&#34;&gt;Gotests&lt;/a&gt; - a tool for generating Go tests from your code - writing tests could not be easier! I love how this is bundled in with the Go extension for VSCode, my text editor of choice (for now&amp;hellip;).&lt;/p&gt;
 &lt;p&gt;Converting the above Java &lt;code&gt;validateDogName&lt;/code&gt; method to Golang will produce something like:&lt;/p&gt;
@@ -423,10 +423,10 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Once you have done that, future tests will now generate with stricter error testing! 🎉&lt;/p&gt;
+&lt;p&gt;Once you have done that, future tests will now generate with stricter error testing! &amp;#x1f389;&lt;/p&gt;
 &lt;h2 id=&#34;closing&#34;&gt;Closing&lt;/h2&gt;
 &lt;p&gt;I understand that the recommendations above will make your code more fragile, as the code is subject to any changing of the error message of say a downstream library. However for myself, I prefer to write tests that are strict and minimalise the chance of other errors contaminating tests.&lt;/p&gt;
-&lt;p&gt;I also understand that GoodestBoy#1 is probably a valid name for a dog! 🐶&lt;/p&gt;
+&lt;p&gt;I also understand that GoodestBoy#1 is probably a valid name for a dog! &amp;#x1f436;&lt;/p&gt;
 </description>
     </item>
     

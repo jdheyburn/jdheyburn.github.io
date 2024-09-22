@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>coronavirus on JDHeyburn</title>
+    <title>Coronavirus on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/coronavirus/</link>
-    <description>Recent content in coronavirus on JDHeyburn</description>
+    <description>Recent content in Coronavirus on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 03 Jun 2021 00:00:00 +0000</lastBuildDate>
@@ -23,8 +23,8 @@
 &lt;/blockquote&gt;
 &lt;p&gt;The UK&amp;rsquo;s coronavirus vaccine strategy has been to target those most vulnerable first, and then trickle down towards the healthier population. Since that age is creeping down toward my age group, I wanted to see if I could alert myself when I would be eligible for the vax.&lt;/p&gt;
 &lt;p&gt;My local GP would send out an SMS text message informing me when I&amp;rsquo;m eligible, however I&amp;rsquo;ve heard that this text can come days after you&amp;rsquo;re eligible. Knowing that the latest guidance is maintained on the &lt;a href=&#34;https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/coronavirus-vaccine/&#34;&gt;NHS Coronavirus Vaccine site&lt;/a&gt;, I can use &lt;a href=&#34;https://github.com/huginn/huginn#what-is-huginn&#34;&gt;Huginn&lt;/a&gt; to alert me when the page updates with the latest eligibility.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;vaccine-eligibility.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/vaccine-eligibility.png&#34;
-         alt=&#34;A list of bullet points of who is eligible to receive the vaccine, includes people aged 30 years and older, vulnerable people, etc&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;vaccine-eligibility.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/vaccine-eligibility.png&#34;
+    alt=&#34;A list of bullet points of who is eligible to receive the vaccine, includes people aged 30 years and older, vulnerable people, etc&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
@@ -148,18 +148,18 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ll need to also add in a DNS entry in PiHole to route HTTP calls on my network for &lt;code&gt;https://huginn.joannet.casa&lt;/code&gt; to the IP address of my Caddy server.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;huginn-deployed.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/huginn-deployed.png&#34;
-         alt=&#34;Huginn login page at the domain name for it specified earlier&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Deployed and ready for set up!&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;huginn-deployed.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/huginn-deployed.png&#34;
+    alt=&#34;Huginn login page at the domain name for it specified earlier&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Deployed and ready for set up!&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;setting-up-agents&#34;&gt;Setting up agents&lt;/h2&gt;
 &lt;p&gt;The workflow we need to set up here is pretty simple whereby we only need two agents; a Website Agent and an Email Agent. The website agent will perform the scraping of the NHS website on a regular basis, and if the component on the web page has changed, then it will invoke it&amp;rsquo;s downstream notifier - the Email Agent.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Website Agent    ------ invokes ------&amp;gt;    Email Agent
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Before we do that we&amp;rsquo;ll need to create an account for it - this is all local to your deployment and is not external. The invitation code you&amp;rsquo;ll need to enter is &lt;code&gt;try-huginn&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;huginn-account-setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/huginn-account-setup.png&#34;
-         alt=&#34;Huginn account setup page with the form filled in with email address and password. The invitation code is populated with try-huginn&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;huginn-account-setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/huginn-account-setup.png&#34;
+    alt=&#34;Huginn account setup page with the form filled in with email address and password. The invitation code is populated with try-huginn&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you get through to the main page, I suggest disabling or removing the agents that are there already to prevent some problems later on. If you set &lt;code&gt;IMPORT_DEFAULT_SCENARIO_FOR_ALL_USERS=false&lt;/code&gt; then you should not see any there.&lt;/p&gt;
@@ -181,55 +181,55 @@
 &lt;/ul&gt;
 &lt;p&gt;The other fields serve a purpose that&amp;rsquo;s beyond the scope of this post.&lt;/p&gt;
 &lt;p&gt;Within Options comes the configuration used to define the website agent. The documentation for the agent config appears on the right hand side, so you can read through that for reference.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;website-agent-form-populated.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/website-agent-form-populated.png&#34;
-         alt=&#34;The completed form to create a new website agent will the fields populated as specified previously&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;website-agent-form-populated.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/website-agent-form-populated.png&#34;
+    alt=&#34;The completed form to create a new website agent will the fields populated as specified previously&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In order for us to determine how to configure this we first need to decide what part of the web page we want to be alerted on in event of a update. Refer to the screenshot below of the &lt;a href=&#34;https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/coronavirus-vaccine/&#34;&gt;NHS Coronavirus Vaccine page&lt;/a&gt; and you&amp;rsquo;ll see a number of bullet points listed out of the vaccine criteria. The text we want to be alerted on is &amp;ldquo;people aged 30 and over&amp;rdquo;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;vaccine-eligibility.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/vaccine-eligibility.png&#34;
-         alt=&#34;A list of bullet points of who is eligible to receive the vaccine, includes people aged 30 years and older, vulnerable people, etc&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;vaccine-eligibility.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/vaccine-eligibility.png&#34;
+    alt=&#34;A list of bullet points of who is eligible to receive the vaccine, includes people aged 30 years and older, vulnerable people, etc&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The website agent supports an &lt;a href=&#34;https://www.w3schools.com/xml/xpath_syntax.asp&#34;&gt;xpath syntax&lt;/a&gt; as a config option, which is an expression syntax used to retrieve objects from XML documents - including HTML. But how do we find out what the xpath for this text field is?&lt;/p&gt;
 &lt;p&gt;Enter &lt;a href=&#34;https://selectorgadget.com/&#34;&gt;SelectorGadget&lt;/a&gt;. It&amp;rsquo;s a &lt;a href=&#34;https://en.wikipedia.org/wiki/Bookmarklet&#34;&gt;bookmarklet&lt;/a&gt; tool that helps with just that - I recommend taking a look at the &lt;a href=&#34;https://vimeo.com/52055686&#34;&gt;short tutorial&lt;/a&gt; on how to use it.&lt;/p&gt;
 &lt;p&gt;Since I know I only want to select the first bullet point in this particular list, I start off by first clicking that property which turns that node green.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-1.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-1.png&#34;
-         alt=&#34;Selector gadget highlighted in green the bullet point we want to monitor on, the remaining bullet points are highlighted yellow. There are 76 items in scope for this current selection&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Clicking on the property I want to target highlights it green&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-1.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-1.png&#34;
+    alt=&#34;Selector gadget highlighted in green the bullet point we want to monitor on, the remaining bullet points are highlighted yellow. There are 76 items in scope for this current selection&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Clicking on the property I want to target highlights it green&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You can see the xpath for this is a &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; node, which returns 76 results on the page we&amp;rsquo;re scraping. These are represented by the boxes that are highlighted yellow.&lt;/p&gt;
 &lt;p&gt;What I want to do is whittle it down by filtering out all the other &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; nodes I&amp;rsquo;m not interested in, so that I only have 1 result left. As I&amp;rsquo;ve already made my first selection, any subsequent clicks will now filter those out. So now it&amp;rsquo;s just a case of playing whack-a-mole until all yellow highlighted fields are gone.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-2.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-2.png&#34;
-         alt=&#34;Selector gadget highlighted in green the bullet point we want to monitor on, the second bullet point we want to ignore is highlighted red - indicating we do not want it in scope. There are 17 items in scope for this current selection&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-2.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-2.png&#34;
+    alt=&#34;Selector gadget highlighted in green the bullet point we want to monitor on, the second bullet point we want to ignore is highlighted red - indicating we do not want it in scope. There are 17 items in scope for this current selection&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Clicking the second bullet point indicated that I don&amp;rsquo;t care about any other &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; elements in this range.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-3.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-3.png&#34;
-         alt=&#34;Scrolling to the top of the page there is another element that is highlighted yellow, the &amp;#39;Home&amp;#39; button&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-3.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-3.png&#34;
+    alt=&#34;Scrolling to the top of the page there is another element that is highlighted yellow, the &amp;#39;Home&amp;#39; button&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; properties also make up headings at the top of the page - so these appear highlighted in yellow too.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-4.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-4.png&#34;
-         alt=&#34;Clicking the home element filters it out and now is highlighted red - there are 13 items in scope for this current selection&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-4.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-4.png&#34;
+    alt=&#34;Clicking the home element filters it out and now is highlighted red - there are 13 items in scope for this current selection&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Clicking the Home element filters that out.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-5.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-5.png&#34;
-         alt=&#34;Scrolling further down the page we see another bullet point in a separate list that is highlighted yellow&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-5.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-5.png&#34;
+    alt=&#34;Scrolling further down the page we see another bullet point in a separate list that is highlighted yellow&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Scrolling down further on the page, there&amp;rsquo;s another &lt;code&gt;&amp;lt;li&amp;gt;&lt;/code&gt; range which needs to be filtered.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-6.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-6.png&#34;
-         alt=&#34;Filtering out the bullet point highlights it red and now there is only 1 item in scope for this selection&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-6.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-6.png&#34;
+    alt=&#34;Filtering out the bullet point highlights it red and now there is only 1 item in scope for this selection&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Boom - filtering that means we only have 1 element being targeted.&lt;/p&gt;
 &lt;p&gt;We now only have 1 selection, so now we can click the XPath button in the tool to retrieve the config we need.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;//ul[(((count(preceding-sibling::*) + 1) = 6) and parent::*)]//li[(((count(preceding-sibling::*) + 1) = 1) and parent::*)]
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-7.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-7.png&#34;
-         alt=&#34;Clicking on the XPath button in SelectorGadget shows the final xpath syntax that we need&#34;/&gt;&lt;/a&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;selector-gadget-7.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/selector-gadget-7.png&#34;
+    alt=&#34;Clicking on the XPath button in SelectorGadget shows the final xpath syntax that we need&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;blockquote&gt;
@@ -250,8 +250,8 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once it&amp;rsquo;s configured then you can click on &lt;strong&gt;Dry Run&lt;/strong&gt; at the bottom to see the text it extracts.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;website-agent-dry-run.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/website-agent-dry-run.png&#34;
-         alt=&#34;Huginn correctly extracts the text for &amp;#39;people aged 30 and over&amp;#39; from the NHS website&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;website-agent-dry-run.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/website-agent-dry-run.png&#34;
+    alt=&#34;Huginn correctly extracts the text for &amp;#39;people aged 30 and over&amp;#39; from the NHS website&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;email-agent&#34;&gt;Email agent&lt;/h3&gt;
@@ -276,21 +276,21 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;headline&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;Vaccine age updated&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;#34;expected_receive_period_in_days&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;email-agent-form-populated.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/email-agent-form-populated.png&#34;
-         alt=&#34;The completed form to create a new email agent will the fields populated as specified previously&#34;/&gt;&lt;/a&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;email-agent-form-populated.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/email-agent-form-populated.png&#34;
+    alt=&#34;The completed form to create a new email agent will the fields populated as specified previously&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The real complexity lies in configuring Huginn to send email&amp;hellip;&lt;/p&gt;
 &lt;h2 id=&#34;configure-huginn-for-sending-email-over-gmail-smtp&#34;&gt;Configure Huginn for sending email over Gmail SMTP&lt;/h2&gt;
 &lt;p&gt;I have a Gmail account which opens up SMTP access to allows applications to send email programatically, where Huginn has support for this. You&amp;rsquo;ll notice earlier when we &lt;a href=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/#deploying-huggin&#34;&gt;deployed Huginn&lt;/a&gt; that I had a number of environment variables configured for SMTP. It took a bit of trial-and-error and searching through GitHub issues to get it right, but that config works for me.&lt;/p&gt;
 &lt;p&gt;Since my Gmail account is set up with 2FA, I cannot use my actual Gmail password in the SMTP_PASSWORD field. Instead what I have to do is set up an application-specific password that only Huginn is configured for. This restriction known in Google as &lt;a href=&#34;https://support.google.com/accounts/answer/6010255&#34;&gt;less secure app access&lt;/a&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;google-less-secure-app-access.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/google-less-secure-app-access.png&#34;
-         alt=&#34;Google accounts less secure app access page - this is disabled because 2-step verification is set up on my account&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;google-less-secure-app-access.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/google-less-secure-app-access.png&#34;
+    alt=&#34;Google accounts less secure app access page - this is disabled because 2-step verification is set up on my account&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;As mentioned, we&amp;rsquo;ll need to set up an app password. For this I navigated to the &lt;a href=&#34;https://myaccount.google.com/apppasswords&#34;&gt;app password page&lt;/a&gt; for my account and selected &lt;em&gt;Other (Custom name)&lt;/em&gt; from the app dropdown, to then enter the name of the app. The name doesn&amp;rsquo;t matter here - it&amp;rsquo;s for your reference.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;google-app-password-setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/google-app-password-setup.png&#34;
-         alt=&#34;Google accounts app password creation page - an entry for Huginn is being created&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;google-app-password-setup.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/google-app-password-setup.png&#34;
+    alt=&#34;Google accounts app password creation page - an entry for Huginn is being created&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you click on &lt;strong&gt;Generate&lt;/strong&gt; it will display the password assigned. It is this value that goes into the SMTP_PASSWORD env var for Huginn to pick up.&lt;/p&gt;
@@ -313,13 +313,13 @@
 &lt;h2 id=&#34;testing-the-flow&#34;&gt;Testing the flow&lt;/h2&gt;
 &lt;p&gt;We can test the whole flow by making a modification to the website agent we created. Currently the mode we have it set to is &lt;code&gt;on_change&lt;/code&gt; which is the desired end mode, and will only trigger its receivers if there has been a change in the property being selected. If we change the mode to be &lt;code&gt;all&lt;/code&gt; then it will always invoke the receivers.&lt;/p&gt;
 &lt;p&gt;Couple this with setting a frequent schedule (i.e. every 5m) then we should be receiving an email with the current value every 5 minutes.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-email.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/example-email.png&#34;
-         alt=&#34;An example email sent out by the agent - it contains the text extracted from the NHS page; &amp;#39;people aged 30 and over&amp;#39;&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Once the flow is tested, we can set the mode on the website agent back to &lt;code&gt;on_change&lt;/code&gt;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-email.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn//blog/alerting-on-nhs-coronavirus-vaccine-updates-with-huginn/example-email.png&#34;
+    alt=&#34;An example email sent out by the agent - it contains the text extracted from the NHS page; &amp;#39;people aged 30 and over&amp;#39;&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Once the flow is tested, we can set the mode on the website agent back to &lt;code&gt;on_change&lt;/code&gt;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;Now we just play the waiting time until getting vaxx&amp;rsquo;ed up as Marc Rebillet says&amp;hellip; 💉&lt;/p&gt;
+&lt;p&gt;Now we just play the waiting time until getting vaxx&amp;rsquo;ed up as Marc Rebillet says&amp;hellip; &amp;#x1f489;&lt;/p&gt;
 
 &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
   &lt;iframe src=&#34;https://www.youtube.com/embed/qeCwwYjf8gw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>obsidian on JDHeyburn</title>
+    <title>Obsidian on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/obsidian/</link>
-    <description>Recent content in obsidian on JDHeyburn</description>
+    <description>Recent content in Obsidian on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Fri, 12 Jan 2024 00:00:00 +0000</lastBuildDate>
@@ -34,28 +34,28 @@
 &lt;p&gt;Everyone has their reasons for journalling; some people use it to track thoughts, emotions, etc. For myself though as I started approaching my late twenties I felt that life was passing by very quickly - unsure of what I had accomplished or even done on a particular day, and what the general theme of a week or month was to me. I use journalling as a reference back to see how far I have progressed whether in my career or my personal life.&lt;/p&gt;
 &lt;p&gt;Obsidian has made this extremely easy for me to do with its &lt;a href=&#34;https://help.obsidian.md/Plugins/Daily+notes&#34;&gt;Daily Notes feature&lt;/a&gt;. These are simply notes that are specific to one day only and can be created from a template so that you don&amp;rsquo;t need to populate them in the boilerplate.&lt;/p&gt;
 &lt;p&gt;In this post, I&amp;rsquo;ll walk through the setup that I use for daily journalling, which then bubbles up to weekly, monthly, and then quarterly notes. You can see some sample screenshots below.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;
-         alt=&#34;Daily note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Daily note&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;
+    alt=&#34;Daily note&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Daily note&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;
-         alt=&#34;Weekly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Weekly note&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;
+    alt=&#34;Weekly note&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Weekly note&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;
-         alt=&#34;Monthly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Monthly note&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;
+    alt=&#34;Monthly note&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Monthly note&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;
-         alt=&#34;Quarterly note&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Quarterly note&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;
+    alt=&#34;Quarterly note&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Quarterly note&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This is achieved with these community plugins:&lt;/p&gt;
@@ -112,7 +112,7 @@
 &lt;h4 id=&#34;calendar&#34;&gt;Calendar&lt;/h4&gt;
 &lt;p&gt;For this I enable &lt;strong&gt;Show week number&lt;/strong&gt; to let me click on week numbers to create notes from them in the widget.&lt;/p&gt;
 &lt;p&gt;I like to enable &lt;strong&gt;Confirm before creating a new note&lt;/strong&gt; so that I don&amp;rsquo;t accidentally create notes I didn&amp;rsquo;t mean to when clicking in the widget.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;calendar-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/calendar-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;calendar-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/calendar-plugin-settings.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;dataview&#34;&gt;Dataview&lt;/h4&gt;
@@ -168,23 +168,23 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-notes-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-notes-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-notes-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-notes-plugin-settings.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;templater&#34;&gt;Templater&lt;/h4&gt;
 &lt;p&gt;Other than setting the &lt;strong&gt;Template folder location&lt;/strong&gt; to &lt;code&gt;templates&lt;/code&gt;, there is no other config needed.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;templater-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/templater-plugin-settings.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;templater-plugin-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/templater-plugin-settings.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;connecting-everything-together&#34;&gt;Connecting everything together&lt;/h3&gt;
 &lt;p&gt;If everything is set up correctly, you should be able to click on a day or week in the Calendar widget and it should generate a note for you. Another way to create these is via the command palette, which can be access through the hotkey &lt;code&gt;Cmd+P&lt;/code&gt; or &lt;code&gt;Ctrl+P&lt;/code&gt; - this is how I create monthly notes.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-command-palette.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/periodic-notes-command-palette.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-command-palette.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/periodic-notes-command-palette.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;deep-dive-into-note-templates&#34;&gt;Deep dive into note templates&lt;/h2&gt;
 &lt;h3 id=&#34;daily&#34;&gt;Daily&lt;/h3&gt;
 &lt;p&gt;The daily note is generated from &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-dailysummary-txt&#34;&gt;this template&lt;/a&gt;, and all daily notes are stored in &lt;code&gt;planner/daily&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-note-overview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Here&amp;rsquo;s a walkthrough on what&amp;rsquo;s happening in each section.&lt;/p&gt;
@@ -273,7 +273,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - Monday 20th November 2023
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since Obsidian has first-class support for properties, it creates a nice interface.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-properties.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-properties.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-properties.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-note-properties.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;navigation&#34;&gt;Navigation&lt;/h4&gt;
@@ -285,11 +285,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;&amp;lt;&amp;lt; [[planner/daily/2023-11-19|2023-11-19]] || [[planner/daily/2023-11-21|2023-11-21]] &amp;gt;&amp;gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[2023-W47]]  || [[2023-11-M]]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This visualises as:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-note-navigation-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-note-navigation-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;See below for the hotkeys I have set up for navigating daily notes. Even if I don&amp;rsquo;t have hotkeys for them, I can still access the &lt;a href=&#34;https://help.obsidian.md/Plugins/Command+palette&#34;&gt;command palette&lt;/a&gt; at the hotkey &lt;code&gt;Ctrl+P&lt;/code&gt;, or &lt;code&gt;Cmd+P&lt;/code&gt; or macOS.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-hotkeys.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/periodic-notes-hotkeys.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;periodic-notes-hotkeys.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/periodic-notes-hotkeys.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;summary&#34;&gt;Summary&lt;/h4&gt;
@@ -314,7 +314,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DailySummary:: 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And here it is when rendered.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-summary-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/daily-summary-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;daily-summary-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/daily-summary-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;a-bit-about-dataview-and-querying&#34;&gt;A bit about Dataview and querying&lt;/h4&gt;
@@ -326,7 +326,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This then is visualised as:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/example-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/example-dataview-query-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;So how do you add metadata? Dataview allows for a &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/annotation/add-metadata/&#34;&gt;couple of methods&lt;/a&gt; ; including &lt;a href=&#34;https://jekyllrb.com/docs/front-matter/&#34;&gt;YAML front matter&lt;/a&gt; (aka &lt;a href=&#34;https://help.obsidian.md/Editing+and+formatting/Properties&#34;&gt;Properties&lt;/a&gt;), or in-line in the file via a key name appended by two colons - e.g. &lt;code&gt;NewProperty::&lt;/code&gt;.&lt;/p&gt;
@@ -334,7 +334,7 @@
 &lt;h3 id=&#34;weekly&#34;&gt;Weekly&lt;/h3&gt;
 &lt;p&gt;The weekly note is used to summarise what happened during a week. In order for me to recall each day, I use a Dataview query to retrieve the &lt;code&gt;DailySummary&lt;/code&gt; for each day in that week.&lt;/p&gt;
 &lt;p&gt;I use &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-weeklysummary-txt&#34;&gt;this template&lt;/a&gt; for my weekly notes, which produces the below.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/weekly-note-overview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;properties-1&#34;&gt;Properties&lt;/h4&gt;
@@ -389,7 +389,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;yearly&lt;/span&gt;: &lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Visualised as:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-properties-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-properties-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-properties-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/weekly-note-properties-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;navigation-1&#34;&gt;Navigation&lt;/h4&gt;
@@ -398,7 +398,7 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[2023-W46]] || [[2023-W48]] &amp;gt;&amp;gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023-11&lt;/span&gt;-M]]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then is visualised as:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-navigation-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-navigation-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/weekly-note-navigation-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;summary-1&#34;&gt;Summary&lt;/h4&gt;
@@ -413,7 +413,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;WeeklySummary:: 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;WeeklySummary::&lt;/code&gt; is where the summary of that week is entered. Above that is a Dataview query for retrieving all the daily entries for the days within that week. This renders the view below:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/weekly-note-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;weekly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/weekly-note-dataview-query-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Let&amp;rsquo;s now break down what the query is doing, skipping over the first line for now.&lt;/p&gt;
@@ -445,7 +445,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SORT file.name ASC
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;```&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then it would print out a list of all the files with the given property.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-list-output.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/example-list-output.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-list-output.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/example-list-output.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;While this tells us what days were in the week, we can use the &lt;a href=&#34;https://blacksmithgu.github.io/obsidian-dataview/queries/query-types/#table&#34;&gt;TABLE&lt;/a&gt; query to display metadata of the queried files in an easy to view format. So reviewing the first line of our original query again:&lt;/p&gt;
@@ -468,7 +468,7 @@
 &lt;p&gt;Once we&amp;rsquo;ve written the weekly summary, that bubbles up to the monthly note.&lt;/p&gt;
 &lt;h3 id=&#34;monthly&#34;&gt;Monthly&lt;/h3&gt;
 &lt;p&gt;The monthly note consolidates all the weekly notes into here so that I can write a summary, and is created from &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-monthlysummary-txt&#34;&gt;this template&lt;/a&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/monthly-note-overview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;properties-and-navigation&#34;&gt;Properties and navigation&lt;/h4&gt;
@@ -527,7 +527,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-Q4]]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&lt;span style=&#34;color:#bd93f9&#34;&gt;2023&lt;/span&gt;-&lt;span style=&#34;color:#ff79c6&#34;&gt;Y&lt;/span&gt;]]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And this is how both of them are rendered:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-properties-and-navigation.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-properties-and-navigation.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-properties-and-navigation.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/monthly-properties-and-navigation.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;summary-2&#34;&gt;Summary&lt;/h4&gt;
@@ -546,12 +546,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;font-weight:bold&#34;&gt;### Monthly summary
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I tend to write a longer prose for the month summary, and so that wouldn&amp;rsquo;t fit in nicely in a Dataview query. Instead I embed the contents of the heading in the quarterly note, which I&amp;rsquo;ll talk about in that section. I include a &lt;a href=&#34;https://help.obsidian.md/Editing+and+formatting/Callouts&#34;&gt;callout&lt;/a&gt; which helps remind me of that set up.&lt;/p&gt;
 &lt;p&gt;When rendered, it looks like this:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/monthly-note-dataview-query-preview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;monthly-note-dataview-query-preview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/monthly-note-dataview-query-preview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;quarterly&#34;&gt;Quarterly&lt;/h3&gt;
 &lt;p&gt;I&amp;rsquo;ve not really built up a habit of writing a summary for quarterly notes, but I do collate the summaries of all months in a quarter into its note. These are located in &lt;code&gt;planner/quarterly&lt;/code&gt; in the format &lt;code&gt;yyyy-[Q]n.md&lt;/code&gt;, i.e. &lt;code&gt;2024-Q1.md&lt;/code&gt;.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;quarterly-note-overview.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal//blog/how-i-use-obsidian-to-journal/quarterly-note-overview.png&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h4 id=&#34;properties-2&#34;&gt;Properties&lt;/h4&gt;

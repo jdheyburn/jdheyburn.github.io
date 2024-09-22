@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>homelab on JDHeyburn</title>
+    <title>Homelab on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/homelab/</link>
-    <description>Recent content in homelab on JDHeyburn</description>
+    <description>Recent content in Homelab on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Thu, 02 Feb 2023 00:00:00 +0000</pubDate>
       
       <guid>https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/</guid>-->
-      <description>&lt;p&gt;In my &lt;a href=&#34;https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix&#34;&gt;last post&lt;/a&gt; I mentioned that I use a &amp;ldquo;service catalog&amp;rdquo; as a source of truth for what is deployed where and how it should be configured. This catalog is read by a number of services to determine the locations of those services so that can be referred back to.&lt;/p&gt;
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://jdheyburn.co.uk/blog/converting-to-the-church-of-nix/&#34;&gt;last post&lt;/a&gt; I mentioned that I use a &amp;ldquo;service catalog&amp;rdquo; as a source of truth for what is deployed where and how it should be configured. This catalog is read by a number of services to determine the locations of those services so that can be referred back to.&lt;/p&gt;
 &lt;p&gt;NixOS makes it easy to get services up and running with sensible defaults. But once those services are online we need a means of routing traffic to them from a nice domain (e.g. &lt;code&gt;service_name.svc.joannet.casa&lt;/code&gt;), and monitoring against the service to alert when it&amp;rsquo;s down.&lt;/p&gt;
 &lt;p&gt;Since NixOS manages the services and their configuration, we can have it create configurations for services that enable connectivity.&lt;/p&gt;
 &lt;p&gt;For my use case the tasks it performs are:&lt;/p&gt;
@@ -221,7 +221,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  value &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; (servicesBase&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;${&lt;/span&gt;serviceName&lt;span style=&#34;color:#f1fa8c&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;//&lt;/span&gt; { name &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; serviceName; });
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}) (&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;builtins&lt;/span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;.&lt;/span&gt;attrNames servicesBase));
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;reading-catalog-definitions&#34;&gt;Reading catalog definitions&lt;/h2&gt;
-&lt;p&gt;To generate the configs for each service, we have to parse the contents of catalog.nix using Nixlang (have you seen &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet&#34;&gt;the cheat sheet&lt;/a&gt;?).&lt;/p&gt;
+&lt;p&gt;To generate the configs for each service, we have to parse the contents of catalog.nix using Nixlang (have you seen &lt;a href=&#34;https://jdheyburn.co.uk/blog/nix-cheat-sheet/&#34;&gt;the cheat sheet&lt;/a&gt;?).&lt;/p&gt;
 &lt;h3 id=&#34;dns-rewrites&#34;&gt;DNS rewrites&lt;/h3&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;tl;dr:&lt;/strong&gt; &lt;a href=&#34;https://github.com/jdheyburn/nixos-configs/blob/5175593745a27de7afc5249bc130a2f1c5edb64c/modules/dns/default.nix&#34;&gt;See here&lt;/a&gt; for the configuration in GitHub.&lt;/p&gt;
@@ -596,8 +596,8 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;visualising-and-alerting&#34;&gt;Visualising and alerting&lt;/h4&gt;
 &lt;p&gt;It&amp;rsquo;s all well and good having VictoriaMetrics scrape and poll, but let&amp;rsquo;s use Grafana to visualise all this. I think I sourced it from &lt;a href=&#34;https://grafana.com/grafana/dashboards/14928-prometheus-blackbox-exporter/&#34;&gt;this dashboard&lt;/a&gt;, in either case I&amp;rsquo;d recommend to use it!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;blackbox-dashboard.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/blackbox-dashboard.png&#34;
-         alt=&#34;A Grafana dashboard showing the data points of the healthchecks against various internal and external websites&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;blackbox-dashboard.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos//blog/automating-service-configurations-with-nixos/blackbox-dashboard.png&#34;
+    alt=&#34;A Grafana dashboard showing the data points of the healthchecks against various internal and external websites&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You&amp;rsquo;ll notice that some services are responding with 4XX codes, this is because the probes are not being authenticated - but I&amp;rsquo;m getting &lt;em&gt;some&lt;/em&gt; response from the service which shows that something is working. These 4XX codes don&amp;rsquo;t cause a probe to fail, which is down to how I configured the blackbox exporter in the previous section: &lt;code&gt;http.valid_status_codes = [ 200 401 403 ];&lt;/code&gt;.&lt;/p&gt;
@@ -605,20 +605,20 @@
 &lt;blockquote&gt;
 &lt;p&gt;I&amp;rsquo;m only interested in alerting on internally routed services, external is out of my control.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-1.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/create-alert-1.png&#34;
-         alt=&#34;Grafana create alert page, entering the metric that we want to be alerting on, followed by the expressions to be made against the metric result&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-1.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos//blog/automating-service-configurations-with-nixos/create-alert-1.png&#34;
+    alt=&#34;Grafana create alert page, entering the metric that we want to be alerting on, followed by the expressions to be made against the metric result&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Expression B is then reducing the metric output to a single value, which will be the maximum value for that period.&lt;/p&gt;
 &lt;p&gt;Lastly expression C checks if B is less than 1, which is what will be produced if the probe failed.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-2.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/create-alert-2.png&#34;
-         alt=&#34;Grafana create alert page, defining how the alert should be evaluated and what details to accompany with it&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;create-alert-2.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos//blog/automating-service-configurations-with-nixos/create-alert-2.png&#34;
+    alt=&#34;Grafana create alert page, defining how the alert should be evaluated and what details to accompany with it&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Next up I&amp;rsquo;m setting how often the alert should poll, and some additional details on the alert, which can be used in the body to link to the blackbox dashboard for diagnosing.&lt;/p&gt;
 &lt;p&gt;By default all alerts go to my root notification policy, which is to send me an email. I&amp;rsquo;ve got SMTP set up on my Grafana instance, but I&amp;rsquo;ll dive into that another time. In the meantime, here&amp;rsquo;s a screenshot of an email alert!&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-grafana-email-alert.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/example-grafana-email-alert.png&#34;
-         alt=&#34;An example Grafana email alert, it reports that two services are down&#34; width=&#34;400x&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;example-grafana-email-alert.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos//blog/automating-service-configurations-with-nixos/example-grafana-email-alert.png&#34;
+    alt=&#34;An example Grafana email alert, it reports that two services are down&#34; width=&#34;400x&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h3 id=&#34;dashy&#34;&gt;Dashy&lt;/h3&gt;
@@ -627,8 +627,8 @@
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://dashy.to/&#34;&gt;Dashy&lt;/a&gt; is a customisable dashboard that can act as a homepage for your web browser to help you navigate to services, bookmarks, and more. I&amp;rsquo;m using it to keep a visual track on the services that I&amp;rsquo;m running at home.&lt;/p&gt;
 &lt;p&gt;The desired end result looks like this:&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;dashy-homepage.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos/dashy-homepage.png&#34;
-         alt=&#34;Dashy homepage with columns for each type of service that is being hosted, followed by those such services&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;dashy-homepage.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/automating-service-configurations-with-nixos//blog/automating-service-configurations-with-nixos/dashy-homepage.png&#34;
+    alt=&#34;Dashy homepage with columns for each type of service that is being hosted, followed by those such services&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The config for Dashy looks like the below, so let&amp;rsquo;s get Nix to build it for us!&lt;/p&gt;
@@ -1121,10 +1121,10 @@
 &lt;p&gt;Both of these services can be accessed through web browsers at the IP address and ports where they are being hosted, such as &lt;code&gt;http://192.168.1.10:8093/admin/&lt;/code&gt; in the case of PiHole. Having to remember the IP address and the port can be a pain. We can front these services with a rememberable domain name which points to these services - of which I&amp;rsquo;ve written about in a &lt;a href=&#34;https://jdheyburn.co.uk/blog/who-goes-blogging-2-custom-domain/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;securing-with-https&#34;&gt;Securing with HTTPS&lt;/h3&gt;
 &lt;p&gt;The web is evolving, and there is no reason why we should access services via insecure HTTP, that includes services that are only running on an internal network such as a home network. Web browsers nowadays give you a warning when you are connecting to website over an unencrypted connection.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;insecure-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&#34;
-         alt=&#34;Insecure PiHole connection&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;insecure-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2//blog/reverse-proxy-multiple-domains-using-caddy-2/insecure-pihole.png&#34;
+    alt=&#34;Insecure PiHole connection&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Simply accessing over HTTP is not an option, when browsers present us with a huge warning message&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://caddyserver.com/&#34;&gt;Caddy&lt;/a&gt; is a web server similar to Apache, nginx, et al., but it is different in that it enables HTTPS by default and upgrades requests from HTTP to HTTPS. Managing certificates for HTTPS is a pain - so Caddy does that too, so long as you can prove you own the domain you are hosting requests at. We can use Caddy in a reverse proxy mode, allowing us to access services at endpoints such as &lt;code&gt;https://pihole.domain.local&lt;/code&gt; in our browsers and forward them to the corresponding IP address hosting the service.&lt;/p&gt;
@@ -1180,16 +1180,16 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;a href=&#34;https://caddyserver.com/docs/json/&#34;&gt;Click here&lt;/a&gt; to see documentation on Caddy JSON config files.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/jdheyburn/ca668a9d162535ab92db2cfa6f4e4e54.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://gist.github.com/jdheyburn/ca668a9d162535ab92db2cfa6f4e4e54.js&#34;&gt;&lt;/script&gt;
 
 &lt;h2 id=&#34;updating-dns-records&#34;&gt;Updating DNS Records&lt;/h2&gt;
 &lt;p&gt;Remember that the domain names aren&amp;rsquo;t actually publicly accessible. At a basic level we can update the &lt;code&gt;/etc/hosts&lt;/code&gt; file of the machine we&amp;rsquo;re running on to add a record telling our machine how to resolve the domain.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo sh -c &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;echo \&amp;#34;192.168.1.10 pihole.joannet.casa\n192.168.1.10 unifi.joannet.casa\&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we&amp;rsquo;re already using PiHole as our own DNS server right? We can add the records there instead.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-dns-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&#34;
-         alt=&#34;Adding domain records to DNS server&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-dns-records.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2//blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-dns-records.png&#34;
+    alt=&#34;Adding domain records to DNS server&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;PiHole let&amp;rsquo;s you specify where local domain names should resolve to&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The IP addresses you see above are pointing to the host running Caddy, the Raspberry Pi.&lt;/p&gt;
@@ -1199,17 +1199,17 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;We need to execute using &lt;code&gt;sudo&lt;/code&gt; so that we can expose the service to restricted ports 80 and 443 (HTTP and HTTPS respectively).&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&#34;
-         alt=&#34;PiHole appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-pihole.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2//blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-pihole.png&#34;
+    alt=&#34;PiHole appearing in browser through a domain name&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-unifi.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&#34;
-         alt=&#34;UniFi Controller appearing in browser through a domain name&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;proxied-unifi.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2//blog/reverse-proxy-multiple-domains-using-caddy-2/proxied-unifi.png&#34;
+    alt=&#34;UniFi Controller appearing in browser through a domain name&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now we have a memorable domain name fronting the service, and Firefox is happy that we&amp;rsquo;re encrypting the connection too. The certificate being produced in seen below.&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-certificate.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&#34;
-         alt=&#34;Certificate used by PiHole&#34;/&gt;&lt;/a&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;pihole-certificate.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reverse-proxy-multiple-domains-using-caddy-2//blog/reverse-proxy-multiple-domains-using-caddy-2/pihole-certificate.png&#34;
+    alt=&#34;Certificate used by PiHole&#34;&gt;&lt;/a&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;enabling-caddy-service&#34;&gt;Enabling Caddy Service&lt;/h2&gt;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>documentation on JDHeyburn</title>
+    <title>Documentation on JDHeyburn</title>
     <link>https://jdheyburn.co.uk/tags/documentation/</link>
-    <description>Recent content in documentation on JDHeyburn</description>
+    <description>Recent content in Documentation on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 26 Jan 2020 00:00:00 +0000</lastBuildDate>
@@ -37,10 +37,10 @@
 &lt;p&gt;Documenting down architecture, processes, runbooks, etc., can help to give you clarity into the subject you are writing about. Once you&amp;rsquo;ve extracted all the details and are able to view them at a high-level, you&amp;rsquo;re able to iron out any creases and make improvements from there.&lt;/p&gt;
 &lt;p&gt;However, more importantly, and one that is most beneficial to me is that&amp;hellip;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;You will forget that shit and will need to reference it back again!&lt;/strong&gt;&lt;/p&gt;
-&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;elephant-cartoon.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor/elephant-cartoon.png&#34;
-         alt=&#34;Cartoon elephant&#34; width=&#34;400x&#34;/&gt;&lt;/a&gt;&lt;figcaption&gt;
-            &lt;p&gt;Not everyone can have the memory of an elephant&amp;hellip;&lt;/p&gt;
-        &lt;/figcaption&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;elephant-cartoon.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/on-becoming-an-open-source-software-contributor//blog/on-becoming-an-open-source-software-contributor/elephant-cartoon.png&#34;
+    alt=&#34;Cartoon elephant&#34; width=&#34;400x&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;Not everyone can have the memory of an elephant&amp;hellip;&lt;/p&gt;
+    &lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We are only human right? There is no way we can remember what most of us did a few weeks ago let alone a project from 6+ months ago.&lt;/p&gt;
