@@ -235,7 +235,7 @@
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>You can then copy and paste the same task resource, only changing the values for the <code>InputParameters</code> and <code>DocumentArn</code> parameters accordingly. If the document you are calling doesn&rsquo;t take any parameters, then you can just omit that block.</p><blockquote><p>You&rsquo;ll have to ensure that the IAM role the maintenance window task is assuming has the correct IAM permissions as required by the document you&rsquo;re calling.</p></blockquote><h2 id=conclusion>Conclusion</h2><p>What we&rsquo;ve done in this post is taken our rudimentary command document, prone to introducing errors into our estate, and converted it to an automation document. With the right SSM maintenance window settings, you can ensure that any maintenance tasks you need to perform on your EC2 instances are done so in a manner that reduces the risk of errors in your environment.</p><p>Next time, we&rsquo;ll be taking this a <em>step further</em> to proactively remove EC2 instances from circulation when behind a load balancer for maintenance activities.</p></div><footer><section class=see-also></section></footer></article></section></div><footer class=footer><section class=container>©
-2024
+2025
 Joseph D. Heyburn
 ·
 Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main></body></html>

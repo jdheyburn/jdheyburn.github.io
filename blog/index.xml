@@ -234,7 +234,16 @@
       <pubDate>Fri, 12 Jan 2024 00:00:00 +0000</pubDate>
       
       <guid>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</guid>-->
-      <description>&lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;edits&#34;&gt;Edits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;2025-01-26
+&lt;ul&gt;
+&lt;li&gt;Updated moment locale from &lt;code&gt;gb&lt;/code&gt; to &lt;code&gt;en-gb&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Sundays were incorrectly being templated as the first day of the week, instead of last&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;tldr&#34;&gt;tl;dr&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;I use Obsidian for journalling&lt;/li&gt;
 &lt;li&gt;You can view the &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1&#34;&gt;templates&lt;/a&gt; I use for creating my daily, weekly, monthly, and quarterly notes&lt;/li&gt;
@@ -414,7 +423,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normal markdown text from here
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Templater is used to populate the property values in the front matter, so let&amp;rsquo;s look at the &lt;a href=&#34;https://gist.github.com/jdheyburn/f0e21fa2671625a21941074f1c94ada1#file-dailysummary-txt-L1-L13&#34;&gt;local variables used&lt;/a&gt; in the daily note template.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;en-gb&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(&lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;Date&lt;/span&gt;(tp.file.title));
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousDay &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisDay.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;days&amp;#39;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousDayFmt &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; previousDay.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-DD&amp;#34;&lt;/span&gt;)
@@ -557,7 +566,7 @@
 &lt;h4 id=&#34;properties-1&#34;&gt;Properties&lt;/h4&gt;
 &lt;p&gt;These local variables are define in the template:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;en-gb&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-&amp;amp;W WW&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisWeek.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;weeks&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; nextWeek &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisWeek.clone().add(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;weeks&amp;#39;&lt;/span&gt;)
@@ -690,7 +699,7 @@
 
 &lt;h4 id=&#34;properties-and-navigation&#34;&gt;Properties and navigation&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;en-gb&amp;#34;&lt;/span&gt;)  
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-MM-&amp;amp;M &amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisQuarter &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Q]Q&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; previousMonth &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisMonth.clone().subtract(&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;months&amp;#39;&lt;/span&gt;)  
@@ -773,7 +782,7 @@
 
 &lt;h4 id=&#34;properties-2&#34;&gt;Properties&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;&amp;lt;%*&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;gb&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;moment.locale(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;en-gb&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisQuarter &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;window&lt;/span&gt;.moment(tp.file.title, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-&amp;amp;Q Q&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; theseMonths &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; [...&lt;span style=&#34;color:#ff79c6&#34;&gt;new&lt;/span&gt; Set([&lt;span style=&#34;color:#bd93f9&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#bd93f9&#34;&gt;2&lt;/span&gt;].map(m=&amp;gt;thisQuarter.startOf(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;quarter&amp;#34;&lt;/span&gt;).clone().add(m, &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;months&amp;#34;&lt;/span&gt;)))]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff79c6&#34;&gt;const&lt;/span&gt; thisYear &lt;span style=&#34;color:#ff79c6&#34;&gt;=&lt;/span&gt; thisQuarter.format(&lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;YYYY-[Y]&amp;#34;&lt;/span&gt;)
