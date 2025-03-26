@@ -19,6 +19,12 @@
       <guid>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</guid>-->
       <description>&lt;h2 id=&#34;edits&#34;&gt;Edits&lt;/h2&gt;
 &lt;ul&gt;
+&lt;li&gt;2025-03-26
+&lt;ul&gt;
+&lt;li&gt;Periodic Notes are now grouped in directories by their year (and if applicable, month)&lt;/li&gt;
+&lt;li&gt;See blog post: &lt;a href=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/&#34;&gt;Reorganising Obsidian Journal Notes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;li&gt;2025-01-26
 &lt;ul&gt;
 &lt;li&gt;Updated moment locale from &lt;code&gt;gb&lt;/code&gt; to &lt;code&gt;en-gb&lt;/code&gt;&lt;/li&gt;
@@ -639,6 +645,11 @@
 &lt;li&gt;Weekly notes move from &lt;code&gt;planner/weekly&lt;/code&gt; to &lt;code&gt;planner/weekly/YYYY&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Monthly notes move from &lt;code&gt;planner/monthly&lt;/code&gt; to &lt;code&gt;planner/monthly/YYYY&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2025-03-26&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I wrote a follow-up blog post to group periodic notes into their respective year:
+&lt;a href=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/&#34;&gt;Reorganising Obsidian Journal Notes&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Hopefully I&amp;rsquo;ve given enough of a walkthrough to allow you to come up with a flow of your own! In the future I&amp;rsquo;ll look to document additional functionalities I have in my daily notes such as task management.&lt;/p&gt;
 </description>
     </item>

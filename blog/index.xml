@@ -6,10 +6,100 @@
     <description>Recent content in Blog on JDHeyburn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 26 Mar 2025 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://jdheyburn.co.uk/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reorganising Obsidian Journal Notes</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
+      <link>https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/</link>
+      <pubDate>Wed, 26 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/</guid>-->
+      <description>&lt;p&gt;I finished off my &lt;a href=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/&#34;&gt;previous post on journalling&lt;/a&gt; in Obsidian with a couple of wish lists:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I do have some improvements I wish to make such as moving notes away from their respective flat directories. i.e.:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Daily notes move from &lt;code&gt;planner/daily&lt;/code&gt; to be grouped by year and month: &lt;code&gt;planner/daily/YYYY/MM&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Weekly notes move from &lt;code&gt;planner/weekly&lt;/code&gt; to &lt;code&gt;planner/weekly/YYYY&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Monthly notes move from &lt;code&gt;planner/monthly&lt;/code&gt; to &lt;code&gt;planner/monthly/YYYY&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I&amp;rsquo;ve been playing around with AI code generation, specifically the Claude 3.7 Sonnet model, and I wanted to see if it could produce scripts to help with this.&lt;/p&gt;
+&lt;p&gt;Unfortunately I didn&amp;rsquo;t capture the exact prompts I used, but it was something along these lines:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There are markdown files in the date format &lt;code&gt;YYYY-MM-DD.md&lt;/code&gt; found in &lt;code&gt;planner/daily&lt;/code&gt;. Create a Python script that will group them in directories by their respective year and month. The Python script should include user confirmation before moving the files.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I repeated this for each note type, and finished with asking it to consolidate all the scripts into one for simplicity.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consolidate all the scripts you&amp;rsquo;ve created into one.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You can find all the scripts on the Github gist link below.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gist.github.com/jdheyburn/f64effd0b606a68044d7d28960becc77&#34;&gt;https://gist.github.com/jdheyburn/f64effd0b606a68044d7d28960becc77&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I strongly recommend backing up your vault and pausing your sync tool of choice before executing any of the scripts.&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;organised-daily-notes.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes//blog/reorganising-obsidian-journal-notes/organised-daily-notes.png&#34;
+    alt=&#34;Output of `ls -l` command, showing directories named after months and the daily notes underneath months&#34;&gt;&lt;/a&gt;&lt;figcaption&gt;
+      &lt;p&gt;After the scripts run, notes are now grouped into tidier directories&lt;/p&gt;
+    &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;group-new-files&#34;&gt;Group new files&lt;/h2&gt;
+&lt;p&gt;Now that existing files had been moved, I had to change the settings for the Periodic Notes plugin to template new files at their correct location:&lt;/p&gt;
+&lt;figure class=&#34;center&#34;&gt;&lt;a href=&#34;updated-periodic-notes-settings.png&#34;&gt;&lt;img src=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes//blog/reorganising-obsidian-journal-notes/updated-periodic-notes-settings.png&#34;
+    alt=&#34;Periodic Notes plugin in Obsidian, the format of each note has been updated as per below this image&#34;&gt;&lt;/a&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I had to update the format of each periodic note as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Daily
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;YYYY/MM/YYYY-MM-DD&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;e.g.: &lt;code&gt;2025/03/2025-03-21&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Weekly
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;YYYY/YYYY-[W]ww&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;e.g.: &lt;code&gt;2025/2025-W12&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Monthly
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;YYYY/YYYY-MM-[M]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;e.g.: &lt;code&gt;2025/2025-03-M&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Quarterly
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;YYYY/YYYY-[Q]Q&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;e.g.: &lt;code&gt;2025/2025-Q1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These get created under their respective note folder, e.g. &lt;code&gt;planner/monthly&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With all but daily notes, I&amp;rsquo;m prepending &lt;code&gt;YYYY/&lt;/code&gt; to the filename. Periodic Notes will see this as a directory and template out the format. Daily is prepended by &lt;code&gt;YYYY/MM/&lt;/code&gt; to allow for grouping on months too.&lt;/p&gt;
+&lt;h2 id=&#34;updated-explicit-daily-note-links&#34;&gt;Updated explicit daily note links&lt;/h2&gt;
+&lt;p&gt;From my &lt;a href=&#34;https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/#daily&#34;&gt;previous post&lt;/a&gt; you would have seen daily notes link to adjacent days through an explicit link under &lt;code&gt;planner/daily&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# Monday 20th November 2023
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[planner/daily/2023-11-19|2023-11-19]] || [[planner/daily/2023-11-21|2023-11-21]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[2023-W47]]  || [[2023-11-M]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These links broke after the restructure because the notes are no longer directly underneath &lt;code&gt;planner/daily&lt;/code&gt;. I can&amp;rsquo;t remember the reason why I set it up this way; it might&amp;rsquo;ve been because I expected more daily notes in various locations. In either case I don&amp;rsquo;t have a need for it, so we can change these to implicit links. There are also implicit links to weekly and monthly notes, but these links will work fine as the files are still in the vault, Obsidian will be able to find them.&lt;/p&gt;
+&lt;p&gt;I also asked Claude to write me a bash one-liner to rename these.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There are markdown files under &lt;code&gt;planner/daily&lt;/code&gt; that have text in the format &lt;code&gt;[[planner/daily/2023-11-19|2023-11-19]] || [[planner/daily/2023-11-21|2023-11-21]]&lt;/code&gt;. Write a bash command that converts them to &lt;code&gt;[[2023-11-19]] || [[2023-11-21]]&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I thought I&amp;rsquo;d have to be explicit with the date format, but it seemed to understand the context enough to imply it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;find planner/daily -name &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#34;*.md&amp;#34;&lt;/span&gt; -type f -exec sed -i &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt; -E &lt;span style=&#34;color:#f1fa8c&#34;&gt;&amp;#39;s/\[\[planner\/daily\/([0-9]{4}-[0-9]{2}-[0-9]{2})\|([0-9]{4}-[0-9]{2}-[0-9]{2})\]\]/[[\1]]/g&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ff79c6&#34;&gt;{}&lt;/span&gt; &lt;span style=&#34;color:#f1fa8c&#34;&gt;\;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This took just 2 seconds to run! I also made sure to backup my Obsidian vault before hand, in case it went a bit haywire.&lt;/p&gt;
+&lt;p&gt;My daily note template also needed updating so that new notes follow this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;# &amp;lt;% thisDayLong %&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&amp;lt; [[&amp;lt;% previousDayFmt %&amp;gt;]] || [[&amp;lt;% nextDayFmt %&amp;gt;]] &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[[&amp;lt;% thisWeek %&amp;gt;]]  || [[&amp;lt;% thisMonth %&amp;gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, I enabled syncing and watched as all the files were updated.&lt;/p&gt;
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Adding aria2 download manager to my NixOS homelab</title><enclosure url="https://jdheyburn.co.uk/images/jdheyburn_co_uk_card.png" type="image/jpg"></enclosure>
@@ -236,6 +326,12 @@
       <guid>https://jdheyburn.co.uk/blog/how-i-use-obsidian-to-journal/</guid>-->
       <description>&lt;h2 id=&#34;edits&#34;&gt;Edits&lt;/h2&gt;
 &lt;ul&gt;
+&lt;li&gt;2025-03-26
+&lt;ul&gt;
+&lt;li&gt;Periodic Notes are now grouped in directories by their year (and if applicable, month)&lt;/li&gt;
+&lt;li&gt;See blog post: &lt;a href=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/&#34;&gt;Reorganising Obsidian Journal Notes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;li&gt;2025-01-26
 &lt;ul&gt;
 &lt;li&gt;Updated moment locale from &lt;code&gt;gb&lt;/code&gt; to &lt;code&gt;en-gb&lt;/code&gt;&lt;/li&gt;
@@ -856,6 +952,11 @@
 &lt;li&gt;Weekly notes move from &lt;code&gt;planner/weekly&lt;/code&gt; to &lt;code&gt;planner/weekly/YYYY&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Monthly notes move from &lt;code&gt;planner/monthly&lt;/code&gt; to &lt;code&gt;planner/monthly/YYYY&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE 2025-03-26&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I wrote a follow-up blog post to group periodic notes into their respective year:
+&lt;a href=&#34;https://jdheyburn.co.uk/blog/reorganising-obsidian-journal-notes/&#34;&gt;Reorganising Obsidian Journal Notes&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Hopefully I&amp;rsquo;ve given enough of a walkthrough to allow you to come up with a flow of your own! In the future I&amp;rsquo;ll look to document additional functionalities I have in my daily notes such as task management.&lt;/p&gt;
 </description>
     </item>
